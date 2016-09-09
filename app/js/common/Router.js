@@ -7,7 +7,8 @@ define(['backbone'], function (Backbone) {
 
         routes: {
             '': 'login',
-
+            'login':'login',
+            'main':'main'
         },
 
         //路由初始化可以做一些事
@@ -21,8 +22,16 @@ define(['backbone'], function (Backbone) {
                 var view = new View();
                 view.render();
             });
-
         },
+
+        main: function () {
+            var _url = './moduals/main/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
         defaultAction: function () {
             router.navigate("login", {trigger: true});
         }

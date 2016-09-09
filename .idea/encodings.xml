@@ -16,10 +16,8 @@
     <file url="file://$PROJECT_DIR$/app/js/lib/common.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/jQuery.md5.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/jquery-2.2.3.js" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/js/lib/jquery-2.2.3.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/jquery-2.2.3.min.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/jquery.serializeObject.js" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/js/lib/require.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/require.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/require.min.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/requirePlugin" charset="UTF-8" />
@@ -34,5 +32,7 @@
     <file url="file://$PROJECT_DIR$/app/js/toastr/toastr.js.map" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/toastr/toastr.min.css" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/toastr/toastr.min.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/moduals/login/tpl.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/moduals/main/tpl.html" charset="UTF-8" />
   </component>
 </project>

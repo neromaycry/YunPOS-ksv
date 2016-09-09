@@ -32,7 +32,7 @@ require.config({
             'exports':'_'
         },
         'bootstrap':{
-            'deps':['jquery'],
+            'deps':['jquery','css!../bootstrap/css/bootstrap.css','css!../bootstrap/css/bootstrap-theme.css'],
             'exports':'Bootstrap'
         },
         'storage':{
@@ -63,11 +63,156 @@ require([
     'storage',
     'toastr',
     'remodal'
-], function ($,_,Backbone,common,Router,validation,Bootstrap,storage,toastr,remodal) {
+], function ($,_,Backbone,common,BaseRouter,validation,Bootstrap,storage,toastr,remodal) {
     window.storage = $.localStorage;
 
     Backbone.history.start();
-    _.extend(Backbone.Model.prototype, Backbone.Validation.mixin)
+    _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
+
+    // 定义调试标志
+    window.debug = true;
+    // 定义 api 接口 url
+    window.API = "http://111.198.72.128:3000/v1";
+    // 定义api调试标志
+    window.api_debug = true;
+    // 重新定义系统本地存储对象
+
+    //初始化第一次登陆参数
+    //if (!window.storage.isSet(system_config.IS_FIRST_KEY)) {
+    //    window.storage.set(system_config.IS_FIRST_KEY, true);
+    //}
+    // 重写控制台输出方法，添加调试标志
+    console.log = (function (oriLogFunc) {
+        return function (str) {
+            if (debug) {
+                oriLogFunc.call(console, str);
+            }
+        }
+    })(console.log);
+
+    window.TOKEN = {
+        set: function (token) {
+            window.storage.set(system_config.TOKEN_KEY, token);
+        },
+        get: function () {
+            return window.storage.get(system_config.TOKEN_KEY);
+        },
+        remove: function () {
+            window.storage.remove(system_config.TOKEN_KEY);
+        }
+    };
+
+    window.LOGIN_USER = {
+        set: function (login_user) {
+            window.storage.set(window.system_config.LOGIN_USER_KEY, login_user);
+        },
+        get: function () {
+            window.storage.get(window.system_config.LOGIN_USER_KEY);
+        }
+    };
+
+    window.POS_KEY = {
+        set: function (key) {
+            // todo 预置方法
+        },
+        get: function () {
+            var pos_key = window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_KEY);
+            return pos_key;
+        }
+    };
+
+    window.GATEWAY = {
+        set: function () {
+
+        },
+        get: function () {
+            return window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY);
+        }
+    };
+
+    window.common_params = function (params) {
+        var _p = $.isEmptyObject(params) ? {} : params;
+        return $.extend(_p, {
+            "poskey": window.POS_KEY.get(),
+            "token": window.TOKEN.get(),
+            "timestamp": new Date().format("yyyy-MM-dd hh:mm:ss"),
+            "sign": "" // todo 签名测试版本不需要添加
+        });
+    };
+
+    window.router = BaseRouter;
+
+    document.onselectstart = function () {
+        return false;
+    };
+
+    function forbidBackSpace(e) {
+        var ev = e || window.event; //获取event对象
+        var obj = ev.target || ev.srcElement; //获取事件源
+        var t = obj.type || obj.getAttribute('type'); //获取事件源类型
+        //获取作为判断条件的事件类型
+        var vReadOnly = obj.readOnly;
+        var vDisabled = obj.disabled;
+        //处理undefined值情况
+        vReadOnly = (vReadOnly == undefined) ? false : vReadOnly;
+        vDisabled = (vDisabled == undefined) ? true : vDisabled;
+        //当敲Backspace键时，事件源类型为密码或单行、多行文本的，
+        //并且readOnly属性为true或disabled属性为true的，则退格键失效
+        var flag1 = ev.keyCode == 8 && (t == "password" || t == "text" || t == "textarea") && (vReadOnly == true || vDisabled == true);
+        //当敲Backspace键时，事件源类型非密码或单行、多行文本的，则退格键失效
+        var flag2 = ev.keyCode == 8 && t != "password" && t != "text" && t != "textarea";
+        //判断
+        if (flag2 || flag1) return false;
+    }
+    //禁止后退键 作用于Firefox、Opera
+    document.onkeypress = forbidBackSpace;
+    //禁止后退键  作用于IE、Chrome
+    document.onkeydown = forbidBackSpace;
+
+    $(document).ready(function () {
+        window.loading = {
+            show: function (obj) {
+                var target = obj || $("body");
+                target.showLoading({
+                    overlayWidth: $(document).width(),
+                    overlayHeight: $(document).height()
+                });
+            },
+
+            hide: function (obj) {
+                var target = obj || $("body");
+                target.hideLoading();
+            }
+        };
+
+        /**
+         * 设置屏幕宽高
+         */
+        var setScreenWH = function () {
+            var dw = $(document).width(),
+                dh = $(document).height();
+            var cw = $("#container").width(),
+                ch = $("#container").height();
+            var cwd = dw - cw;
+            var chd = dh - ch;
+            var cl = 0;
+            var ct = 0;
+            if (cwd > 0) {
+                cl = cwd / 2;
+            }
+            if (chd > 0) {
+                ct = chd / 2;
+            }
+            $("#container").css({
+                "left": cl,
+                "top": ct
+            });
+        };
+
+        setScreenWH();
+
+    });
+
 
 
 });

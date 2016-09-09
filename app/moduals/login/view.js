@@ -15,12 +15,16 @@ define([
         template: tpl,
 
         events: {
-
+            'click #btn_login':'doLogin'
         },
 
         pageInit: function () {
 
         },
+
+        doLogin: function () {
+            router.navigate('main',{trigger:true,replace:true});
+        }
 
     });
 
