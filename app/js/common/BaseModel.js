@@ -16,7 +16,7 @@ define(['backbone'], function (Backbone) {
                 dataType: "json",
                 error: function (model, textStatus, errorThrown) {
                     //f7app.alert('网络请求失败!','提示');
-                    window.toast.show('网络请求失败!');
+                    window.toastr.error('网络请求失败！');
                     console.log(textStatus);
                     console.error("网络请求失败！");
                 }
@@ -34,7 +34,7 @@ define(['backbone'], function (Backbone) {
                 },
                 error: function (model, textStatus, errorThrown) {
                     //f7app.alert('网络请求失败!','提示');
-                    window.toast.show('网络请求失败!');
+                    window.toastr.error('网络请求失败！');
                     console.log(errorThrown);
                     console.error("网络请求失败！");
                 },

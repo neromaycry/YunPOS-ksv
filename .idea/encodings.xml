@@ -9,6 +9,7 @@
     <file url="file://$PROJECT_DIR$/app/js/common/BaseModel.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/common/BaseView.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/common/Router.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/js/config.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/jquery-storageapi" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/backbone-validation.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/backbone.js" charset="UTF-8" />
@@ -23,6 +24,7 @@
     <file url="file://$PROJECT_DIR$/app/js/lib/requirePlugin" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/underscore.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/lib/underscore.min.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/js/loading" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/remodal/remodal-default-theme.css" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/remodal/remodal.css" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/remodal/remodal.js" charset="UTF-8" />
@@ -32,7 +34,10 @@
     <file url="file://$PROJECT_DIR$/app/js/toastr/toastr.js.map" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/toastr/toastr.min.css" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/js/toastr/toastr.min.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/moduals/login/model.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/moduals/login/tpl.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/moduals/login/view.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/moduals/main/tpl.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/moduals/main/view.js" charset="UTF-8" />
   </component>
 </project>

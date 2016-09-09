@@ -10,7 +10,9 @@ require.config({
         'storage':'../jquery-storageapi/jquery.storageapi.min',
         'underscore':'underscore',
         'backbone':'backbone.min',
-        "validation": "backbone-validation",
+        "md5": "jQuery.md5",
+        'validation': 'backbone-validation',
+        'loading':'../loading/jquery.showLoading.min',
         'common':'common',
         'toastr':'../toastr/toastr.min',
         'remodal':'../remodal/remodal',
@@ -25,12 +27,15 @@ require.config({
             'deps':['underscore'],
             'exports':'Backbone'
         },
-        "validation": {
-            "deps": ["backbone"],
-            "exports": "validation"
+        'validation': {
+            'deps': ["backbone"],
+            'exports': 'validation'
         },
         'underscore':{
             'exports':'_'
+        },
+        "md5": {
+            "deps": ["jquery"],
         },
         "serializeObject": {
             "deps": ["jquery"]
@@ -41,6 +46,12 @@ require.config({
         },
         'storage':{
             'deps':['jquery']
+        },
+        'loading': {
+            "deps": [
+                'css!../loading/showLoading.css',
+                'jquery'
+            ],
         },
         'md5':{
             'deps':['jquery']
@@ -61,32 +72,43 @@ require([
     'underscore',
     'backbone',
     'common',
-    "serializeObject",
+    'serializeObject',
     'js/common/Router.js',
     'validation',
     'bootstrap',
+    'loading',
     'storage',
     'toastr',
-    'remodal'
-], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,storage,toastr,remodal) {
+    'remodal',
+    'md5'
+], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,remodal,md5) {
     window.storage = $.localStorage;
+
+    window.pageId = 0;
 
     Backbone.history.start();
     _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 
-    // ¶¨Òåµ÷ÊÔ±êÖ¾
-    window.debug = true;
-    // ¶¨Òå api ½Ó¿Ú url
-    window.API = "http://111.198.72.128:3000/v1";
-    // ¶¨Òåapiµ÷ÊÔ±êÖ¾
-    window.api_debug = true;
-    // ÖØĞÂ¶¨ÒåÏµÍ³±¾µØ´æ´¢¶ÔÏó
+    //toastrçš„åˆå§‹åŒ–è®¾ç½®
+    window.toastr = toastr;
+    window.toastr.options = {
+        'timeOut':'800',
+        'positionClass':'toast-bottom-center'
+    };
 
-    //³õÊ¼»¯µÚÒ»´ÎµÇÂ½²ÎÊı
+    // å®šä¹‰è°ƒè¯•æ ‡å¿—
+    window.debug = true;
+    // å®šä¹‰ api æ¥å£ url
+    window.API = "http://111.198.72.128:3000/v1";
+    // å®šä¹‰apiè°ƒè¯•æ ‡å¿—
+    window.api_debug = true;
+    // é‡æ–°å®šä¹‰ç³»ç»Ÿæœ¬åœ°å­˜å‚¨å¯¹è±¡
+
+    //åˆå§‹åŒ–ç¬¬ä¸€æ¬¡ç™»é™†å‚æ•°
     //if (!window.storage.isSet(system_config.IS_FIRST_KEY)) {
     //    window.storage.set(system_config.IS_FIRST_KEY, true);
     //}
-    // ÖØĞ´¿ØÖÆÌ¨Êä³ö·½·¨£¬Ìí¼Óµ÷ÊÔ±êÖ¾
+    // é‡å†™æ§åˆ¶å°è¾“å‡ºæ–¹æ³•ï¼Œæ·»åŠ è°ƒè¯•æ ‡å¿—
     console.log = (function (oriLogFunc) {
         return function (str) {
             if (debug) {
@@ -118,7 +140,7 @@ require([
 
     window.POS_KEY = {
         set: function (key) {
-            // todo Ô¤ÖÃ·½·¨
+            // todo é¢„ç½®æ–¹æ³•
         },
         get: function () {
             var pos_key = window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_KEY);
@@ -141,7 +163,7 @@ require([
             "poskey": window.POS_KEY.get(),
             "token": window.TOKEN.get(),
             "timestamp": new Date().format("yyyy-MM-dd hh:mm:ss"),
-            "sign": "" // todo Ç©Ãû²âÊÔ°æ±¾²»ĞèÒªÌí¼Ó
+            "sign": "" // todo ç­¾åæµ‹è¯•ç‰ˆæœ¬ä¸éœ€è¦æ·»åŠ 
         });
     };
 
@@ -152,26 +174,26 @@ require([
     };
 
     function forbidBackSpace(e) {
-        var ev = e || window.event; //»ñÈ¡event¶ÔÏó
-        var obj = ev.target || ev.srcElement; //»ñÈ¡ÊÂ¼şÔ´
-        var t = obj.type || obj.getAttribute('type'); //»ñÈ¡ÊÂ¼şÔ´ÀàĞÍ
-        //»ñÈ¡×÷ÎªÅĞ¶ÏÌõ¼şµÄÊÂ¼şÀàĞÍ
+        var ev = e || window.event; //è·å–eventå¯¹è±¡
+        var obj = ev.target || ev.srcElement; //è·å–äº‹ä»¶æº
+        var t = obj.type || obj.getAttribute('type'); //è·å–äº‹ä»¶æºç±»å‹
+        //è·å–ä½œä¸ºåˆ¤æ–­æ¡ä»¶çš„äº‹ä»¶ç±»å‹
         var vReadOnly = obj.readOnly;
         var vDisabled = obj.disabled;
-        //´¦ÀíundefinedÖµÇé¿ö
+        //å¤„ç†undefinedå€¼æƒ…å†µ
         vReadOnly = (vReadOnly == undefined) ? false : vReadOnly;
         vDisabled = (vDisabled == undefined) ? true : vDisabled;
-        //µ±ÇÃBackspace¼üÊ±£¬ÊÂ¼şÔ´ÀàĞÍÎªÃÜÂë»òµ¥ĞĞ¡¢¶àĞĞÎÄ±¾µÄ£¬
-        //²¢ÇÒreadOnlyÊôĞÔÎªtrue»òdisabledÊôĞÔÎªtrueµÄ£¬ÔòÍË¸ñ¼üÊ§Ğ§
+        //å½“æ•²Backspaceé”®æ—¶ï¼Œäº‹ä»¶æºç±»å‹ä¸ºå¯†ç æˆ–å•è¡Œã€å¤šè¡Œæ–‡æœ¬çš„ï¼Œ
+        //å¹¶ä¸”readOnlyå±æ€§ä¸ºtrueæˆ–disabledå±æ€§ä¸ºtrueçš„ï¼Œåˆ™é€€æ ¼é”®å¤±æ•ˆ
         var flag1 = ev.keyCode == 8 && (t == "password" || t == "text" || t == "textarea") && (vReadOnly == true || vDisabled == true);
-        //µ±ÇÃBackspace¼üÊ±£¬ÊÂ¼şÔ´ÀàĞÍ·ÇÃÜÂë»òµ¥ĞĞ¡¢¶àĞĞÎÄ±¾µÄ£¬ÔòÍË¸ñ¼üÊ§Ğ§
+        //å½“æ•²Backspaceé”®æ—¶ï¼Œäº‹ä»¶æºç±»å‹éå¯†ç æˆ–å•è¡Œã€å¤šè¡Œæ–‡æœ¬çš„ï¼Œåˆ™é€€æ ¼é”®å¤±æ•ˆ
         var flag2 = ev.keyCode == 8 && t != "password" && t != "text" && t != "textarea";
-        //ÅĞ¶Ï
+        //åˆ¤æ–­
         if (flag2 || flag1) return false;
     }
-    //½ûÖ¹ºóÍË¼ü ×÷ÓÃÓÚFirefox¡¢Opera
+    //ç¦æ­¢åé€€é”® ä½œç”¨äºFirefoxã€Opera
     document.onkeypress = forbidBackSpace;
-    //½ûÖ¹ºóÍË¼ü  ×÷ÓÃÓÚIE¡¢Chrome
+    //ç¦æ­¢åé€€é”®  ä½œç”¨äºIEã€Chrome
     document.onkeydown = forbidBackSpace;
 
     $(document).ready(function () {
@@ -191,7 +213,7 @@ require([
         };
 
         /**
-         * ÉèÖÃÆÁÄ»¿í¸ß
+         * è®¾ç½®å±å¹•å®½é«˜
          */
         var setScreenWH = function () {
             var dw = $(document).width(),

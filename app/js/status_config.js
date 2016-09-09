@@ -140,3 +140,8 @@ window.RESPONSE_TOOLS = {
         return false;
     }
 };
+
+window.PAGE_ID = {
+    'LOGIN':1,
+    'MAIN':2,
+};

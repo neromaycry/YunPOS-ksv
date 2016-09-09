@@ -19,7 +19,8 @@ define([
         },
 
         pageInit: function () {
-
+            pageId = window.PAGE_ID.MAIN;
+            console.log(pageId);
         },
 
 
