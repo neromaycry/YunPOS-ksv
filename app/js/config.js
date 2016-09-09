@@ -6,6 +6,7 @@ require.config({
     baseUrl:'./js/lib/',
     paths:{
         'jquery':'jquery-2.2.3',
+        "serializeObject": "jquery.serializeObject",
         'storage':'../jquery-storageapi/jquery.storageapi.min',
         'underscore':'underscore',
         'backbone':'backbone.min',
@@ -30,6 +31,9 @@ require.config({
         },
         'underscore':{
             'exports':'_'
+        },
+        "serializeObject": {
+            "deps": ["jquery"]
         },
         'bootstrap':{
             'deps':['jquery','css!../bootstrap/css/bootstrap.css','css!../bootstrap/css/bootstrap-theme.css'],
@@ -57,13 +61,14 @@ require([
     'underscore',
     'backbone',
     'common',
+    "serializeObject",
     'js/common/Router.js',
     'validation',
     'bootstrap',
     'storage',
     'toastr',
     'remodal'
-], function ($,_,Backbone,common,BaseRouter,validation,Bootstrap,storage,toastr,remodal) {
+], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,storage,toastr,remodal) {
     window.storage = $.localStorage;
 
     Backbone.history.start();
