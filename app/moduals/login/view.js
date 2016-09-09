@@ -39,7 +39,6 @@ define([
 
         initPlugins: function () {
             $('input[name = username]').focus();
-            this.bindKeys();
         },
 
         doLogin: function () {

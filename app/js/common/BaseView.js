@@ -17,6 +17,7 @@ define([
         initialize: function (attrs) {
             console.log(">>> " + this.id);
             this.undelegateEvents();
+            $(document).unbind('keyup');
             this.$el.empty().off();
             if (attrs) {
                 this.attrs = attrs;
@@ -75,11 +76,18 @@ define([
         },
 
         bindKeyEvents: function (id,keyCode,callback) {
-            $(document).keypress(function (e) {
-                if(e.keyCode == keyCode && pageId == id) {
+
+            $(document).keyup(function (e) {
+                e = e || window.event;
+                console.log(e.which);
+                if(e.which == keyCode && pageId == id) {
                     callback();
                 }
             });
+        },
+
+        bindKeys: function () {
+
         },
 
         render: function () {
@@ -90,6 +98,7 @@ define([
             this.$el.html(this.template(dataset));
             this.initOtherView();
             this.initPlugins();
+            this.bindKeys();
             return this;
         }
 

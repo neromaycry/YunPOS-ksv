@@ -8,7 +8,9 @@ define(['backbone'], function (Backbone) {
         routes: {
             '': 'login',
             'login':'login',
-            'main':'main'
+            'main':'main',
+            'salesman':'salesman',
+            'member':'member'
         },
 
         //路由初始化可以做一些事
@@ -26,6 +28,22 @@ define(['backbone'], function (Backbone) {
 
         main: function () {
             var _url = './moduals/main/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        member: function () {
+            var _url = './moduals/member/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        salesman: function () {
+            var _url = './moduals/salesman/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

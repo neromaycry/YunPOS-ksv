@@ -24,8 +24,18 @@ define([
         },
 
         initPlugins: function () {
+
+        },
+
+        bindKeys: function () {
             this.bindKeyEvents(pageId, window.KEYS.Enter, function () {
-               console.log('主页');
+                console.log('主页');
+            });
+            this.bindKeyEvents(pageId, window.KEYS.M, function () {
+                router.navigate('member',{trigger:true});
+            });
+            this.bindKeyEvents(pageId, window.KEYS.S, function () {
+                router.navigate('salesman',{trigger:true});
             });
         }
 
