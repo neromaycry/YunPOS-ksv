@@ -74,6 +74,14 @@ define([
 
         },
 
+        bindKeyEvents: function (id,keyCode,callback) {
+            $(document).keypress(function (e) {
+                if(e.keyCode == keyCode && pageId == id) {
+                    callback();
+                }
+            });
+        },
+
         render: function () {
             console.log('render');
             console.log(this.template);
@@ -82,7 +90,6 @@ define([
             this.$el.html(this.template(dataset));
             this.initOtherView();
             this.initPlugins();
-
             return this;
         }
 

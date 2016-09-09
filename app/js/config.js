@@ -80,7 +80,7 @@ require([
     'storage',
     'toastr',
     'remodal',
-    'md5'
+    'md5',
 ], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,remodal,md5) {
     window.storage = $.localStorage;
 

@@ -23,6 +23,11 @@ define([
             console.log(pageId);
         },
 
+        initPlugins: function () {
+            this.bindKeyEvents(pageId, window.KEYS.Enter, function () {
+               console.log('主页');
+            });
+        }
 
     });
 

@@ -37,6 +37,11 @@ define([
             });
         },
 
+        initPlugins: function () {
+            $('input[name = username]').focus();
+            this.bindKeys();
+        },
+
         doLogin: function () {
             var username = $('input[name = username]').val();
             var password = $('input[name = password]').val();
@@ -67,6 +72,34 @@ define([
                     }
                 } else {
                     toastr.error(response.msg);
+                }
+            });
+        },
+
+        bindKeys: function () {
+            var _self = this;
+            this.bindKeyEvents(pageId, window.KEYS.Enter, function () {
+                var isUserFocused = $('input[name = username]').is(':focus');
+                if (isUserFocused) {
+                    $('input[name = password]').focus();
+                } else {
+                    _self.doLogin();
+                }
+            });
+            this.bindKeyEvents(pageId,window.KEYS.Up, function () {
+                var isUserFocused = $('input[name = username]').is(':focus');
+                if (isUserFocused) {
+                    $('input[name = password]').focus();
+                } else {
+                    $('input[name = username]').focus();
+                }
+            });
+            this.bindKeyEvents(pageId, window.KEYS.Down, function () {
+                var isUserFocused = $('input[name = username]').is(':focus');
+                if (isUserFocused) {
+                    $('input[name = password]').focus();
+                } else {
+                    $('input[name = username]').focus();
                 }
             });
         }
