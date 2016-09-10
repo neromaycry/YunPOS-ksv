@@ -3,8 +3,10 @@
  */
 define([
     '../../js/common/BaseView',
+    '../../moduals/salesman/model',
+    '../../moduals/salesman/collection',
     'text!../../moduals/salesman/tpl.html',
-], function (BaseView, tpl) {
+], function (BaseView,SalesmanModel,SalesmanCollection, tpl) {
 
     var salesmanView = Backbone.View.extend({
 
@@ -15,10 +17,18 @@ define([
         template: tpl,
 
         initialize: function () {
+            var _self = this;
             console.log('initialize');
             if (this.template) {
                 this.template = _.template(this.template);
             }
+            _self.collection = new SalesmanCollection();
+            _self.collection.fetch({
+                success: function (collection,resp) {
+                    console.log(collection);
+                    _self.collection.set(collection.toJSON());
+                }
+            });
             this.bindModalKeys();
             this.render();
         },
@@ -26,8 +36,27 @@ define([
         bindModalKeys: function () {
             console.log('bind modal keys');
             var _self = this;
+            var n = 0;
             this.bindKeyEvents(window.PAGE_ID.SALESMAN, window.KEYS.Enter, function () {
-                _self.hideModal(window.PAGE_ID.MAIN);
+                var search = $('#salesman_id').val()
+                if(search != ''){
+                    for(var i=0;i<_self.collection.length;i++){
+                        n++;
+                        if(search == _self.collection.at(i).get("number")){
+                            _self.hideModal(window.PAGE_ID.MAIN);
+                            console.log('登陆成功');
+                            break;
+                        }
+                    }
+                    if(n == _self.collection.length){
+                        toastr.warning('您输入的营业员不存在,请重新输入');
+                        n = 0;
+                    }
+                }else{
+                    toastr.warning('您输入的营业员编号为空');
+                }
+
+
             });
         },
 

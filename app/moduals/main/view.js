@@ -81,6 +81,9 @@ define([
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
                 _self.showModal(window.PAGE_ID.SALESMAN,_self.salesmanView);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = salesman_id]').focus();
+                });
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
                 toastr.info('esc 主页');

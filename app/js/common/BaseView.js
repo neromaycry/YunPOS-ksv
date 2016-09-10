@@ -92,7 +92,7 @@ define([
         showModal: function (id,view) {
             pageId = id;
             $('.modal').modal('show');
-            $('.modal').on('shown.bs.modal', function (e) {
+            $('.modal').on('show.bs.modal', function (e) {
                view.render();
             });
         },
