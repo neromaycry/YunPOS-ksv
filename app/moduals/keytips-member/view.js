@@ -28,8 +28,8 @@ define([
 
         bindKeys: function () {
             this.bindKeyEvents(pageId, window.KEYS.Esc , function () {
-                var remodal = $('[data-remodal-id=modal]').remodal();
-                remodal.close();
+                modal.close();
+                toastr.warning('keytips');
             });
         }
 

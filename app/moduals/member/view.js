@@ -21,7 +21,11 @@ define([
 
         pageInit: function () {
             pageId = window.PAGE_ID.MEMBER;
-            this.tipsView = new KMemberView();
+            if (this.tipsView) {
+                this.tipsView.remove();
+            } else {
+                this.tipsView = new KMemberView();
+            }
         },
 
         initPlugins: function () {

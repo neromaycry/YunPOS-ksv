@@ -18,7 +18,7 @@ define([
             var _self = this;
             console.log(">>> " + this.id);
             this.undelegateEvents();
-
+            $(document).unbind('keyup');
             this.$el.empty().off();
             if (attrs) {
                 this.attrs = attrs;
@@ -46,6 +46,7 @@ define([
                 this.listenTo(this.collection, "reset", this.collection_reset);
             }
             this.delegateEvents();
+            this.bindKeys();
             $(document).on('opening','.remodal', function (e) {
                 //console.log('remodal opening');
                 $(document).unbind('keyup');
@@ -106,7 +107,7 @@ define([
             this.$el.html(this.template(dataset));
             this.initOtherView();
             this.initPlugins();
-            this.bindKeys();
+
             return this;
         }
 
