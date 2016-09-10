@@ -6,36 +6,46 @@ define([
     'text!../../moduals/salesman/tpl.html',
 ], function (BaseView, tpl) {
 
-    var salesmanView = BaseView.extend({
+    var salesmanView = Backbone.View.extend({
 
         id: "salesmanView",
 
-        el: '.modal-container',
+        el: '.modal',
 
         template: tpl,
 
-        events: {
-
-        },
-
-        pageInit: function () {
-            pageId = window.PAGE_ID.SALESMAN;
-        },
-
-        initPlugins: function () {
+        initialize: function () {
+            console.log('initialize');
+            if (this.template) {
+                this.template = _.template(this.template);
+            }
             this.bindModalKeys();
+            this.render();
         },
 
         bindModalKeys: function () {
-            this.bindKeyEvents(pageId, window.KEYS.Esc , function () {
-                modal.close();
-            });
-            this.bindKeyEvents(pageId, window.KEYS.Enter , function () {
-                toastr.success('营业员登陆成功');
+            console.log('bind modal keys');
+            this.bindKeyEvents(window.PAGE_ID.SALESMAN, window.KEYS.Enter, function () {
+                $('.modal').modal('hide');
                 pageId = window.PAGE_ID.MAIN;
-                modal.close();
             });
+        },
+
+        bindKeyEvents: function (id,keyCode,callback) {
+            $(document).keyup(function (e) {
+                e = e || window.event;
+                console.log(e.which);
+                if(e.which == keyCode && pageId == id) {
+                    callback();
+                }
+            });
+        },
+
+        render: function () {
+            this.$el.html(this.template(this.model));
+            return this;
         }
+
 
     });
 

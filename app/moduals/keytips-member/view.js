@@ -10,7 +10,7 @@ define([
 
         id: "kMemberView",
 
-        el: '.modal-container',
+        el: '.modal',
 
         template: tpl,
 
@@ -19,17 +19,17 @@ define([
         },
 
         pageInit: function () {
-            pageId = window.PAGE_ID.TIP_MEMBER;
         },
 
         initPlugins: function () {
-
+            this.bindModalKeys();
         },
 
-        bindKeys: function () {
-            this.bindKeyEvents(pageId, window.KEYS.Esc , function () {
-                modal.close();
+        bindModalKeys: function () {
+            this.bindKeyEvents(window.PAGE_ID.TIP_MEMBER, window.KEYS.Esc , function () {
+                $('.modal').modal('hide');
                 toastr.warning('keytips');
+                pageId = window.PAGE_ID.MEMBER;
             });
         }
 

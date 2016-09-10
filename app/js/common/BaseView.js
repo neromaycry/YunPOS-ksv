@@ -52,7 +52,7 @@ define([
                 $(document).unbind('keyup');
             });
             $(document).on('closed','.remodal', function (e) {
-                _self.bindKeys(pageId);
+                _self.bindKeys();
             });
         },
 
@@ -94,7 +94,7 @@ define([
             });
         },
 
-        bindKeys: function (id) {
+        bindKeys: function () {
 
         },
 

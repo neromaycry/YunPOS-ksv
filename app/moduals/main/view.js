@@ -26,6 +26,8 @@ define([
 
         template_posinfo:posinfotpl,
 
+        salesmanView:null,
+
         events: {
 
         },
@@ -43,7 +45,11 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
-
+            if (this.salesmanView) {
+                this.salesmanView.remove();
+            } else {
+                this.salesmanView = new SalesmanView();
+            }
             this.initTemplates();
         },
 
@@ -63,21 +69,25 @@ define([
             return this;
         },
 
-        bindKeys: function (id) {
-            pageId = id;
+        bindKeys: function () {
             var _self = this;
-            this.bindKeyEvents(pageId, window.KEYS.Enter, function () {
+            console.log('bindkeys main');
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Enter, function () {
                 console.log('主页');
             });
-            this.bindKeyEvents(pageId, window.KEYS.M, function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
+                console.log('main m');
                 router.navigate('member',{trigger:true});
             });
-            this.bindKeyEvents(pageId, window.KEYS.S, function () {
-                modal.open();
-                var salesmanView = new SalesmanView();
-                salesmanView.render();
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
+                pageId = window.PAGE_ID.SALESMAN;
+                console.log('main s');
+                $('.modal').modal('show');
+                $('.modal').on('shown.bs.modal', function (e) {
+                    _self.salesmanView.render();
+                });
             });
-            this.bindKeyEvents(pageId, window.KEYS.Esc,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
                 toastr.info('esc 主页');
             });
         }
