@@ -7,8 +7,9 @@ define([
     '../../../../moduals/main/collection',
     '../../../../moduals/salesman/view',
     'text!../../../../moduals/main/posinfotpl.html',
+    'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, posinfotpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, posinfotpl,salesmantpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -25,6 +26,8 @@ define([
         discountamount: 0,
 
         template_posinfo:posinfotpl,
+
+        template_salesman:salesmantpl,
 
         salesmanView:null,
 
@@ -51,15 +54,18 @@ define([
                 this.salesmanView = new SalesmanView();
             }
             this.initTemplates();
+            this.handleEvents();
         },
 
         initPlugins: function () {
             $('input[name = main]').focus();
             this.renderPosInfo();
+            this.renderSalesman();
         },
 
         initTemplates: function () {
             this.template_posinfo = _.template(this.template_posinfo);
+            this.template_salesman = _.template(this.template_salesman);
             //this.template_cart = _.template(this.template_cart);
             //this.template_shopitem = _.template(this.template_shopitem);
         },
@@ -67,6 +73,23 @@ define([
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
             return this;
+        },
+
+        renderSalesman: function() {
+            this.$el.find('.for-salesman').html(this.template_salesman(this.model.toJSON()));
+        },
+
+        handleEvents: function () {
+            Backbone.off('SalesmanAdd');
+            Backbone.on('SalesmanAdd',this.SalesmanAdd,this);
+        },
+
+        SalesmanAdd: function (attrData) {
+            this.model = new HomeModel();
+            this.model.set({
+                salesman:attrData['name']
+            });
+            this.renderSalesman();
         },
 
         bindKeys: function () {

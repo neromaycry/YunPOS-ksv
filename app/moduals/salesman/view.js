@@ -44,7 +44,10 @@ define([
                         n++;
                         if(search == _self.collection.at(i).get("number")){
                             _self.hideModal(window.PAGE_ID.MAIN);
-                            console.log('登陆成功');
+                            toastr.success('营业员' + search + '登录成功');
+                            var attrData = {};
+                            attrData['name'] = _self.collection.at(i).get("name");
+                            Backbone.trigger('SalesmanAdd',attrData);
                             break;
                         }
                     }
