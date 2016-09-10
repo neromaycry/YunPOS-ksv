@@ -18,3 +18,27 @@ function toDecimal2(x) {
     }
     return s;
 }
+
+function ValidateFloat(e, pnumber){
+
+    if (!/^\d+[.]?\d*$/.test(pnumber)){
+
+        $(e).val(/^\d+[.]?\d*/.exec($(e).val()));
+
+    }
+
+    return false;
+
+}
+
+function ValidateNumber(e, pnumber){
+
+    if (!/^\d+$/.test(pnumber)){
+
+        $(e).val(/^\d+/.exec($(e).val()));
+
+    }
+
+    return false;
+
+}
