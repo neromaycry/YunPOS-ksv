@@ -3,8 +3,9 @@
  */
 define([
     '../../../../js/common/BaseView',
+    '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/member/tpl.html',
-], function (BaseView, tpl) {
+], function (BaseView,KMemberView, tpl) {
 
     var memberView = BaseView.extend({
 
@@ -20,6 +21,7 @@ define([
 
         pageInit: function () {
             pageId = window.PAGE_ID.MEMBER;
+            this.tipsView = new KMemberView();
         },
 
         initPlugins: function () {
@@ -27,8 +29,14 @@ define([
         },
 
         bindKeys: function () {
-            this.bindKeyEvents(pageId,window.KEYS.Esc, function () {
+            var _self = this;
+            this.bindKeyEvents(pageId, window.KEYS.Esc, function () {
                 router.navigate('main',{trigger:true});
+            });
+            this.bindKeyEvents(pageId, window.KEYS.T, function () {
+                console.log('快捷键');
+                modal.open();
+                _self.tipsView.render();
             });
         }
 

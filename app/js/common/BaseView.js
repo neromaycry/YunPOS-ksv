@@ -15,9 +15,10 @@ define([
         is_modal_open:false,
 
         initialize: function (attrs) {
+            var _self = this;
             console.log(">>> " + this.id);
             this.undelegateEvents();
-            $(document).unbind('keyup');
+
             this.$el.empty().off();
             if (attrs) {
                 this.attrs = attrs;
@@ -45,6 +46,14 @@ define([
                 this.listenTo(this.collection, "reset", this.collection_reset);
             }
             this.delegateEvents();
+            $(document).on('opening','.remodal', function (e) {
+                //console.log('remodal opening');
+                $(document).unbind('keyup');
+            });
+            $(document).on('closed','.remodal', function (e) {
+                //toastr.info('remodal closed');
+                _self.bindKeys();
+            });
         },
 
         initRouter: function () {
@@ -76,7 +85,6 @@ define([
         },
 
         bindKeyEvents: function (id,keyCode,callback) {
-
             $(document).keyup(function (e) {
                 e = e || window.event;
                 console.log(e.which);

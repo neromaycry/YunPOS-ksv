@@ -86,6 +86,11 @@ require([
 
     window.pageId = 0;
 
+    var options = {
+        hashTracking:false
+    };
+    window.modal = $('[data-remodal-id = modal]').remodal(options);
+
     Backbone.history.start();
     _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 
