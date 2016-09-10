@@ -52,8 +52,7 @@ define([
                 $(document).unbind('keyup');
             });
             $(document).on('closed','.remodal', function (e) {
-                //toastr.info('remodal closed');
-                _self.bindKeys();
+                _self.bindKeys(pageId);
             });
         },
 
@@ -95,7 +94,7 @@ define([
             });
         },
 
-        bindKeys: function () {
+        bindKeys: function (id) {
 
         },
 

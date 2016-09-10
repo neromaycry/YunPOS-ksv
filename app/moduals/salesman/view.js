@@ -23,19 +23,17 @@ define([
         },
 
         initPlugins: function () {
-
+            this.bindModalKeys();
         },
 
-        bindKeys: function () {
+        bindModalKeys: function () {
             this.bindKeyEvents(pageId, window.KEYS.Esc , function () {
-                var remodal = $('[data-remodal-id=modal]').remodal();
-                remodal.close();
+                modal.close();
             });
             this.bindKeyEvents(pageId, window.KEYS.Enter , function () {
                 toastr.success('营业员登陆成功');
                 pageId = window.PAGE_ID.MAIN;
-                var remodal = $('[data-remodal-id=modal]').remodal();
-                remodal.close();
+                modal.close();
             });
         }
 

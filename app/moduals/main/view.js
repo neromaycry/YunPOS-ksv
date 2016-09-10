@@ -5,9 +5,10 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
+    '../../../../moduals/salesman/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, posinfotpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, posinfotpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -42,6 +43,7 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
+
             this.initTemplates();
         },
 
@@ -61,7 +63,9 @@ define([
             return this;
         },
 
-        bindKeys: function () {
+        bindKeys: function (id) {
+            pageId = id;
+            var _self = this;
             this.bindKeyEvents(pageId, window.KEYS.Enter, function () {
                 console.log('主页');
             });
@@ -69,7 +73,9 @@ define([
                 router.navigate('member',{trigger:true});
             });
             this.bindKeyEvents(pageId, window.KEYS.S, function () {
-                router.navigate('salesman',{trigger:true});
+                modal.open();
+                var salesmanView = new SalesmanView();
+                salesmanView.render();
             });
             this.bindKeyEvents(pageId, window.KEYS.Esc,function () {
                 toastr.info('esc 主页');
