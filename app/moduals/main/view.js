@@ -80,12 +80,7 @@ define([
                 router.navigate('member',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
-                pageId = window.PAGE_ID.SALESMAN;
-                console.log('main s');
-                $('.modal').modal('show');
-                $('.modal').on('shown.bs.modal', function (e) {
-                    _self.salesmanView.render();
-                });
+                _self.showModal(window.PAGE_ID.SALESMAN,_self.salesmanView);
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
                 toastr.info('esc 主页');

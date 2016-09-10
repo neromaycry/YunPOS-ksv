@@ -38,13 +38,7 @@ define([
                 router.navigate('main',{trigger:true});
             });
             this.bindKeyEvents(pageId, window.KEYS.T, function () {
-                pageId = window.PAGE_ID.TIP_MEMBER
-                console.log('快捷键');
-                $('.modal').modal('show');
-                $('.modal').on('shown.bs.modal', function (e) {
-                    _self.tipsView.render();
-                });
-
+                _self.showModal(window.PAGE_ID.TIP_MEMBER,_self.tipsView);
             });
         }
 

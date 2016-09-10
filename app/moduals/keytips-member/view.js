@@ -26,10 +26,9 @@ define([
         },
 
         bindModalKeys: function () {
+            var _self = this;
             this.bindKeyEvents(window.PAGE_ID.TIP_MEMBER, window.KEYS.Esc , function () {
-                $('.modal').modal('hide');
-                toastr.warning('keytips');
-                pageId = window.PAGE_ID.MEMBER;
+                _self.hideModal(window.PAGE_ID.MEMBER);
             });
         }
 

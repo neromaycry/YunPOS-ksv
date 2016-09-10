@@ -25,9 +25,9 @@ define([
 
         bindModalKeys: function () {
             console.log('bind modal keys');
+            var _self = this;
             this.bindKeyEvents(window.PAGE_ID.SALESMAN, window.KEYS.Enter, function () {
-                $('.modal').modal('hide');
-                pageId = window.PAGE_ID.MAIN;
+                _self.hideModal(window.PAGE_ID.MAIN);
             });
         },
 
@@ -39,6 +39,11 @@ define([
                     callback();
                 }
             });
+        },
+
+        hideModal: function (id) {
+            pageId = id;
+            $('.modal').modal('hide');
         },
 
         render: function () {

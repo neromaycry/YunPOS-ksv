@@ -84,6 +84,34 @@ define([
 
         },
 
+        /**
+         * 模态框弹出公用方法
+         * @param id 弹出的模态框的view的pageid 例如:window.PAGE_ID.MAIN,按需要向status_config里面添加pageid
+         * @param view 弹出的模态框中的view
+         */
+        showModal: function (id,view) {
+            pageId = id;
+            $('.modal').modal('show');
+            $('.modal').on('shown.bs.modal', function (e) {
+               view.render();
+            });
+        },
+
+        /**
+         * 模态框隐藏公用方法
+         * @param id 返回的页面的view的pageid 例如:window.PAGE_ID.MAIN
+         */
+        hideModal: function (id) {
+            pageId = id;
+            $('.modal').modal('hide');
+        },
+
+        /**
+         * 键盘绑定公用方法
+         * @param id 当前view的pageid
+         * @param keyCode 将要绑定的键值
+         * @param callback 对应将要绑定的回调函数
+         */
         bindKeyEvents: function (id,keyCode,callback) {
             $(document).keyup(function (e) {
                 e = e || window.event;
