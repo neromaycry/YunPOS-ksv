@@ -86,7 +86,10 @@ define([
                 });
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
-                toastr.info('esc 主页');
+                toastr.info('退出');
+            });
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
+                router.navigate('billing',{trigger:true});
             });
         }
 

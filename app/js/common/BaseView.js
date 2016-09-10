@@ -32,7 +32,6 @@ define([
             }
 
             this.initRouter();
-
             this.pageInit();
             this.stopListening();
             if (this.model) {
@@ -47,8 +46,8 @@ define([
             }
             this.delegateEvents();
             this.bindKeys();
+
             $(document).on('opening','.remodal', function (e) {
-                //console.log('remodal opening');
                 $(document).unbind('keyup');
             });
             $(document).on('closed','.remodal', function (e) {
@@ -128,13 +127,11 @@ define([
 
         render: function () {
             console.log('render');
-            console.log(this.template);
             var _data = this.collection || this.model;
             var dataset = _data ? _data.toJSON() : {};
             this.$el.html(this.template(dataset));
             this.initOtherView();
             this.initPlugins();
-
             return this;
         }
 

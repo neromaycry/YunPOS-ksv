@@ -10,7 +10,8 @@ define(['backbone'], function (Backbone) {
             'login':'login',
             'main':'main',
             'salesman':'salesman',
-            'member':'member'
+            'member':'member',
+            'billing':'billing'
         },
 
         //路由初始化可以做一些事
@@ -44,6 +45,14 @@ define(['backbone'], function (Backbone) {
 
         salesman: function () {
             var _url = './moduals/salesman/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        billing: function () {
+            var _url = './moduals/billing/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

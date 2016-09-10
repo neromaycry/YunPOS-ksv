@@ -9,3 +9,13 @@
 .text-left {
     text-align: left;
 }
+
+.no-padding {
+    padding: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.no-margining {
+    margin: 0px;
+}
