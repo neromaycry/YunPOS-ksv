@@ -1,81 +1,213 @@
-<div class="page-header">
-    <h1>销售首页</h1>
-</div>
-<div class="row">
-    <div class="col-md-3">
-        <div class="form-group">
-            <input type="text" id="" placeholder="请输入商品编码" class="form-control"/>
+<nav class="navbar" role="navigation" style="background:#337AB7;">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" style="color: #ffffff">销售首页</a>
         </div>
+    </div>
+</nav>
+<div class="row" style="padding-top: 50px;">
+    <div class="col-md-3">
+        <form>
+            <div class="form-group">
+                <label class="sr-only" for="search_item">商品编码</label>
+                <input type="text" id="search_item" placeholder="请输入商品编码" class="form-control"/>
+            </div>
+        </form>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <div class="row">
-                    <div class="col-md-6 text-center">
-                        <strong>收款员：xxxx</strong>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <strong>收款机：2341</strong>
-                    </div>
-                </div>
+                <strong>收款员：xxxx</strong>&nbsp;&nbsp;
+                <strong>收款机：2341</strong>
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-6 text-center">
-                        件数：
+                        <div class="col-md-6 text-center">
+                            件数：
+                        </div>
+                        <div class="col-md-6 text-left">
+                            xxx
+                        </div>
                     </div>
-                    <div class="col-md-6 text-center">
-                        xxx
-                    </div>
-                </div>
                 <div class="row">
-                    <div class="col-md-6 text-center">
-                        优惠：
+                        <div class="col-md-6 text-center">
+                            优惠：
+                        </div>
+                        <div class="col-md-6 text-left" style="color: #4db6ac">
+                            ￥1.00
+                        </div>
                     </div>
-                    <div class="col-md-6 text-center">
-                        xxx
-                    </div>
-                </div>
                 <div class="row">
-                    <div class="col-md-6 text-center">
-                        总计：
+                        <div class="col-md-6 text-center">
+                            总计：
+                        </div>
+                        <div class="col-md-6 text-left" style="color:#f36c60">
+                            ￥26.8
+                        </div>
                     </div>
-                    <div class="col-md-6 text-center">
-                        xxx
-                    </div>
-                </div>
             </div>
         </div>
     </div>
     <div class="col-md-9">
-        <table class="table">
-            <tbody>
-                <tr id="thead" class="label-primary">
-                    <td scope="col">
-                        <label style="color:white">序号</label>
+        <table class="table" style="border: 1px solid #dddddd">
+            <thead>
+                 <tr class="label-primary">
+                <td scope="col">
+                    <label style="color:white">序号</label>
+                </td>
+                <td>
+                    <label style="color:white">商品编码</label>
+                </td>
+                <td>
+                    <label style="color:white">商品名称</label>
+                </td>
+                <td>
+                    <label style="color:white">商品单价</label>
+                </td>
+                <td>
+                    <label style="color:white">商品规格</label>
+                </td>
+                <td>
+                    <label style="color:white">商品优惠</label>
+                </td>
+                <td>
+                    <label style="color:white">商品数量</label>
+                </td>
+                <td>
+                    <label style="color:white">小计</label>
+                </td>
+            </tr>
+            </thead>
+            <tbody class="list-item">
+                <tr>
+                <td>
+                    1
+                </td>
+                    <td style="color: #757575">
+                      001487
                     </td>
-                    <td>
-                        <label style="color:white">商品编码</label>
+                <td>
+                   良源清真粽子系列 (正价)
+                </td>
+                <td>
+                    26.80
+                </td>
+                <td style="color:#f36c60">
+                   *
+                </td>
+                <td  style="color: #4db6ac">
+                    - 0.00
+                </td>
+                <td>
+                    1
+                </td>
+                <td style="color:#f36c60">
+                    26.80
+                </td>
+                </tr>
+                <tr>
+                <td>
+                    1
+                </td>
+                    <td style="color: #757575">
+                      001487
                     </td>
-                    <td>
-                        <label style="color:white">商品名称</label>
+                <td>
+                   良源清真粽子系列 (正价)
+                </td>
+                <td>
+                    26.80
+                </td>
+                <td style="color:#f36c60">
+                   *
+                </td>
+                <td  style="color: #4db6ac">
+                    - 0.00
+                </td>
+                <td>
+                    1
+                </td>
+                <td style="color:#f36c60">
+                    26.80
+                </td>
+                </tr>
+                <tr>
+                <td>
+                    1
+                </td>
+                    <td style="color: #757575">
+                      001487
                     </td>
-                    <td>
-                        <label style="color:white">商品单价</label>
+                <td>
+                   良源清真粽子系列 (正价)
+                </td>
+                <td>
+                    26.80
+                </td>
+                <td style="color:#f36c60">
+                   *
+                </td>
+                <td  style="color: #4db6ac">
+                    - 0.00
+                </td>
+                <td>
+                    1
+                </td>
+                <td style="color:#f36c60">
+                    26.80
+                </td>
+                </tr>
+                <tr>
+                <td>
+                    1
+                </td>
+                    <td style="color: #757575">
+                      001487
                     </td>
-                    <td>
-                        <label style="color:white">商品规格</label>
+                <td>
+                   良源清真粽子系列 (正价)
+                </td>
+                <td>
+                    26.80
+                </td>
+                <td style="color:#f36c60">
+                   *
+                </td>
+                <td  style="color: #4db6ac">
+                    - 0.00
+                </td>
+                <td>
+                    1
+                </td>
+                <td style="color:#f36c60">
+                    26.80
+                </td>
+                </tr>
+                <tr>
+                <td>
+                    1
+                </td>
+                    <td style="color: #757575">
+                      001487
                     </td>
-                    <td>
-                        <label style="color:white">商品优惠</label>
-                    </td>
-                    <td>
-                        <label style="color:white">商品数量</label>
-                    </td>
-                    <td>
-                        <label style="color:white">小计</label>
-                    </td>
+                <td>
+                   良源清真粽子系列 (正价)
+                </td>
+                <td>
+                    26.80
+                </td>
+                <td style="color:#f36c60">
+                   *
+                </td>
+                <td  style="color: #4db6ac">
+                    - 0.00
+                </td>
+                <td>
+                    1
+                </td>
+                <td style="color:#f36c60">
+                    26.80
+                </td>
                 </tr>
             </tbody>
         </table>
     </div>
-
 </div>
