@@ -146,7 +146,8 @@ window.PAGE_ID = {
     'MAIN':2,
     'MEMBER':3,
     'SALESMAN':4,
-    'TIP_MEMBER':5
+    'TIP_MEMBER':5,
+    'BILLING':6
 };
 
 window.KEYS = {
