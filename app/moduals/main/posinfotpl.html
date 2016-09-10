@@ -1,0 +1,36 @@
+<div class="panel-heading">
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <strong>收款员：<%= name %></strong>
+        </div>
+        <div class="col-md-6 text-center">
+            <strong>收款机：<%= pos %></strong>
+        </div>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-md-6 text-center">
+            件数：
+        </div>
+        <div class="col-md-6 text-center">
+            <%= itemamount %>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+        <div class="col-md-6 text-center">
+            优惠：
+        </div>
+        <div class="col-md-6 text-center">
+           - <%= toDecimal2(discountamount) %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-center">
+            总计：
+        </div>
+        <div class="col-md-6 text-center">
+            <%= toDecimal2(totalamount) %>
+        </div>
+    </div>
+</div>
