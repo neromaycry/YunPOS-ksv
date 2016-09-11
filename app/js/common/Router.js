@@ -44,7 +44,7 @@ define(['backbone'], function (Backbone) {
         },
 
         salesman: function () {
-            var _url = './moduals/salesman/view.js';
+            var _url = './moduals/modal-salesman/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

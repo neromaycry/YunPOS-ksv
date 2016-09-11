@@ -3,9 +3,9 @@
  */
 define([
     '../../js/common/BaseModalView',
-    '../../moduals/salesman/model',
-    '../../moduals/salesman/collection',
-    'text!../../moduals/salesman/tpl.html',
+    '../../moduals/modal-salesman/model',
+    '../../moduals/modal-salesman/collection',
+    'text!../../moduals/modal-salesman/tpl.html',
 ], function (BaseModalView,SalesmanModel,SalesmanCollection, tpl) {
 
     var salesmanView = BaseModalView.extend({
