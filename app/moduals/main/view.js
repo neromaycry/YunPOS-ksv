@@ -5,7 +5,7 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
-    '../../../../moduals/salesman/view',
+    '../../../../moduals/modal-salesman/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
@@ -44,6 +44,7 @@ define([
             console.log(pageId);
             var user = storage.get(system_config.LOGIN_USER_KEY);
             this.model = new HomeModel();
+            this.salesmanModel = new HomeModel();
             this.collection = new HomeCollection();
             this.requestModel = new HomeModel();
             this.model.set({
@@ -97,11 +98,13 @@ define([
         },
 
         renderSalesman: function() {
-            this.$el.find('.for-salesman').html(this.template_salesman(this.model.toJSON()));
+            this.$el.find('.for-salesman').html(this.template_salesman(this.salesmanModel.toJSON()));
+            return this;
         },
 
         renderCartList: function() {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
+            return this;
         },
 
         handleEvents: function () {
@@ -110,8 +113,7 @@ define([
         },
 
         SalesmanAdd: function (attrData) {
-            this.model = new HomeModel();
-            this.model.set({
+            this.salesmanModel.set({
                 salesman:attrData['name']
             });
             this.renderSalesman();
@@ -119,7 +121,6 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            this.request = new HomeModel();
             console.log('bindkeys main');
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Enter, function () {
                 search = $('#input_main').val();
@@ -138,7 +139,7 @@ define([
                         data['medium_type'] = '*';
                     }
                     data['goods_detail'] = JSON.stringify(_self.collection);
-                    _self.request.sku(data , function(resp) {
+                    _self.requestModel.sku(data , function(resp) {
                         if(resp.status == '00') {
                             _self.onAddItem(resp.goods_detail);
                         }else{
@@ -165,20 +166,30 @@ define([
                 router.navigate('billing',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D,function () {
-                if(this.totalamount == 0){
-                    toastr.warning('购物车里没有商品');
+                if($('li').hasClass('cus-selected')){
+                    console.log('delete');
                 }else {
-                    $('#li0').addClass('cus-selected');
-                    $('input[name = main]').blur();
+                    if(this.totalamount == 0){
+                        toastr.warning('购物车里没有商品');
+                    }else {
+                        $('#li0').addClass('cus-selected');
+                        $('input[name = main]').blur();
+                    }
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
-                for (var i = 1; i < this.itemamount;i++) {
-                    console.log(this.itemamount);
-                    console.log('#li ')
+                var num = _self.model.get('itemamount');
+                for(var i = 1;i < num; i++) {
                     $('#li' + i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 }
             });
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
+                var num = _self.model.get('itemamount');
+                for(var i = num;i >= 0;i--) {
+                    $('#li' + i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                }
+            });
+            this.bindKeyEvents()
         },
 
         onAddItem: function (JSONData) {
