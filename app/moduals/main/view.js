@@ -88,7 +88,7 @@ define([
             var dh = $(document).height();
             var nav = $('.navbar').height();
             var toolbar = $('.label-primary').height();
-            cart = dh - nav - toolbar - 140;
+            cart = dh - nav - toolbar - 50;
             $('.for-cartlist').height(cart);
         },
         renderPosInfo: function () {
@@ -142,7 +142,7 @@ define([
                         if(resp.status == '00') {
                             _self.onAddItem(resp.goods_detail);
                         }else{
-                            toastr.warning('您输入的商品编码不存在，请重新输入');
+                            toastr.warning(resp.msg);
                         }
                     });
                     $('#input_main').val('');
@@ -163,6 +163,11 @@ define([
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
                 router.navigate('billing',{trigger:true});
+            });
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D,function () {
+                if(this.totalamount == 0){
+                    toastr.warning('购物车里没有商品');
+                }
             });
         },
 
