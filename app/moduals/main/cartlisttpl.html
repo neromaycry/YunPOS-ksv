@@ -1,0 +1,47 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+<% function toDecimal3(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 3) {
+s += '0';
+}
+return s;
+}%>
+
+<% _.each(obj,function(e,i){ %>
+<tr>
+    <td><%= i + 1%></td>
+    <td style="color: #757575"><%= e.barcode%></td>
+    <td><%= e.goods_name%>(正价)</td>
+    <td><%= toDecimal2(e.price) %></td>
+    <td style="color: red"><%= e.spec%></td>
+    <td style="color: #4db6ac;">- <%= toDecimal2(e.discount) %></td>
+    <td><%= toDecimal3(e.num) %></td>
+    <td style="color:#f36c60"><%= toDecimal2(e.num*e.price-e.discount) %></td>
+</tr>
+<% }) %>
