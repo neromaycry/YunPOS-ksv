@@ -87,7 +87,7 @@ define([
          * @param id 弹出的模态框的view的pageid 例如:window.PAGE_ID.MAIN,按需要向status_config里面添加pageid
          * @param view 弹出的模态框中的view
          */
-        showModal: function (id,view) {
+        showModal: function (id, view) {
             pageId = id;
             $('.modal').modal('show');
             $('.modal').on('show.bs.modal', function (e) {

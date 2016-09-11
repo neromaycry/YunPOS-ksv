@@ -6,7 +6,6 @@ define(['../../js/common/BaseModel'],function(BaseModel){
     var keytipsModel=BaseModel.extend({
 
         defaults:{
-            name:''
         },
 
     });

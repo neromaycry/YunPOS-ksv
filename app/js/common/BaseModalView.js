@@ -11,19 +11,32 @@ define([
 
         el: '.modal',
 
-        initialize: function () {
+        attrs:null,
+
+        initialize: function (attrs) {
             console.log('modal:' + this.id);
+            this.$el.empty().off();
             $(document).unbind('keydown');
-            if (this.template) {
-                this.template = _.template(this.template);
+            if (attrs) {
+                this.attrs = attrs;
             }
+            if (this.model) {
+                this.collection = new Backbone.Collection.extend({model: this.model});
+            }
+            //if (this.template) {
+            //    this.template = _.template(tehis.template);
+            //    this.$el.html(this.template);
+            //}
             this.modalInitPage();
             this.bindModalKeys();
-            this.render();
         },
 
         modalInitPage: function () {
 
+        },
+
+        onModalShown: function () {
+            
         },
 
         bindModalKeys: function () {
@@ -46,7 +59,9 @@ define([
         },
 
         render: function () {
+            console.log('modal render');
             this.$el.html(this.template(this.model));
+            this.onModalShown();
             return this;
         }
 
