@@ -4,22 +4,31 @@
 define([
     '../../js/common/BaseModalView',
     '../../moduals/keytips-member/model',
-    'text!../../moduals/keytips-member/tpl.html',
-], function (BaseModalView,KMemberModel, tpl) {
+    '../../moduals/keytips-member/collection',
+    'text!../../moduals/keytips-member/tpl.html'
+], function (BaseModalView,KeyTipsModel,KeyTipsCollection, tpl) {
 
     var kMemberView = BaseModalView.extend({
 
         id: "kMemberView",
 
-        template: tpl,
+        template_collection: tpl,
 
         events: {
 
         },
 
         modalInitPage: function () {
-            this.model = new KMemberModel();
+            console.log(this.attrs);
+            this.collection = new KeyTipsCollection();
+            this.collection.set(storage.get(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,this.attrs));
+            this.template_collection = _.template(this.template_collection);
+            this.renderHotKeys();
+        },
 
+        renderHotKeys: function () {
+            this.$el.html(this.template_collection(this.collection));
+            return this;
         },
 
         bindModalKeys: function () {

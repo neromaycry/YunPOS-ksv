@@ -4,8 +4,9 @@
 define([
     '../../../../js/common/BaseView',
     '../../../../moduals/login/model',
+    '../../../../moduals/login/collection',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, tpl) {
+], function (BaseView, LoginModel, LoginCollection, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -23,6 +24,7 @@ define([
             pageId = window.PAGE_ID.LOGIN;
             storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY,'http://111.198.72.128:3000/v1');
             storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.POS_KEY,'1');
+            this.setHotKeys();
             this.requestModel = new LoginModel();
             this.model = new LoginModel();
             var data = {};
@@ -73,6 +75,23 @@ define([
                     toastr.error(response.msg);
                 }
             });
+        },
+
+        setHotKeys: function () {
+            this.memberhotkeys = new LoginCollection();
+            var memberkey1 = new LoginModel();
+            var memberkey2 = new LoginModel();
+            memberkey1.set({
+                effect:'返回',
+                key:'ESC'
+            });
+            memberkey2.set({
+                effect:'确定',
+                key:'Enter'
+            });
+            this.memberhotkeys.push(memberkey1);
+            this.memberhotkeys.push(memberkey2);
+            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'MEMBER_PAGE',this.memberhotkeys);
         },
 
         bindKeys: function () {
