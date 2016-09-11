@@ -201,7 +201,7 @@ define([
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
-                number = $('#input_main').val();
+                var number = $('#input_main').val();
                 if(number == ''){
                     toastr.warning('您未输入任何数量，请重新输入');
                 }else{
@@ -224,9 +224,30 @@ define([
                     }
                     _self.calculateModel();
                 }
-                $('#input_main').val('')
+                $('#input_main').val('');
                 console.log(_self.i);
                 $('#li' + _self.i).addClass('cus-selected');
+            });
+            //单品优惠
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y,function () {
+                var value = $('#input_main').val();
+                if(value == '') {
+                    toastr.warning('您输入的优惠金额为零，请重新输入');
+                }else {
+                    var item = _self.collection.at(_self.i);
+                    var price = item.get('price');
+                    if (value <= parseFloat(price) ) {
+                        _self.collection.at(_self.i).set({
+                            discount: value
+                        });
+                        _self.calculateModel();
+                        $('#li' + _self.i).addClass('cus-selected');
+
+                    }else {
+                        toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
+                    }
+                }
+                $('#input_main').val('');
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
