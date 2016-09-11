@@ -2,6 +2,10 @@ ul .cus-selected{
     background: #e1f5fe; !important;
 }
 
+div .bottom-margin {
+    margin-bottom: 10px;
+}
+
 .no-padding {
     padding: 0px;
 }
