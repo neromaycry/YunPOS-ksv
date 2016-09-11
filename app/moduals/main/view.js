@@ -204,7 +204,9 @@ define([
                 var number = $('#input_main').val();
                 if(number == ''){
                     toastr.warning('您未输入任何数量，请重新输入');
-                }else{
+                }else if(number == 0) {
+                    toastr.warning('修改的数量不能为零，请重新输入');
+                }else {
                     var item = _self.collection.at(_self.i);
                     item.set({
                         num: parseFloat(number)
