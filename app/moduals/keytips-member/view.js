@@ -2,15 +2,14 @@
  * Created by gjwlg on 2016/9/9.
  */
 define([
-    '../../js/common/BaseView',
+    '../../js/common/BaseModalView',
+    '../../moduals/keytips-member/model',
     'text!../../moduals/keytips-member/tpl.html',
-], function (BaseView, tpl) {
+], function (BaseModalView,KMemberModel, tpl) {
 
-    var kMemberView = BaseView.extend({
+    var kMemberView = BaseModalView.extend({
 
         id: "kMemberView",
-
-        el: '.modal',
 
         template: tpl,
 
@@ -18,16 +17,14 @@ define([
 
         },
 
-        pageInit: function () {
-        },
+        modalInitPage: function () {
+            this.model = new KMemberModel();
 
-        initPlugins: function () {
-            this.bindModalKeys();
         },
 
         bindModalKeys: function () {
             var _self = this;
-            this.bindKeyEvents(window.PAGE_ID.TIP_MEMBER, window.KEYS.Esc , function () {
+            this.bindModalKeyEvents(window.PAGE_ID.TIP_MEMBER, window.KEYS.Esc , function () {
                 _self.hideModal(window.PAGE_ID.MEMBER);
             });
         }
