@@ -46,11 +46,10 @@ define([
             }
             this.delegateEvents();
             this.bindKeys();
-
-            $(document).on('opening','.remodal', function (e) {
+            $('.modal').on('show.bs.modal', function () {
                 $(document).unbind('keyup');
             });
-            $(document).on('closed','.remodal', function (e) {
+            $('.modal').on('hidden.bs.modal', function () {
                 _self.bindKeys();
             });
         },
@@ -101,8 +100,10 @@ define([
          * @param id 返回的页面的view的pageid 例如:window.PAGE_ID.MAIN
          */
         hideModal: function (id) {
-            pageId = id;
             $('.modal').modal('hide');
+            $('.modal').on('hide.bs.modal', function () {
+                pageId = id;
+            });
         },
 
         /**
@@ -113,6 +114,16 @@ define([
          */
         bindKeyEvents: function (id,keyCode,callback) {
             $(document).keyup(function (e) {
+                e = e || window.event;
+                console.log(e.which);
+                if(e.which == keyCode && pageId == id) {
+                    callback();
+                }
+            });
+        },
+
+        bindModalKeyEvents: function (id, keyCode, callback) {
+            $(document).keydown(function (e) {
                 e = e || window.event;
                 console.log(e.which);
                 if(e.which == keyCode && pageId == id) {
