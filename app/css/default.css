@@ -1,0 +1,86 @@
+ul .cus-selected{
+    background: #e1f5fe; !important;
+}
+
+.no-padding {
+    padding: 0px;
+}
+
+.no-border {
+    border: 0;
+}
+
+.no-margining {
+    margin: 0;
+}
+
+.gray-bg {
+    background-color: #f3f3f4
+}
+
+.middle-box {
+    max-width: 400px;
+    z-index: 100;
+    margin: 0 auto;
+    padding-top: 40px
+}
+
+.loginscreen .middle-box {
+    width: 300px
+}
+
+.animated {
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none
+}
+
+.logo-name {
+    font-size: 180px;
+    font-weight: 800;
+    letter-spacing: 0px;
+    margin-bottom: 0
+}
+
+.m-t {
+    margin-top: 15px
+}
+
+.full-width {
+    width: 100% !important
+}
+
+.m-b {
+    margin-bottom: 15px
+}
+
+.text-muted {
+    color: #fff;
+    opacity: .8
+}
+
+.nav-pills > li > a {
+    border-radius: 0px;
+}
+
+.center-vertical {
+    position: relative;
+    /*top: 50%;*/
+    transform: translateY(30%);
+}
+.changeColor{
+    background: #74898a;
+}
+.changeCss{
+    position: absolute;
+    display: none;
+    z-index: 2;
+    margin-left: 45px;
+}
+.setSelected{
+    background: rgba(52,152,219,0.4);
+}
+.changeVipCss{
+
+}
+
