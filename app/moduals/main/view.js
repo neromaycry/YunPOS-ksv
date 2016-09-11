@@ -154,6 +154,7 @@ define([
                         }
                     });
                     $('#input_main').val('');
+                    _self.i = 0;
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
@@ -223,6 +224,9 @@ define([
                     }
                     _self.calculateModel();
                 }
+                $('#input_main').val('')
+                console.log(_self.i);
+                $('#li' + _self.i).addClass('cus-selected');
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
