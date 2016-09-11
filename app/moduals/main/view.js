@@ -6,11 +6,12 @@ define([
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
     '../../../../moduals/modal-salesman/view',
+    '../../../../moduals/modal-login/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -26,6 +27,8 @@ define([
 
         discountamount: 0,
 
+        i: 0,
+
         template_posinfo:posinfotpl,
 
         template_salesman:salesmantpl,
@@ -33,6 +36,8 @@ define([
         template_cartlisttpl:cartlisttpl,
 
         salesmanView:null,
+
+        secondloginView:null,
 
         events: {
 
@@ -68,11 +73,13 @@ define([
         },
 
         initPlugins: function () {
+            var _self = this;
             $('input[name = main]').focus();
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
             this.initLayoutHeight();
+            $('#li' + _self.i).addClass('cus-selected');
         },
 
         initTemplates: function () {
@@ -154,7 +161,8 @@ define([
                 router.navigate('member',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
-                _self.showModal(window.PAGE_ID.SALESMAN,_self.salesmanView);
+                var salesmanView = new SalesmanView();
+                _self.showModal(window.PAGE_ID.SALESMAN,salesmanView);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = salesman_id]').focus();
                 });
@@ -165,29 +173,68 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
                 router.navigate('billing',{trigger:true});
             });
+            //清空购物车
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {
+                _self.collection.reset();
+                _self.model.set({
+                    totalamount: 0,
+                    itemamount: 0,
+                    discountamount: 0
+                });
+                _self.renderPosInfo();
+                _self.renderCartList();
+                storage.remove(system_config.SALE_PAGE_KEY);
+                toastr.success('清空购物车成功');
+            });
+            //删除商品
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D,function () {
                 if($('li').hasClass('cus-selected')){
-                    console.log('delete');
-                }else {
-                    if(this.totalamount == 0){
-                        toastr.warning('购物车里没有商品');
-                    }else {
-                        $('#li0').addClass('cus-selected');
-                        $('input[name = main]').blur();
+                    console.log(_self.i);
+                    console.log(_self.collection);
+                    var item = _self.collection.at(_self.i);
+                    _self.collection.remove(item);
+                    _self.renderCartList();
+                    console.log(_self.collection);
+                    _self.calculateModel();
+                }
+            });
+            //修改数量
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
+                number = $('#input_main').val();
+                if(number == ''){
+                    toastr.warning('您未输入任何数量，请重新输入');
+                }else{
+                    var item = _self.collection.at(_self.i);
+                    item.set({
+                        num: parseFloat(number)
+                    });
+                    console.log(_self.collection);
+                    _self.totalamount = 0;
+                    _self.itemamount = 0;
+                    _self.discountamount = 0;
+                    var priceList = _self.collection.pluck('price');
+                    var discounts = _self.collection.pluck('discount');
+                    var itemNum = _self.collection.pluck('num');
+                    for (var i = 0; i < priceList.length; i++) {
+                        discounts[i] = parseFloat(discounts[i]);
+                        _self.totalamount += priceList[i] * itemNum[i];
+                        _self.itemamount += itemNum[i];
+                        _self.discountamount += discounts[i] * itemNum[i];
                     }
+                    _self.calculateModel();
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
-                var num = _self.model.get('itemamount');
-                for(var i = 1;i < num; i++) {
-                    $('#li' + i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                if (_self.i < _self.collection.length - 1) {
+                    _self.i++;
                 }
+                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
-                var num = _self.model.get('itemamount');
-                for(var i = num;i >= 0;i--) {
-                    $('#li' + i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                if (_self.i > 0) {
+                    _self.i--;
                 }
+                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
             this.bindKeyEvents()
         },
