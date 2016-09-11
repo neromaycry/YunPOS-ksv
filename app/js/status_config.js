@@ -147,7 +147,8 @@ window.PAGE_ID = {
     'MEMBER':3,
     'SALESMAN':4,
     'TIP_MEMBER':5,
-    'BILLING':6
+    'BILLING':6,
+    'SECONDLOGIN':7
 };
 
 window.KEYS = {
