@@ -168,8 +168,15 @@ define([
                 if(this.totalamount == 0){
                     toastr.warning('购物车里没有商品');
                 }else {
-                    $('#tr0').addClass('cus-selected');
+                    $('#li0').addClass('cus-selected');
                     $('input[name = main]').blur();
+                }
+            });
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
+                for (var i = 1; i < this.itemamount;i++) {
+                    console.log(this.itemamount);
+                    console.log('#li ')
+                    $('#li' + i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 }
             });
         },
