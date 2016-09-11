@@ -15,7 +15,6 @@ define([
 
         initialize: function (attrs) {
             console.log('modal:' + this.id);
-            this.$el.empty().off();
             $(document).unbind('keydown');
             if (attrs) {
                 this.attrs = attrs;
@@ -23,10 +22,10 @@ define([
             if (this.model) {
                 this.collection = new Backbone.Collection.extend({model: this.model});
             }
-            //if (this.template) {
-            //    this.template = _.template(tehis.template);
-            //    this.$el.html(this.template);
-            //}
+            if (this.template) {
+                this.$el.html(this.template);
+                this.template = _.template(this.template);
+            }
             this.modalInitPage();
             this.bindModalKeys();
         },
