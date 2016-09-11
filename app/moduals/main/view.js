@@ -87,8 +87,8 @@ define([
         initLayoutHeight: function () {
             var dh = $(document).height();
             var nav = $('.navbar').height();
-            var toolbar = $('.label-primary').height();
-            cart = dh - nav - toolbar - 50;
+            var panelheading = $('.panel-heading').height();
+            cart = dh - nav * 2 - panelheading * 2;
             $('.for-cartlist').height(cart);
         },
         renderPosInfo: function () {
@@ -167,6 +167,9 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D,function () {
                 if(this.totalamount == 0){
                     toastr.warning('购物车里没有商品');
+                }else {
+                    $('#tr0').addClass('cus-selected');
+                    $('input[name = main]').blur();
                 }
             });
         },
