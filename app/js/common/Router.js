@@ -12,6 +12,7 @@ define(['backbone'], function (Backbone) {
             'salesman':'salesman',
             'member':'member',
             'billing':'billing',
+            'billingreturn':'billingreturn',
             'restorder':'restorder',
             'returnforce':'returnforce'
         },
@@ -60,6 +61,15 @@ define(['backbone'], function (Backbone) {
                 view.render();
             });
         },
+
+        billingreturn: function () {
+            var _url = './moduals/billingreturn/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
 
         restorder: function () {
             var _url = './moduals/restorder/view.js';

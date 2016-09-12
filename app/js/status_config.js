@@ -149,7 +149,8 @@ window.PAGE_ID = {
     'TIP_MEMBER':5,
     'BILLING':6,
     'SECONDLOGIN':7,
-    'RESTORDER':8
+    'RESTORDER':8,
+    'BILLING_RETURN':9
 };
 
 window.KEYS = {
