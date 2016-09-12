@@ -2,12 +2,12 @@
  * Created by Joey on 2016/7/22.
  */
 define(['../../js/common/BaseCollection',
-    '../../moduals/main/model'],function(BaseCollection,HomeModel){
-    var homeCollection=BaseCollection.extend({
+    '../../moduals/main/model'],function(BaseCollection,ReturnforceModel){
+    var returnforceCollection=BaseCollection.extend({
 
-        model:HomeModel
+        model:ReturnforceModel
 
     });
 
-    return homeCollection;
+    return returnforceCollection;
 });

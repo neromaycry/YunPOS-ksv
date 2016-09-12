@@ -3,12 +3,7 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var homeModel=BaseModel.extend({
-
-        defaults:{
-            salesman:'未登录',
-            member:'未登录'
-        },
+    var returnforceModel=BaseModel.extend({
 
         goods: function (data, callback) {
             this.sendPOST({
@@ -32,5 +27,5 @@ define(['../../js/common/BaseModel'],function(BaseModel){
             })
         }
     });
-    return homeModel;
+    return returnforceModel;
 });
