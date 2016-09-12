@@ -77,11 +77,18 @@ define([
             if(storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
                 _self.salesmanModel.set({
                     salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman'),
-                    member:'未登录'
                 });
             }else {
                 _self.salesmanModel.set({
                     salesman:'未登录',
+                });
+            }
+            if(storage.isSet(system_config.VIP_KEY)) {
+                _self.salesmanModel.set({
+                    member:storage.get(system_config.VIP_KEY,'name')
+                });
+            }else {
+                _self.salesmanModel.set({
                     member:'未登录'
                 });
             }
@@ -142,9 +149,6 @@ define([
             storage.set(system_config.SALE_PAGE_KEY,'salesman',attrData['name']);
             this.salesmanModel.set({
                 salesman:attrData['name']
-            });
-            this.salesmanModel.set({
-                member:'未登录'
             });
             this.renderSalesman();
         },
