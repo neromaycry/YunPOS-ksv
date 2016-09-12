@@ -34,9 +34,6 @@ require.config({
         'underscore':{
             'exports':'_'
         },
-        "md5": {
-            "deps": ["jquery"],
-        },
         "serializeObject": {
             "deps": ["jquery"]
         },

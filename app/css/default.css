@@ -1,3 +1,7 @@
+body .no-padding {
+    padding: 0px;
+}
+
 ul .cus-selected{
     background: #e1f5fe; !important;
 }
@@ -6,15 +10,23 @@ div .bottom-margin {
     margin-bottom: 10px;
 }
 
-.no-padding {
+div .no-padding {
     padding: 0px;
 }
 
-.no-border {
+div .left-padding {
+    padding-left: 15px;
+}
+
+div .right-padding {
+    padding-right: 15px;
+}
+
+div .no-border {
     border: 0;
 }
 
-.no-margining {
+div .no-margining {
     margin: 0;
 }
 
