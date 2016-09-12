@@ -14,6 +14,8 @@ define([
 
         is_modal_open:false,
 
+        is_from_force:false,
+
         initialize: function (attrs) {
             var _self = this;
             console.log(">>> " + this.id);

@@ -83,6 +83,8 @@ require([
 
     window.pageId = 0;
 
+    window.isfromForce = false;
+
     var options = {
         hashTracking:false
     };

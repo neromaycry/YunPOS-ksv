@@ -341,6 +341,9 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F, function () {
                 router.navigate('returnforce',{ trigger:true });
             });
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.W, function () {
+                router.navigate('returnwhole',{ trigger:true });
+            });
         },
 
         onAddItem: function (JSONData) {
