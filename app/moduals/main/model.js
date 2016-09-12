@@ -6,8 +6,7 @@ define(['../../js/common/BaseModel'],function(BaseModel){
     var homeModel=BaseModel.extend({
 
         defaults:{
-            salesman:'未登录',
-            member:'未登录'
+
         },
 
         goods: function (data, callback) {

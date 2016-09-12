@@ -1,0 +1,7 @@
+<ul class="list-group">
+    <% _.each(obj,function(e,i){ %>
+    <li id="li<%=i%>" class="list-group-item" style="border-radius: 0" data-index="<%= e.orderNum %>">
+        <%=e.orderNum %>
+    </li>
+    <% }) %>
+</ul>
