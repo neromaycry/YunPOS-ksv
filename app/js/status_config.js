@@ -150,7 +150,8 @@ window.PAGE_ID = {
     'BILLING':6,
     'SECONDLOGIN':7,
     'RESTORDER':8,
-    'BILLING_RETURN':9
+    'BILLING_RETURN':9,
+    'RETURN_FORCE':10
 };
 
 window.KEYS = {

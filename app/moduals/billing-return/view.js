@@ -45,8 +45,8 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Esc, function () {
-                router.navigate('main',{trigger:true});
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Esc, function () {
+                router.navigate('returnforce',{trigger:true});
             });
         }
 

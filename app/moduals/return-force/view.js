@@ -37,8 +37,7 @@ define([
 
         pageInit: function () {
             var _self = this;
-            pageId = window.PAGE_ID.MAIN;
-            console.log(pageId);
+            pageId = window.PAGE_ID.RETURN_FORCE;
             var user = storage.get(system_config.LOGIN_USER_KEY);
             this.model = new ReturnForceModel();
             this.collection = new ReturnForceCollection();
@@ -122,14 +121,14 @@ define([
             });
 
 
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Esc,function () {
                 router.navigate('main',{trigger:true});
             });
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
-                router.navigate('billing',{trigger:true});
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.B,function () {
+                router.navigate('billingreturn',{trigger:true});
             });
             //清空购物车
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.C, function() {
                 _self.collection.reset();
                 _self.model.set({
                     totalamount: 0,
@@ -142,7 +141,7 @@ define([
                 toastr.success('清空购物车成功');
             });
             //删除商品
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D,function () {
                 if($('li').hasClass('cus-selected')){
                     console.log(_self.i);
                     console.log(_self.collection);
@@ -155,11 +154,13 @@ define([
                 toastr.success('删除成功');
             });
             //修改数量
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.N,function () {
                 var number = $('#input_main').val();
                 if(number == ''){
                     toastr.warning('您未输入任何数量，请重新输入');
-                }else{
+                }else if (number == 0) {
+                    toastr.warning('输入的数量不能为零，请重新输入');
+                }else {
                     var item = _self.collection.at(_self.i);
                     item.set({
                         num: parseFloat(number)
@@ -184,7 +185,7 @@ define([
                 $('#li' + _self.i).addClass('cus-selected');
             });
             //单品优惠
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Y,function () {
                 var value = $('#input_main').val();
                 if(value == '') {
                     toastr.warning('您输入的优惠金额为零，请重新输入');
@@ -204,13 +205,13 @@ define([
                 }
                 $('#input_main').val('');
             });
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Up, function () {
                 if (_self.i > 0) {
                     _self.i--;
                 }
