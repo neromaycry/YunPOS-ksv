@@ -11,7 +11,8 @@ define(['backbone'], function (Backbone) {
             'main':'main',
             'salesman':'salesman',
             'member':'member',
-            'billing':'billing'
+            'billing':'billing',
+            'restorder':'restorder'
         },
 
         //路由初始化可以做一些事
@@ -53,6 +54,14 @@ define(['backbone'], function (Backbone) {
 
         billing: function () {
             var _url = './moduals/billing/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        restorder: function () {
+            var _url = './moduals/restorder/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

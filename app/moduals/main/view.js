@@ -161,6 +161,10 @@ define([
                 console.log('main m');
                 router.navigate('member',{trigger:true});
             });
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.G, function () {
+                console.log('restorder open');
+                router.navigate('restorder',{trigger:true});
+            });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
                 var salesmanView = new SalesmanView();
                 _self.showModal(window.PAGE_ID.SALESMAN,salesmanView);

@@ -148,7 +148,8 @@ window.PAGE_ID = {
     'SALESMAN':4,
     'TIP_MEMBER':5,
     'BILLING':6,
-    'SECONDLOGIN':7
+    'SECONDLOGIN':7,
+    'RESTORDER':8
 };
 
 window.KEYS = {
