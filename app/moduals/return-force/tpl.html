@@ -1,0 +1,34 @@
+<nav class="navbar" style="background:#337AB7;border-radius: 0px">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" style="color: #ffffff">强制退货</a>
+        </div>
+    </div>
+</nav>
+<div class="row" style="margin-right: 15px;margin-left: 15px">
+    <div class="col-md-3 no-padding" style="padding-left: 0px">
+        <div class="form-group">
+            <input type="text" id="input_main" name="main" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
+        </div>
+        <div class="panel panel-primary for-posinfo" >
+
+        </div>
+    </div>
+    <div class="col-md-9 no-padding left-padding">
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+              <div class="row">
+                  <div class="col-md-1">序号</div>
+                  <div class="col-md-2">编码</div>
+                  <div class="col-md-2">名称</div>
+                  <div class="col-md-1">规格</div>
+                  <div class="col-md-2">单价</div>
+                  <div class="col-md-1 text-left">优惠</div>
+                  <div class="col-md-1 text-left">数量</div>
+                  <div class="col-md-1 text-right">小计</div>
+              </div>
+            </div>
+            <div class="panel-body for-cartlist" style="padding: 0; overflow-y: scroll"></div>
+        </div>
+    </div>
+</div>
