@@ -27,6 +27,10 @@ define([
 
         discountamount: 0,
 
+        salesman:'',
+
+        memeber:'',
+
         i: 0,
 
         template_posinfo:posinfotpl,
@@ -38,6 +42,8 @@ define([
         salesmanView:null,
 
         secondloginView:null,
+
+        restOrderDelivery: {},
 
         events: {
 
@@ -67,6 +73,17 @@ define([
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
                 _self.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
                 _self.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
+            }
+            if(storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
+                _self.salesmanModel.set({
+                    salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman'),
+                    member:'未登录'
+                });
+            }else {
+                _self.salesmanModel.set({
+                    salesman:'未登录',
+                    member:'未登录'
+                });
             }
             this.initTemplates();
             this.handleEvents();
@@ -116,14 +133,31 @@ define([
 
         handleEvents: function () {
             Backbone.off('SalesmanAdd');
+            Backbone.off('onReleaseOrder');
             Backbone.on('SalesmanAdd',this.SalesmanAdd,this);
+            Backbone.on('onReleaseOrder',this.onReleaseOrder,this);
         },
 
         SalesmanAdd: function (attrData) {
+            storage.set(system_config.SALE_PAGE_KEY,'salesman',attrData['name']);
             this.salesmanModel.set({
                 salesman:attrData['name']
             });
+            this.salesmanModel.set({
+                member:'未登录'
+            });
             this.renderSalesman();
+        },
+
+        onReleaseOrder: function (data) {
+            console.log(data);
+            this.collection = new HomeCollection();
+            for (var i in data) {
+                var item = new HomeModel();
+                item.set(data[i]);
+                this.collection.push(item);
+            }
+            this.onAddItem(this.collection.toJSON());
         },
 
         bindKeys: function () {
@@ -161,9 +195,41 @@ define([
                 console.log('main m');
                 router.navigate('member',{trigger:true});
             });
+            //挂单
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.G, function () {
-                console.log('restorder open');
-                router.navigate('restorder',{trigger:true});
+                var itemamount = _self.model.get('itemamount');
+                if (itemamount == 0) {
+                   toastr.warning('当前购物车内无商品，无法执行挂单操作');
+                }else {
+                    var orderNum = new Date().getTime();
+                    if (storage.isSet(system_config.RESTORDER_KEY)) {
+                        var pre = storage.get(system_config.RESTORDER_KEY);
+                        pre[orderNum] = _self.collection.toJSON();
+                        storage.set(system_config.RESTORDER_KEY, pre);
+                    } else {
+                        _self.restOrderDelivery[orderNum] = _self.collection.toJSON();
+                        storage.set(system_config.RESTORDER_KEY, _self.restOrderDelivery);
+                    }
+                    _self.model.set({
+                        itemamount: 0,
+                        totalamount: 0,
+                        discountamount: 0
+                    });
+                    _self.collection.reset();
+                    _self.renderPosInfo();
+                    _self.renderCartList();
+                    storage.remove(system_config.SALE_PAGE_KEY);
+                    toastr.success('挂单成功');
+                }
+            });
+            //解挂
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.J, function() {
+                var itemamount = _self.model.get('itemamount');
+                if(itemamount != 0){
+                    toastr.warning('购物车内有商品，不能执行解挂操作');
+                }else {
+                    router.navigate('restorder',{trigger:true});
+                }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
                 var salesmanView = new SalesmanView();
@@ -202,6 +268,7 @@ define([
                     console.log(_self.collection);
                     _self.calculateModel();
                 }
+                toastr.success('删除成功');
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
@@ -291,6 +358,7 @@ define([
          * 购物车中商品变更后执行的通用方法，主要是在更新后collection中重新计算总计、件数和优惠
          */
         calculateModel: function () {
+            this.newmodel = new HomeModel();
             this.totalamount = 0;
             this.itemamount = 0;
             this.discountamount = 0;
