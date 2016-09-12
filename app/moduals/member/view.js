@@ -22,7 +22,6 @@ define([
         isRequestSuccess:false,
 
         events: {
-
         },
 
         pageInit: function () {
