@@ -338,7 +338,9 @@ define([
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
-            this.bindKeyEvents()
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F, function () {
+                router.navigate('returnforce',{ trigger:true });
+            });
         },
 
         onAddItem: function (JSONData) {
