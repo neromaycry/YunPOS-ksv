@@ -152,7 +152,8 @@ window.PAGE_ID = {
     'RESTORDER':8,
     'BILLING_RETURN':9,
     'RETURN_FORCE':10,
-    'RETURN_WHOLE':11
+    'BILLING_TYPE':11,
+    'RETURN_WHOLE':12
 };
 
 window.KEYS = {

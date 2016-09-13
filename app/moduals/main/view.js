@@ -244,7 +244,12 @@ define([
                 toastr.info('退出');
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
-                router.navigate('billing',{trigger:true});
+                console.log(_self.model.get('itemamount'));
+                if(_self.model.get('itemamount') == 0){
+                    toastr.warning('购物车内无商品，请先选择一些商品吧');
+                } else {
+                    router.navigate('billing',{trigger:true});
+                }
             });
             //清空购物车
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {

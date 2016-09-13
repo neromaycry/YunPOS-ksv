@@ -3,12 +3,12 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var billModel=BaseModel.extend({
+    var billtypeModel=BaseModel.extend({
 
         defaults:{
-            discount:0
+
         },
 
     });
-    return billModel;
+    return billtypeModel;
 });
