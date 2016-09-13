@@ -1,4 +1,41 @@
-<div class="panel-heading">付款详情</div>
-<div class="panel-body">
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
 
+<div class="panel-heading">付款详情</div>
+<div class="panel-body text-center">
+    <div class="row">
+        <div class="col-md-6">应收金额：</div>
+        <div class="col-md-6"><%= toDecimal2(totalamount) %></div>
+    </div>
+    <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+        <div class="col-md-6">实付金额：</div>
+        <div class="col-md-6"><%= toDecimal2(receivedsum) %></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">优惠金额：</div>
+        <div class="col-md-6"><%= toDecimal2(discount)  %></div>
+    </div>
+    <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+        <div class="col-md-6">未付金额：</div>
+        <div class="col-md-6"><%= toDecimal2(unpaidamount) %></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">找零金额：</div>
+        <div class="col-md-6"><%= toDecimal2(oddchange) %></div>
+    </div>
 </div>

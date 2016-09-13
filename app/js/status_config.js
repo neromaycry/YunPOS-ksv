@@ -151,7 +151,8 @@ window.PAGE_ID = {
     'SECONDLOGIN':7,
     'RESTORDER':8,
     'BILLING_RETURN':9,
-    'RETURN_FORCE':10
+    'RETURN_FORCE':10,
+    'BILLING_TYPE':11
 };
 
 window.KEYS = {

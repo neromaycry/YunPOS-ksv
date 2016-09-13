@@ -14,7 +14,7 @@ define(['backbone'], function (Backbone) {
             'billing':'billing',
             'billingreturn':'billingreturn',
             'restorder':'restorder',
-            'returnforce':'returnforce'
+            'returnforce':'returnforce',
         },
 
         //路由初始化可以做一些事
