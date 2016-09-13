@@ -15,18 +15,17 @@ s += '0';
 }
 return s;
 }%>
-<div class="panel-heading">原订单付款详情</div>
+<div class="panel-heading">
+    <div class="row text-center">
+        <div class="col-md-1">序号</div>
+        <div class="col-md-2">付款代号</div>
+        <div class="col-md-2">付款方式</div>
+        <div class="col-md-3">付款金额</div>
+        <div class="col-md-4">付款账号</div>
+    </div>
+</div>
 <div class="panel-body no-padding">
-    <ul class="list-group">
-        <li class="list-group-item" style="border-radius: 0">
-            <div class="row text-center">
-                <div class="col-md-1">序号</div>
-                <div class="col-md-2">付款代号</div>
-                <div class="col-md-2">付款方式</div>
-                <div class="col-md-3">付款金额</div>
-                <div class="col-md-4">付款账号</div>
-            </div>
-        </li>
+    <ul class="list-group payedlist-content" style="overflow-y: scroll">
         <% _.each(obj,function(e,i){ %>
         <li id="li<%=i%>" class="list-group-item" data-index="<%= i %>" style="border-radius: 0">
             <div class="row text-center">

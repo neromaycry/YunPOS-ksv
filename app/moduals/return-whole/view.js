@@ -56,12 +56,25 @@ define([
             this.renderRtInfo();
             this.renderRtcart();
             this.renderRtPayedlist();
+            this.initLayoutHeight();
         },
 
         initTemplates: function () {
             this.template_returninfo = _.template(this.template_returninfo);
             this.template_rtcart = _.template(this.template_rtcart);
             this.template_rtpayedlist = _.template(this.template_rtpayedlist);
+        },
+
+        initLayoutHeight: function () {
+            var dh = $(document).height();
+            var navbar =$('.navbar').height();
+            var panel_head = $('.panel-heading').height();
+            console.log('dh:' + dh + ' navbar:' + navbar + ' panel head:' + panel_head*2);
+            var payedlist = (dh - (navbar + panel_head)*4)/2;
+            var rtcart = payedlist;
+            console.log('payedlist:' + payedlist);
+            $('.rtcart-content').height(rtcart);
+            $('.payedlist-content').height(payedlist);
         },
 
         renderRtInfo: function () {
