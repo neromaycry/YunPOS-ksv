@@ -15,6 +15,7 @@ define([
 
         initialize: function (attrs) {
             console.log('modal:' + this.id);
+            //$(document).unbind('keyup');
             $(document).unbind('keydown');
             this.$el.empty().off();
             if (attrs) {
@@ -54,8 +55,10 @@ define([
         },
 
         hideModal: function (id) {
-            pageId = id;
             $('.modal').modal('hide');
+            $('.modal').on('hidden.bs.modal', function () {
+                pageId = id;
+            });
         },
 
         render: function () {

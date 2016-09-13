@@ -59,7 +59,7 @@ define([
 
         bindModalKeyEvents: function (id,keyCode,callback) {
             $(document).keydown(function (e) {
-                e = e || window.event;
+                var e = e || window.event;
                 console.log(e.which);
                 if(e.which == keyCode && pageId == id) {
                     callback();
@@ -68,8 +68,10 @@ define([
         },
 
         hideModal: function (id) {
-            pageId = id;
             $('.modal').modal('hide');
+            $('.modal').on('hidden.bs.modal', function () {
+                pageId = id;
+            });
         }
 
     });

@@ -65,23 +65,23 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
-            if (this.salesmanView) {
-                this.salesmanView.remove();
-            } else {
-                console.log('new salesmanview');
-                this.salesmanView = new SalesmanView();
-            }
+            //if (this.salesmanView) {
+            //    this.salesmanView.remove();
+            //} else {
+            //    console.log('new salesmanview');
+            //    this.salesmanView = new SalesmanView();
+            //}
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
                 _self.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
                 _self.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
             }
             if(storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
                 _self.salesmanModel.set({
-                    salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman'),
+                    salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman')
                 });
             }else {
                 _self.salesmanModel.set({
-                    salesman:'未登录',
+                    salesman:'未登录'
                 });
             }
             if(storage.isSet(system_config.VIP_KEY)) {
@@ -93,6 +93,7 @@ define([
                     member:'未登录'
                 });
             }
+
             this.initTemplates();
             this.handleEvents();
         },
@@ -105,6 +106,10 @@ define([
             this.renderCartList();
             this.initLayoutHeight();
             $('#li' + _self.i).addClass('cus-selected');
+            $('.modal').on('hidden.bs.modal', function () {
+                alert('bindkeys');
+                _self.bindKeys();
+            });
         },
 
         initTemplates: function () {
@@ -142,6 +147,7 @@ define([
         handleEvents: function () {
             Backbone.off('SalesmanAdd');
             Backbone.off('onReleaseOrder');
+            Backbone.off('reBindEvent');
             Backbone.on('SalesmanAdd',this.SalesmanAdd,this);
             Backbone.on('onReleaseOrder',this.onReleaseOrder,this);
         },
@@ -235,6 +241,7 @@ define([
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
+                this.salesmanView = new SalesmanView();
                 _self.showModal(window.PAGE_ID.SALESMAN,_self.salesmanView);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = salesman_id]').focus();
