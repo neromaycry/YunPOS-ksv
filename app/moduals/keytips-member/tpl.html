@@ -5,7 +5,9 @@
                 <div class="panel-heading">帮助</div>
                 <div class="panel-body">
                     <div class="row text-center">
-
+                        <% _.each(obj,function(e,i){ %>
+                            <div class="col-md-12"><%= e.effect %> : <%= e.key %></div>
+                        <% }) %>
                     </div>
                 </div>
             </div>

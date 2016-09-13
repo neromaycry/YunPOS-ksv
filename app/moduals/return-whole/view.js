@@ -3,8 +3,11 @@
  */
 define([
     '../../../../js/common/BaseView',
+    '../../../../moduals/return-whole/model',
+    '../../../../moduals/return-whole/collection',
+    'text!../../../../moduals/return-whole/returninfotpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, returninfotpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -13,6 +16,8 @@ define([
         el: '.views',
 
         template: tpl,
+
+        template_returninfo:returninfotpl,
 
         totalamount: 0,
 
@@ -28,11 +33,26 @@ define([
 
         pageInit: function () {
             pageId = window.PAGE_ID.RETURN_WHOLE;
-
+            this.model = new RtWholeModel();
+            this.model.set({
+                totalamount: this.totalamount,
+                itemamount: this.itemamount,
+                discountamount: this.discountamount
+            });
+            this.initTemplates();
         },
 
         initPlugins: function () {
+            this.renderRtInfo();
+        },
 
+        initTemplates: function () {
+            this.template_returninfo = _.template(this.template_returninfo);
+        },
+
+        renderRtInfo: function () {
+            this.$el.find('.for-rtinfo').html(this.template_returninfo(this.model.toJSON()));
+            return this;
         },
 
         bindKeys: function () {

@@ -12,7 +12,7 @@ define([
 
         id: "kMemberView",
 
-        template_collection: tpl,
+        template: tpl,
 
         events: {
 
@@ -22,12 +22,11 @@ define([
             console.log(this.attrs);
             this.collection = new KeyTipsCollection();
             this.collection.set(storage.get(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,this.attrs));
-            this.template_collection = _.template(this.template_collection);
             this.renderHotKeys();
         },
 
         renderHotKeys: function () {
-            this.$el.html(this.template_collection(this.collection));
+            this.$el.html(this.template(this.collection.toJSON()));
             return this;
         },
 
