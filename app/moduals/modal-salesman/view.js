@@ -16,8 +16,9 @@ define([
 
         modalInitPage: function () {
             var _self = this;
-            _self.collection = new SalesmanCollection();
-            _self.collection.fetch({
+            this.model = new SalesmanModel();
+            this.collection = new SalesmanCollection();
+            this.collection.fetch({
                 success: function (collection,resp) {
                     console.log(collection);
                     _self.collection.set(collection.toJSON());
@@ -34,7 +35,7 @@ define([
                 if(search != ''){
                     for(var i=0;i<_self.collection.length;i++){
                         n++;
-                        if(search == _self.collection.at(i).get("number")){
+                        if(search == _self.collection.at(i).get("number")) {
                             _self.hideModal(window.PAGE_ID.MAIN);
                             toastr.success('营业员' + search + '登录成功');
                             var attrData = {};

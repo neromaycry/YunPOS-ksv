@@ -125,6 +125,7 @@ define([
                 router.navigate('main',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.B,function () {
+                isfromForce = true;
                 router.navigate('billingreturn',{trigger:true});
             });
             //清空购物车

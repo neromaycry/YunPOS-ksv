@@ -16,6 +16,7 @@ define([
         initialize: function (attrs) {
             console.log('modal:' + this.id);
             $(document).unbind('keydown');
+            this.$el.empty().off();
             if (attrs) {
                 this.attrs = attrs;
             }
@@ -59,7 +60,7 @@ define([
 
         render: function () {
             console.log('modal render');
-            this.$el.html(this.template(this.model));
+            this.$el.html(this.template(this.model.toJSON()));
             this.onModalShown();
             return this;
         }

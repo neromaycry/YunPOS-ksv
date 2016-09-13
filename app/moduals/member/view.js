@@ -57,7 +57,7 @@ define([
                 router.navigate('main',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.T, function () {
-                _self.showModal(window.PAGE_ID.TIP_MEMBER,this.tipsView);
+                _self.showModal(window.PAGE_ID.TIP_MEMBER,_self.tipsView);
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.Enter, function () {
                 var isUserFocused = $('input[name = custid]').is(':focus');

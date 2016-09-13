@@ -68,6 +68,7 @@ define([
             if (this.salesmanView) {
                 this.salesmanView.remove();
             } else {
+                console.log('new salesmanview');
                 this.salesmanView = new SalesmanView();
             }
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
@@ -120,7 +121,7 @@ define([
             var dh = $(document).height();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
-            cart = dh - nav * 2 - panelheading * 2;
+            var cart = dh - nav * 2 - panelheading * 2;
             $('.for-cartlist').height(cart);
         },
         renderPosInfo: function () {
@@ -166,7 +167,6 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            console.log('bindkeys main');
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Enter, function () {
                 search = $('#input_main').val();
                 if(search == ''){
@@ -196,7 +196,6 @@ define([
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
-                console.log('main m');
                 router.navigate('member',{trigger:true});
             });
             //挂单
@@ -236,8 +235,7 @@ define([
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
-                var salesmanView = new SalesmanView();
-                _self.showModal(window.PAGE_ID.SALESMAN,salesmanView);
+                _self.showModal(window.PAGE_ID.SALESMAN,_self.salesmanView);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = salesman_id]').focus();
                 });
@@ -345,6 +343,9 @@ define([
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F, function () {
                 router.navigate('returnforce',{ trigger:true });
+            });
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.W, function () {
+                router.navigate('returnwhole',{ trigger:true });
             });
         },
 
