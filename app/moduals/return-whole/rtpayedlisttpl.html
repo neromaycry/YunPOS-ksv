@@ -1,4 +1,42 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
 <div class="panel-heading">原订单付款详情</div>
-<div class="panel-body">
-    <div>asfasfef</div>
+<div class="panel-body no-padding">
+    <ul class="list-group">
+        <li class="list-group-item" style="border-radius: 0">
+            <div class="row text-center">
+                <div class="col-md-1">序号</div>
+                <div class="col-md-2">付款代号</div>
+                <div class="col-md-2">付款方式</div>
+                <div class="col-md-3">付款金额</div>
+                <div class="col-md-4">付款账号</div>
+            </div>
+        </li>
+        <% _.each(obj,function(e,i){ %>
+        <li id="li<%=i%>" class="list-group-item" data-index="<%= i %>" style="border-radius: 0">
+            <div class="row text-center">
+                <div class="col-md-1"><%= i + 1 %></div>
+                <div class="col-md-2" style="color:#757575"><%= e.gather_id %></div>
+                <div class="col-md-2"><%= e.gather_name %></div>
+                <div class="col-md-3 text-red"><%= toDecimal2(e.gather_money) %></div>
+                <div class="col-md-4"><%= e.gather_no %></div>
+            </div>
+        </li>
+        <% }) %>
+    </ul>
 </div>

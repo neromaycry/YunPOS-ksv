@@ -40,6 +40,7 @@ define([
         pageInit: function () {
             pageId = window.PAGE_ID.RETURN_WHOLE;
             this.model = new RtWholeModel();
+            this.requestModel = new RtWholeModel();
             this.RtcartCollection = new RtWholeCollection();
             this.RtPayedlistCollection = new RtWholeCollection();
             this.model.set({
@@ -51,6 +52,7 @@ define([
         },
 
         initPlugins: function () {
+            $('input[name = whole_return_order]').focus();
             this.renderRtInfo();
             this.renderRtcart();
             this.renderRtPayedlist();
@@ -77,7 +79,36 @@ define([
             return this;
         },
 
+        requestOrder: function () {
+            var _self = this;
+            var orderNo = $('input[name = whole_return_order]').val();
+            //if (orderDate == '') {
+            //    toastr.info('请输入订单日期');
+            //    return;
+            //}
+            if (orderNo == '') {
+                toastr.info('请输入订单号');
+                return;
+            }
+            var data = {};
+            data['day'] = '';
+            data['bill_no'] = orderNo;
+            this.requestModel.getOrderInfo(data, function (resp) {
+                console.log(resp);
+                if (resp.status == '00') {
+                    _self.RtcartCollection.set(resp.goods_detail);
+                    _self.RtPayedlistCollection.set(resp.gather_detail);
+                    console.log(_self.RtcartCollection);
+                    _self.renderRtcart();
+                    _self.renderRtPayedlist();
+                } else {
+                    toastr.error(resp.msg);
+                }
+            });
+        },
+
         bindKeys: function () {
+            var _self = this;
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Esc,function () {
                 router.navigate('main',{trigger:true});
             });
@@ -85,7 +116,13 @@ define([
                 isfromForce = false;
                 router.navigate('billingreturn',{trigger:true});
             });
-        }
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
+                _self.requestOrder();
+
+            });
+        },
+
+
 
     });
 

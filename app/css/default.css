@@ -2,6 +2,10 @@ body .no-padding {
     padding: 0px;
 }
 
+body .no-border-radius {
+    border-radius: 0;
+}
+
 ul .cus-selected{
     background: #e1f5fe; !important;
 }

@@ -1,4 +1,94 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+<% function toDecimal3(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 3) {
+s += '0';
+}
+return s;
+}%>
+<%function convertPricetypeToText(price_type){
+switch(price_type){
+case '00':
+var text='正价';
+break;
+case '01':
+var text='特价';
+break;
+case '02':
+var text='满减';
+break;
+case '03':
+var text='会员';
+break;
+case '04':
+var text='捆绑';
+break;
+case '05':
+var text='奇偶';
+break;
+case '06':
+var text='赠品';
+break;
+case '07':
+var text='折让';
+break;
+}
+return text;
+}%>
 <div class="panel-heading">待退货商品列表</div>
-<div class="panel-body">
-    <div>asfasfef</div>
+<div class="panel-body no-padding">
+    <ul class="list-group">
+        <li class="list-group-item" style="border-radius: 0">
+            <div class="row text-center">
+                <div class="col-md-1">序号</div>
+                <div class="col-md-2">编码</div>
+                <div class="col-md-2">名称</div>
+                <div class="col-md-1">规格</div>
+                <div class="col-md-2">单价</div>
+                <div class="col-md-1 text-left">优惠</div>
+                <div class="col-md-1 text-left">数量</div>
+                <div class="col-md-1 text-right">小计</div>
+            </div>
+        </li>
+        <% _.each(obj,function(e,i){ %>
+        <li id="li<%=i%>" class="list-group-item" data-index="<%= i %>" style="border-radius: 0">
+            <div class="row text-center">
+                <div class="col-md-1"><%= i + 1%></div>
+                <div class="col-md-2" style="color:#757575"><%= e.barcode%></div>
+                <div class="col-md-2"><%= e.goods_name%>(<%=convertPricetypeToText(e.price_type)%>)</div>
+                <div class="col-md-1" style="padding:5px;color: red"><%= e.spec%></div>
+                <div class="col-md-2"><%= toDecimal2(e.price) %></div>
+                <div class="col-md-1" style="color: #4db6ac;">- <%= toDecimal2(e.discount) %></div>
+                <div class="col-md-1"><%= toDecimal3(e.num) %></div>
+                <div class="col-md-2" style="color:#f36c60;"><%= toDecimal2(e.num*e.price-e.discount) %></div>
+            </div>
+        </li>
+        <% }) %>
+    </ul>
 </div>
