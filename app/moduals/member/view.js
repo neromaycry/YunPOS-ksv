@@ -28,12 +28,13 @@ define([
             pageId = window.PAGE_ID.MEMBER;
             this.model = new MemberModel();
             this.requestModel = new MemberModel();
-            if (this.tipsView) {
-                this.tipsView.remove();
-            } else {
-                this.tipsView = new KMemberView("MEMBER_PAGE");
-            }
-
+            this.tipsView = new KMemberView("MEMBER_PAGE");
+            //if (this.tipsView) {
+            //    this.tipsView.remove();
+            //    this.tipsView = new KMemberView("MEMBER_PAGE");
+            //} else {
+            //    this.tipsView = new KMemberView("MEMBER_PAGE");
+            //}
             this.initTemplates();
         },
 
@@ -57,6 +58,7 @@ define([
                 router.navigate('main',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.T, function () {
+
                 _self.showModal(window.PAGE_ID.TIP_MEMBER,_self.tipsView);
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.Enter, function () {

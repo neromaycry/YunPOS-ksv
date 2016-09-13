@@ -20,9 +20,17 @@ define([
 
         modalInitPage: function () {
             console.log(this.attrs);
+            var _self = this;
+            this.model = new KeyTipsModel();
             this.collection = new KeyTipsCollection();
             this.collection.set(storage.get(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,this.attrs));
+            //$('.modal').on('show.bs.modal', function () {
+            //    _self.renderHotKeys();
+            //});
             this.renderHotKeys();
+            $('.modal').on('shown.bs.modal', function () {
+                _self.renderHotKeys();
+            });
         },
 
         renderHotKeys: function () {
