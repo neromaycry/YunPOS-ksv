@@ -48,12 +48,14 @@ define([
             }
             this.delegateEvents();
             this.bindKeys();
-            $('.modal').on('show.bs.modal', function () {
-                $(document).unbind('keyup');
-            });
-            $('.modal').on('hidden.bs.modal', function () {
-                _self.bindKeys();
-            });
+            //$('.modal').on('show.bs.modal', function () {
+            //    alert('unbind keyup');
+            //    $(document).unbind('keyup');
+            //});
+            //$('.modal').on('hide.bs.modal', function () {
+            //    alert('bindkeys');
+            //    _self.bindKeys();
+            //});
         },
 
         initRouter: function () {
@@ -91,7 +93,7 @@ define([
          */
         showModal: function (id, view) {
             pageId = id;
-            $('.modal').modal('show');
+            $('.modal').modal('show',{keyboard:false});
             $('.modal').on('show.bs.modal', function (e) {
                view.render();
             });
@@ -103,9 +105,10 @@ define([
          */
         hideModal: function (id) {
             $('.modal').modal('hide');
-            $('.modal').on('hide.bs.modal', function () {
-                pageId = id;
-            });
+            //$('.modal').on('hide.bs.modal', function () {
+            //    pageId = id;
+            //});
+            pageId = id;
         },
 
         /**

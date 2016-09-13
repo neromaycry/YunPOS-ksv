@@ -83,11 +83,13 @@ define([
             var memberkey2 = new LoginModel();
             memberkey1.set({
                 effect:'返回',
-                key:'ESC'
+                key:'ESC',
+                keyCode:window.KEYS.Esc
             });
             memberkey2.set({
                 effect:'确定',
-                key:'Enter'
+                key:'Enter',
+                keyCode:window.KEYS.Enter
             });
             this.memberhotkeys.push(memberkey1);
             this.memberhotkeys.push(memberkey2);

@@ -65,22 +65,23 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
-            if (this.salesmanView) {
-                this.salesmanView.remove();
-            } else {
-                this.salesmanView = new SalesmanView();
-            }
+            //if (this.salesmanView) {
+            //    this.salesmanView.remove();
+            //} else {
+            //    console.log('new salesmanview');
+            //    this.salesmanView = new SalesmanView();
+            //}
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
                 _self.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
                 _self.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
             }
             if(storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
                 _self.salesmanModel.set({
-                    salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman'),
+                    salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman')
                 });
             }else {
                 _self.salesmanModel.set({
-                    salesman:'未登录',
+                    salesman:'未登录'
                 });
             }
             if(storage.isSet(system_config.VIP_KEY)) {
@@ -92,6 +93,7 @@ define([
                     member:'未登录'
                 });
             }
+
             this.initTemplates();
             this.handleEvents();
         },
@@ -104,6 +106,10 @@ define([
             this.renderCartList();
             this.initLayoutHeight();
             $('#li' + _self.i).addClass('cus-selected');
+            $('.modal').on('hidden.bs.modal', function () {
+                alert('bindkeys');
+                _self.bindKeys();
+            });
         },
 
         initTemplates: function () {
@@ -120,7 +126,7 @@ define([
             var dh = $(document).height();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
-            cart = dh - nav * 2 - panelheading * 2;
+            var cart = dh - nav * 2 - panelheading * 2;
             $('.for-cartlist').height(cart);
         },
         renderPosInfo: function () {
@@ -141,6 +147,7 @@ define([
         handleEvents: function () {
             Backbone.off('SalesmanAdd');
             Backbone.off('onReleaseOrder');
+            Backbone.off('reBindEvent');
             Backbone.on('SalesmanAdd',this.SalesmanAdd,this);
             Backbone.on('onReleaseOrder',this.onReleaseOrder,this);
         },
@@ -166,7 +173,6 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            console.log('bindkeys main');
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Enter, function () {
                 search = $('#input_main').val();
                 if(search == ''){
@@ -196,7 +202,6 @@ define([
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
-                console.log('main m');
                 router.navigate('member',{trigger:true});
             });
             //挂单
@@ -236,8 +241,8 @@ define([
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
-                var salesmanView = new SalesmanView();
-                _self.showModal(window.PAGE_ID.SALESMAN,salesmanView);
+                this.salesmanView = new SalesmanView();
+                _self.showModal(window.PAGE_ID.SALESMAN,_self.salesmanView);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = salesman_id]').focus();
                 });
@@ -246,7 +251,12 @@ define([
                 toastr.info('退出');
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
-                router.navigate('billing',{trigger:true});
+                console.log(_self.model.get('itemamount'));
+                if(_self.model.get('itemamount') == 0){
+                    toastr.warning('购物车内无商品，请先选择一些商品吧');
+                } else {
+                    router.navigate('billing',{trigger:true});
+                }
             });
             //清空购物车
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {

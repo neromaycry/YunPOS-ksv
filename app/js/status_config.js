@@ -62,13 +62,14 @@ window.statusCode = {
 };
 
 
+
 window.API_URL = {
     "LOGIN": "/login",
     "SKU": "/sku",
     "KIND1": "/kind",
     "KIND2": "/kind",
     "BARGAINGOODS": "/kind",
-    "ACCOUNT": "/account",
+    "ACCOUNT":"/account",
     "ACCOUNT_INFOR": "/account/infor",
     "ACCOUNT_PAY": "/account/pay",
     "ACCOUNT_REFUND": "/account/refund",
@@ -79,13 +80,13 @@ window.API_URL = {
     "ONLINEPAY_QUERY": "/onlinepay/query",
     "ONLINEPAY_REFUND": "/onlinepay/refund",
     "INIT": "/init",
-    "VIPINFO": "/vipinfo",
+    "VIPINFO":"/vipinfo",
     "GATHER": "/gather",
     "SETTINGS": "/settings",
     "ONLINEBILL": "/onlinebill",
     "ACCOUNT_ICPWD": "/account/icpwd",
-    "REPORT": "/report",
-    "PRINT": '/print'
+    "REPORT":"/report",
+    "PRINT":'/print'
 };
 
 // 系统参数设置
@@ -102,21 +103,21 @@ window.system_config = {
     "BASE_DATA_KEY": "BASE_DATA",
     "HOME_KEY": "HOME_KEY",
     "SALEMENT_KEY": "SALEMENT_KEY",
-    "VIP_KEY": "VIP",
+    "VIP_KEY":"VIP",
     "KIND_DATA_KEY": "KIND_DATA",
     "GATHER_KEY": "GATHER",
-    "SALE_PAGE_KEY": "SALE_PAGE",
-    "RETURN_KEY": "RETURN",
-    "FORCE_RETURN_KEY": "FORCE_RETURN",
-    "RESTORDER_KEY": "RESTORDER_KEY",
-    "ONE_CARD_KEY": "ONE_CARD_KEY",
-    "SHORTCUT_KEY": "SHORTCUT_KEY",
-    "SETTING_BASE_KEY": "SETTING_BASE_KEY"
+    "SALE_PAGE_KEY":"SALE_PAGE",
+    "RETURN_KEY":"RETURN",
+    "FORCE_RETURN_KEY":"FORCE_RETURN",
+    "RESTORDER_KEY":"RESTORDER_KEY",
+    "ONE_CARD_KEY":"ONE_CARD_KEY",
+    "SHORTCUT_KEY":"SHORTCUT_KEY",
+    "SETTING_BASE_KEY":"SETTING_BASE_KEY"
 };
 
 window.DIRECTIVES = {
-    "PRINTTEXT": "01",
-    "BBPOS_PAIRED_DEVICES": "02"
+    "PRINTTEXT":"01",
+    "BBPOS_PAIRED_DEVICES":"02"
 
 };
 
@@ -141,17 +142,18 @@ window.RESPONSE_TOOLS = {
 };
 
 window.PAGE_ID = {
-    'LOGIN': 1,
-    'MAIN': 2,
-    'MEMBER': 3,
-    'SALESMAN': 4,
-    'TIP_MEMBER': 5,
-    'BILLING': 6,
-    'SECONDLOGIN': 7,
-    'RESTORDER': 8,
-    'BILLING_RETURN': 9,
-    'RETURN_FORCE': 10,
-    'RETURN_WHOLE': 11
+    'LOGIN':1,
+    'MAIN':2,
+    'MEMBER':3,
+    'SALESMAN':4,
+    'TIP_MEMBER':5,
+    'BILLING':6,
+    'SECONDLOGIN':7,
+    'RESTORDER':8,
+    'BILLING_RETURN':9,
+    'RETURN_FORCE':10,
+    'BILLING_TYPE':11,
+    'RETURN_WHOLE':12
 };
 
 window.KEYS = {

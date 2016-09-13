@@ -2,12 +2,13 @@
     <div class="modal-content">
         <div class="modal-body" style="padding: 0">
             <div class="panel panel-primary" style="border: none;margin: 0;">
-                <div class="panel-heading">帮助</div>
+                <div class="panel-heading">应收金额</div>
                 <div class="panel-body">
-                    <div class="row text-center">
-                        <% _.each(obj,function(e,i){ %>
-                            <div class="col-md-12"><%= e.effect %> : <%= e.key %></div>
-                        <% }) %>
+                    <form>
+                        <input type="text" id="receive_money" class="form-control" placeholder="请输入付款金额"/>
+                    </form>
+                    <div class="row for-billingtype" style="padding: 15px">
+
                     </div>
                 </div>
             </div>

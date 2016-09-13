@@ -2,11 +2,15 @@ body .no-padding {
     padding: 0px;
 }
 
+body .no-border-radius {
+    border-radius: 0;
+}
+
 ul .cus-selected{
     background: #e1f5fe; !important;
 }
 
-div .bottom-margin {
+body .bottom-margin {
     margin-bottom: 10px;
 }
 
@@ -20,6 +24,22 @@ div .left-padding {
 
 div .right-padding {
     padding-right: 15px;
+}
+
+body .info-padding-right {
+    padding-right: 100px;
+}
+
+body .info-padding-left {
+    padding-left: 100px;
+}
+
+body .text-teal {
+    color: #4db6ac;
+}
+
+body .text-red {
+    color: #f36c60;
 }
 
 div .no-border {

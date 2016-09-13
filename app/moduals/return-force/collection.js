@@ -2,7 +2,7 @@
  * Created by Joey on 2016/7/22.
  */
 define(['../../js/common/BaseCollection',
-    '../../moduals/main/model'],function(BaseCollection,ReturnforceModel){
+    '../../moduals/return-force/model'],function(BaseCollection,ReturnforceModel){
     var returnforceCollection=BaseCollection.extend({
 
         model:ReturnforceModel
