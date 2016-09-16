@@ -86,6 +86,10 @@ define([
 
         },
 
+        initLayoutHeight: function () {
+
+        },
+
         /**
          * 模态框弹出公用方法
          * @param id 弹出的模态框的view的pageid 例如:window.PAGE_ID.MAIN,按需要向status_config里面添加pageid
@@ -148,6 +152,7 @@ define([
             this.$el.html(this.template(dataset));
             this.initOtherView();
             this.initPlugins();
+            this.initLayoutHeight();
             return this;
         }
 

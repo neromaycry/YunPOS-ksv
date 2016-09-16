@@ -56,7 +56,7 @@ define([
 
         initPlugins: function () {
             var _self = this;
-            this.initLayoutHeight();
+            //this.initLayoutHeight();
             this.renderRestorder();
             $('#li' + _self.i).addClass('cus-selected');
             _self.restorderdetail();
