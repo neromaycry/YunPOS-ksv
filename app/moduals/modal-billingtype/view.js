@@ -58,16 +58,10 @@ define([
             });
         },
 
-        hideModal: function (id) {
-            pageId = id;
-            $('.modal').modal('hide');
-        },
-
         renderBilltype: function () {
             this.$el.find('.for-billingtype').html(this.template_billingtype(this.collection.toJSON()));
             return this;
         },
-
 
     });
 

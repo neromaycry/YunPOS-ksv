@@ -74,31 +74,34 @@ define([
                 router.navigate('main',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Z, function () {
-                if (_self.billtypeView) {
-                    _self.billtypeView.remove();
-                    _self.billtypeView = new BilltypeView('00');
-                } else {
-                    _self.billtypeView = new BilltypeView('00');
-                }
-                _self.showModal(window.PAGE_ID.BILLING_TYPE,_self.billtypeView);
+                //if (_self.billtypeView) {
+                //    _self.billtypeView.remove();
+                //    _self.billtypeView = new BilltypeView('00');
+                //} else {
+                //    _self.billtypeView = new BilltypeView('00');
+                //}
+                var billtypeView = new BilltypeView('00');
+                _self.showModal(window.PAGE_ID.BILLING_TYPE,billtypeView);
             });
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function() {
-                if (_self.billtypeView) {
-                    _self.billtypeView.remove();
-                    _self.billtypeView = new BilltypeView('01');
-                } else {
-                    _self.billtypeView = new BilltypeView('01');
-                }
-                _self.showModal(window.PAGE_ID.BILLING_TYPE,_self.billtypeView);
+                //if (_self.billtypeView) {
+                //    _self.billtypeView.remove();
+                //    _self.billtypeView = new BilltypeView('01');
+                //} else {
+                //    _self.billtypeView = new BilltypeView('01');
+                //}
+                 var billtypeView = new BilltypeView('01');
+                _self.showModal(window.PAGE_ID.BILLING_TYPE,billtypeView);
             });
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function() {
-                if (_self.billtypeView) {
-                    _self.billtypeView.remove();
-                    _self.billtypeView = new BilltypeView('02');
-                } else {
-                    _self.billtypeView = new BilltypeView('02');
-                }
-                _self.showModal(window.PAGE_ID.BILLING_TYPE,_self.billtypeView);
+                //if (_self.billtypeView) {
+                //    _self.billtypeView.remove();
+                //    _self.billtypeView = new BilltypeView('02');
+                //} else {
+                //    _self.billtypeView = new BilltypeView('02');
+                //}
+                var billtypeView = new BilltypeView('02');
+                _self.showModal(window.PAGE_ID.BILLING_TYPE,billtypeView);
             });
 
         },
