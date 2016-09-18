@@ -1,52 +1,34 @@
 <nav class="navbar" style="background:#337AB7;border-radius: 0px">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" style="color: #ffffff">结算</a>
+            <a class="navbar-brand" style="color: #ffffff">退货结算</a>
         </div>
     </div>
 </nav>
-<div class="row" style="padding-left: 15px;padding-right: 15px">
-    <div class="col-md-3">
+<div class="row" style="margin-right: 15px;margin-left: 15px">
+    <div class="col-md-3 no-padding" style="padding-left: 0px">
         <div class="form-group">
-            <input type="text" id="input_billingrt" name="billingrt" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
+            <input type="text" id="input_billingrt" placeholder="请输入现金退货金额" name="billingrt" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
+            <input type="text" style="display: none"/>
         </div>
-        <div class="panel panel-primary for-billinfort">
+        <div class="panel panel-primary for-billinfo" >
 
         </div>
     </div>
-    <div class="col-md-9">
-        <table class="table">
-            <thead class="label-primary">
-                <tr>
-                    <th>
-                        <label style="color:white">序号</label>
-                    </th>
-                    <th>
-                        <label style="color:white">退款方式</label>
-                    </th>
-                    <th>
-                        <label style="color:white">退款金额</label>
-                    </th>
-                    <th>
-                        <label style="color:white">退款账号</label>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>现金</td>
-                    <td>309.00</td>
-                    <td>*</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>现金</td>
-                    <td>309.00</td>
-                    <td>*</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="col-md-9 no-padding left-padding">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-3">序号</div>
+                    <div class="col-md-3">退款方式</div>
+                    <div class="col-md-3">退款金额</div>
+                    <div class="col-md-3">退款账号</div>
+                </div>
+            </div>
+            <div class="panel-body for-billdetail" style="padding: 0;overflow-y: scroll">
+
+            </div>
+        </div>
     </div>
 </div>
 

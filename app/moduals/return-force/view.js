@@ -91,7 +91,7 @@ define([
         bindKeys: function () {
             var _self = this;
             console.log('bindkeys main');
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Enter, function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Enter, function () {
                 search = $('#input_main').val();
                 if(search == ''){
                     toastr.warning('您输入的商品编码为空，请重新输入');

@@ -193,6 +193,7 @@ define([
                 });
                 _self.renderBillInfo();
                 _self.renderBillDetail();
+                toastr.success('删除成功');
             });
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
@@ -230,9 +231,8 @@ define([
                             send_data['content'] = resp.printf;
                             console.log(resp.printf);
                             //wsClient.send(JSON.stringify(send_data));
-
                         } else {
-                            f7app.alert(resp.msg,'提示');
+                           toastr.error(resp.msg);
                         }
                     });
                 }else{
@@ -285,7 +285,7 @@ define([
                     });
                 }
             });
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
                     toastr.warning('待支付金额为零,请进行结算');
@@ -300,6 +300,11 @@ define([
                         //$('#li' + _self.i).addClass('cus-selected');
                     });
                 }
+            });
+
+            //一卡通支付快捷键
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
+
             });
         }
 

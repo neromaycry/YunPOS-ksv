@@ -6,7 +6,17 @@ define(['../../js/common/BaseModel'],function(BaseModel){
     var billModel=BaseModel.extend({
 
         defaults:{
+            receivedsum:0,
+            unpaidamount:0
         },
+
+        trade_confirm: function (data, callback) {
+            this.sendPOST({
+                url:window.API_URL.TRADE_CONFIRM,
+                data:data,
+                success:callback
+            });
+        }
 
     });
     return billModel;
