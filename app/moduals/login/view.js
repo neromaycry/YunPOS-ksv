@@ -98,7 +98,7 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            this.bindKeyEvents(pageId, window.KEYS.Enter, function () {
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Enter, function () {
                 var isUserFocused = $('input[name = username]').is(':focus');
                 if (isUserFocused) {
                     $('input[name = password]').focus();
@@ -106,7 +106,7 @@ define([
                     _self.doLogin();
                 }
             });
-            this.bindKeyEvents(pageId,window.KEYS.Up, function () {
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Up, function () {
                 var isUserFocused = $('input[name = username]').is(':focus');
                 if (isUserFocused) {
                     $('input[name = password]').focus();
@@ -114,7 +114,7 @@ define([
                     $('input[name = username]').focus();
                 }
             });
-            this.bindKeyEvents(pageId, window.KEYS.Down, function () {
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Down, function () {
                 var isUserFocused = $('input[name = username]').is(':focus');
                 if (isUserFocused) {
                     $('input[name = password]').focus();

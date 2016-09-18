@@ -150,8 +150,14 @@ define([
                 router.navigate('main',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.B,function () {
-                isfromForce = false;
-                router.navigate('billingreturn',{trigger:true});
+                var itemamount = _self.model.get('itemamount');
+                if (itemamount == 0) {
+                    toastr.info('请输入订单号');
+                } else {
+                    isfromForce = false;
+                    router.navigate('billingreturn',{trigger:true});
+                }
+
             });
             //取消整单退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function() {

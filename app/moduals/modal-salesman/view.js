@@ -41,6 +41,7 @@ define([
                             var attrData = {};
                             attrData['name'] = _self.collection.at(i).get("name");
                             Backbone.trigger('SalesmanAdd',attrData);
+                            $('input[name = main]').focus();
                             break;
                         }
                     }
@@ -54,6 +55,7 @@ define([
             });
             this.bindModalKeyEvents(window.PAGE_ID.SALESMAN, window.KEYS.Esc, function () {
                 _self.hideModal(window.PAGE_ID.MAIN);
+                $('input[name = main]').focus();
             });
         },
 

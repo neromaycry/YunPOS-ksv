@@ -7,11 +7,12 @@ define([
     '../../../../moduals/main/collection',
     '../../../../moduals/modal-salesman/view',
     '../../../../moduals/modal-login/view',
+    '../../../../moduals/modal-logout/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, LogoutView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -248,7 +249,11 @@ define([
                 });
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
-                toastr.info('退出');
+                var logoutView = new LogoutView();
+                _self.showModal(window.PAGE_ID.LOGOUT, logoutView);
+                $('.modal').on('shown.bs.modal', function () {
+                    $('input[name = logout_username]').focus();
+                });
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
                 console.log(_self.model.get('itemamount'));

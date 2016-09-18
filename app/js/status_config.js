@@ -159,7 +159,8 @@ window.PAGE_ID = {
     'RETURN_BILLING_ACCOUNT':15,
     'SETDNS':16,
     'SETPOSKEY':17,
-    'INITINFO':18
+    'INITINFO':18,
+    'LOGOUT':19
 };
 
 window.KEYS = {

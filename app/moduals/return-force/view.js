@@ -125,8 +125,13 @@ define([
                 router.navigate('main',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.B,function () {
-                isfromForce = true;
-                router.navigate('billingreturn',{trigger:true});
+                var itemamount = _self.model.get('itemamount');
+                if (itemamount == 0) {
+                    toastr.info('请添加要退货的商品');
+                } else {
+                    isfromForce = true;
+                    router.navigate('billingreturn',{trigger:true});
+                }
             });
             //取消退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.C, function() {
