@@ -27,6 +27,8 @@ define([
 
         totalamount:0,
 
+        discoutamount:0,
+
         receivedsum:0,
 
         unpaidamount:0,
@@ -45,6 +47,8 @@ define([
             if(isfromForce){
                 //强制退货
                 this.totalamount = storage.get(system_config.FORCE_RETURN_KEY,'panel','totalamount');
+                this.discoutamount = storage.get(system_config.FORCE_RETURN_KEY,'panel','discountamount');
+                this.totalamount = this.totalamount - this.discoutamount;
                 this.unpaidamount = this.totalamount;
                 this.model.set({
                     totalamount:this.totalamount,
@@ -182,7 +186,7 @@ define([
                 var totalreceived = 0;
                 var trlist = _self.collection.pluck('gather_money');
                 for(var i = 0;i<trlist.length;i++) {
-                    totalreceived += trlist[0];
+                    totalreceived += trlist[i];
                 }
                 if(totalreceived >= _self.totalamount) {
                     _self.unpaidamount = 0;

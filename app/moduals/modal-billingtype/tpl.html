@@ -1,8 +1,26 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+
 <div class="modal-dialog modal-sm modal-type">
     <div class="modal-content">
         <div class="modal-body" style="padding: 0">
             <div class="panel panel-primary" style="border: none;margin: 0;">
-                <div class="panel-heading">应收金额：<%=unpaidamount%></div>
+                <div class="panel-heading">应收金额：<%= toDecimal2(unpaidamount) %></div>
                 <div class="panel-body">
                     <form>
                         <input type="text" id="receivedsum"  name="receivedsum" class="form-control" placeholder="请输入付款金额"/>

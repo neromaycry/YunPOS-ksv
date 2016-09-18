@@ -89,6 +89,7 @@ define([
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
             console.log(data);
+            console.log('*************');
             this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId);
         },
 
@@ -170,14 +171,12 @@ define([
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
                 var item = _self.collection.at(_self.i);
-                console.log(item);
-                console.log(_self.collection);
                 _self.collection.remove(item);
                 console.log(_self.collection);
                 var totalreceived = 0;
                 var trlist = _self.collection.pluck('gather_money');
-                for(var i = 0;i<trlist.length;i++) {
-                    totalreceived += trlist[0];
+                for(var i = 0;i < trlist.length; i++) {
+                    totalreceived += trlist[i];
                 }
                 if(totalreceived >= _self.totalamount) {
                     _self.unpaidamount = 0;
@@ -198,8 +197,8 @@ define([
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
                 var confirmBill = new BillModel();
-                _self.unpaidamount = _self.unpaidamount.toFixed(2);
                 if(_self.unpaidamount == 0){
+                    _self.unpaidamount = _self.unpaidamount.toFixed(2);
                     var data = {};
                     data['mode'] = '00';
                     if (storage.isSet(system_config.VIP_KEY)) {

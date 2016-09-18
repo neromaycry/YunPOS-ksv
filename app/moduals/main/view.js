@@ -176,7 +176,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Enter, function () {
                 search = $('#input_main').val();
                 if(search == ''){
-                    toastr.warning('您输入的商品编码为空，请重新输入');
+                    toastr.info('您输入的商品编码为空，请重新输入');
                 }else{
                     var data = {};
                     data['skucode'] = search;
@@ -288,7 +288,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
                 var number = $('#input_main').val();
                 if(number == ''){
-                    toastr.warning('您未输入任何数量，请重新输入');
+                    toastr.warning('修改的数量不能为空，请重新输入');
                 }else if(number == 0) {
                     toastr.warning('修改的数量不能为零，请重新输入');
                 }else {
@@ -319,8 +319,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y,function () {
                 var value = $('#input_main').val();
                 if(value == '') {
-                    toastr.warning('您输入的优惠金额为零，请重新输入');
-                }else {
+                    toastr.warning('输入的优惠金额不能为空，请重新输入');
+                }else if(value == 0){
+                    toastr.warning('输入的优惠金额不能为零，请重新输入');
+                } else{
                     var item = _self.collection.at(_self.i);
                     var price = item.get('price');
                     if (value <= parseFloat(price) ) {
