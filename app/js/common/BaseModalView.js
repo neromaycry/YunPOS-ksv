@@ -54,6 +54,14 @@ define([
             });
         },
 
+        showModal: function (id, view) {
+            pageId = id;
+            $('.modal').modal('show',{keyboard:false});
+            $('.modal').on('show.bs.modal', function (e) {
+                view.render();
+            });
+        },
+
         hideModal: function (id) {
             $('.modal').modal('hide');
             $('.modal').on('hidden.bs.modal', function () {

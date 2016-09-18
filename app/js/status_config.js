@@ -153,7 +153,8 @@ window.PAGE_ID = {
     'BILLING_RETURN':9,
     'RETURN_FORCE':10,
     'BILLING_TYPE':11,
-    'RETURN_WHOLE':12
+    'RETURN_WHOLE':12,
+    'BILLING_ACCOUNT':13
 };
 
 window.KEYS = {
