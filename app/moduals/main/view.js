@@ -104,7 +104,7 @@ define([
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
-            this.initLayoutHeight();
+            //this.initLayoutHeight();
             $('#li' + _self.i).addClass('cus-selected');
             $('.modal').on('hidden.bs.modal', function () {
                 alert('bindkeys');
@@ -123,7 +123,7 @@ define([
          * 初始化layout中各个view的高度
          */
         initLayoutHeight: function () {
-            var dh = $(document).height();
+            var dh = $(window).height();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
             var cart = dh - nav * 2 - panelheading * 2;

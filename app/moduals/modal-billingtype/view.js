@@ -116,7 +116,6 @@ define([
             return this;
         },
 
-
     });
 
     return billtypeView;

@@ -56,7 +56,7 @@ define([
             this.renderRtInfo();
             this.renderRtcart();
             this.renderRtPayedlist();
-            this.initLayoutHeight();
+            //this.initLayoutHeight();
         },
 
         initTemplates: function () {
@@ -69,10 +69,10 @@ define([
             var dh = $(document).height();
             var navbar =$('.navbar').height();
             var panel_head = $('.panel-heading').height();
-            console.log('dh:' + dh + ' navbar:' + navbar + ' panel head:' + panel_head*2);
+            //console.log('dh:' + dh + ' navbar:' + navbar + ' panel head:' + panel_head*2);
             var payedlist = (dh - (navbar + panel_head)*4)/2;
             var rtcart = payedlist;
-            console.log('payedlist:' + payedlist);
+            //console.log('payedlist:' + payedlist);
             $('.rtcart-content').height(rtcart);
             $('.payedlist-content').height(payedlist);
         },
@@ -83,12 +83,12 @@ define([
         },
 
         renderRtcart: function () {
-            this.$el.find('.for-rtcart').html(this.template_rtcart(this.RtcartCollection.toJSON()));
+            this.$el.find('.rtcart-content').html(this.template_rtcart(this.RtcartCollection.toJSON()));
             return this;
         },
 
         renderRtPayedlist: function () {
-            this.$el.find('.for-rtpayedlist').html(this.template_rtpayedlist(this.RtPayedlistCollection.toJSON()));
+            this.$el.find('.payedlist-content').html(this.template_rtpayedlist(this.RtPayedlistCollection.toJSON()));
             return this;
         },
 

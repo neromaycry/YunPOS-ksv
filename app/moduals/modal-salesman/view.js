@@ -67,13 +67,6 @@ define([
             });
         },
 
-        hideModal: function (id) {
-            $('.modal').modal('hide');
-            $('.modal').on('hidden.bs.modal', function () {
-                pageId = id;
-            });
-        }
-
     });
 
     return salesmanView;

@@ -59,7 +59,7 @@ define([
             $('input[name = main]').focus();
             this.renderPosInfo();
             this.renderCartList();
-            this.initLayoutHeight();
+            //this.initLayoutHeight();
             $('#li' + _self.i).addClass('cus-selected');
         },
 
