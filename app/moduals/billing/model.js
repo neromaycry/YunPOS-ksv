@@ -9,6 +9,14 @@ define(['../../js/common/BaseModel'],function(BaseModel){
             discount:0
         },
 
+        trade_confirm: function (data, callback) {
+            this.sendPOST({
+                url:window.API_URL.TRADE_CONFIRM,
+                data:data,
+                success:callback
+            });
+        }
+
     });
     return billModel;
 });

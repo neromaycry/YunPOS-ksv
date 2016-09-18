@@ -28,6 +28,8 @@ define([
 
         receivedsum:0,
 
+        i:0,
+
         visibleTypes:{},
 
         template_billinfo:billinfotpl,
@@ -156,11 +158,101 @@ define([
                 _self.receivedsum = $('#input_billing').val();
                 if(_self.model.get('unpaidamount') == 0) {
                     toastr.warning('待支付金额为零，请进行结算');
+                }else if($('#input_billing').val() == '') {
+                    toastr.warning('支付金额不能为空，请重新输入');
+                }else if($('#input_billing').val() == 0){
+                    toastr.warning('支付金额不能为零，请重新输入');
                 }else{
                     _self.addToPaymentList(_self.totalamount,"现金",_self.receivedsum,"*","00");
                 }
                 $('#input_billing').val("");
             });
+
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
+                var item = _self.collection.at(_self.i);
+                console.log(item);
+                console.log(_self.collection);
+                _self.collection.remove(item);
+                console.log(_self.collection);
+                var totalreceived = 0;
+                var trlist = _self.collection.pluck('gather_money');
+                for(var i = 0;i<trlist.length;i++) {
+                    totalreceived += trlist[0];
+                }
+                if(totalreceived >= _self.totalamount) {
+                    _self.unpaidamount = 0;
+                    _self.oddchange = totalreceived - _self.totalamount;
+                }else{
+                    _self.oddchange = 0;
+                    _self.unpaidamount = _self.totalamount - totalreceived;
+                }
+                _self.model.set({
+                    receivedsum: totalreceived,
+                    unpaidamount: _self.unpaidamount,
+                    oddchange:_self.oddchange
+                });
+                _self.renderBillInfo();
+                _self.renderBillDetail();
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
+                var confirmBill = new BillModel();
+                _self.unpaidamount = _self.unpaidamount.toFixed(2);
+                if(_self.unpaidamount == 0){
+                    var data = {};
+                    data['mode'] = '00';
+                    if (storage.isSet(system_config.VIP_KEY)) {
+                        data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                        data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                        data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+
+                    } else {
+                        data['medium_id'] = "*";
+                        data['medium_type'] = "*";
+                        data['cust_id'] = "*";
+                    }
+                    data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
+                    data['gather_detail'] = _self.collection.toJSON();
+                    console.log(data);
+                    confirmBill.trade_confirm(data, function (resp) {
+                        console.log(resp);
+                        if (resp.status == '00') {
+                            storage.remove(system_config.SALE_PAGE_KEY);
+                            storage.remove(system_config.ONE_CARD_KEY);
+                            if (storage.isSet(system_config.VIP_KEY)) {
+                                storage.remove(system_config.VIP_KEY);
+                            }
+                            router.navigate("main", {trigger: true,replace:true});
+                            //f7app.alert("订单号：" + resp.bill_no,'提示');
+                            toastr.success("订单号：" + resp.bill_no);
+                            var send_data = {};
+                            send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
+                            send_data['content'] = resp.printf;
+                            console.log(resp.printf);
+                            //wsClient.send(JSON.stringify(send_data));
+
+                        } else {
+                            f7app.alert(resp.msg,'提示');
+                        }
+                    });
+                }else{
+                    toastr.warning('还有未支付的金额，请支付完成后再进行结算');
+                }
+            });
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
+                if (_self.i < _self.collection.length - 1) {
+                    _self.i++;
+                }
+                $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Up, function() {
+                if (_self.i > 0) {
+                    _self.i--;
+                }
+                $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            });
+
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){

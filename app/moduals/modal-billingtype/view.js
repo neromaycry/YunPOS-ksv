@@ -76,6 +76,7 @@ define([
                 if (_self.i > 0) {
                     _self.i--;
                 }
+
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
 
