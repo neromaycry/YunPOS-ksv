@@ -128,7 +128,7 @@ define([
                 isfromForce = true;
                 router.navigate('billingreturn',{trigger:true});
             });
-            //清空购物车
+            //取消退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.C, function() {
                 _self.collection.reset();
                 _self.model.set({
@@ -139,7 +139,7 @@ define([
                 _self.renderPosInfo();
                 _self.renderCartList();
                 storage.remove(system_config.FORCE_RETURN_KEY);
-                toastr.success('清空购物车成功');
+                toastr.success('取消退货');
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D,function () {
@@ -206,12 +206,15 @@ define([
                 }
                 $('#input_main').val('');
             });
+
+
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
+
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Up, function () {
                 if (_self.i > 0) {
                     _self.i--;

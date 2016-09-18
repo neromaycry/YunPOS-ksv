@@ -153,8 +153,23 @@ define([
                 isfromForce = false;
                 router.navigate('billingreturn',{trigger:true});
             });
+            //取消整单退货
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function() {
+                _self.RtcartCollection.reset();
+                _self.RtPayedlistCollection.reset();
+                _self.model.set({
+                    totalamount: 0,
+                    itemamount: 0,
+                    discountamount: 0
+                });
+                _self.renderRtcart();
+                _self.renderRtInfo();
+                _self.renderRtPayedlist();
+                storage.remove(system_config.RETURN_KEY);
+            });
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
                 _self.requestOrder();
+                $('#whole_return_order').val("");
             });
         },
 
