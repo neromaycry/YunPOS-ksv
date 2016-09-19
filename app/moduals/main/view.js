@@ -131,6 +131,7 @@ define([
             var panelheading = $('.panel-heading').height();
             var cart = dh - nav * 2 - panelheading * 2;
             $('.for-cartlist').height(cart);
+            console.log($('ul').outerHeight());
         },
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
@@ -354,12 +355,18 @@ define([
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
+                if (_self.i > 5) {
+                    $('.for-cartlist').scrollTop(200);
+                }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
 
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
                 if (_self.i > 0) {
                     _self.i--;
+                }
+                if (_self.i <5) {
+                    $('.for-cartlist').scrollTop(-200);
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
