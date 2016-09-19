@@ -9,11 +9,12 @@ define([
     '../../../../moduals/modal-login/view',
     '../../../../moduals/modal-logout/view',
     '../../../../moduals/modal-billingdiscount/view',
+    '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, LogoutView,BilldiscountView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, LogoutView,BilldiscountView, KeyTipsView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -369,6 +370,10 @@ define([
             //整单退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.W, function () {
                 router.navigate('returnwhole',{ trigger:true });
+            });
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.T, function () {
+                var tipsView = new KeyTipsView('MAIN_PAGE');
+                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
             });
         },
 

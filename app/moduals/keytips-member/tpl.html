@@ -4,9 +4,10 @@
             <div class="panel panel-primary" style="border: none;margin: 0;">
                 <div class="panel-heading">帮助</div>
                 <div class="panel-body">
-                    <div class="row text-center">
+                    <div class="row">
                         <% _.each(obj,function(e,i){ %>
-                            <div class="col-md-12"><%= e.effect %> : <%= e.key %></div>
+                            <div class="col-md-3 bottom-margin"><%= e.effect %> : </div>
+                            <div class="col-md-3 bottom-margin"><%= e.key %></div>
                         <% }) %>
                     </div>
                 </div>

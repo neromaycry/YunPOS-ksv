@@ -41,7 +41,15 @@ define([
         bindModalKeys: function () {
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.TIP_MEMBER, window.KEYS.Esc , function () {
-                _self.hideModal(window.PAGE_ID.MEMBER);
+                console.log(_self.attrs);
+                switch (_self.attrs) {
+                    case 'MAIN_PAGE':
+                        _self.hideModal(window.PAGE_ID.MAIN);
+                        break;
+                    case 'MEMBER_PAGE':
+                        _self.hideModal(window.PAGE_ID.MEMBER);
+                        break;
+                }
             });
         }
 
