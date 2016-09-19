@@ -52,6 +52,9 @@ define([
                     case 'RESTORDER_PAGE':
                         _self.hideModal(window.PAGE_ID.RESTORDER);
                         break;
+                    case 'RETURNWHOLE_PAGE':
+                        _self.hideModal(window.PAGE_ID.RETURN_WHOLE);
+                        break;
                 }
             });
         }

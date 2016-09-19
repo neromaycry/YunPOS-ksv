@@ -130,7 +130,19 @@ define([
         },
 
         setReturnWholeKeys: function () {
-
+            var effects = ['返回', '确定', '结算', '取消退货', '方向上', '方向下'];
+            var keys = ['ESC', 'ENTER', 'B', 'C', '↑', '↓'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.B, window.KEYS.C, window.KEYS.Up,
+                window.KEYS.Down];
+            var returnWholeKeys = [];
+            for (var i = 0;i<effects.length;i++) {
+                var effect = effects[i];
+                var key = keys[i];
+                var keyCode = keyCodes[i];
+                var returnWholeKey = { effect:effect, key:key, keyCode:keyCode };
+                returnWholeKeys.push(returnWholeKey);
+            }
+            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'RETURNWHOLE_PAGE',returnWholeKeys);
         },
 
         setBillingKeys: function () {

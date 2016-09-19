@@ -5,11 +5,12 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/return-whole/model',
     '../../../../moduals/return-whole/collection',
+    '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/return-whole/returninfotpl.html',
     'text!../../../../moduals/return-whole/rtcarttpl.html',
     'text!../../../../moduals/return-whole/rtpayedlisttpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, RtWholeModel, RtWholeCollection, returninfotpl, rtcarttpl, rtpayedlisttpl, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, KeyTipsView, returninfotpl, rtcarttpl, rtpayedlisttpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -146,6 +147,11 @@ define([
 
         bindKeys: function () {
             var _self = this;
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.T,function () {
+                var tipsView = new KeyTipsView('RETURNWHOLE_PAGE');
+                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+            });
+
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Esc,function () {
                 router.navigate('main',{trigger:true});
             });
@@ -172,6 +178,7 @@ define([
                 _self.renderRtPayedlist();
                 storage.remove(system_config.RETURN_KEY);
             });
+            //确定
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
                 if($('input[name = return_order_date]').val() == '') {
                     toastr.warning('订单日期不能为空');
