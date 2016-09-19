@@ -52,7 +52,7 @@ define([
         },
 
         initPlugins: function () {
-            $('input[name = whole_return_order]').focus();
+            $('input[name = return_order_date]').focus();
             if (storage.isSet(system_config.RETURN_KEY)) {
                 this.RtPayedlistCollection.set(storage.get(system_config.RETURN_KEY,'paymentlist'));
                 this.RtcartCollection.set(storage.get(system_config.RETURN_KEY,'cartlist'));
@@ -157,7 +157,6 @@ define([
                     isfromForce = false;
                     router.navigate('billingreturn',{trigger:true});
                 }
-
             });
             //取消整单退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function() {
@@ -174,9 +173,22 @@ define([
                 storage.remove(system_config.RETURN_KEY);
             });
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
-                _self.requestOrder();
-                $('#whole_return_order').val("");
+                if($('input[name = return_order_date]').val() == '') {
+                    toastr.warning('订单日期不能为空');
+                } else if ($('input[name = whole_return_order]').val() == ''){
+                    toastr.warning('订单编号不能为空');
+                }else {
+                    _self.requestOrder();
+                    $('input[name = return_order_date]').val("");
+                    $('input[name = whole_return_order]').val("");
+                }
             });
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Down, function () {
+                $('input[name = whole_return_order]').focus();
+            });
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Up, function () {
+                $('input[name = return_order_date]').focus();
+            })
         },
 
 

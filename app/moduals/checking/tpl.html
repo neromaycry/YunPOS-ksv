@@ -1,0 +1,44 @@
+<nav class="navbar" style="background:#337AB7;border-radius: 0px">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" style="color: #ffffff">收银对账</a>
+        </div>
+    </div>
+</nav>
+<div class="row" style="margin-right: 15px;margin-left: 15px">
+    <div class="col-md-4 col-md-offset-4" style="padding-left: 0px">
+        <form class="form-horizontal">
+            <input class="form-control" type="text" id="checking_date" name ="checking_date" maxlength="8" placeholder="请输入收银对账日期 例如：20160101"/>
+            <input type="text" style="display: none">
+        </form>
+    </div>
+</div>
+<div class="row no-margining">
+    <div class="col-md-7 col-md-offset-2" style="margin-top: 20px">
+        <ul class="nav nav-tabs" role="tablist" id="myTabs">
+            <li role="presentation" class="active">
+                <a href="#cashier_report" data-toggle="tab">收银员报表</a>
+            </li>
+            <li role="presentation"><a href="#cashier_daily_report" data-toggle="tab">收银员日结报表</a></li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div  class="tab-pane fade in active " id="cashier_report">
+                <table class="table table-bordered for-cashier-report" id="for-cashier-report" style="margin-top: 20px;">
+
+                </table>
+
+                <div class="panel panel-primary for-cashier-detail">
+
+                </div>
+            </div>
+            <div  class="tab-pane fade" id="cashier_daily_report">
+                <table class="table table-bordered for-cashier-daily" id="for-cashier-daily" style="margin-top: 20px;">
+
+                </table>
+                <div class="panel panel-primary for-cashier-detail">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

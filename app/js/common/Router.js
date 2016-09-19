@@ -18,8 +18,8 @@ define(['backbone'], function (Backbone) {
             'billingreturn':'billingreturn',
             'restorder':'restorder',
             'returnforce':'returnforce',
-            'returnwhole':'returnwhole'
-
+            'returnwhole':'returnwhole',
+            'checking':'checking'
         },
 
         //路由初始化可以做一些事
@@ -127,6 +127,14 @@ define(['backbone'], function (Backbone) {
 
         returnforce: function () {
             var _url = './moduals/return-force/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        checking: function () {
+            var _url = './moduals/checking/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

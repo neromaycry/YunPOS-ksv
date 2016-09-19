@@ -203,7 +203,7 @@ define([
                     _self.i = 0;
                 }
             });
-
+            //会员登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
                 router.navigate('member',{trigger:true});
             });
@@ -369,6 +369,10 @@ define([
             //整单退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.W, function () {
                 router.navigate('returnwhole',{ trigger:true });
+            });
+            //收银对账
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
+                router.navigate('checking',{trigger:true});
             });
         },
 
