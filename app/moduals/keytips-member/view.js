@@ -49,6 +49,9 @@ define([
                     case 'MEMBER_PAGE':
                         _self.hideModal(window.PAGE_ID.MEMBER);
                         break;
+                    case 'RESTORDER_PAGE':
+                        _self.hideModal(window.PAGE_ID.RESTORDER);
+                        break;
                 }
             });
         }

@@ -179,8 +179,6 @@ define([
             });
         },
 
-
-
     });
 
     return returnWholeView;

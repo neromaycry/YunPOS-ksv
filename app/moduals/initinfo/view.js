@@ -46,9 +46,12 @@ define([
             });
             this.setMainKeys();
             this.setMemberKeys();
+            this.setRestOrderKeys();
+            this.setBillingKeys();
+            this.setBillingReturnKeys();
+            this.setReturnForceKeys();
+            this.setReturnWholeKeys();
         },
-
-
 
         renderModel: function () {
             this.$el.html(this.template(this.model.toJSON()));
@@ -93,8 +96,8 @@ define([
 
         setMemberKeys: function () {
             var effects = ['返回', '确定', '方向左', '方向右'];
-            var keys = ['ESC', 'ENTER', '←', '→']
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Left, window.KEYS.Right ];
+            var keys = ['ESC', 'ENTER', '←', '→'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Left, window.KEYS.Right];
             var memberKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -104,8 +107,38 @@ define([
                 memberKeys.push(memberKey);
             }
             storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'MEMBER_PAGE',memberKeys);
-        }
+        },
 
+        setRestOrderKeys: function () {
+            var effects = ['返回', '确定', '方向上', '方向下'];
+            var keys = ['ESC', 'ENTER', '↑', '↓'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down];
+            var restOrderKeys = [];
+            for (var i = 0;i<effects.length;i++) {
+                var effect = effects[i];
+                var key = keys[i];
+                var keyCode = keyCodes[i];
+                var restOrderKey = { effect:effect, key:key, keyCode:keyCode };
+                restOrderKeys.push(restOrderKey);
+            }
+            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'RESTORDER_PAGE',restOrderKeys);
+        },
+
+        setReturnForceKeys: function () {
+
+        },
+
+        setReturnWholeKeys: function () {
+
+        },
+
+        setBillingKeys: function () {
+
+        },
+
+        setBillingReturnKeys: function () {
+
+        }
 
     });
 
