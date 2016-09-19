@@ -22,12 +22,14 @@ define([
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.BILL_DISCOUNT, window.KEYS.Esc , function () {
                 _self.hideModal(window.PAGE_ID.BILLING);
+                $('input[name = billing]').focus();
             });
             this.bindModalKeyEvents(window.PAGE_ID.BILL_DISCOUNT, window.KEYS.Enter , function () {
                 var attrData = {};
                 attrData['percentage'] = $('input[name = percentage]').val();
                 Backbone.trigger('onBillDiscount',attrData);
                 _self.hideModal(window.PAGE_ID.BILLING);
+                $('input[name = billing]').focus();
             });
         },
 

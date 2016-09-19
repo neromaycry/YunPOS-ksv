@@ -22,6 +22,7 @@ define([
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.BILLING_ACCOUNT, window.KEYS.Esc , function () {
                 _self.hideModal(window.PAGE_ID.BILLING);
+                $('input[name = billing]').focus();
             });
             this.bindModalKeyEvents(window.PAGE_ID.BILLING_ACCOUNT, window.KEYS.Enter , function () {
                 var receivedaccount = $('#receive_account').val();
@@ -37,6 +38,7 @@ define([
                     attrData['gather_no'] = receivedaccount;
                     Backbone.trigger('onReceivedsum',attrData);
                     _self.hideModal(window.PAGE_ID.BILLING);
+                    $('input[name = billing]').focus();
                 }
             });
         },

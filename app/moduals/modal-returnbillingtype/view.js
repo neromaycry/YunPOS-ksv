@@ -64,6 +64,7 @@ define([
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.RETURN_BILLING_TYPE, window.KEYS.Esc , function () {
                 _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                $('input[name = billingrt]').focus();
             });
             this.bindModalKeyEvents(window.PAGE_ID.RETURN_BILLING_TYPE, window.KEYS.Down, function() {
                 if (_self.i < _self.collection.length - 1) {
