@@ -355,8 +355,11 @@ define([
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
-                if (_self.i > 5) {
-                    $('.for-cartlist').scrollTop(200);
+                var height = $('.for-cartlist').height();
+                var item = $('li').height() + 20;
+                var temp = parseInt(height / item);
+                if (_self.i % temp == 0) {
+                    $('.for-cartlist').scrollTop(height);
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
@@ -365,8 +368,11 @@ define([
                 if (_self.i > 0) {
                     _self.i--;
                 }
-                if (_self.i <5) {
-                    $('.for-cartlist').scrollTop(-200);
+                var height = $('.for-cartlist').height();
+                var item = $('li').height() + 20;
+                var temp = parseInt(height / item);
+                if (_self.i % temp == 0) {
+                    $('.for-cartlist').scrollTop(-height);
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });

@@ -22,6 +22,8 @@ define([
 
         template_cashierdailytpl:cashierdailytpl,
 
+        i:0,
+
         events: {
 
         },
@@ -49,7 +51,9 @@ define([
         initLayoutHeight:function(){
             var dh = $(document).height();
             var nav = $('.navbar').height();
-            //var table = $('#for-cashier-daily').height();
+            var td = $('td').height();
+            var cashierdetail = dh - 3 * nav - td * 10 - 130;
+            $('.for-cashier-detail').height(cashierdetail);
         },
 
         bindKeys: function () {
@@ -98,6 +102,7 @@ define([
                 }
                 $('input[name = checking_date]').val("");
             });
+            //this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Down, function ())
         },
 
         renderCashierreport: function () {

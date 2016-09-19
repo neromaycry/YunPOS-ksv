@@ -65,10 +65,10 @@ define([
          * 初始化layout中各个view的高度
          */
         initLayoutHeight: function () {
-            var dh = $(document).height();
+            var dh = $(window).height();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
-            restordernum = dh - nav * 2 - panelheading * 2;
+            var restordernum = dh - nav * 2 - panelheading * 2;
             $('.for-restordernum-list').height(restordernum);
             $('.for-restorderdetail-list').height(restordernum);
         },
