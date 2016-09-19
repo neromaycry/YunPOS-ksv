@@ -44,6 +44,7 @@ define([
                     toastr.warning(resp.msg);
                 }
             });
+
             this.setMainKeys();
             this.setMemberKeys();
             this.setRestOrderKeys();
