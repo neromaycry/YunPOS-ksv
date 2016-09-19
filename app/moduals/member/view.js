@@ -29,12 +29,6 @@ define([
             this.model = new MemberModel();
             this.requestModel = new MemberModel();
             this.tipsView = new KMemberView("MEMBER_PAGE");
-            //if (this.tipsView) {
-            //    this.tipsView.remove();
-            //    this.tipsView = new KMemberView("MEMBER_PAGE");
-            //} else {
-            //    this.tipsView = new KMemberView("MEMBER_PAGE");
-            //}
             this.initTemplates();
         },
 

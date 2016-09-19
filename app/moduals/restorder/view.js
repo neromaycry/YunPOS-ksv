@@ -5,10 +5,11 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/restorder/model',
     '../../../../moduals/restorder/collection',
+    '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/restorder/tpl.html',
     'text!../../../../moduals/restorder/restordernumtpl.html',
     'text!../../../../moduals/restorder/restorderdetailtpl.html'
-], function (BaseView,RestorderModel,RestorderCollection, tpl, restordernumtpl, restorderdetailtpl) {
+], function (BaseView,RestorderModel,RestorderCollection, KeyTipsView, tpl, restordernumtpl, restorderdetailtpl) {
 
     var restorderView = BaseView.extend({
 
@@ -43,10 +44,8 @@ define([
                     orderNum:key
                 });
                 this.collection.push(item);
-                console.log(this.collection);
             }
             this.initTemplates();
-
         },
 
         initTemplates: function () {
@@ -76,27 +75,28 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            this.bindKeyEvents(pageId, window.KEYS.Esc, function () {
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Esc, function () {
                 router.navigate('main',{trigger:true});
             });
-            this.bindKeyEvents(pageId, window.KEYS.T, function () {
-                _self.showModal(window.PAGE_ID.TIP_MEMBER,this.tipsView);
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.T, function () {
+                var tipsView = new KeyTipsView('RESTORDER_PAGE');
+                _self.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             });
-            this.bindKeyEvents(pageId, window.KEYS.Down, function() {
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Down, function() {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 _self.restorderdetail();
             });
-            this.bindKeyEvents(pageId, window.KEYS.Up, function() {
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Up, function() {
                 if (_self.i > 0) {
                     _self.i--;
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 _self.restorderdetail();
             });
-            this.bindKeyEvents(pageId, window.KEYS.Enter, function() {
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Enter, function() {
                 Backbone.trigger('onReleaseOrder',_self.orderSelectedDetail);
                 storage.remove(system_config.RESTORDER_KEY,_self.orderNum);
                 router.navigate('main',{trigger:true});

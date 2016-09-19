@@ -226,7 +226,6 @@ define([
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
-            this.bindKeyEvents()
         },
 
         onAddItem: function (JSONData) {
