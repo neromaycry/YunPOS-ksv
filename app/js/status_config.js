@@ -161,7 +161,8 @@ window.PAGE_ID = {
     'SETPOSKEY':17,
     'INITINFO':18,
     'LOGOUT':19,
-    'BILL_DISCOUNT':20
+    'BILL_DISCOUNT':20,
+    'CHECKING':21
 };
 
 window.KEYS = {

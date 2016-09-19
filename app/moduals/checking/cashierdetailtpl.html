@@ -1,0 +1,22 @@
+<div class="panel-heading">
+    <div class="row">
+        <div class="col-md-3">付款方式编号</div>
+        <div class="col-md-3">付款方式</div>
+        <div class="col-md-3">付款金额</div>
+        <div class="col-md-3">付款交易次数</div>
+    </div>
+</div>
+<div class="panel-body" style="padding: 0">
+    <ul class="list-group">
+        <% _.each(obj,function(e,i){ %>
+            <li class="list-group-item" style="border-radius: 0">
+                <div class="row">
+                    <div class="col-md-3"><%= e.gather_id %></div>
+                    <div class="col-md-3"><%= e.gather_name %></div>
+                    <div class="col-md-3"><%= e.gather_money %></div>
+                    <div class="col-md-3"><%= e.gather_num %></div>
+                </div>
+            </li>
+        <% }) %>
+    </ul>
+</div>

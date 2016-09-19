@@ -204,7 +204,7 @@ define([
                     _self.i = 0;
                 }
             });
-
+            //会员登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
                 router.navigate('member',{trigger:true});
             });
@@ -374,6 +374,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.T, function () {
                 var tipsView = new KeyTipsView('MAIN_PAGE');
                 _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+            });
+            //收银对账
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
+                router.navigate('checking',{trigger:true});
             });
         },
 
