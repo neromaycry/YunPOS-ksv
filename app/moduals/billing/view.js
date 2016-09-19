@@ -174,6 +174,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Esc, function () {
                 router.navigate('main',{trigger:true});
             });
+
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Enter, function () {
                 _self.receivedsum = $('#input_billing').val();
                 if(_self.model.get('unpaidamount') == 0) {
@@ -218,7 +219,7 @@ define([
                 var confirmBill = new BillModel();
                 if(_self.unpaidamount == 0){
                     _self.unpaidamount = _self.unpaidamount.toFixed(2);
-                    if(_self.model.get('percentage') != 0){
+                    if(_self.percentage != 0){
                         _self.totalDiscount(_self.percentage);
                     }
                     var data = {};
@@ -260,6 +261,7 @@ define([
                     toastr.warning('还有未支付的金额，请支付完成后再进行结算');
                 }
             });
+
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
@@ -290,6 +292,7 @@ define([
                     });
                 }
             });
+
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -306,6 +309,7 @@ define([
                     });
                 }
             });
+
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -324,9 +328,11 @@ define([
             });
             //整单优惠
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Y, function () {
-                if(_self.model.get('receivedsum') != 0){
+                if(_self.model.get('totaldiscount') != 0) {
+                    toastr.warning('不能重复整单优惠');
+                }else if(_self.model.get('receivedsum') != 0) {
                     toastr.warning('您已选择支付方式，不能再进行整单优惠');
-                }else {
+                } else {
                     var billdiscountview = new BilldiscountView();
                     _self.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
                     $('.modal').on('shown.bs.modal', function (){
@@ -352,7 +358,6 @@ define([
                     toastr.success('取消整单优惠成功');
                 }
             });
-
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
 
