@@ -8,11 +8,12 @@ define([
     '../../../../moduals/modal-salesman/view',
     '../../../../moduals/modal-login/view',
     '../../../../moduals/modal-logout/view',
+    '../../../../moduals/modal-billingdiscount/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, LogoutView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, LogoutView,BilldiscountView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -202,6 +203,7 @@ define([
                     _self.i = 0;
                 }
             });
+
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
                 router.navigate('member',{trigger:true});
             });
@@ -241,6 +243,7 @@ define([
                     router.navigate('restorder',{trigger:true});
                 }
             });
+            //营业员登陆
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
                 this.salesmanView = new SalesmanView();
                 _self.showModal(window.PAGE_ID.SALESMAN,_self.salesmanView);
@@ -248,6 +251,7 @@ define([
                     $('input[name = salesman_id]').focus();
                 });
             });
+            //退出登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
                 var logoutView = new LogoutView();
                 _self.showModal(window.PAGE_ID.LOGOUT, logoutView);
@@ -255,6 +259,7 @@ define([
                     $('input[name = logout_username]').focus();
                 });
             });
+            //结算
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
                 console.log(_self.model.get('itemamount'));
                 if(_self.model.get('itemamount') == 0){
@@ -343,21 +348,25 @@ define([
                 }
                 $('#input_main').val('');
             });
+
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
+
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
                 if (_self.i > 0) {
                     _self.i--;
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
+            //强制退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F, function () {
                 router.navigate('returnforce',{ trigger:true });
             });
+            //整单退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.W, function () {
                 router.navigate('returnwhole',{ trigger:true });
             });

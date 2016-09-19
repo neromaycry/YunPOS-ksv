@@ -160,7 +160,8 @@ window.PAGE_ID = {
     'SETDNS':16,
     'SETPOSKEY':17,
     'INITINFO':18,
-    'LOGOUT':19
+    'LOGOUT':19,
+    'BILL_DISCOUNT':20
 };
 
 window.KEYS = {

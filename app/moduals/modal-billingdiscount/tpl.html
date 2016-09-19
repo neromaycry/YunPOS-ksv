@@ -1,0 +1,23 @@
+<div class="modal-dialog modal-sm modal-account">
+    <div class="modal-content">
+        <div class="modal-body" style="padding: 0">
+            <div class="panel panel-primary" style="border: none;margin: 0;">
+                <div class="panel-heading">整单优惠</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <form>
+                                <input type="text" id="percentage" name="percentage" maxlength="2" class="form-control" onkeyup="return ValidateNumber($(this),value)" placeholder="请输入折扣百分比，如：80"/>
+                                <input type="text" style="display: none;"/>
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            %
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+

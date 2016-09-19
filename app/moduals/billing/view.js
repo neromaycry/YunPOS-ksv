@@ -7,10 +7,11 @@ define([
     '../../../../moduals/billing/collection',
     '../../../../moduals/modal-billingtype/view',
     '../../../../moduals/modal-billingaccount/view',
+    '../../../../moduals/modal-billingdiscount/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, billinfotpl, billingdetailtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -29,6 +30,10 @@ define([
         receivedsum:0,
 
         i:0,
+
+        percentage:0,
+
+        totaldiscount:0,//整单优惠的总价格
 
         visibleTypes:{},
 
@@ -80,6 +85,8 @@ define([
 
         handleEvents: function () {
             Backbone.off('onReceivedsum');
+            Backbone.off('onBillDiscount');
+            Backbone.on('onBillDiscount',this.onBillDiscount,this);
             Backbone.on('onReceivedsum',this.onReceivedsum,this);
         },
 
@@ -88,9 +95,21 @@ define([
             var gatherNo = data['gather_no'];
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
-            console.log(data);
-            console.log('*************');
             this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId);
+        },
+
+        onBillDiscount: function (data) {
+            this.percentage = data['percentage'] / 100;
+            this.totaldiscount = (this.totalamount * ( 1- this.percentage)).toFixed(2);//优惠金额
+            this.totalamount = (this.totalamount - this.totaldiscount).toFixed(2);//折扣后的支付金额
+            this.unpaidamount = this.totalamount;
+            this.model.set({
+                totaldiscount:this.totaldiscount,
+                totalamount:parseFloat(this.totalamount),
+                unpaidamount:parseFloat(this.unpaidamount),
+                percentage:percentage
+            });
+            this.renderBillInfo();
         },
 
         /**
@@ -199,6 +218,9 @@ define([
                 var confirmBill = new BillModel();
                 if(_self.unpaidamount == 0){
                     _self.unpaidamount = _self.unpaidamount.toFixed(2);
+                    if(_self.model.get('percentage') != 0){
+                        _self.totalDiscount(_self.percentage);
+                    }
                     var data = {};
                     data['mode'] = '00';
                     if (storage.isSet(system_config.VIP_KEY)) {
@@ -300,14 +322,88 @@ define([
                     });
                 }
             });
+            //整单优惠
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Y, function () {
+                if(_self.model.get('receivedsum') != 0){
+                    toastr.warning('您已选择支付方式，不能再进行整单优惠');
+                }else {
+                    var billdiscountview = new BilldiscountView();
+                    _self.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
+                    $('.modal').on('shown.bs.modal', function (){
+                        $('input[name = percentage]').focus();
+                    });
+                }
+            });
+            //取消整单优惠
+            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.Q, function () {
+                if(_self.model.get('totaldiscount') == 0){
+                    toastr.info('您未进行任何优惠');
+                }else if(_self.model.get('receivedsum') != 0){
+                    toastr.warning('您已选择支付方式，不能取消整单优惠');
+                }else{
+                    _self.totalamount = parseFloat(_self.model.get("totalamount")) + parseFloat(_self.model.get("totaldiscount"));
+                    _self.unpaidamount = _self.totalamount;
+                    _self.model.set({
+                        totalamount:_self.totalamount,
+                        unpaidamount:_self.unpaidamount,
+                        totaldiscount:0
+                    });
+                    _self.renderBillInfo();
+                    toastr.success('取消整单优惠成功');
+                }
+            });
 
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
 
             });
+        },
+
+        /**
+         * 计算整单优惠
+         */
+        totalDiscount:function(percentage){
+            var _self = this;
+            var finaldiscount = 0;
+            _self.discountcollection = new BillCollection();
+            this.localObj = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
+            storage.set(system_config.SALE_PAGE_KEY,'totaldiscountamount',_self.totaldiscount);
+            //在SALE_PAGE_KEY里面新加入一个属性，值为总的整单优惠的价格
+            console.log('整单优惠的总价格:' + _self.totaldiscount);
+            for(var i = 0;i < this.localObj.length - 1;i++){
+                var item = new BillModel();
+                item.set(this.localObj[i]);
+                var num = item.get('num');
+                var money = item.get('money');
+                var discount = parseFloat(item.get('discount'));
+                var totaldiscount = (1 - percentage) * (money * num - discount);//前n-1项每个单品的单品折扣
+                finaldiscount = finaldiscount + totaldiscount;
+                discount = discount + totaldiscount;//前n-1项每个单品的单品优惠和整单优惠平平均之后的总和
+                discount = discount.toFixed(2);
+                console.log('第' + i + '的整单折扣' + discount);
+                item.set({
+                    discount:discount
+                });
+                console.log(item);
+                _self.discountcollection.push(item);
+            }
+            console.log(_self.discountcollection);
+            console.log('>>>>>>>>>>>>>>>>>>>>');
+            //最后一项的折扣为
+            finaldiscount = this.totaldiscount - finaldiscount;
+            finaldiscount = finaldiscount.toFixed(2);
+            console.log(finaldiscount + '最后一项的优惠');
+            var tmp = new BillModel();
+            tmp.set(this.localObj[this.localObj.length - 1]);
+            tmp.set('discount',finaldiscount);
+            _self.discountcollection.push(tmp);
+            storage.set(system_config.SALE_PAGE_KEY,'shopcart',_self.discountcollection);
+            //console.log(_self.discountcollection);
+            //console.log('final');
         }
 
     });
+
 
     return billingView;
 });

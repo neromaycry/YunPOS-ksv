@@ -1,10 +1,28 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+
 <ul class="list-group">
     <% _.each(obj,function(e,i){ %>
     <li id="billdetail<%=i%>" class="list-group-item" data-index="<%= i %>" style="border-radius: 0">
         <div class="row">
             <div class="col-md-3"><%=i+1%></div>
             <div class="col-md-3"><%=e.gather_name%></div>
-            <div class="col-md-3"><%=e.gather_money%></div>
+            <div class="col-md-3"><%= toDecimal2(e.gather_money)%></div>
             <div class="col-md-3"><%=e.gather_no%></div>
         </div>
     </li>

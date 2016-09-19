@@ -6,7 +6,7 @@ define(['../../js/common/BaseModel'],function(BaseModel){
     var billModel=BaseModel.extend({
 
         defaults:{
-            discount:0
+            totaldiscount:0
         },
 
         trade_confirm: function (data, callback) {
