@@ -9,11 +9,11 @@ define([
     '../../../../moduals/modal-billingaccount/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
+    '../../../../moduals/modal-confirm/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView, billinfotpl, billingdetailtpl, tpl) {
-
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, billinfotpl, billingdetailtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -43,7 +43,6 @@ define([
         template_billingdetailtpl:billingdetailtpl,
 
         events: {
-
         },
 
         pageInit: function () {
@@ -63,9 +62,7 @@ define([
             });
             this.initTemplates();
             this.handleEvents();
-
         },
-
         initPlugins: function () {
             var _self = this;
             this.renderBillInfo();
@@ -75,7 +72,6 @@ define([
             _self.itemheight = $('li').height() + 20;
             _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数
         },
-
         /**
          * 初始化layout中各个view的高度
          */
@@ -86,14 +82,12 @@ define([
             var billdetail = dh - nav * 2 - panelheading * 2;
             $('.for-billdetail').height(billdetail);
         },
-
         handleEvents: function () {
             Backbone.off('onReceivedsum');
             Backbone.off('onBillDiscount');
             Backbone.on('onBillDiscount',this.onBillDiscount,this);
             Backbone.on('onReceivedsum',this.onReceivedsum,this);
         },
-
         onReceivedsum: function (data) {
             var receivedsum = data['receivedsum'];
             var gatherNo = data['gather_no'];
@@ -101,7 +95,6 @@ define([
             var gatherId = data['gather_id'];
             this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId);
         },
-
         onBillDiscount: function (data) {
             this.percentage = data['percentage'] / 100;
             this.totaldiscount = (this.totalamount * ( 1- this.percentage)).toFixed(2);//优惠金额
@@ -115,7 +108,6 @@ define([
             });
             this.renderBillInfo();
         },
-
         /**
          * 向已付款列表中插入新的行
          * @param totalamount 总金额
@@ -157,28 +149,23 @@ define([
             this.renderBillInfo();
             this.renderBillDetail();
         },
-
         initTemplates: function () {
             this.template_billinfo = _.template(this.template_billinfo);
             this.template_billingdetailtpl = _.template(this.template_billingdetailtpl);
         },
-
         renderBillInfo: function () {
             this.$el.find('.for-billinfo').html(this.template_billinfo(this.model.toJSON()));
             return this;
         },
-
         renderBillDetail: function () {
             this.$el.find('.for-billdetail').html(this.template_billingdetailtpl(this.collection.toJSON()));
             return this;
         },
-
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Esc, function () {
                 router.navigate('main',{trigger:true});
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Enter, function () {
                 _self.receivedsum = $('#input_billing').val();
                 if(_self.model.get('unpaidamount') == 0) {
@@ -192,7 +179,6 @@ define([
                 }
                 $('#input_billing').val("");
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
                 var item = _self.collection.at(_self.i);
                 _self.collection.remove(item);
@@ -218,55 +204,57 @@ define([
                 _self.renderBillDetail();
                 toastr.success('删除成功');
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
                 var confirmBill = new BillModel();
-                if(_self.unpaidamount == 0){
-                    _self.unpaidamount = _self.unpaidamount.toFixed(2);
-                    if(_self.percentage != 0){
-                        _self.totalDiscount(_self.percentage);
-                    }
-                    var data = {};
-                    data['mode'] = '00';
-                    if (storage.isSet(system_config.VIP_KEY)) {
-                        data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                        data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                        data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-
-                    } else {
-                        data['medium_id'] = "*";
-                        data['medium_type'] = "*";
-                        data['cust_id'] = "*";
-                    }
-                    data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
-                    data['gather_detail'] = _self.collection.toJSON();
-                    console.log(data);
-                    confirmBill.trade_confirm(data, function (resp) {
-                        console.log(resp);
-                        if (resp.status == '00') {
-                            storage.remove(system_config.SALE_PAGE_KEY);
-                            storage.remove(system_config.ONE_CARD_KEY);
-                            if (storage.isSet(system_config.VIP_KEY)) {
-                                storage.remove(system_config.VIP_KEY);
-                            }
-                            router.navigate("main", {trigger: true,replace:true});
-                            //f7app.alert("订单号：" + resp.bill_no,'提示');
-                            toastr.success("订单号：" + resp.bill_no);
-                            var send_data = {};
-                            send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
-                            send_data['content'] = resp.printf;
-                            send_data = JSON.stringify(send_data) + '<EOF>';
-                            console.log(resp.printf);
-                            _self.sendLargeData2Socket(send_data);
-                        } else {
-                           toastr.error(resp.msg);
-                        }
-                    });
-                }else{
+                if(_self.unpaidamount != 0){
                     toastr.warning('还有未支付的金额，请支付完成后再进行结算');
+                } else {
+                    var confirmView = new ConfirmView({
+                        pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
+                        callback: function () { //
+                            _self.unpaidamount = _self.unpaidamount.toFixed(2);
+                            if(_self.percentage != 0){
+                                _self.totalDiscount(_self.percentage);
+                            }
+                            var data = {};
+                            data['mode'] = '00';
+                            if (storage.isSet(system_config.VIP_KEY)) {
+                                data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                                data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                                data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                            } else {
+                                data['medium_id'] = "*";
+                                data['medium_type'] = "*";
+                                data['cust_id'] = "*";
+                            }
+                            data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
+                            data['gather_detail'] = _self.collection.toJSON();
+                            console.log(data);
+                            confirmBill.trade_confirm(data, function (resp) {
+                                if (resp.status == '00') {
+                                    storage.remove(system_config.SALE_PAGE_KEY);
+                                    storage.remove(system_config.ONE_CARD_KEY);
+                                    if (storage.isSet(system_config.VIP_KEY)) {
+                                        storage.remove(system_config.VIP_KEY);
+                                    }
+                                    router.navigate("main", {trigger: true,replace:true});
+                                    //f7app.alert("订单号：" + resp.bill_no,'提示');
+                                    toastr.success("订单号：" + resp.bill_no);
+                                    var send_data = {};
+                                    send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
+                                    send_data['content'] = resp.printf;
+                                    send_data = JSON.stringify(send_data) + '<EOF>';
+                                    _self.sendLargeData2Socket(send_data);
+                                } else {
+                                    toastr.error(resp.msg);
+                                }
+                            });
+                        },
+                        content:'确定结算此单？'
+                    });
                 }
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
@@ -277,7 +265,6 @@ define([
                 }
                 $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Up, function() {
                 if (_self.i > 0) {
                     _self.i--;
@@ -288,7 +275,6 @@ define([
                 }
                 $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -305,7 +291,6 @@ define([
                     });
                 }
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -322,7 +307,6 @@ define([
                     });
                 }
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -339,7 +323,6 @@ define([
                     });
                 }
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -388,17 +371,14 @@ define([
                     toastr.success('取消整单优惠成功');
                 }
             });
-
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
                 var tipsView = new KeyTipsView('BILLING_PAGE');
                 _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
             });
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
-
             });
         },
-
         /**
          * 计算整单优惠
          */
@@ -441,9 +421,6 @@ define([
             //console.log(_self.discountcollection);
             //console.log('final');
         }
-
     });
-
-
     return billingView;
 });
