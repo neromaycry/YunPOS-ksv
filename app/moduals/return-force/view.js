@@ -6,10 +6,12 @@ define([
     '../../../../moduals/return-force/model',
     '../../../../moduals/return-force/collection',
     '../../../../moduals/keytips-member/view',
+    '../../../../moduals/modal-confirm/view',
+    '../../../../moduals/modal-login/view',
     'text!../../../../moduals/return-force/posinfotpl.html',
     'text!../../../../moduals/return-force/cartlisttpl.html',
     'text!../../../../moduals/return-force/tpl.html',
-], function (BaseView, ReturnForceModel, ReturnForceCollection,KeyTipsView, posinfotpl,cartlisttpl, tpl) {
+], function (BaseView, ReturnForceModel, ReturnForceCollection,KeyTipsView,ConfirmView,SecondLoginView, posinfotpl,cartlisttpl, tpl) {
 
     var returnForceView = BaseView.extend({
 
@@ -26,6 +28,10 @@ define([
         discountamount: 0,
 
         i: 0,
+
+        isDeleteKey:false,
+
+        deleteKey:{},
 
         template_posinfo:posinfotpl,
 
@@ -52,6 +58,10 @@ define([
                 _self.collection.set(storage.get(system_config.FORCE_RETURN_KEY,'cartlist'));
                 _self.model.set(storage.get(system_config.FORCE_RETURN_KEY,'panel'));
             }
+            if(storage.isSet(system_config.LOGIN_USER_KEY)){
+                this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
+            }
+            this.onDeleteKey();
             this.initTemplates();
         },
 
@@ -136,29 +146,37 @@ define([
             });
             //取消退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.C, function() {
-                _self.collection.reset();
-                _self.model.set({
-                    totalamount: 0,
-                    itemamount: 0,
-                    discountamount: 0
+                var confirmView = new ConfirmView({
+                    pageid:window.PAGE_ID.RETURN_FORCE, //当前打开confirm模态框的页面id
+                    callback: function () { //
+                        _self.collection.reset();
+                        _self.model.set({
+                            totalamount: 0,
+                            itemamount: 0,
+                            discountamount: 0
+                        });
+                        _self.renderPosInfo();
+                        _self.renderCartList();
+                        storage.remove(system_config.FORCE_RETURN_KEY);
+                        toastr.success('取消退货成功');
+                    },
+                    content:'确定取消退货？'
                 });
-                _self.renderPosInfo();
-                _self.renderCartList();
-                storage.remove(system_config.FORCE_RETURN_KEY);
-                toastr.success('取消退货');
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D,function () {
-                if($('li').hasClass('cus-selected')){
-                    console.log(_self.i);
-                    console.log(_self.collection);
-                    var item = _self.collection.at(_self.i);
-                    _self.collection.remove(item);
-                    _self.renderCartList();
-                    console.log(_self.collection);
-                    _self.calculateModel();
+                if(_self.isDeleteKey){
+                    _self.deleteItem();
+                }else{
+                    var secondLoginView = new SecondLoginView({
+                        pageid: window.PAGE_ID.RETURN_FORCE,
+                        callback: function () {
+                            _self.deleteItem();
+                        }
+                    });
+                    _self.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
                 }
-                toastr.success('删除成功');
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.N,function () {
@@ -233,6 +251,19 @@ define([
             });
         },
 
+        /**
+         * 单品删除
+         */
+        deleteItem: function () {
+            if($('li').hasClass('cus-selected')){
+                var item = this.collection.at(this.i);
+                this.collection.remove(item);
+                this.renderCartList();
+                this.calculateModel();
+            }
+            toastr.success('删除成功');
+        },
+
         onAddItem: function (JSONData) {
             this.collection.set(JSONData, {merge: false});
             this.insertSerial();
@@ -284,6 +315,21 @@ define([
             });
             this.renderPosInfo();
         },
+
+        /**
+         * 判断当前营业员是否有删除商品的权限
+         */
+        onDeleteKey: function () {
+            for(var j = 0; j < this.deleteKey.length; j++){
+                console.log(this.deleteKey[j]);
+                if(this.deleteKey[j] == '02'){
+                    this.isDeleteKey = true;//判断当前是否有删除权限的key
+                    break;
+                }else{
+                    this.isDeleteKey = false;
+                }
+            }
+        }
 
     });
 

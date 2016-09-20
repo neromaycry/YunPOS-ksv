@@ -30,7 +30,7 @@ define([
                 return;
             }
             if (password == '') {
-                toastr.warning('请输入密码');
+                toastr.warning('请输入密�?');
                 return;
             }
             var data = {};
