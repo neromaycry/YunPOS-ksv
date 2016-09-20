@@ -36,6 +36,14 @@ define([
 
         i: 0,
 
+        height:0,//购物车的高度
+
+        item:0,//每条商品的高度
+
+        temp:0,//购物车显示的商品数量
+
+        n:0,//
+
         template_posinfo:posinfotpl,
 
         template_salesman:salesmantpl,
@@ -107,12 +115,11 @@ define([
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
-            //this.initLayoutHeight();
+            this.initLayoutHeight();
             $('#li' + _self.i).addClass('cus-selected');
-            $('.modal').on('hidden.bs.modal', function () {
-                alert('bindkeys');
-                _self.bindKeys();
-            });
+            _self.height = $('.for-cartlist').height();
+            _self.item = $('li').height() + 20;
+            _self.temp = parseInt(_self.height / _self.item);//商品列表中的条目数
         },
 
         initTemplates: function () {
@@ -355,11 +362,10 @@ define([
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
-                var height = $('.for-cartlist').height();
-                var item = $('li').height() + 20;
-                var temp = parseInt(height / item);
-                if (_self.i % temp == 0) {
-                    $('.for-cartlist').scrollTop(height);
+
+                if (_self.i % _self.temp == 0) {
+                    _self.n++;
+                    $('.for-cartlist').scrollTop(_self.height * _self.n);
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
@@ -368,11 +374,10 @@ define([
                 if (_self.i > 0) {
                     _self.i--;
                 }
-                var height = $('.for-cartlist').height();
-                var item = $('li').height() + 20;
-                var temp = parseInt(height / item);
-                if (_self.i % temp == 0) {
-                    $('.for-cartlist').scrollTop(-height);
+                if (_self.i % _self.temp == 0) {
+                    _self.n--;
+                    $('.for-cartlist').scrollTop(_self.height * _self.n );
+
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
