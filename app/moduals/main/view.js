@@ -363,7 +363,7 @@ define([
                     _self.i++;
                 }
 
-                if ((_self.i+1) % _self.temp == 0) {
+                if (_self.i % _self.temp == 0) {
                     _self.n++;
                     $('.for-cartlist').scrollTop(_self.height * _self.n);
                 }
