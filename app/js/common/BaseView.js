@@ -153,6 +153,26 @@ define([
 
         },
 
+        sendLargeData2Socket: function (str) {
+            var slicelength = 42;
+            var n = str.length/slicelength+1;
+            var i = 0;
+            setInterval(function () {
+                if (i<str.length/slicelength+1){
+                    if (i == (n-1)) {
+                        var laststr = str.slice(slicelength*i,str.length);
+                        console.log(laststr);
+                        wsClient.send(laststr);
+                    } else {
+                        var substr = str.slice(slicelength*i,slicelength*(i+1));
+                        console.log('substr:' + substr);
+                        wsClient.send(substr);
+                    }
+                }
+                i++
+            },10);
+        },
+
         render: function () {
             console.log('render');
             var _data = this.collection || this.model;

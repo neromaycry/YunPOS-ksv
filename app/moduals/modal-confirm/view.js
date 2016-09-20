@@ -44,8 +44,6 @@ define([
                 _self.attrs.callback();
                 _self.confirmHideModal(_self.attrs.pageid);
             });
-
-
         },
 
         confirmHideModal:function(pageid) {
@@ -79,8 +77,6 @@ define([
                     break;
             }
         }
-
-
     });
 
     return confirmView;

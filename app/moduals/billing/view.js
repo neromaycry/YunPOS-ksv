@@ -255,8 +255,9 @@ define([
                             var send_data = {};
                             send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
                             send_data['content'] = resp.printf;
+                            send_data = JSON.stringify(send_data) + '<EOF>';
                             console.log(resp.printf);
-                            //wsClient.send(JSON.stringify(send_data));
+                            _self.sendLargeData2Socket(send_data);
                         } else {
                            toastr.error(resp.msg);
                         }
