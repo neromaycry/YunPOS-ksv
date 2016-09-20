@@ -53,7 +53,7 @@ define([
         },
 
         initPlugins: function () {
-            $('input[name = return_order_date]').focus();
+            $('input[name = whole_return_order]').focus();
             if (storage.isSet(system_config.RETURN_KEY)) {
                 this.RtPayedlistCollection.set(storage.get(system_config.RETURN_KEY,'paymentlist'));
                 this.RtcartCollection.set(storage.get(system_config.RETURN_KEY,'cartlist'));
@@ -180,22 +180,28 @@ define([
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
-                if($('input[name = return_order_date]').val() == '') {
-                    toastr.warning('订单日期不能为空');
-                } else if ($('input[name = whole_return_order]').val() == ''){
+                if ($('input[name = whole_return_order]').val() == '') {
                     toastr.warning('订单编号不能为空');
-                }else {
-                    _self.requestOrder();
-                    $('input[name = return_order_date]').val("");
-                    $('input[name = whole_return_order]').val("");
+                    return;
                 }
+                _self.requestOrder();
+                $('input[name = whole_return_order]').val("");
+                //if($('input[name = return_order_date]').val() == '') {
+                //    toastr.warning('订单日期不能为空');
+                //} else if ($('input[name = whole_return_order]').val() == ''){
+                //    toastr.warning('订单编号不能为空');
+                //}else {
+                //    _self.requestOrder();
+                //    $('input[name = return_order_date]').val("");
+                //    $('input[name = whole_return_order]').val("");
+                //}
             });
-            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Down, function () {
-                $('input[name = whole_return_order]').focus();
-            });
-            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Up, function () {
-                $('input[name = return_order_date]').focus();
-            })
+            //this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Down, function () {
+            //    $('input[name = whole_return_order]').focus();
+            //});
+            //this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Up, function () {
+            //    $('input[name = return_order_date]').focus();
+            //})
         },
 
     });

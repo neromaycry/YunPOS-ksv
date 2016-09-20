@@ -22,6 +22,14 @@ div .no-padding {
     padding: 0px;
 }
 
+div .left-margin {
+    margin-left: 15px;
+}
+
+div .right-margin {
+    margin-right: 60px;
+}
+
 div .left-padding {
     padding-left: 15px;
 }

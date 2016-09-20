@@ -9,27 +9,27 @@
     </div>
 </div>
 <div class="panel-body">
-    <div class="row">
+    <div class="row bottom-margin">
         <div class="col-md-6 text-center">
             件数：
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-3 text-right">
             <%= itemamount %>
         </div>
     </div>
-    <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+    <div class="row bottom-margin">
         <div class="col-md-6 text-center">
             优惠：
         </div>
-        <div class="col-md-6 text-center" style="color: #4db6ac;">
+        <div class="col-md-3 text-right text-teal">
            - <%= toDecimal2(discountamount) %>
         </div>
     </div>
-    <div class="row">
+    <div class="row bottom-margin">
         <div class="col-md-6 text-center">
             总计：
         </div>
-        <div class="col-md-6 text-center" style="color:#f36c60;">
+        <div class="col-md-3 text-right text-red">
             <%= toDecimal2(totalamount-discountamount) %>
         </div>
     </div>
