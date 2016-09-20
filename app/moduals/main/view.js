@@ -10,11 +10,12 @@ define([
     '../../../../moduals/modal-logout/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
+    '../../../../moduals/modal-confirm/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, LogoutView,BilldiscountView, KeyTipsView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -198,7 +199,14 @@ define([
             });
             //清空购物车
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {
-                _self.clearCart();
+                var confirmView = new ConfirmView({
+                    pageid:window.PAGE_ID.MAIN,
+                    callback: function () {
+                        _self.clearCart();
+                    },
+                    content:'确定清空购物车？'
+                });
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D,function () {

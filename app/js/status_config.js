@@ -162,7 +162,8 @@ window.PAGE_ID = {
     'INITINFO':18,
     'LOGOUT':19,
     'BILL_DISCOUNT':20,
-    'CHECKING':21
+    'CHECKING':21,
+    'CONFIRM':22
 };
 
 window.KEYS = {
