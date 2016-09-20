@@ -7,10 +7,11 @@ define([
     '../../../../moduals/billing-return/collection',
     '../../../../moduals/modal-returnbillingtype/view',
     '../../../../moduals/keytips-member/view',
+    '../../../../moduals/modal-confirm/view',
     'text!../../../../moduals/billing-return/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/billing-return/tpl.html'
-], function (BaseView, BillRtModel, BillRtCollection, BilltypeView,KeyTipsView, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, BillRtModel, BillRtCollection, BilltypeView,KeyTipsView, ConfirmView, billinfotpl, billingdetailtpl, tpl) {
 
     var billingRtView = BaseView.extend({
 
@@ -208,78 +209,85 @@ define([
 
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.B, function() {
                 var confirmBill = new BillRtModel();
-                _self.unpaidamount = _self.unpaidamount.toFixed(2);
-                if(_self.unpaidamount == 0){
-                    if(isfromForce) {
-                        var data = {};
-                        data['mode'] = '02';
-                        if (storage.isSet(system_config.VIP_KEY)) {
-                            data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                            data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                            data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-
-                        } else {
-                            data['medium_id'] = "*";
-                            data['medium_type'] = "*";
-                            data['cust_id'] = "*";
-                        }
-                        data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY,'cartlist');
-                        data['gather_detail'] = _self.collection.toJSON();
-                        for(var i = 0;i<data['gather_detail'].length;i++) {
-                            data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
-                            console.log(data['gather_detail'][i]);
-                        }
-                        confirmBill.trade_confirm(data, function (resp) {
-                            console.log(resp);
-                            if (resp.status == '00') {
-                                console.log(resp.bill_no);
-                                storage.remove(system_config.FORCE_RETURN_KEY);
-                                if (storage.isSet(system_config.VIP_KEY)) {
-                                    storage.remove(system_config.VIP_KEY);
-                                }
-                                router.navigate("main", {trigger: true,replace:true});
-                                toastr.success("订单号：" + resp.bill_no);
-                            } else {
-                                toastr.error(resp.msg);
-                            }
-                        });
-
-                    }else {
-                        var data = {};
-                        data['mode'] = '02';
-                        if (storage.isSet(system_config.VIP_KEY)) {
-                            data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                            data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                            data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-                        } else {
-                            data['medium_id'] = "*";
-                            data['medium_type'] = "*";
-                            data['cust_id'] = "*";
-                        }
-                        data['goods_detail'] = storage.get(system_config.RETURN_KEY,'cartlist');
-                        data['gather_detail'] = _self.collection.toJSON();
-                        for(var i = 0;i<data['gather_detail'].length;i++) {
-                            data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
-                            console.log(data['gather_detail'][i]);
-                        }
-                        confirmBill.trade_confirm(data, function (resp) {
-                            console.log(resp);
-                            if (resp.status == '00') {
-                                console.log(resp.bill_no);
-                                storage.remove(system_config.RETURN_KEY);
-                                if (storage.isSet(system_config.VIP_KEY)) {
-                                    storage.remove(system_config.VIP_KEY);
-                                }
-                                router.navigate("main", {trigger: true,replace:true});
-                                //f7app.alert('订单号：' + resp.bill_no,'提示');
-                                toastr.success('订单号：' + resp.bill_no)
-                            } else {
-                                toastr.error(resp.msg);
-                            }
-                        });
-                    }
-                }else{
+                if(_self.unpaidamount != 0){
                     toastr.warning('还有未支付的金额，请支付完成后再进行结算');
+                } else {
+                    var confirmView = new ConfirmView({
+                        pageid:window.PAGE_ID.BILLING_RETURN, //当前打开confirm模态框的页面id
+                        callback: function () { //
+                            _self.unpaidamount = _self.unpaidamount.toFixed(2);
+                                if(isfromForce) {
+                                    var data = {};
+                                    data['mode'] = '02';
+                                    if (storage.isSet(system_config.VIP_KEY)) {
+                                        data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                                        data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                                        data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+
+                                    } else {
+                                        data['medium_id'] = "*";
+                                        data['medium_type'] = "*";
+                                        data['cust_id'] = "*";
+                                    }
+                                    data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY,'cartlist');
+                                    data['gather_detail'] = _self.collection.toJSON();
+                                    for(var i = 0;i<data['gather_detail'].length;i++) {
+                                        data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
+                                        console.log(data['gather_detail'][i]);
+                                    }
+                                    confirmBill.trade_confirm(data, function (resp) {
+                                        console.log(resp);
+                                        if (resp.status == '00') {
+                                            console.log(resp.bill_no);
+                                            storage.remove(system_config.FORCE_RETURN_KEY);
+                                            if (storage.isSet(system_config.VIP_KEY)) {
+                                                storage.remove(system_config.VIP_KEY);
+                                            }
+                                            router.navigate("main", {trigger: true,replace:true});
+                                            toastr.success("订单号：" + resp.bill_no);
+                                        } else {
+                                            toastr.error(resp.msg);
+                                        }
+                                    });
+
+                                }else {
+                                    var data = {};
+                                    data['mode'] = '02';
+                                    if (storage.isSet(system_config.VIP_KEY)) {
+                                        data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                                        data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                                        data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                                    } else {
+                                        data['medium_id'] = "*";
+                                        data['medium_type'] = "*";
+                                        data['cust_id'] = "*";
+                                    }
+                                    data['goods_detail'] = storage.get(system_config.RETURN_KEY,'cartlist');
+                                    data['gather_detail'] = _self.collection.toJSON();
+                                    for(var i = 0;i<data['gather_detail'].length;i++) {
+                                        data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
+                                        console.log(data['gather_detail'][i]);
+                                    }
+                                    confirmBill.trade_confirm(data, function (resp) {
+                                        console.log(resp);
+                                        if (resp.status == '00') {
+                                            console.log(resp.bill_no);
+                                            storage.remove(system_config.RETURN_KEY);
+                                            if (storage.isSet(system_config.VIP_KEY)) {
+                                                storage.remove(system_config.VIP_KEY);
+                                            }
+                                            router.navigate("main", {trigger: true,replace:true});
+                                            //f7app.alert('订单号：' + resp.bill_no,'提示');
+                                            toastr.success('订单号：' + resp.bill_no)
+                                        } else {
+                                            toastr.error(resp.msg);
+                                        }
+                                    });
+                                }
+                        },
+                        content:'确定进入退货结算？'
+                    });
+                    _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
                 }
             });
 

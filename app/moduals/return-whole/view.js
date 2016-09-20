@@ -6,11 +6,12 @@ define([
     '../../../../moduals/return-whole/model',
     '../../../../moduals/return-whole/collection',
     '../../../../moduals/keytips-member/view',
+    '../../../../moduals/modal-confirm/view',
     'text!../../../../moduals/return-whole/returninfotpl.html',
     'text!../../../../moduals/return-whole/rtcarttpl.html',
     'text!../../../../moduals/return-whole/rtpayedlisttpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, RtWholeModel, RtWholeCollection, KeyTipsView, returninfotpl, rtcarttpl, rtpayedlisttpl, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, KeyTipsView,ConfirmView, returninfotpl, rtcarttpl, rtpayedlisttpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -166,17 +167,26 @@ define([
             });
             //取消整单退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function() {
-                _self.RtcartCollection.reset();
-                _self.RtPayedlistCollection.reset();
-                _self.model.set({
-                    totalamount: 0,
-                    itemamount: 0,
-                    discountamount: 0
+                var confirmView = new ConfirmView({
+                    pageid:window.PAGE_ID.RETURN_WHOLE, //当前打开confirm模态框的页面id
+                    callback: function () { //
+                        //_self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                        _self.RtcartCollection.reset();
+                        _self.RtPayedlistCollection.reset();
+                        _self.model.set({
+                            totalamount: 0,
+                            itemamount: 0,
+                            discountamount: 0
+                        });
+                        _self.renderRtcart();
+                        _self.renderRtInfo();
+                        _self.renderRtPayedlist();
+                        toastr.success('取消退货成功');
+                        storage.remove(system_config.RETURN_KEY);
+                    },
+                    content:'确定取消整单退货？'
                 });
-                _self.renderRtcart();
-                _self.renderRtInfo();
-                _self.renderRtPayedlist();
-                storage.remove(system_config.RETURN_KEY);
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {

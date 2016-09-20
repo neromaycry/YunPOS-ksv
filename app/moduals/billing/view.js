@@ -9,10 +9,11 @@ define([
     '../../../../moduals/modal-billingaccount/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
+    '../../../../moduals/modal-confirm/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView, ConfirmView,billinfotpl, billingdetailtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -221,49 +222,56 @@ define([
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
                 var confirmBill = new BillModel();
-                if(_self.unpaidamount == 0){
-                    _self.unpaidamount = _self.unpaidamount.toFixed(2);
-                    if(_self.percentage != 0){
-                        _self.totalDiscount(_self.percentage);
-                    }
-                    var data = {};
-                    data['mode'] = '00';
-                    if (storage.isSet(system_config.VIP_KEY)) {
-                        data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                        data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                        data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-
-                    } else {
-                        data['medium_id'] = "*";
-                        data['medium_type'] = "*";
-                        data['cust_id'] = "*";
-                    }
-                    data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
-                    data['gather_detail'] = _self.collection.toJSON();
-                    console.log(data);
-                    confirmBill.trade_confirm(data, function (resp) {
-                        console.log(resp);
-                        if (resp.status == '00') {
-                            storage.remove(system_config.SALE_PAGE_KEY);
-                            storage.remove(system_config.ONE_CARD_KEY);
-                            if (storage.isSet(system_config.VIP_KEY)) {
-                                storage.remove(system_config.VIP_KEY);
-                            }
-                            router.navigate("main", {trigger: true,replace:true});
-                            //f7app.alert("订单号：" + resp.bill_no,'提示');
-                            toastr.success("订单号：" + resp.bill_no);
-                            var send_data = {};
-                            send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
-                            send_data['content'] = resp.printf;
-                            console.log(resp.printf);
-                            //wsClient.send(JSON.stringify(send_data));
-                        } else {
-                           toastr.error(resp.msg);
-                        }
-                    });
-                }else{
+                if(_self.unpaidamount != 0){
                     toastr.warning('还有未支付的金额，请支付完成后再进行结算');
+                } else {
+                    var confirmView = new ConfirmView({
+                        pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
+                        callback: function () { //
+                            _self.unpaidamount = _self.unpaidamount.toFixed(2);
+                            if(_self.percentage != 0){
+                                _self.totalDiscount(_self.percentage);
+                            }
+                            var data = {};
+                            data['mode'] = '00';
+                            if (storage.isSet(system_config.VIP_KEY)) {
+                                data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                                data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                                data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                            } else {
+                                data['medium_id'] = "*";
+                                data['medium_type'] = "*";
+                                data['cust_id'] = "*";
+                            }
+                            data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
+                            data['gather_detail'] = _self.collection.toJSON();
+                            console.log(data);
+                            confirmBill.trade_confirm(data, function (resp) {
+                                    console.log(resp);
+                                    if (resp.status == '00') {
+                                        storage.remove(system_config.SALE_PAGE_KEY);
+                                        storage.remove(system_config.ONE_CARD_KEY);
+                                        if (storage.isSet(system_config.VIP_KEY)) {
+                                            storage.remove(system_config.VIP_KEY);
+                                        }
+                                        router.navigate("main", {trigger: true,replace:true});
+                                        //f7app.alert("订单号：" + resp.bill_no,'提示');
+                                        toastr.success("订单号：" + resp.bill_no);
+                                        var send_data = {};
+                                        send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
+                                        send_data['content'] = resp.printf;
+                                        console.log(resp.printf);
+                                        //wsClient.send(JSON.stringify(send_data));
+                                    } else {
+                                        toastr.error(resp.msg);
+                                    }
+                                });
+                        },
+                        content:'确定结算此单？'
+                    });
                 }
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+
             });
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
