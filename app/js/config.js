@@ -15,7 +15,7 @@ require.config({
         'loading':'../loading/jquery.showLoading.min',
         'common':'common',
         'toastr':'../toastr/toastr.min',
-        'remodal':'../remodal/remodal',
+        'sockjs':'../sockjs/sockjs',
         'bootstrap':'../bootstrap/js/bootstrap',
         'text': 'requirePlugin/text',
         'css': 'requirePlugin/css',
@@ -57,9 +57,8 @@ require.config({
             'deps':['css!../toastr/toastr.css'],
             'exports':'toastr'
         },
-        'remodal':{
-            'deps':['css!../remodal/remodal.css','css!../remodal/remodal-default-theme.css'],
-            'exports':'remodal'
+        'sockjs':{
+            'exports':'sockjs'
         }
     }
 });
@@ -76,9 +75,9 @@ require([
     'loading',
     'storage',
     'toastr',
-    'remodal',
+    'sockjs',
     'md5',
-], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,remodal,md5) {
+], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,sockjs,md5) {
     window.storage = $.localStorage;
 
     window.pageId = 0;
@@ -98,6 +97,52 @@ require([
     window.toastr.options = {
         'timeOut':'800',
         'positionClass':'toast-bottom-center'
+    };
+
+    var SOCKET_ADDR = 'ws://192.168.1.143:2001/';
+
+    window.wsClient = new WebSocket(SOCKET_ADDR);
+    window.wsClient.onopen = function (e) {
+        window.toastr.success('已与硬件建立连接');
+    };
+    window.wsClient.onmessage = function(e) {
+        var jsonData = JSON.parse(e.data);
+        console.log(jsonData);
+        switch (jsonData.directive) {
+            case '01':
+                window.toastr.info(jsonData.content);
+                break;
+            case '02':
+                window.toastr.info(jsonData.content);
+                break;
+            case '03':
+                window.toastr.info(jsonData.content);
+                break;
+            case '04':
+                window.toastr.info(jsonData.content);
+                break;
+            case '05':
+                window.toastr.info(jsonData.content);
+                break;
+            case '06':
+                window.toastr.info(jsonData.content);
+                break;
+            case '07':
+                window.toastr.info(jsonData.content);
+                break;
+            case '08':
+                window.toastr.info(jsonData.content);
+                break;
+            case '09':
+                window.toastr.info(jsonData.content);
+                break;
+        }
+    };
+    window.wsClient.onclose = function (e) {
+        window.toastr.warning('与硬件连接断开');
+    };
+    window.wsClient.onerror = function(e) {
+        window.toastr.warning('与硬件连接出现问题，请检查硬件');
     };
 
     // 定义调试标志
