@@ -16,6 +16,14 @@ define([
 
         is_from_force:false,
 
+        listheight:0,//购物车的高度
+
+        itemheight:0,//每条商品的高度
+
+        listnum:0,//购物车显示的商品数量
+
+        n:0,//
+
         initialize: function (attrs) {
             var _self = this;
             console.log(">>> " + this.id);

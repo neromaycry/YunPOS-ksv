@@ -70,6 +70,9 @@ define([
             this.renderBillInfo();
             $('input[name = billing]').focus();
             this.initLayoutHeight();
+            _self.listheight = $('.for-billdetail').height();
+            _self.itemheight = $('li').height() + 20;
+            _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数
         },
 
         /**
@@ -266,12 +269,20 @@ define([
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
+                if (_self.i % _self.listnum == 0) {
+                    _self.n++;
+                    $('.for-billdetail').scrollTop(_self.listheight * _self.n);
+                }
                 $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Up, function() {
                 if (_self.i > 0) {
                     _self.i--;
+                }
+                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                    _self.n--;
+                    $('.for-billdetail').scrollTop(_self.listheight * _self.n );
                 }
                 $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
