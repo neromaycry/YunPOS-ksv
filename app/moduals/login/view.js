@@ -123,6 +123,12 @@ define([
                     $('input[name = username]').focus();
                 }
             });
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
+                storage.remove(system_config.SETTING_DATA_KEY);
+                storage.remove(system_config.IS_FIRST_KEY);
+                router.navigate("setdns",{trigger:true,replace:true});
+            });
+
         }
 
     });
