@@ -27,6 +27,8 @@ define([
 
         orderNum:'',
 
+        isOrdernum:true,
+
         events: {
 
         },
@@ -86,33 +88,68 @@ define([
                 _self.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             });
             this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Down, function() {
-                if (_self.i < _self.collection.length - 1) {
-                    _self.i++;
+                if(_self.isOrdernum){
+                    if (_self.i < _self.collection.length - 1) {
+                        _self.i++;
+                    }
+                    if (_self.i % _self.listnum == 0 && _self.n < parseInt(_self.collection.length / _self.listnum)) {
+                        _self.n++;
+                        $('.for-restordernum-list').scrollTop(_self.listheight * _self.n);
+                    }
+                    $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                    _self.restorderdetail();
+                } else {
+                    if (_self.i < _self.detailCollection.length - 1) {
+                        _self.i++;
+                    }
+                    if (_self.i % _self.listnum == 0 && _self.n < parseInt(_self.collection.length / _self.listnum)) {
+                        _self.n++;
+                        //alert(_self.n);
+                        $('.for-restorderdetail-list').scrollTop(_self.listheight * _self.n);
+                    }
+                    $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 }
-                if (_self.i % _self.listnum == 0) {
-                    _self.n++;
-                    $('.for-restordernum-list').scrollTop(_self.listheight * _self.n);
-                }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                _self.restorderdetail();
             });
             this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Up, function() {
-                if (_self.i > 0) {
-                    _self.i--;
+                if(_self.isOrdernum){
+                    if (_self.i > 0) {
+                        _self.i--;
+                    }
+                    if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                        _self.n--;
+                        $('.for-restordernum-list').scrollTop(_self.listheight * _self.n );
+                    }
+                    $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                    _self.restorderdetail();
+                }else{
+                    if (_self.i > 0) {
+                        _self.i--;
+                    }
+                    if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                        _self.n--;
+                        //alert(_self.n);
+                        $('.for-restorderdetail-list').scrollTop(_self.listheight * _self.n );
+                    }
+                    $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 }
-                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
-                    _self.n--;
-                    $('.for-restordernum-list').scrollTop(_self.listheight * _self.n );
-                }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                _self.restorderdetail();
             });
             this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Left, function() {
-
+                _self.isOrdernum = true;
+                _self.i = 0;
+                _self.n = 0;
+                $('.for-restordernum-list').scrollTop(0);
+                _self.listheight = $('.for-restordernum-list').height();
+                _self.itemheight = $('li').height() + 20;
+                _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数
             });
 
             this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Right, function () {
-
+                _self.isOrdernum = false;
+                _self.i = 0;
+                _self.n = 0;
+                _self.listheight = $('.for-restorderdetail-list').height();
+                _self.itemheight = $('li').height() + 20;
+                _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数
             });
 
             this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Enter, function() {

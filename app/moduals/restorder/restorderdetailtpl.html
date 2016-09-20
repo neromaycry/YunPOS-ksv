@@ -17,7 +17,7 @@ return s;
 }%>
 <ul class="list-group">
 <% _.each(obj,function(e,i){ %>
-<li class="list-group-item" style="border-radius: 0">
+<li class="list-group-item" id="detail<%= i %>" style="border-radius: 0">
     <div class="row">
         <div class="col-md-4"><%=e.goods_name%></div>
         <div class="col-md-4"><%=e.num%></div>

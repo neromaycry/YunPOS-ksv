@@ -1,0 +1,13 @@
+
+<ul class="list-group">
+    <% _.each(obj,function(e,i){ %>
+    <li class="list-group-item" id="detail<%=i%>" style="border-radius: 0">
+        <div class="row">
+            <div class="col-md-3"><%= e.gather_id %></div>
+            <div class="col-md-3"><%= e.gather_name %></div>
+            <div class="col-md-3"><%= e.gather_money %></div>
+            <div class="col-md-3"><%= e.gather_num %></div>
+        </div>
+    </li>
+    <% }) %>
+</ul>
