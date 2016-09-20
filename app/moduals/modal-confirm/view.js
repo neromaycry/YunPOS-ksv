@@ -38,38 +38,48 @@ define([
         bindModalKeys: function () {
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.CONFIRM, window.KEYS.Esc , function () {
-                switch (_self.attrs.pageid) {
-                    case window.PAGE_ID.MAIN:
-                        _self.hideModal(window.PAGE_ID.MAIN);
-                        break;
-                    case window.PAGE_ID.MEMBER:
-                        _self.hideModal(window.PAGE_ID.MEMBER);
-                        break;
-                    case window.PAGE_ID.RESTORDER:
-                        _self.hideModal(window.PAGE_ID.RESTORDER);
-                        break;
-                    case window.PAGE_ID.RETURN_WHOLE:
-                        _self.hideModal(window.PAGE_ID.RETURN_WHOLE);
-                        break;
-                    case window.PAGE_ID.BILLING:
-                        _self.hideModal(window.PAGE_ID.BILLING);
-                        break;
-                    case window.PAGE_ID.BILLING_RETURN:
-                        _self.hideModal(window.PAGE_ID.BILLING_RETURN);
-                        break;
-                    case window.PAGE_ID.RETURN_FORCE:
-                        _self.hideModal(window.PAGE_ID.RETURN_FORCE);
-                        break;
-                    case window.PAGE_ID.CHECKING:
-                        _self.hideModal(window.PAGE_ID.CHECKING);
-                        break;
-                }
+               _self.confirmHideModal(_self.attrs.pageid);
             });
             this.bindModalKeyEvents(window.PAGE_ID.CONFIRM, window.KEYS.Enter, function () {
                 _self.attrs.callback();
-                _self.hideModal(window.PAGE_ID.MAIN);
+                _self.confirmHideModal(_self.attrs.pageid);
             });
+
+
+        },
+
+        confirmHideModal:function(pageid) {
+            switch (pageid) {
+                case window.PAGE_ID.LOGIN:
+                    this.hideModal(window.PAGE_ID.SETDNS);
+                    break;
+                case window.PAGE_ID.MAIN:
+                    this.hideModal(window.PAGE_ID.MAIN);
+                    break;
+                case window.PAGE_ID.MEMBER:
+                    this.hideModal(window.PAGE_ID.MEMBER);
+                    break;
+                case window.PAGE_ID.RESTORDER:
+                    this.hideModal(window.PAGE_ID.RESTORDER);
+                    break;
+                case window.PAGE_ID.RETURN_WHOLE:
+                    this.hideModal(window.PAGE_ID.RETURN_WHOLE);
+                    break;
+                case window.PAGE_ID.BILLING:
+                    this.hideModal(window.PAGE_ID.BILLING);
+                    break;
+                case window.PAGE_ID.BILLING_RETURN:
+                    this.hideModal(window.PAGE_ID.BILLING_RETURN);
+                    break;
+                case window.PAGE_ID.RETURN_FORCE:
+                    this.hideModal(window.PAGE_ID.RETURN_FORCE);
+                    break;
+                case window.PAGE_ID.CHECKING:
+                    this.hideModal(window.PAGE_ID.CHECKING);
+                    break;
+            }
         }
+
 
     });
 

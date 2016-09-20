@@ -5,8 +5,9 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/login/model',
     '../../../../moduals/login/collection',
+    '../../../../moduals/modal-confirm/view',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, tpl) {
+], function (BaseView, LoginModel, LoginCollection, ConfirmView, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -124,9 +125,16 @@ define([
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
-                storage.remove(system_config.SETTING_DATA_KEY);
-                storage.remove(system_config.IS_FIRST_KEY);
-                router.navigate("setdns",{trigger:true,replace:true});
+                var confirmView = new ConfirmView({
+                    pageid: window.PAGE_ID.LOGIN,
+                    callback: function () {
+                        storage.remove(system_config.SETTING_DATA_KEY);
+                        storage.remove(system_config.IS_FIRST_KEY);
+                        router.navigate("setdns",{trigger:true,replace:true});
+                    },
+                    content:'确定初始化吗？'
+                });
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
 
         }

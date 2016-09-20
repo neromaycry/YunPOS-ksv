@@ -26,11 +26,6 @@ define([
             });
         },
 
-
-        hideModal: function (id) {
-
-        }
-
     });
 
     return secondloginView;
