@@ -28,7 +28,6 @@ define([
             pageId = window.PAGE_ID.MEMBER;
             this.model = new MemberModel();
             this.requestModel = new MemberModel();
-            this.tipsView = new KMemberView("MEMBER_PAGE");
             this.initTemplates();
         },
 
@@ -52,8 +51,8 @@ define([
                 router.navigate('main',{trigger:true});
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.T, function () {
-
-                _self.showModal(window.PAGE_ID.TIP_MEMBER,_self.tipsView);
+                var tipsView = new KMemberView('MEMBER_PAGE');
+                _self.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.Enter, function () {
                 var isUserFocused = $('input[name = custid]').is(':focus');

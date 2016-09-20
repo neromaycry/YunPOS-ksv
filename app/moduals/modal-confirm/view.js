@@ -42,13 +42,20 @@ define([
             });
             this.bindModalKeyEvents(window.PAGE_ID.CONFIRM, window.KEYS.Enter, function () {
                 _self.attrs.callback();
-                _self.confirmHideModal(_self.attrs.pageid);
+                if (_self.attrs.is_navigate) {
+                    _self.confirmHideModal(_self.attrs.navigate_page);
+                } else {
+                    _self.confirmHideModal(_self.attrs.pageid);
+                }
             });
         },
 
         confirmHideModal:function(pageid) {
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
+                    this.hideModal(window.PAGE_ID.LOGIN);
+                    break;
+                case window.PAGE_ID.SETDNS:
                     this.hideModal(window.PAGE_ID.SETDNS);
                     break;
                 case window.PAGE_ID.MAIN:

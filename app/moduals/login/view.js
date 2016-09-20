@@ -87,9 +87,6 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.A, function () {
-
-            });
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Enter, function () {
                 var isUserFocused = $('input[name = username]').is(':focus');
                 if (isUserFocused) {
@@ -117,6 +114,8 @@ define([
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
                 var confirmView = new ConfirmView({
                     pageid: window.PAGE_ID.LOGIN,
+                    is_navigate:true,
+                    navigate_page:window.PAGE_ID.SETDNS,
                     callback: function () {
                         storage.remove(system_config.SETTING_DATA_KEY);
                         storage.remove(system_config.IS_FIRST_KEY);

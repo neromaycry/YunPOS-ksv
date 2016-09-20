@@ -211,6 +211,8 @@ define([
                 } else {
                     var confirmView = new ConfirmView({
                         pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
+                        is_navigate:true,
+                        navigate_page: window.PAGE_ID.MAIN,
                         callback: function () { //
                             _self.unpaidamount = _self.unpaidamount.toFixed(2);
                             if(_self.percentage != 0){

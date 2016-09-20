@@ -256,7 +256,7 @@ define([
             });
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.T, function () {
                 var tipsView = new KeyTipsView('MAIN_PAGE');
-                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+                _self.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             });
             //收银对账
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
