@@ -6,10 +6,11 @@ define([
     '../../../../moduals/billing-return/model',
     '../../../../moduals/billing-return/collection',
     '../../../../moduals/modal-returnbillingtype/view',
+    '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/billing-return/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/billing-return/tpl.html'
-], function (BaseView, BillRtModel, BillRtCollection, BilltypeView, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, BillRtModel, BillRtCollection, BilltypeView,KeyTipsView, billinfotpl, billingdetailtpl, tpl) {
 
     var billingRtView = BaseView.extend({
 
@@ -282,7 +283,6 @@ define([
                 }
             });
 
-
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
@@ -314,7 +314,7 @@ define([
                 }
             });
 
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.T, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.A, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
                     toastr.warning('待支付金额为零,请进行结算');
@@ -330,6 +330,7 @@ define([
                     });
                 }
             });
+
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.P, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -345,6 +346,31 @@ define([
                         //$('#li' + _self.i).addClass('cus-selected');
                     });
                 }
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Q, function() {
+                var unpaidamount = _self.model.get('unpaidamount');
+                if(unpaidamount == 0){
+                    toastr.warning('待支付金额为零,请进行结算');
+                }else {
+                    this.billtype = new BilltypeView('03');
+                    _self.showModal(window.PAGE_ID.RETURN_BILLING_TYPE,_self.billtype);
+                    var attrData = {};
+                    attrData['unpaidamount'] = _self.model.get('unpaidamount');//本次应收的金额
+                    Backbone.trigger('onunpaidamount',attrData);
+                    $('.modal').on('shown.bs.modal',function(e) {
+                        $('input[name = receivedsum]').focus();
+                        //$('#li' + _self.i).addClass('cus-selected');
+                    });
+                }
+            });
+            //一卡通支付
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.O, function () {
+
+            });
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.T, function () {
+                var tipsView = new KeyTipsView('BILLING_RETURN_PAGE');
+                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
             });
         }
 
