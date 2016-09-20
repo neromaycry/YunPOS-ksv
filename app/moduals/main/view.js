@@ -200,8 +200,8 @@ define([
             //清空购物车
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {
                 var confirmView = new ConfirmView({
-                    pageid:window.PAGE_ID.MAIN,
-                    callback: function () {
+                    pageid:window.PAGE_ID.MAIN, //当前打开confirm模态框的页面id
+                    callback: function () { //
                         _self.clearCart();
                     },
                     content:'确定清空购物车？'
@@ -287,7 +287,7 @@ define([
             if (this.i < this.collection.length - 1) {
                 this.i++;
             }
-            if (this.i % _self.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
+            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
                 this.n++;
                 //alert(_self.n);
                 $('.for-cartlist').scrollTop(this.listheight * this.n);
@@ -302,7 +302,7 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
-            if ((this.i+1) % _self.listnum == 0 && this.i > 0) {
+            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
                 //alert(_self.n);
                 $('.for-cartlist').scrollTop(this.listheight * this.n );
