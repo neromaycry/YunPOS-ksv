@@ -55,6 +55,18 @@ define([
                     case 'RETURNWHOLE_PAGE':
                         _self.hideModal(window.PAGE_ID.RETURN_WHOLE);
                         break;
+                    case 'BILLING_PAGE':
+                        _self.hideModal(window.PAGE_ID.BILLING);
+                        break;
+                    case 'BILLING_RETURN_PAGE':
+                        _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                        break;
+                    case 'RETURNFORCE_PAGE':
+                        _self.hideModal(window.PAGE_ID.RETURN_FORCE);
+                        break;
+                    case 'CHECKING_PAGE':
+                        _self.hideModal(window.PAGE_ID.CHECKING);
+                        break;
                 }
             });
         }

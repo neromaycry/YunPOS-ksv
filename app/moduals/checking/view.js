@@ -2,12 +2,13 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/checking/model',
     '../../../../moduals/checking/collection',
+    '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/checking/cashierreporttpl.html',
     'text!../../../../moduals/checking/reportdetailtpl.html',
     'text!../../../../moduals/checking/cashierdailytpl.html',
     'text!../../../../moduals/checking/dailydetailtpl.html',
     'text!../../../../moduals/checking/tpl.html',
-], function (BaseView, CheckingModel,CheckingCollection,cashierreporttpl, cashierdetailtpl,cashierdailytpl,dailydetailtpl, tpl) {
+], function (BaseView, CheckingModel,CheckingCollection, KeyTipsView, cashierreporttpl, cashierdetailtpl,cashierdailytpl,dailydetailtpl, tpl) {
 
     var checkingView = BaseView.extend({
 
@@ -72,18 +73,21 @@ define([
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Esc, function () {
                 router.navigate('main',{trigger:true});
             });
+
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Right, function () {
                 _self.isCashierReport = false;
                 _self.i = 0;
                 _self.n = 0;
                 $('#myTabs a[href="#cashier_daily_report"]').tab('show')
             });
+
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Left, function () {
                 _self.isCashierReport = true;
                 _self.i = 0;
                 _self.n = 0;
                 $('#myTabs a[href="#cashier_report"]').tab('show');
             });
+
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Enter, function () {
                 var date = $('input[name = checking_date]').val();
                 console.log(date);
@@ -120,6 +124,7 @@ define([
                 }
                 $('input[name = checking_date]').val("");
             });
+
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Down, function () {
                 if(_self.isCashierReport){
                     if (_self.i < _self.collection.length - 1) {
@@ -164,6 +169,11 @@ define([
                     }
                     $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 }
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.T, function () {
+                var tipsView = new KeyTipsView('CHECKING_PAGE');
+                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
             });
         },
 

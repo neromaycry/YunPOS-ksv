@@ -5,10 +5,11 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/return-force/model',
     '../../../../moduals/return-force/collection',
+    '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/return-force/posinfotpl.html',
     'text!../../../../moduals/return-force/cartlisttpl.html',
     'text!../../../../moduals/return-force/tpl.html',
-], function (BaseView, ReturnForceModel, ReturnForceCollection, posinfotpl,cartlisttpl, tpl) {
+], function (BaseView, ReturnForceModel, ReturnForceCollection,KeyTipsView, posinfotpl,cartlisttpl, tpl) {
 
     var returnForceView = BaseView.extend({
 
@@ -120,10 +121,10 @@ define([
                 }
             });
 
-
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Esc,function () {
                 router.navigate('main',{trigger:true});
             });
+
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.B,function () {
                 var itemamount = _self.model.get('itemamount');
                 if (itemamount == 0) {
@@ -212,7 +213,6 @@ define([
                 $('#input_main').val('');
             });
 
-
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
@@ -225,6 +225,11 @@ define([
                     _self.i--;
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.T, function () {
+                var tipsView = new KeyTipsView('RETURNFORCE_PAGE');
+                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
             });
         },
 

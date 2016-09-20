@@ -134,10 +134,12 @@ define([
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Left, function() {
+                $('#detail' + _self.i).removeClass('cus-selected');
                 _self.isOrdernum = true;
                 _self.i = 0;
                 _self.n = 0;
                 $('.for-restordernum-list').scrollTop(0);
+                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 _self.listheight = $('.for-restordernum-list').height();
                 _self.itemheight = $('li').height() + 20;
                 _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数
@@ -147,6 +149,7 @@ define([
                 _self.isOrdernum = false;
                 _self.i = 0;
                 _self.n = 0;
+                $('#detail' + _self.i).addClass('cus-selected');
                 _self.listheight = $('.for-restorderdetail-list').height();
                 _self.itemheight = $('li').height() + 20;
                 _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数

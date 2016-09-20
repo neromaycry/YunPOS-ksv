@@ -8,10 +8,11 @@ define([
     '../../../../moduals/modal-billingtype/view',
     '../../../../moduals/modal-billingaccount/view',
     '../../../../moduals/modal-billingdiscount/view',
+    '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView, billinfotpl, billingdetailtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -304,7 +305,7 @@ define([
                 }
             });
 
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
                     toastr.warning('待支付金额为零,请进行结算');
@@ -337,6 +338,23 @@ define([
                     });
                 }
             });
+
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
+                var unpaidamount = _self.model.get('unpaidamount');
+                if(unpaidamount == 0){
+                    toastr.warning('待支付金额为零,请进行结算');
+                }else {
+                    this.billtype = new BilltypeView('03');
+                    _self.showModal(window.PAGE_ID.BILLING_TYPE,_self.billtype);
+                    var attrData = {};
+                    attrData['unpaidamount'] = _self.model.get('unpaidamount');//本次应收的金额
+                    Backbone.trigger('onunpaidamount',attrData);
+                    $('.modal').on('shown.bs.modal',function(e) {
+                        $('input[name = receivedsum]').focus();
+                        //$('#li' + _self.i).addClass('cus-selected');
+                    });
+                }
+            });
             //整单优惠
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Y, function () {
                 if(_self.model.get('totaldiscount') != 0) {
@@ -352,7 +370,7 @@ define([
                 }
             });
             //取消整单优惠
-            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.Q, function () {
+            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.C, function () {
                 if(_self.model.get('totaldiscount') == 0){
                     toastr.info('您未进行任何优惠');
                 }else if(_self.model.get('receivedsum') != 0){
@@ -368,6 +386,11 @@ define([
                     _self.renderBillInfo();
                     toastr.success('取消整单优惠成功');
                 }
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
+                var tipsView = new KeyTipsView('BILLING_PAGE');
+                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
             });
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
