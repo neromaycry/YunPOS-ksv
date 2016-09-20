@@ -374,10 +374,9 @@ define([
                 if (_self.i > 0) {
                     _self.i--;
                 }
-                if (_self.i % _self.temp == 0) {
+                if (_self.i % _self.temp == 0 && _self.i > 0) {
                     _self.n--;
                     $('.for-cartlist').scrollTop(_self.height * _self.n );
-
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
