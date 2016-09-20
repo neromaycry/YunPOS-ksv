@@ -69,24 +69,24 @@ define([
                 discountamount: this.discountamount
             });
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
-                _self.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
-                _self.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
+                this.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
+                this.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
             }
             if(storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
-                _self.salesmanModel.set({
+                this.salesmanModel.set({
                     salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman')
                 });
             }else {
-                _self.salesmanModel.set({
+                this.salesmanModel.set({
                     salesman:'未登录'
                 });
             }
             if(storage.isSet(system_config.VIP_KEY)) {
-                _self.salesmanModel.set({
+                this.salesmanModel.set({
                     member:storage.get(system_config.VIP_KEY,'name')
                 });
             }else {
-                _self.salesmanModel.set({
+                this.salesmanModel.set({
                     member:'未登录'
                 });
             }
@@ -158,7 +158,6 @@ define([
         },
 
         onReleaseOrder: function (data) {
-            console.log(data);
             this.collection = new HomeCollection();
             for (var i in data) {
                 var item = new HomeModel();
@@ -171,32 +170,7 @@ define([
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Enter, function () {
-                search = $('#input_main').val();
-                if(search == ''){
-                    toastr.info('您输入的商品编码为空，请重新输入');
-                }else{
-                    var data = {};
-                    data['skucode'] = search;
-                    if(storage.isSet(system_config.VIP_KEY)) {
-                        data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-                        data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                        data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                    }else{
-                        data['cust_id'] = '*';
-                        data['medium_id'] = '*';
-                        data['medium_type'] = '*';
-                    }
-                    data['goods_detail'] = JSON.stringify(_self.collection);
-                    _self.requestModel.sku(data , function(resp) {
-                        if(resp.status == '00') {
-                            _self.onAddItem(resp.goods_detail);
-                        }else{
-                            toastr.warning(resp.msg);
-                        }
-                    });
-                    $('#input_main').val('');
-                    _self.i = 0;
-                }
+                _self.addItem();
             });
             //会员登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
@@ -204,168 +178,47 @@ define([
             });
             //挂单
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.G, function () {
-                var itemamount = _self.model.get('itemamount');
-                if (itemamount == 0) {
-                   toastr.warning('当前购物车内无商品，无法执行挂单操作');
-                }else {
-                    var orderNum = new Date().getTime();
-                    if (storage.isSet(system_config.RESTORDER_KEY)) {
-                        var pre = storage.get(system_config.RESTORDER_KEY);
-                        pre[orderNum] = _self.collection.toJSON();
-                        storage.set(system_config.RESTORDER_KEY, pre);
-                    } else {
-                        _self.restOrderDelivery[orderNum] = _self.collection.toJSON();
-                        storage.set(system_config.RESTORDER_KEY, _self.restOrderDelivery);
-                    }
-                    _self.model.set({
-                        itemamount: 0,
-                        totalamount: 0,
-                        discountamount: 0
-                    });
-                    _self.collection.reset();
-                    _self.renderPosInfo();
-                    _self.renderCartList();
-                    storage.remove(system_config.SALE_PAGE_KEY);
-                    toastr.success('挂单成功');
-                }
+                _self.restOrder();
             });
             //解挂
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.J, function() {
-                var itemamount = _self.model.get('itemamount');
-                if(itemamount != 0){
-                    toastr.warning('购物车内有商品，不能执行解挂操作');
-                }else {
-                    router.navigate('restorder',{trigger:true});
-                }
+                _self.releaseOrder();
             });
             //营业员登陆
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
-                this.salesmanView = new SalesmanView();
-                _self.showModal(window.PAGE_ID.SALESMAN,_self.salesmanView);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = salesman_id]').focus();
-                });
+               _self.doLoginSalesman();
             });
             //退出登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
-                var logoutView = new LogoutView();
-                _self.showModal(window.PAGE_ID.LOGOUT, logoutView);
-                $('.modal').on('shown.bs.modal', function () {
-                    $('input[name = logout_username]').focus();
-                });
+                _self.doLogout();
             });
             //结算
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
-                console.log(_self.model.get('itemamount'));
-                if(_self.model.get('itemamount') == 0){
-                    toastr.warning('购物车内无商品，请先选择一些商品吧');
-                } else {
-                    router.navigate('billing',{trigger:true});
-                }
+                _self.doBilling();
             });
             //清空购物车
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {
-                _self.collection.reset();
-                _self.model.set({
-                    totalamount: 0,
-                    itemamount: 0,
-                    discountamount: 0
-                });
-                _self.renderPosInfo();
-                _self.renderCartList();
-                storage.remove(system_config.SALE_PAGE_KEY);
-                toastr.success('清空购物车成功');
+                _self.clearCart();
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D,function () {
-                if($('li').hasClass('cus-selected')){
-                    console.log(_self.i);
-                    console.log(_self.collection);
-                    var item = _self.collection.at(_self.i);
-                    _self.collection.remove(item);
-                    _self.renderCartList();
-                    console.log(_self.collection);
-                    _self.calculateModel();
-                }
-                toastr.success('删除成功');
+                _self.deleteItem();
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
-                var number = $('#input_main').val();
-                if(number == ''){
-                    toastr.warning('修改的数量不能为空，请重新输入');
-                }else if(number == 0) {
-                    toastr.warning('修改的数量不能为零，请重新输入');
-                }else {
-                    var item = _self.collection.at(_self.i);
-                    item.set({
-                        num: parseFloat(number)
-                    });
-                    console.log(_self.collection);
-                    _self.totalamount = 0;
-                    _self.itemamount = 0;
-                    _self.discountamount = 0;
-                    var priceList = _self.collection.pluck('price');
-                    var discounts = _self.collection.pluck('discount');
-                    var itemNum = _self.collection.pluck('num');
-                    for (var i = 0; i < priceList.length; i++) {
-                        discounts[i] = parseFloat(discounts[i]);
-                        _self.totalamount += priceList[i] * itemNum[i];
-                        _self.itemamount += itemNum[i];
-                        _self.discountamount += discounts[i] * itemNum[i];
-                    }
-                    _self.calculateModel();
-                }
-                $('#input_main').val('');
-                console.log(_self.i);
-                $('#li' + _self.i).addClass('cus-selected');
+                _self.modifyItemNum();
             });
             //单品优惠
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y,function () {
-                var value = $('#input_main').val();
-                if(value == '') {
-                    toastr.warning('输入的优惠金额不能为空，请重新输入');
-                }else if(value == 0){
-                    toastr.warning('输入的优惠金额不能为零，请重新输入');
-                } else{
-                    var item = _self.collection.at(_self.i);
-                    var price = item.get('price');
-                    if (value <= parseFloat(price) ) {
-                        _self.collection.at(_self.i).set({
-                            discount: value
-                        });
-                        _self.calculateModel();
-                        $('#li' + _self.i).addClass('cus-selected');
-
-                    }else {
-                        toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
-                    }
-                }
-                $('#input_main').val('');
+                _self.modifyItemDiscount();
             });
 
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
-                if (_self.i < _self.collection.length - 1) {
-                    _self.i++;
-                }
-                if (_self.i % _self.listnum == 0 && _self.n < parseInt(_self.collection.length / _self.listnum)) {
-                    _self.n++;
-                    //alert(_self.n);
-                    $('.for-cartlist').scrollTop(_self.listheight * _self.n);
-                }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                _self.scrollDown();
             });
 
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
-                if (_self.i > 0) {
-                    _self.i--;
-                }
-                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
-                    _self.n--;
-                    //alert(_self.n);
-                    $('.for-cartlist').scrollTop(_self.listheight * _self.n );
-                }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                _self.scrollUp();
             });
             //强制退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F, function () {
@@ -385,10 +238,240 @@ define([
             });
         },
 
+        /**
+         * 账户登出
+         */
+        doLogout: function () {
+            var logoutView = new LogoutView();
+            this.showModal(window.PAGE_ID.LOGOUT, logoutView);
+            $('.modal').on('shown.bs.modal', function () {
+                $('input[name = logout_username]').focus();
+            });
+        },
+
+        /**
+         * 结算
+         */
+        doBilling: function () {
+            //console.log(_self.model.get('itemamount'));
+            if(this.model.get('itemamount') == 0){
+                toastr.warning('购物车内无商品，请先选择一些商品吧');
+            } else {
+                router.navigate('billing',{trigger:true});
+            }
+        },
+
+        /**
+         * 营业员登录
+         */
+        doLoginSalesman: function () {
+            var salesmanView = new SalesmanView();
+            this.showModal(window.PAGE_ID.SALESMAN, salesmanView);
+            $('.modal').on('shown.bs.modal',function(e) {
+                $('input[name = salesman_id]').focus();
+            });
+        },
+
+        /**
+         * 购物车光标向下
+         */
+        scrollDown: function () {
+            if (this.i < this.collection.length - 1) {
+                this.i++;
+            }
+            if (this.i % _self.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
+                this.n++;
+                //alert(_self.n);
+                $('.for-cartlist').scrollTop(this.listheight * this.n);
+            }
+            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+
+        /**
+         * 购物车光标向上
+         */
+        scrollUp: function () {
+            if (this.i > 0) {
+                this.i--;
+            }
+            if ((this.i+1) % _self.listnum == 0 && this.i > 0) {
+                this.n--;
+                //alert(_self.n);
+                $('.for-cartlist').scrollTop(this.listheight * this.n );
+            }
+            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+
+        /**
+         * 解挂
+         */
+        releaseOrder: function () {
+            var itemamount = this.model.get('itemamount');
+            if(itemamount != 0){
+                toastr.warning('购物车内有商品，不能执行解挂操作');
+            }else {
+                router.navigate('restorder',{trigger:true});
+            }
+        },
+
+        /**
+         * 挂单
+         */
+        restOrder: function () {
+            var itemamount = this.model.get('itemamount');
+            if (itemamount == 0) {
+                toastr.warning('当前购物车内无商品，无法执行挂单操作');
+            }else {
+                var orderNum = new Date().getTime();
+                if (storage.isSet(system_config.RESTORDER_KEY)) {
+                    var pre = storage.get(system_config.RESTORDER_KEY);
+                    pre[orderNum] = this.collection.toJSON();
+                    storage.set(system_config.RESTORDER_KEY, pre);
+                } else {
+                    this.restOrderDelivery[orderNum] = this.collection.toJSON();
+                    storage.set(system_config.RESTORDER_KEY, this.restOrderDelivery);
+                }
+                this.model.set({
+                    itemamount: 0,
+                    totalamount: 0,
+                    discountamount: 0
+                });
+                this.collection.reset();
+                this.renderPosInfo();
+                this.renderCartList();
+                storage.remove(system_config.SALE_PAGE_KEY);
+                toastr.success('挂单成功');
+            }
+        },
+
+        /**
+         * 修改单品数量
+         */
+        modifyItemNum: function () {
+            var _self = this;
+            var number = $('#input_main').val();
+            if(number == ''){
+                toastr.warning('修改的数量不能为空，请重新输入');
+            }else if(number == 0) {
+                toastr.warning('修改的数量不能为零，请重新输入');
+            }else {
+                var item = _self.collection.at(_self.i);
+                item.set({
+                    num: parseFloat(number)
+                });
+                console.log(_self.collection);
+                _self.totalamount = 0;
+                _self.itemamount = 0;
+                _self.discountamount = 0;
+                var priceList = _self.collection.pluck('price');
+                var discounts = _self.collection.pluck('discount');
+                var itemNum = _self.collection.pluck('num');
+                for (var i = 0; i < priceList.length; i++) {
+                    discounts[i] = parseFloat(discounts[i]);
+                    _self.totalamount += priceList[i] * itemNum[i];
+                    _self.itemamount += itemNum[i];
+                    _self.discountamount += discounts[i] * itemNum[i];
+                }
+                _self.calculateModel();
+            }
+            $('#input_main').val('');
+            console.log(_self.i);
+            $('#li' + _self.i).addClass('cus-selected');
+        },
+
+        /**
+         * 单品优惠
+         */
+        modifyItemDiscount: function () {
+            var _self = this;
+            var value = $('#input_main').val();
+            if(value == '') {
+                toastr.warning('输入的优惠金额不能为空，请重新输入');
+            }else if(value == 0){
+                toastr.warning('输入的优惠金额不能为零，请重新输入');
+            } else{
+                var item = _self.collection.at(_self.i);
+                var price = item.get('price');
+                if (value <= parseFloat(price) ) {
+                    _self.collection.at(_self.i).set({
+                        discount: value
+                    });
+                    _self.calculateModel();
+                    $('#li' + _self.i).addClass('cus-selected');
+
+                }else {
+                    toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
+                }
+            }
+            $('#input_main').val('');
+        },
+
+        /**
+         * 单品删除
+         */
+        deleteItem: function () {
+            if($('li').hasClass('cus-selected')){
+                console.log(_self.i);
+                console.log(_self.collection);
+                var item = _self.collection.at(_self.i);
+                _self.collection.remove(item);
+                _self.renderCartList();
+                console.log(_self.collection);
+                _self.calculateModel();
+            }
+            toastr.success('删除成功');
+        },
+
+        /**
+         * 添加商品
+         */
+        addItem: function () {
+            var _self = this;
+            var search = $('#input_main').val();
+            if(search == ''){
+                toastr.info('您输入的商品编码为空，请重新输入');
+            }else{
+                var data = {};
+                data['skucode'] = search;
+                if(storage.isSet(system_config.VIP_KEY)) {
+                    data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                    data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                    data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                }else{
+                    data['cust_id'] = '*';
+                    data['medium_id'] = '*';
+                    data['medium_type'] = '*';
+                }
+                data['goods_detail'] = JSON.stringify(this.collection);
+                this.requestModel.sku(data , function(resp) {
+                    if(resp.status == '00') {
+                        _self.onAddItem(resp.goods_detail);
+                    }else{
+                        toastr.warning(resp.msg);
+                    }
+                });
+                $('#input_main').val('');
+                this.i = 0;
+            }
+        },
+
         onAddItem: function (JSONData) {
             this.collection.set(JSONData, {merge: false});
             this.insertSerial();
             this.calculateModel();
+        },
+
+        clearCart: function () {
+            this.collection.reset();
+            this.model.set({
+                totalamount: 0,
+                itemamount: 0,
+                discountamount: 0
+            });
+            this.renderPosInfo();
+            this.renderCartList();
+            storage.remove(system_config.SALE_PAGE_KEY);
+            toastr.success('清空购物车成功');
         },
 
         /**

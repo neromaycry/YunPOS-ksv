@@ -52,6 +52,7 @@ define([
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Esc, function () {
                 _self.hideModal(window.PAGE_ID.MAIN);
+                $('input[name = main]').focus();
             });
 
             this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Enter, function() {
