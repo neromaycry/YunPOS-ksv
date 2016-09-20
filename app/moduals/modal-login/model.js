@@ -6,6 +6,14 @@ define(['../../js/common/BaseModel'],function(BaseModel){
 
         },
 
+        secondlogin: function (data,callback) {
+            this.sendPOST({
+                url: window.API_URL.LOGIN,
+                data: data,
+                success: callback
+            });
+        },
+
     });
     return secondloginModel;
 });

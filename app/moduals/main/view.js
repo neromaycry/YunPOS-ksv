@@ -6,16 +6,16 @@ define([
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
     '../../../../moduals/modal-salesman/view',
-    '../../../../moduals/modal-login/view',
     '../../../../moduals/modal-logout/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
+    '../../../../moduals/modal-login/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView,SecondloginView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, posinfotpl,salesmantpl,cartlisttpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView,  posinfotpl,salesmantpl,cartlisttpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -243,6 +243,17 @@ define([
             //收银对账
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
                 router.navigate('checking',{trigger:true});
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
+                var secondLoginView = new SecondLoginView({
+                    pageid: window.PAGE_ID.MAIN,
+                    callback: function () {
+                       console.log('hehe');
+                    }
+                });
+                _self.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
+
             });
         },
 
