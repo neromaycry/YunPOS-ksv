@@ -63,6 +63,7 @@ define([
             });
             this.initTemplates();
             this.handleEvents();
+
         },
         initPlugins: function () {
             var _self = this;
@@ -74,10 +75,11 @@ define([
          * 初始化layout中各个view的高度
          */
         initLayoutHeight: function () {
-            var dh = $(document).height();
+            var dh = $(window).height();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
-            var billdetail = dh - nav * 2 - panelheading * 2;
+            var panelfooter = $('.panel-footer').height();
+            var billdetail = dh - nav * 2 - panelheading * 3 - panelfooter;
             $('.for-billdetail').height(billdetail);
             this.listheight = $('.for-billdetail').height();
             this.itemheight = $('li').height() + 20;
@@ -164,9 +166,11 @@ define([
         },
         bindKeys: function () {
             var _self = this;
+            //返回上一层
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Esc, function () {
                 router.navigate('main',{trigger:true});
             });
+            //确定
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Enter, function () {
                 _self.receivedsum = $('#input_billing').val();
                 if(_self.model.get('unpaidamount') == 0) {
@@ -180,6 +184,7 @@ define([
                 }
                 $('#input_billing').val("");
             });
+            //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
                 var item = _self.collection.at(_self.i);
                 _self.collection.remove(item);
@@ -205,6 +210,7 @@ define([
                 _self.renderBillDetail();
                 toastr.success('删除成功');
             });
+            //结算
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
                 var confirmBill = new BillModel();
                 if(_self.unpaidamount != 0){
@@ -259,6 +265,7 @@ define([
                 }
 
             });
+            //方向下
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
@@ -269,6 +276,7 @@ define([
                 }
                 $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
+            //方向上
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Up, function() {
                 if (_self.i > 0) {
                     _self.i--;
@@ -279,6 +287,7 @@ define([
                 }
                 $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             });
+            //现金支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -295,6 +304,7 @@ define([
                     });
                 }
             });
+            //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -311,6 +321,7 @@ define([
                     });
                 }
             });
+            //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -327,6 +338,7 @@ define([
                     });
                 }
             });
+            //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
                 var unpaidamount = _self.model.get('unpaidamount');
                 if(unpaidamount == 0){
@@ -375,6 +387,7 @@ define([
                     toastr.success('取消整单优惠成功');
                 }
             });
+            //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
                 var tipsView = new KeyTipsView('BILLING_PAGE');
                 _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);

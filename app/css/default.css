@@ -32,6 +32,10 @@ div .bg-teal {
     background-color: #4db6ac;
 }
 
+div .bg-white{
+    background: #FFF;
+}
+
 div .left-margin {
     margin-left: 15px;
 }
@@ -91,6 +95,10 @@ div .border-right {
 
 div .border-bottom {
     border-bottom: solid thin #3277B2;
+}
+
+div .border-top {
+    border-top: solid thin #3277B2;
 }
 
 .gray-bg {
@@ -163,3 +171,7 @@ div .border-bottom {
 
 }
 
+/*.navbar-nav > li > a:hover,.navbar-nav > li > a:focus{*/
+    /*background-color: #74898a;*/
+    /*color:#ffffff;*/
+/*}*/
