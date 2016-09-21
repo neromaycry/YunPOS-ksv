@@ -101,7 +101,8 @@ define([
             var dh = $(document).height();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
-            var billdetail = dh - nav * 2 - panelheading * 2;
+            var panelfooter = $('.panel-footer').height();
+            var billdetail = dh - nav * 2 - panelheading * 3 - panelfooter;
             $('.for-billdetail').height(billdetail);
         },
 

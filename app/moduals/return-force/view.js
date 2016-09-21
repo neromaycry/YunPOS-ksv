@@ -82,11 +82,14 @@ define([
          * 初始化layout中各个view的高度
          */
         initLayoutHeight: function () {
-            var dh = $(document).height();
+            var dh = $(window).height();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
-            cart = dh - nav * 2 - panelheading * 2;
+            var panelfooter = $('.panel-footer').height();
+            var cart = dh - nav * 2 - panelheading * 2 - panelfooter;
             $('.for-cartlist').height(cart);
+            this.listheight = $('.for-cartlist').height();//购物车列表的高度
+            this.listnum = 8;//设置商品列表中的条目数
         },
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
@@ -95,6 +98,7 @@ define([
 
         renderCartList: function() {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
+            $('li').height(this.listheight / this.listnum - 21);
             return this;
         },
 
@@ -232,17 +236,11 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Down, function () {
-                if (_self.i < _self.collection.length - 1) {
-                    _self.i++;
-                }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+               _self.scrollDown();
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Up, function () {
-                if (_self.i > 0) {
-                    _self.i--;
-                }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+               _self.scrollUp();
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.T, function () {
@@ -251,6 +249,35 @@ define([
             });
         },
 
+        /**
+         * 购物车光标向下
+         */
+        scrollDown: function () {
+            if (this.i < this.collection.length - 1) {
+                this.i++;
+            }
+            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
+                this.n++;
+                //alert(_self.n);
+                $('.for-cartlist').scrollTop(this.listheight * this.n);
+            }
+            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+
+        /**
+         * 购物车光标向上
+         */
+        scrollUp: function () {
+            if (this.i > 0) {
+                this.i--;
+            }
+            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
+                this.n--;
+                //alert(_self.n);
+                $('.for-cartlist').scrollTop(this.listheight * this.n );
+            }
+            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
         /**
          * 单品删除
          */
