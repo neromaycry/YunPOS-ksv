@@ -129,10 +129,11 @@ define([
             var dh = $(window).height();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
-            var cart = dh - nav * 2 - panelheading * 2;
+            var panelfooter = $('.panel-footer').height();
+            var cart = dh - nav * 2 - panelheading * 2 - panelfooter;
             $('.for-cartlist').height(cart);
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
-            this.listnum = 10;//设置商品列表中的条目数
+            this.listnum = 8;//设置商品列表中的条目数
         },
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
