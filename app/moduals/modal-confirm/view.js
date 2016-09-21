@@ -17,7 +17,8 @@ define([
         template_content:contenttpl,
 
         events: {
-
+            'click .cancel':'onCancelClicked',
+            'click .ok':'onOKClicked'
         },
 
         modalInitPage: function () {
@@ -83,7 +84,21 @@ define([
                     this.hideModal(window.PAGE_ID.CHECKING);
                     break;
             }
+        },
+
+        onCancelClicked: function () {
+            this.confirmHideModal(this.attrs.pageid);
+        },
+
+        onOKClicked: function () {
+            this.attrs.callback();
+            if (this.attrs.is_navigate) {
+                this.confirmHideModal(this.attrs.navigate_page);
+            } else {
+                this.confirmHideModal(this.attrs.pageid);
+            }
         }
+
     });
 
     return confirmView;

@@ -35,8 +35,15 @@ define([
 
         i: 0,
 
-        events: {
+        input: 'input[name = whole_return_order]',
 
+        events: {
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
+            'click .cancel':'onCancelClicked',
+            'click .billing':'onBillingClicked'
         },
 
         pageInit: function () {
@@ -167,26 +174,7 @@ define([
             });
             //取消整单退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function() {
-                var confirmView = new ConfirmView({
-                    pageid:window.PAGE_ID.RETURN_WHOLE, //当前打开confirm模态框的页面id
-                    callback: function () { //
-                        //_self.showModal(window.PAGE_ID.CONFIRM, confirmView);
-                        _self.RtcartCollection.reset();
-                        _self.RtPayedlistCollection.reset();
-                        _self.model.set({
-                            totalamount: 0,
-                            itemamount: 0,
-                            discountamount: 0
-                        });
-                        _self.renderRtcart();
-                        _self.renderRtInfo();
-                        _self.renderRtPayedlist();
-                        toastr.success('取消退货成功');
-                        storage.remove(system_config.RETURN_KEY);
-                    },
-                    content:'确定取消整单退货？'
-                });
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                _self.cancelReturn();
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
@@ -212,6 +200,73 @@ define([
             //this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Up, function () {
             //    $('input[name = return_order_date]').focus();
             //})
+        },
+
+        /**
+         * 取消退货
+         */
+        cancelReturn: function () {
+            var _self = this;
+            var confirmView = new ConfirmView({
+                pageid:window.PAGE_ID.RETURN_WHOLE, //当前打开confirm模态框的页面id
+                callback: function () { //
+                    //_self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                    _self.RtcartCollection.reset();
+                    _self.RtPayedlistCollection.reset();
+                    _self.model.set({
+                        totalamount: 0,
+                        itemamount: 0,
+                        discountamount: 0
+                    });
+                    _self.renderRtcart();
+                    _self.renderRtInfo();
+                    _self.renderRtPayedlist();
+                    toastr.success('取消退货成功');
+                    storage.remove(system_config.RETURN_KEY);
+                },
+                content:'确定取消整单退货？'
+            });
+            _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+        },
+
+        onCancelClicked: function () {
+            this.cancelReturn();
+        },
+
+        onBillingClicked: function () {
+            var itemamount = this.model.get('itemamount');
+            if (itemamount == 0) {
+                toastr.info('请输入订单号');
+            } else {
+                isfromForce = false;
+                router.navigate('billingreturn',{trigger:true});
+            }
+        },
+
+        onOKClicked: function () {
+            if ($('input[name = whole_return_order]').val() == '') {
+                toastr.warning('订单编号不能为空');
+                return;
+            }
+            this.requestOrder();
+            $('input[name = whole_return_order]').val("");
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
         },
 
     });
