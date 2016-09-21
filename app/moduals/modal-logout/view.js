@@ -13,9 +13,16 @@ define([
 
         template: tpl,
 
+        input: 'input[name = logout_username]',
+
         events:{
             'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked'
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click input[name = logout_username]':'focusInputUser',
+            'click input[name = logout_passwd]':'focusInputPasswd',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked'
         },
 
         modalInitPage: function () {
@@ -66,6 +73,23 @@ define([
             }
         },
 
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
+
         bindModalKeys: function () {
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Esc, function () {
@@ -101,6 +125,13 @@ define([
             });
         },
 
+        focusInputUser: function () {
+            this.input = 'input[name = logout_username]';
+        },
+
+        focusInputPasswd: function () {
+            this.input = 'input[name = logout_passwd]';
+        }
 
     });
 

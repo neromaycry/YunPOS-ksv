@@ -14,9 +14,18 @@ define([
 
         template: tpl,
 
+        input: 'input[name = secondlogin_user]',
+
         events:{
             'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked'
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click input[name = secondlogin_user]':'focusInputUser',
+            'click input[name = secondlogin_passwd]':'focusInputPasswd',
+            //'click .btn-up':'onUpClicked',
+            //'click .btn-down':'onDownClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked'
         },
 
         modalInitPage: function () {
@@ -68,6 +77,32 @@ define([
             } else {
                 this.doSecondLogin();
             }
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        //onUpClicked: function () {
+        //
+        //},
+        //
+        //onDownClicked: function () {
+        //
+        //
+        //},
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
         },
 
         bindModalKeys: function () {
@@ -129,6 +164,14 @@ define([
                     this.hideModal(window.PAGE_ID.CHECKING);
                     break;
             }
+        },
+
+        focusInputUser: function () {
+            this.input = 'input[name = secondlogin_user]';
+        },
+
+        focusInputPasswd: function () {
+            this.input = 'input[name = secondlogin_passwd]';
         }
 
     });
