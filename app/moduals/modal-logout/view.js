@@ -13,6 +13,11 @@ define([
 
         template: tpl,
 
+        events:{
+            'click .cancel':'onCancelClicked',
+            'click .ok':'onOKClicked'
+        },
+
         modalInitPage: function () {
             this.model = new LogoutModel();
         },
@@ -46,6 +51,19 @@ define([
                 }
             });
 
+        },
+
+        onCancelClicked: function () {
+            this.hideModal(window.PAGE_ID.MAIN);
+        },
+
+        onOKClicked: function () {
+            var isUserFocused = $('input[name = logout_username]').is(':focus');
+            if (isUserFocused) {
+                $('input[name = logout_passwd]').focus();
+            } else {
+                this.doLogout();
+            }
         },
 
         bindModalKeys: function () {

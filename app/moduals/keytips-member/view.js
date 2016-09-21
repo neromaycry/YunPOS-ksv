@@ -15,7 +15,7 @@ define([
         template: tpl,
 
         events: {
-
+            'click .tipclose':'onCloseClicked'
         },
 
         modalInitPage: function () {
@@ -37,34 +37,41 @@ define([
         bindModalKeys: function () {
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.TIP_MEMBER, window.KEYS.Esc , function () {
-                console.log(_self.attrs);
-                switch (_self.attrs) {
-                    case 'MAIN_PAGE':
-                        _self.hideModal(window.PAGE_ID.MAIN);
-                        break;
-                    case 'MEMBER_PAGE':
-                        _self.hideModal(window.PAGE_ID.MEMBER);
-                        break;
-                    case 'RESTORDER_PAGE':
-                        _self.hideModal(window.PAGE_ID.RESTORDER);
-                        break;
-                    case 'RETURNWHOLE_PAGE':
-                        _self.hideModal(window.PAGE_ID.RETURN_WHOLE);
-                        break;
-                    case 'BILLING_PAGE':
-                        _self.hideModal(window.PAGE_ID.BILLING);
-                        break;
-                    case 'BILLING_RETURN_PAGE':
-                        _self.hideModal(window.PAGE_ID.BILLING_RETURN);
-                        break;
-                    case 'RETURNFORCE_PAGE':
-                        _self.hideModal(window.PAGE_ID.RETURN_FORCE);
-                        break;
-                    case 'CHECKING_PAGE':
-                        _self.hideModal(window.PAGE_ID.CHECKING);
-                        break;
-                }
+                _self.tipsModalHide(_self.attrs);
             });
+        },
+
+        onCloseClicked: function () {
+            this.tipsModalHide(this.attrs);
+        },
+
+        tipsModalHide: function (pageid) {
+            switch (pageid) {
+                case 'MAIN_PAGE':
+                    this.hideModal(window.PAGE_ID.MAIN);
+                    break;
+                case 'MEMBER_PAGE':
+                    this.hideModal(window.PAGE_ID.MEMBER);
+                    break;
+                case 'RESTORDER_PAGE':
+                    this.hideModal(window.PAGE_ID.RESTORDER);
+                    break;
+                case 'RETURNWHOLE_PAGE':
+                    this.hideModal(window.PAGE_ID.RETURN_WHOLE);
+                    break;
+                case 'BILLING_PAGE':
+                    this.hideModal(window.PAGE_ID.BILLING);
+                    break;
+                case 'BILLING_RETURN_PAGE':
+                    this.hideModal(window.PAGE_ID.BILLING_RETURN);
+                    break;
+                case 'RETURNFORCE_PAGE':
+                    this.hideModal(window.PAGE_ID.RETURN_FORCE);
+                    break;
+                case 'CHECKING_PAGE':
+                    this.hideModal(window.PAGE_ID.CHECKING);
+                    break;
+            }
         }
 
     });

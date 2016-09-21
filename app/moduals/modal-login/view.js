@@ -14,6 +14,11 @@ define([
 
         template: tpl,
 
+        events:{
+            'click .cancel':'onCancelClicked',
+            'click .ok':'onOKClicked'
+        },
+
         modalInitPage: function () {
             this.model = new SecondloginModel();
             $('.modal').on('shown.bs.modal', function () {
@@ -30,7 +35,7 @@ define([
                 return;
             }
             if (password == '') {
-                toastr.warning('请输入密�?');
+                toastr.warning('请输入密码');
                 return;
             }
             var data = {};
@@ -50,6 +55,19 @@ define([
                 }
             });
 
+        },
+
+        onCancelClicked: function () {
+            this.confirmHideModal(this.attrs.pageid);
+        },
+
+        onOKClicked: function () {
+            var isUserFocused = $('input[name = secondlogin_user]').is(':focus');
+            if (isUserFocused) {
+                $('input[name = secondlogin_passwd]').focus();
+            } else {
+                this.doSecondLogin();
+            }
         },
 
         bindModalKeys: function () {

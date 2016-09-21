@@ -166,9 +166,9 @@ define([
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D,function () {
-                if(_self.isDeleteKey){
-                    _self.deleteItem();
-                }else{
+                //if(_self.isDeleteKey){
+                //    _self.deleteItem();
+                //}else{
                     var secondLoginView = new SecondLoginView({
                         pageid: window.PAGE_ID.RETURN_FORCE,
                         callback: function () {
@@ -176,7 +176,7 @@ define([
                         }
                     });
                     _self.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
-                }
+                //}
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.N,function () {

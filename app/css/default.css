@@ -22,6 +22,16 @@ div .no-padding {
     padding: 0px;
 }
 
+div .bg-red {
+    color: #FFF;
+    background-color: #f36c60;
+}
+
+div .bg-teal {
+    color: #FFF;
+    background-color: #4db6ac;
+}
+
 div .left-margin {
     margin-left: 15px;
 }
