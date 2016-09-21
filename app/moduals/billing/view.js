@@ -43,6 +43,7 @@ define([
         template_billingdetailtpl:billingdetailtpl,
 
         events: {
+
         },
 
         pageInit: function () {
@@ -68,9 +69,6 @@ define([
             this.renderBillInfo();
             $('input[name = billing]').focus();
             this.initLayoutHeight();
-            _self.listheight = $('.for-billdetail').height();
-            _self.itemheight = $('li').height() + 20;
-            _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数
         },
         /**
          * 初始化layout中各个view的高度
@@ -81,6 +79,9 @@ define([
             var panelheading = $('.panel-heading').height();
             var billdetail = dh - nav * 2 - panelheading * 2;
             $('.for-billdetail').height(billdetail);
+            this.listheight = $('.for-billdetail').height();
+            this.itemheight = $('li').height() + 20;
+            this.listnum = parseInt(this.listheight / this.itemheight);//商品列表中的条目数
         },
         handleEvents: function () {
             Backbone.off('onReceivedsum');
@@ -254,8 +255,9 @@ define([
                         },
                         content:'确定结算此单？'
                     });
+                    _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
                 }
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+
             });
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
                 if (_self.i < _self.collection.length - 1) {
@@ -422,7 +424,10 @@ define([
             storage.set(system_config.SALE_PAGE_KEY,'shopcart',_self.discountcollection);
             //console.log(_self.discountcollection);
             //console.log('final');
-        }
+        },
+
+
+
     });
     return billingView;
 });

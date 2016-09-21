@@ -62,6 +62,27 @@ div .no-margining {
     margin: 0;
 }
 
+div .panel-group {
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+div .border-right-bottom {
+    border-right: solid thin #3277B2;
+    border-bottom: solid thin #3277B2;
+}
+
+div .border-right {
+    border-right: solid thin #3277B2;
+}
+
+div .border-bottom {
+    border-bottom: solid thin #3277B2;
+}
+
 .gray-bg {
     background-color: #f3f3f4
 }
