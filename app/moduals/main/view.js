@@ -54,7 +54,22 @@ define([
         isDeleteKey:false,
 
         events: {
-            'click #btn_help':'openHelp'
+            'click .help':'openHelp',
+            'click .billing':'onBillingClicked',
+            'click .salesman':'onSalesmanClicked',
+            'click .member':'onMemberClicked',
+            'click .discount':'onDiscountClicked',
+            'click .delete':'onDeleteClicked',
+            'click .modify-item-num':'onModifyItemNum',
+            'click .clean':'onCleanClicked',
+            'click .keyup':'onKeyUpClicked',
+            'click .keydown':'onKeyDownClicked',
+            'click #restorder':'onRestorderClicked',
+            'click #unrestorder':'onUnRestOrderClicked',
+            'click .return_whole':'onReturnWholeClicked',
+            'click .return_force':'onReturnForceClicked',
+            'click .checking':'onCheckingClicked',
+            'click .login_out':'onLoginOutClicked'
         },
 
         pageInit: function () {
@@ -111,6 +126,7 @@ define([
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
+            this.buttonSelected();
             $('#li' + _self.i).addClass('cus-selected');
         },
 
@@ -376,6 +392,7 @@ define([
                 this.collection.reset();
                 this.renderPosInfo();
                 this.renderCartList();
+                this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
                 toastr.success('挂单成功');
             }
@@ -387,30 +404,35 @@ define([
         modifyItemNum: function () {
             var _self = this;
             var number = $('#input_main').val();
-            if(number == ''){
-                toastr.warning('修改的数量不能为空，请重新输入');
-            }else if(number == 0) {
-                toastr.warning('修改的数量不能为零，请重新输入');
+            if(_self.model.get('itemamount') == 0){
+                toastr.warning('当前购物车内无商品');
             }else {
-                var item = _self.collection.at(_self.i);
-                item.set({
-                    num: parseFloat(number)
-                });
-                console.log(_self.collection);
-                _self.totalamount = 0;
-                _self.itemamount = 0;
-                _self.discountamount = 0;
-                var priceList = _self.collection.pluck('price');
-                var discounts = _self.collection.pluck('discount');
-                var itemNum = _self.collection.pluck('num');
-                for (var i = 0; i < priceList.length; i++) {
-                    discounts[i] = parseFloat(discounts[i]);
-                    _self.totalamount += priceList[i] * itemNum[i];
-                    _self.itemamount += itemNum[i];
-                    _self.discountamount += discounts[i] * itemNum[i];
+                if(number == ''){
+                    toastr.warning('修改的数量不能为空，请重新输入');
+                }else if(number == 0) {
+                    toastr.warning('修改的数量不能为零，请重新输入');
+                }else {
+                    var item = _self.collection.at(_self.i);
+                    item.set({
+                        num: parseFloat(number)
+                    });
+                    console.log(_self.collection);
+                    _self.totalamount = 0;
+                    _self.itemamount = 0;
+                    _self.discountamount = 0;
+                    var priceList = _self.collection.pluck('price');
+                    var discounts = _self.collection.pluck('discount');
+                    var itemNum = _self.collection.pluck('num');
+                    for (var i = 0; i < priceList.length; i++) {
+                        discounts[i] = parseFloat(discounts[i]);
+                        _self.totalamount += priceList[i] * itemNum[i];
+                        _self.itemamount += itemNum[i];
+                        _self.discountamount += discounts[i] * itemNum[i];
+                    }
+                    _self.calculateModel();
                 }
-                _self.calculateModel();
             }
+
             $('#input_main').val('');
             console.log(_self.i);
             $('#li' + _self.i).addClass('cus-selected');
@@ -422,22 +444,26 @@ define([
         modifyItemDiscount: function () {
             var _self = this;
             var value = $('#input_main').val();
-            if(value == '') {
-                toastr.warning('输入的优惠金额不能为空，请重新输入');
-            }else if(value == 0){
-                toastr.warning('输入的优惠金额不能为零，请重新输入');
-            } else{
-                var item = _self.collection.at(_self.i);
-                var price = item.get('price');
-                if (value <= parseFloat(price) ) {
-                    _self.collection.at(_self.i).set({
-                        discount: value
-                    });
-                    _self.calculateModel();
-                    $('#li' + _self.i).addClass('cus-selected');
+            if(_self.model.get('itemamount') == 0){
+                toastr.warning('当前购物车内无商品');
+            }else{
+                if(value == '') {
+                    toastr.warning('输入的优惠金额不能为空，请重新输入');
+                }else if(value == 0){
+                    toastr.warning('输入的优惠金额不能为零，请重新输入');
+                } else{
+                    var item = _self.collection.at(_self.i);
+                    var price = item.get('price');
+                    if (value <= parseFloat(price) ) {
+                        _self.collection.at(_self.i).set({
+                            discount: value
+                        });
+                        _self.calculateModel();
+                        $('#li' + _self.i).addClass('cus-selected');
 
-                }else {
-                    toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
+                    }else {
+                        toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
+                    }
                 }
             }
             $('#input_main').val('');
@@ -493,6 +519,7 @@ define([
             this.collection.set(JSONData, {merge: false});
             this.insertSerial();
             this.calculateModel();
+            this.buttonSelected();
         },
 
         clearCart: function () {
@@ -502,6 +529,7 @@ define([
                 itemamount: 0,
                 discountamount: 0
             });
+            this.buttonSelected();
             this.renderPosInfo();
             this.renderCartList();
             storage.remove(system_config.SALE_PAGE_KEY);
@@ -552,6 +580,7 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
+            this.buttonSelected();
             this.renderPosInfo();
         },
         /**
@@ -572,7 +601,144 @@ define([
         openHelp: function () {
             var tipsView = new KeyTipsView('MAIN_PAGE');
             this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
-        }
+        },
+
+        /**
+         * 结算按钮点击事件
+         */
+        onBillingClicked: function () {
+            this.doBilling();
+        },
+
+        /**
+         * 营业员登录按钮点击事件
+         */
+        onSalesmanClicked: function () {
+            this.doLoginSalesman();
+        },
+
+        /**
+         * 会员登录按钮点击事件
+         */
+        onMemberClicked:function () {
+            router.navigate('member',{trigger:true});
+        },
+
+        /**
+         * 单品优惠按钮点击事件
+         */
+        onDiscountClicked: function () {
+            this.modifyItemDiscount();
+        },
+        /**
+         * 删除按钮点击事件
+         */
+        onDeleteClicked: function () {
+            if(this.isDeleteKey){
+                this.deleteItem();
+            }else{
+                var secondLoginView = new SecondLoginView({
+                    pageid: window.PAGE_ID.MAIN,
+                    callback: function () {
+                        this.deleteItem();
+                    }
+                });
+                this.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
+            }
+        },
+
+        /**
+         * 修改数量点击事件
+         */
+        onModifyItemNum: function () {
+            this.modifyItemNum();
+        },
+
+        /**
+         *清空购物车按钮点击事件
+         */
+        onCleanClicked: function () {
+            var _self = this;
+            var confirmView = new ConfirmView({
+                pageid: window.PAGE_ID.MAIN, //当前打开confirm模态框的页面id
+                callback: function () { //点击确认键的回调
+                    _self.clearCart();
+                },
+                content:'确定清空购物车？' //confirm模态框的提示内容
+            });
+            _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+        },
+
+        /**
+         * 向上选择点击事件
+         */
+        onKeyUpClicked: function () {
+            this.scrollUp();
+        },
+
+        /**
+         * 向下选择点击事件
+         */
+        onKeyDownClicked: function () {
+            this.scrollDown();
+        },
+
+        /**
+         * 挂单按钮点击事件
+         */
+        onRestorderClicked: function () {
+            this.restOrder();
+        },
+
+        /**
+         * 解挂按钮点击事件
+         */
+        onUnRestOrderClicked: function() {
+            this.releaseOrder();
+        },
+
+        /**
+         * 整单退货按钮点击事件
+         */
+        onReturnWholeClicked: function () {
+            router.navigate('returnwhole',{ trigger:true });
+        },
+
+        /**
+         * 强制退货按钮点击事件
+         */
+        onReturnForceClicked: function () {
+            router.navigate('returnforce',{ trigger:true });
+        },
+
+        /**
+         * 收银对账按钮点击事件
+         */
+        onCheckingClicked: function () {
+            router.navigate('checking',{trigger:true});
+        },
+
+        /**
+         * 退出按钮点击事件
+         */
+        onLoginOutClicked: function () {
+            this.doLogout();
+        },
+
+        /**
+         * 挂单，解挂按钮选择
+         */
+        buttonSelected: function () {
+            var itemamount = this.model.get("itemamount");
+            if (itemamount != 0) {
+                $('#restorder').css('display', 'block');
+                $('#unrestorder').css('display', 'none');
+            }else {
+                $('#restorder').css('display','none');
+                $('#unrestorder').css('display','block');
+            }
+        },
+
 
     });
 

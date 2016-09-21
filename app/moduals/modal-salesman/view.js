@@ -14,6 +14,17 @@ define([
 
         template: tpl,
 
+        input: 'input[name = salesman_id]',
+
+        events:{
+            'click .cancel':'onCancelClicked',
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked'
+        },
+
+
         modalInitPage: function () {
             var _self = this;
             this.model = new SalesmanModel();
@@ -25,33 +36,35 @@ define([
                 }
             });
         },
+        onCancelClicked: function () {
+            this.hideModal(window.PAGE_ID.MAIN);
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
+
+        onOKClicked: function () {
+            this.onSalesmanLogin();
+        },
 
         bindModalKeys: function () {
-            console.log('bind modal keys');
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.SALESMAN, window.KEYS.Enter, function () {
-                var n = 0;
-                var search = $('#salesman_id').val();
-                if(search != ''){
-                    for(var i=0;i<_self.collection.length;i++){
-                        n++;
-                        if(search == _self.collection.at(i).get("number")) {
-                            _self.hideModal(window.PAGE_ID.MAIN);
-                            toastr.success('营业员' + search + '登录成功');
-                            var attrData = {};
-                            attrData['name'] = _self.collection.at(i).get("name");
-                            Backbone.trigger('SalesmanAdd',attrData);
-                            $('input[name = main]').focus();
-                            break;
-                        }
-                    }
-                    if(n == _self.collection.length){
-                        toastr.warning('您输入的营业员不存在,请重新输入');
-                        n = 0;
-                    }
-                }else{
-                    toastr.warning('您输入的营业员编号为空');
-                }
+                _self.onSalesmanLogin();
             });
             this.bindModalKeyEvents(window.PAGE_ID.SALESMAN, window.KEYS.Esc, function () {
                 _self.hideModal(window.PAGE_ID.MAIN);
@@ -68,6 +81,33 @@ define([
                 }
             });
         },
+        /**
+         * 销售人员登录事件
+         */
+        onSalesmanLogin: function () {
+            var n = 0;
+            var search = $('#salesman_id').val();
+            if(search != ''){
+                for(var i=0;i<this.collection.length;i++){
+                    n++;
+                    if(search == this.collection.at(i).get("number")) {
+                        this.hideModal(window.PAGE_ID.MAIN);
+                        toastr.success('营业员' + search + '登录成功');
+                        var attrData = {};
+                        attrData['name'] = this.collection.at(i).get("name");
+                        Backbone.trigger('SalesmanAdd',attrData);
+                        $('input[name = main]').focus();
+                        break;
+                    }
+                }
+                if(n == this.collection.length){
+                    toastr.warning('您输入的营业员不存在,请重新输入');
+                    n = 0;
+                }
+            }else{
+                toastr.warning('您输入的营业员编号为空');
+            }
+        }
 
     });
 
