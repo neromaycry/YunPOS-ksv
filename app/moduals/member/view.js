@@ -29,7 +29,9 @@ define([
             'click input[name = custid]':'focusInputCustid',
             'click input[name = custpwd]':'focusInputPasswd',
             'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked'
+            'click .btn-clear':'onClearClicked',
+            'click .member_help':'onHelpClicked',
+            'click .member_return':'onReturnClicked'
         },
 
         pageInit: function () {
@@ -156,6 +158,13 @@ define([
                     }
                 });
             }
+        },
+        onHelpClicked:function() {
+            var tipsView = new KMemberView('MEMBER_PAGE');
+            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+        },
+        onReturnClicked:function() {
+            router.navigate('main',{trigger:true});
         }
 
     });
