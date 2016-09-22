@@ -112,9 +112,9 @@ define([
         },
 
         setRestOrderKeys: function () {
-            var effects = ['返回', '确定', '方向上', '方向下'];
-            var keys = ['ESC', 'ENTER', '↑', '↓'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down];
+            var effects = ['返回', '确定', '方向上', '方向下','切换到挂单编号','切换到挂单商品信息'];
+            var keys = ['ESC', 'ENTER', '↑', '↓','←','→'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down,window.KEYS.Left,window.KEYS.Right];
             var restOrderKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
