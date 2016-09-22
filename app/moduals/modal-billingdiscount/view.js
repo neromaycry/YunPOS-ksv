@@ -14,8 +14,47 @@ define([
 
         template: tpl,
 
+
+        input: 'input[name = percentage]',
+
+        events:{
+            'click .cancel':'onCancelClicked',
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked'
+        },
+
         modalInitPage: function () {
 
+        },
+        onCancelClicked: function () {
+            this.hideModal(window.PAGE_ID.BILLING);
+        },
+
+        onOKClicked: function () {
+            var attrData = {};
+            attrData['percentage'] = $('input[name = percentage]').val();
+            Backbone.trigger('onBillDiscount',attrData);
+            this.hideModal(window.PAGE_ID.BILLING);
+            $('input[name = billing]').focus();
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
         },
 
         bindModalKeys: function () {
