@@ -6,7 +6,7 @@ define(['../../js/common/BaseModel'],function(BaseModel){
     var homeModel=BaseModel.extend({
 
         defaults:{
-
+            pos:'',
         },
 
         goods: function (data, callback) {

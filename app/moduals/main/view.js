@@ -76,7 +76,7 @@ define([
             'click .main-btn-num':'onNumClicked',
             'click .main-btn-backspace':'onBackspaceClicked',
             'click .main-btn-clear':'onClearClicked',
-            'click .btn-floatpad':'onFloatPadClicked'
+            //'click .btn-floatpad':'onFloatPadClicked'
         },
 
         pageInit: function () {
@@ -90,11 +90,13 @@ define([
             this.logincollection = new HomeCollection();
             this.requestModel = new HomeModel();
             this.model.set({
-                name:user.user_name,
-                pos: '收款机(2341)',
                 totalamount: this.totalamount,
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
+            });
+            this.salesmanModel.set({
+                name:user.user_name,
+                pos: '收款机(2341)'
             });
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
                 this.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
@@ -756,16 +758,16 @@ define([
             $(this.input).val('');
         },
 
-        onFloatPadClicked: function () {
-            var isDisplay = $('.float-numpad').css('display') == 'none';
-            if (isDisplay) {
-                $('.float-numpad').css('display','block');
-                $('.btn-floatpad').text('关闭小键盘')
-            } else {
-                $('.float-numpad').css('display','none');
-                $('.btn-floatpad').text('开启小键盘')
-            }
-        },
+        //onFloatPadClicked: function () {
+        //    var isDisplay = $('.float-numpad').css('display') == 'none';
+        //    if (isDisplay) {
+        //        $('.float-numpad').css('display','block');
+        //        $('.btn-floatpad').text('关闭小键盘')
+        //    } else {
+        //        $('.float-numpad').css('display','none');
+        //        $('.btn-floatpad').text('开启小键盘')
+        //    }
+        //},
 
         /**
          * 挂单，解挂按钮选择

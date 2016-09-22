@@ -1,46 +1,53 @@
-<div class="panel-heading">
-    <div class="row">
-        <div class="col-md-6 text-center">
-           收款员：<%= name %>
-        </div>
-        <div class="col-md-6 text-center">
-            <%= pos %>
-        </div>
-    </div>
-</div>
-<div class="panel-body">
-    <div class="row bottom-margin">
-        <div class="col-md-6 text-center">
-            件数：
-        </div>
-        <div class="col-md-3 text-right">
-            <%= itemamount %>
-        </div>
-    </div>
-    <div class="row bottom-margin">
-        <div class="col-md-6 text-center">
-            优惠：
-        </div>
-        <div class="col-md-3 text-right text-teal">
-           - <%= toDecimal2(discountamount) %>
-        </div>
-    </div>
-    <div class="row bottom-margin">
-        <div class="col-md-6 text-center">
-            总计：
-        </div>
-        <div class="col-md-3 text-right text-red">
-            <%= toDecimal2(totalamount-discountamount) %>
-        </div>
-    </div>
-</div>
-<div class="panel-footer no-padding text-center border-top bg-white">
-    <div class="row text-center no-margining">
-        <div class="col-md-6  no-padding border-right bg-darkblue">
-            <div class="panel-group btn-floatpad">开启小键盘</div>
-        </div>
-        <div class="col-md-6  no-padding" >
-            <div class="panel-group bg-red billing">结算</div>
-        </div>
-    </div>
+<!--<div class="panel-heading">-->
+    <!--<div class="row">-->
+        <!--<div class="col-md-6 text-center">-->
+           <!--收款员：<%= name %>-->
+        <!--</div>-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--<%= pos %>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<div class="panel-body">-->
+    <!--<div class="row bottom-margin">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--件数：-->
+        <!--</div>-->
+        <!--<div class="col-md-3 text-right">-->
+            <!--<%= itemamount %>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row bottom-margin">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--优惠：-->
+        <!--</div>-->
+        <!--<div class="col-md-3 text-right text-teal">-->
+           <!--<!-&#45;&#45; <%= toDecimal2(discountamount) %>&ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row bottom-margin">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--总计：-->
+        <!--</div>-->
+        <!--<div class="col-md-3 text-right text-red">-->
+            <!--<%= toDecimal2(totalamount-discountamount) %>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<div class="panel-footer no-padding text-center border-top bg-white">-->
+    <!--<div class="row text-center no-margining">-->
+        <!--<div class="col-md-6  no-padding border-right bg-darkblue">-->
+            <!--<div class="panel-group btn-floatpad">开启小键盘</div>-->
+        <!--</div>-->
+        <!--<div class="col-md-6  no-padding" >-->
+            <!--<div class="panel-group bg-red billing">结算</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="col-md-3 panel-group">件数：<%= itemamount %></div>
+<div class="col-md-3 panel-group text-teal">优惠： - <%= toDecimal2(discountamount) %></div>
+<div class="col-md-3 panel-group text-red">总计： <%= toDecimal2(totalamount-discountamount) %></div>
+<div class="col-md-3">
+    <div class="panel-group bg-red billing">结算</div>
 </div>
