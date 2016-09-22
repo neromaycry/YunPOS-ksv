@@ -3,18 +3,88 @@
         <div class="navbar-header">
             <a class="navbar-brand" style="color: #ffffff">收银对账</a>
         </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="help"><a style="color: #ffffff">帮助</a></li>
+                <li class="back-to-main" ><a style="color: #ffffff">返回销售首页</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
 <div class="row" style="margin-right: 15px;margin-left: 15px">
-    <div class="col-md-4 col-md-offset-4" style="padding-left: 0px">
-        <form class="form-horizontal">
-            <input class="form-control" type="text" id="checking_date" name ="checking_date" maxlength="8" placeholder="请输入收银对账日期 例如：20160101"/>
-            <input type="text" style="display: none">
-        </form>
+    <div class="col-md-4">
+        <div class="row" style="margin-right: 15px;margin-left: 15px">
+            <div class="col-md-12 no-padding" style="padding-left: 0px">
+                <!--<div class="form-group">-->
+                <!--<input type="text" id="return_order_date" name="return_order_date" class="form-control" maxlength="8" onkeyup="return ValidateNumber($(this),value)" placeholder="请输入订单日期，如：20160101"/>-->
+                <!--</div>-->
+                <div class="form-group">
+                    <input type="text" id="checking_date" name="checking_date" class="form-control" onkeyup="return ValidateNumber($(this),value)" maxlength="8" placeholder="请输入查询收银对账日期 例如：20160101"/>
+                    <input type="text" style="display: none">
+                </div>
+                <div class="panel panel-primary">
+                    <div class="row no-margining text-center">
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="7">7</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="8">8</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="9">9</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-backspace panel-group border-bottom">←</div>
+                        </div>
+                    </div>
+                    <div class="row no-margining text-center">
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="4">4</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="5">5</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="6">6</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-clear panel-group border-bottom">C</div>
+                        </div>
+                    </div>
+                    <div class="row no-margining text-center">
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="1">1</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="2">2</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right-bottom" data-num="3">3</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-bottom" data-num="00">00</div>
+                        </div>
+                    </div>
+                    <div class="row no-margining text-center">
+                        <div class="col-md-3 no-padding">
+                            <div class="btn-num panel-group border-right" data-num="0">0</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="panel-group border-right keydown" >↓</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="panel-group border-right keyup">↑</div>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <div class="panel-group bg-red ok">确定</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
-<div class="row no-margining">
-    <div class="col-md-7 col-md-offset-2" style="margin-top: 20px">
+    <div class="col-md-7">
         <ul class="nav nav-tabs" role="tablist" id="myTabs">
             <li role="presentation" class="active">
                 <a href="#cashier_report" data-toggle="tab">收银员报表</a>
@@ -60,3 +130,4 @@
         </div>
     </div>
 </div>
+
