@@ -17,7 +17,7 @@ define([
         template: tpl,
 
         events: {
-
+            'click .init-done':'onInitDoneClicked'
         },
 
         pageInit: function () {
@@ -62,17 +62,15 @@ define([
 
         bindKeys: function () {
             this.bindKeyEvents(window.PAGE_ID.INITINFO,window.KEYS.Enter, function () {
-                console.log('enter');
                 storage.set(system_config.IS_FIRST_KEY, true);
                 if (storage.isSet(system_config.IS_FIRST_KEY)) {
                     router.navigate('login', {trigger:true});
                 }
             });
 
-            this.bindKeyEvents(window.PAGE_ID.INITINFO, window.KEYS.Esc, function () {
-                console.log('esc');
-                router.navigate('setposkey', {trigger:true});
-            });
+            //this.bindKeyEvents(window.PAGE_ID.INITINFO, window.KEYS.Esc, function () {
+            //    router.navigate('setposkey', {trigger:true});
+            //});
         },
 
         setMainKeys: function () {
@@ -212,9 +210,14 @@ define([
                 checkingKeys.push(checkingKey);
                 storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'CHECKING_PAGE', checkingKeys);
             }
+        },
+
+        onInitDoneClicked: function () {
+            storage.set(system_config.IS_FIRST_KEY, true);
+            if (storage.isSet(system_config.IS_FIRST_KEY)) {
+                router.navigate('login', {trigger:true});
+            }
         }
-
-
 
     });
 

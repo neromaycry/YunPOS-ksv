@@ -15,7 +15,7 @@ define([
         template: tpl,
 
         events: {
-
+            'click .dns-next':'onNextClicked'
         },
 
         pageInit: function () {
@@ -28,16 +28,28 @@ define([
         },
 
         bindKeys: function () {
+            var _self = this;
             this.bindKeyEvents(window.PAGE_ID.SETDNS,window.KEYS.Enter, function () {
-                console.log('setdns enter');
-                var value =  $('input[name = dns]').val();
-                if (value == '') {
-                    toastr.warning('请输入有效网关');
-                } else {
-                    storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,'gateway',value);
-                    router.navigate('setposkey',{trigger:true});
-                }
+                //console.log('setdns enter');
+                //var value =  $('input[name = dns]').val();
+                //if (value == '') {
+                //    toastr.warning('请输入有效网关');
+                //} else {
+                //    storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,'gateway',value);
+                //    router.navigate('setposkey',{trigger:true});
+                //}
+                _self.onNextClicked();
             });
+        },
+
+        onNextClicked: function () {
+            var value =  $('input[name = dns]').val();
+            if (value == '') {
+                toastr.warning('请输入有效网关');
+            } else {
+                storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,'gateway',value);
+                router.navigate('setposkey',{trigger:true});
+            }
         }
 
 
