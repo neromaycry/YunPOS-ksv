@@ -110,7 +110,18 @@ define([
         },
 
         onOKClicked: function () {
-
+            var isUserFocused = $('input[name = custid]').is(':focus');
+            if (this.isRequestSuccess) {
+                storage.set(system_config.VIP_KEY,this.model.toJSON());
+                toastr.success('会员登录成功');
+                router.navigate('main',{trigger:true});
+            } else {
+                if (isUserFocused) {
+                    $('input[name = custpwd]').focus();
+                } else {
+                    this.requestMemberInfo();
+                }
+            }
         },
 
         onBackspaceClicked: function (e) {

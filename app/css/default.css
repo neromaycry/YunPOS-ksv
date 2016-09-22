@@ -2,6 +2,10 @@ div {
     font-family: Microsoft YaHei;
 }
 
+div .float-numpad {
+    width: 330px;z-index: 1000;position: absolute;margin-top: 320px;margin-left: 15px;display: none
+}
+
 body .no-padding {
     padding: 0px;
 }

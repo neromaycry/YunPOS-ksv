@@ -53,6 +53,8 @@ define([
 
         isDeleteKey:false,
 
+        input:'input[name = main]',
+
         events: {
             'click .main_help':'openHelp',
             'click .billing':'onBillingClicked',
@@ -69,7 +71,12 @@ define([
             'click .return_whole':'onReturnWholeClicked',
             'click .return_force':'onReturnForceClicked',
             'click .checking':'onCheckingClicked',
-            'click .login_out':'onLoginOutClicked'
+            'click .login_out':'onLoginOutClicked',
+            'click .main-ok':'onOKClicked',
+            'click .main-btn-num':'onNumClicked',
+            'click .main-btn-backspace':'onBackspaceClicked',
+            'click .main-btn-clear':'onClearClicked',
+            'click .btn-floatpad':'onFloatPadClicked'
         },
 
         pageInit: function () {
@@ -121,7 +128,7 @@ define([
 
         initPlugins: function () {
             var _self = this;
-            $('input[name = main]').focus();
+            $(this.input).focus();
             this.initLayoutHeight();
             this.renderPosInfo();
             this.renderSalesman();
@@ -723,6 +730,38 @@ define([
          */
         onLoginOutClicked: function () {
             this.doLogout();
+        },
+
+        onOKClicked: function () {
+            this.addItem();
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function () {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
+
+        onFloatPadClicked: function () {
+            var isDisplay = $('.float-numpad').css('display') == 'none';
+            if (isDisplay) {
+                $('.float-numpad').css('display','block');
+                $('.btn-floatpad').text('关闭小键盘')
+            } else {
+                $('.float-numpad').css('display','none');
+                $('.btn-floatpad').text('开启小键盘')
+            }
         },
 
         /**
