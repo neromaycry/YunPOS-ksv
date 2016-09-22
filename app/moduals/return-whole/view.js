@@ -43,7 +43,8 @@ define([
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
             'click .cancel':'onCancelClicked',
-            'click .billing':'onBillingClicked'
+            'click .billing':'onBillingClicked',
+            'click .back-to-main':'onBackClicked'
         },
 
         pageInit: function () {
@@ -227,6 +228,10 @@ define([
                 content:'确定取消整单退货？'
             });
             _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+        },
+
+        onBackClicked: function () {
+            router.navigate('main',{trigger:true});
         },
 
         onCancelClicked: function () {

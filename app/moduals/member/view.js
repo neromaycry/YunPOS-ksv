@@ -21,7 +21,15 @@ define([
 
         isRequestSuccess:false,
 
+        input:'input[name = custid]',
+
         events: {
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click input[name = custid]':'focusInputCustid',
+            'click input[name = custpwd]':'focusInputPasswd',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked'
         },
 
         pageInit: function () {
@@ -84,6 +92,35 @@ define([
                     $('input[name = custid]').focus();
                 }
             });
+        },
+
+        focusInputCustid: function () {
+            this.input = 'input[name = custid]';
+        },
+
+        focusInputPasswd: function () {
+            this.input = 'input[name = custpwd]';
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onOKClicked: function () {
+
+        },
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function (e) {
+            $(this.input).val('');
         },
 
         requestMemberInfo: function () {

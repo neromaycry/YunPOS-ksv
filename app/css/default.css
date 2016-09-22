@@ -44,6 +44,11 @@ div .right-margin {
     margin-right: 60px;
 }
 
+div .right-left-margin {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
 div .left-padding {
     padding-left: 15px;
 }
@@ -101,8 +106,14 @@ div .border-top {
     border-top: solid thin #3277B2;
 }
 
-.gray-bg {
-    background-color: #f3f3f4
+div .bg-gray {
+    color: #FFF;
+    background-color: #9e9e9e;
+}
+
+div .bg-darkblue {
+    color: #FFF;
+    background-color: #337AB7;
 }
 
 .middle-box {
