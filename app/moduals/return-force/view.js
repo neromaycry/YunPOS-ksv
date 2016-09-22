@@ -33,13 +33,28 @@ define([
 
         deleteKey:{},
 
+        input: 'input[name = main]',
+
         template_posinfo:posinfotpl,
 
         template_cartlisttpl:cartlisttpl,
 
 
         events: {
-
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
+            'click .returnforce_billing':'onBillingClicked',
+            'click .returnforce_cancel':'onCancelClicked',
+            'click .returnforce_discount':'onDiscountClicked',
+            'click .returnforce_delete':'onDeleteClicked',
+            'click .modify_num':'onModifyNumClicked',
+            'click .returnforce_clean':'onCleanClicked',
+            'click .returnforce_keyup':'onKeyUpClicked',
+            'click .returnforce_keydown':'onKeyDownClicked',
+            'click .returnforce_help':'onHelpClicked',
+            'click .returnforce_return':'onReturnClicked'
         },
 
         pageInit: function () {
@@ -105,68 +120,18 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            console.log('bindkeys main');
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Enter, function () {
-                search = $('#input_main').val();
-                if(search == ''){
-                    toastr.warning('您输入的商品编码为空，请重新输入');
-                }else{
-                    var data = {};
-                    data['skucode'] = search;
-                    if(storage.isSet(system_config.VIP_KEY)) {
-                        data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-                        data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                        data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                    }else{
-                        data['cust_id'] = '*';
-                        data['medium_id'] = '*';
-                        data['medium_type'] = '*';
-                    }
-                    data['goods_detail'] = JSON.stringify(_self.collection);
-                    _self.requestModel.sku(data , function(resp) {
-                        if(resp.status == '00') {
-                            _self.onAddItem(resp.goods_detail);
-                        }else{
-                            toastr.warning(resp.msg);
-                        }
-                    });
-                    $('#input_main').val('');
-                    _self.i = 0;
-                }
+                _self.searchGoods();
             });
-
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Esc,function () {
                 router.navigate('main',{trigger:true});
             });
-
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.B,function () {
-                var itemamount = _self.model.get('itemamount');
-                if (itemamount == 0) {
-                    toastr.info('请添加要退货的商品');
-                } else {
-                    isfromForce = true;
-                    router.navigate('billingreturn',{trigger:true});
-                }
+                _self.doBilling();
             });
             //取消退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.C, function() {
-                var confirmView = new ConfirmView({
-                    pageid:window.PAGE_ID.RETURN_FORCE, //当前打开confirm模态框的页面id
-                    callback: function () { //
-                        _self.collection.reset();
-                        _self.model.set({
-                            totalamount: 0,
-                            itemamount: 0,
-                            discountamount: 0
-                        });
-                        _self.renderPosInfo();
-                        _self.renderCartList();
-                        storage.remove(system_config.FORCE_RETURN_KEY);
-                        toastr.success('取消退货成功');
-                    },
-                    content:'确定取消退货？'
-                });
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                _self.cancelForceReturn();
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D,function () {
@@ -184,55 +149,11 @@ define([
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.N,function () {
-                var number = $('#input_main').val();
-                if(number == ''){
-                    toastr.warning('您未输入任何数量，请重新输入');
-                }else if (number == 0) {
-                    toastr.warning('输入的数量不能为零，请重新输入');
-                }else {
-                    var item = _self.collection.at(_self.i);
-                    item.set({
-                        num: parseFloat(number)
-                    });
-                    console.log(_self.collection);
-                    _self.totalamount = 0;
-                    _self.itemamount = 0;
-                    _self.discountamount = 0;
-                    var priceList = _self.collection.pluck('price');
-                    var discounts = _self.collection.pluck('discount');
-                    var itemNum = _self.collection.pluck('num');
-                    for (var i = 0; i < priceList.length; i++) {
-                        discounts[i] = parseFloat(discounts[i]);
-                        _self.totalamount += priceList[i] * itemNum[i];
-                        _self.itemamount += itemNum[i];
-                        _self.discountamount += discounts[i] * itemNum[i];
-                    }
-                    _self.calculateModel();
-                }
-                $('#input_main').val('');
-                console.log(_self.i);
-                $('#li' + _self.i).addClass('cus-selected');
+                _self.modifyItemNum();
             });
             //单品优惠
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Y,function () {
-                var value = $('#input_main').val();
-                if(value == '') {
-                    toastr.warning('您输入的优惠金额为零，请重新输入');
-                }else {
-                    var item = _self.collection.at(_self.i);
-                    var price = item.get('price');
-                    if (value <= parseFloat(price) ) {
-                        _self.collection.at(_self.i).set({
-                            discount: value
-                        });
-                        _self.calculateModel();
-                        $('#li' + _self.i).addClass('cus-selected');
-
-                    }else {
-                        toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
-                    }
-                }
-                $('#input_main').val('');
+               _self.onDiscount();
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Down, function () {
@@ -290,13 +211,136 @@ define([
             }
             toastr.success('删除成功');
         },
+        /**
+         *取消退货
+         */
+        cancelForceReturn: function () {
+            var _self = this;
+            var confirmView = new ConfirmView({
+                pageid:window.PAGE_ID.RETURN_FORCE, //当前打开confirm模态框的页面id
+                callback: function () { //
+                    _self.collection.reset();
+                    _self.model.set({
+                        totalamount: 0,
+                        itemamount: 0,
+                        discountamount: 0
+                    });
+                    _self.renderPosInfo();
+                    _self.renderCartList();
+                    storage.remove(system_config.FORCE_RETURN_KEY);
+                    toastr.success('取消退货成功');
+                },
+                content:'确定取消退货？'
+            });
+            _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+        },
 
         onAddItem: function (JSONData) {
             this.collection.set(JSONData, {merge: false});
             this.insertSerial();
             this.calculateModel();
         },
+        /**
+         * 查找商品
+         */
+        searchGoods:function (){
+            var _self = this;
+            search = $('#input_main').val();
+            if(search == ''){
+                toastr.warning('您输入的商品编码为空，请重新输入');
+            }else{
+                var data = {};
+                data['skucode'] = search;
+                if(storage.isSet(system_config.VIP_KEY)) {
+                    data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                    data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                    data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                }else{
+                    data['cust_id'] = '*';
+                    data['medium_id'] = '*';
+                    data['medium_type'] = '*';
+                }
+                data['goods_detail'] = JSON.stringify(_self.collection);
+                _self.requestModel.sku(data , function(resp) {
+                    if(resp.status == '00') {
+                        _self.onAddItem(resp.goods_detail);
+                    }else{
+                        toastr.warning(resp.msg);
+                    }
+                });
+                $('#input_main').val('');
+                _self.i = 0;
+            }
+        },
+        /**
+         * 结算
+         */
+        doBilling: function () {
+            var itemamount = this.model.get('itemamount');
+            if (itemamount == 0) {
+                toastr.info('请添加要退货的商品');
+            } else {
+                isfromForce = true;
+                router.navigate('billingreturn',{trigger:true});
+            }
+        },
+        /**
+         * 单品优惠
+         */
+        onDiscount: function () {
+            var value = $('#input_main').val();
+            if(value == '') {
+                toastr.warning('您输入的优惠金额为零，请重新输入');
+            }else {
+                var item = this.collection.at(this.i);
+                var price = item.get('price');
+                if (value <= parseFloat(price) ) {
+                    this.collection.at(this.i).set({
+                        discount: value
+                    });
+                    this.calculateModel();
+                    $('#li' + this.i).addClass('cus-selected');
 
+                }else {
+                    toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
+                }
+            }
+            $('#input_main').val('');
+        },
+        /**
+         * 修改数量
+         */
+        modifyItemNum: function () {
+            var _self = this;
+            var number = $('#input_main').val();
+            if(number == ''){
+                toastr.warning('您未输入任何数量，请重新输入');
+            }else if (number == 0) {
+                toastr.warning('输入的数量不能为零，请重新输入');
+            }else {
+                var item = _self.collection.at(_self.i);
+                item.set({
+                    num: parseFloat(number)
+                });
+                console.log(_self.collection);
+                _self.totalamount = 0;
+                _self.itemamount = 0;
+                _self.discountamount = 0;
+                var priceList = _self.collection.pluck('price');
+                var discounts = _self.collection.pluck('discount');
+                var itemNum = _self.collection.pluck('num');
+                for (var i = 0; i < priceList.length; i++) {
+                    discounts[i] = parseFloat(discounts[i]);
+                    _self.totalamount += priceList[i] * itemNum[i];
+                    _self.itemamount += itemNum[i];
+                    _self.discountamount += discounts[i] * itemNum[i];
+                }
+                _self.calculateModel();
+            }
+            $('#input_main').val('');
+            console.log(_self.i);
+            $('#li' + _self.i).addClass('cus-selected');
+        },
         /**
          * 每次添加商品时，向新添加的商品插入serial属性值
          */
@@ -356,8 +400,66 @@ define([
                     this.isDeleteKey = false;
                 }
             }
+        },
+        onOKClicked:function (){
+            this.searchGoods();
+        },
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
+        onBillingClicked: function () {
+            this.doBilling();
+        },
+        onCancelClicked: function () {
+            this.cancelForceReturn();
+        },
+        onDiscountClicked: function () {
+            this.onDiscount();
+        },
+        onDeleteClicked:function (){
+            var _self = this;
+            //if(_self.isDeleteKey){
+            //    _self.deleteItem();
+            //}else{
+            var secondLoginView = new SecondLoginView({
+                pageid: window.PAGE_ID.RETURN_FORCE,
+                callback: function () {
+                    _self.deleteItem();
+                }
+            });
+            this.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
+            //}
+        },
+        onModifyNumClicked: function () {
+            this.modifyItemNum();
+        },
+        onCleanClicked: function () {
+            this.cancelForceReturn();
+        },
+        onKeyUpClicked:function (){
+            this.scrollUp();
+        },
+        onKeyDownClicked: function () {
+            this.scrollDown();
+        },
+        onHelpClicked:function (){
+            var tipsView = new KeyTipsView('RETURNFORCE_PAGE');
+            this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+        },
+        onReturnClicked: function () {
+            router.navigate('main',{trigger:true});
         }
-
     });
 
     return returnForceView;
