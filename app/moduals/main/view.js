@@ -175,7 +175,7 @@ define([
 
         renderCartList: function() {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
-            $('li').height(this.listheight / this.listnum - 21);
+            $('.li-cartlist').height(this.listheight / this.listnum - 21);
             return this;
         },
 
