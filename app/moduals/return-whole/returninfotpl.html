@@ -1,33 +1,40 @@
-<div class="panel-heading">退款详情</div>
-<div class="panel-body">
-    <div class="row bottom-margin">
-        <div class="col-md-6 text-center">
-            件数：
-        </div>
-        <div class="col-md-6 text-right info-padding-right">
-            <%= itemamount %>
-        </div>
-    </div>
-    <div class="row bottom-margin">
-        <div class="col-md-6 text-center">
-            优惠：
-        </div>
-        <div class="col-md-6 text-right info-padding-right text-teal">
-            - <%= toDecimal2(discountamount) %>
-        </div>
-    </div>
-    <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
-        <div class="col-md-6 text-center">
-            退款：
-        </div>
-        <div class="col-md-6 text-right info-padding-right text-red">
-            <%= toDecimal2(totalamount-discountamount) %>
-        </div>
-    </div>
-</div>
-<div class="panel-footer no-padding">
-    <div class="row text-center no-margining">
-        <div class="col-md-6 panel-group cancel">取消退货</div>
-        <div class="col-md-6 panel-group bg-red billing">结算</div>
-    </div>
+<!--<div class="panel-heading">退款详情</div>-->
+<!--<div class="panel-body">-->
+    <!--<div class="row bottom-margin">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--件数：-->
+        <!--</div>-->
+        <!--<div class="col-md-6 text-right info-padding-right">-->
+            <!--<%= itemamount %>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row bottom-margin">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--优惠：-->
+        <!--</div>-->
+        <!--<div class="col-md-6 text-right info-padding-right text-teal">-->
+            <!-&#45;&#45; <%= toDecimal2(discountamount) %>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row" style="margin-top: 10px;margin-bottom: 10px;">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--退款：-->
+        <!--</div>-->
+        <!--<div class="col-md-6 text-right info-padding-right text-red">-->
+            <!--<%= toDecimal2(totalamount-discountamount) %>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<div class="panel-footer no-padding">-->
+    <!--<div class="row text-center no-margining">-->
+        <!--<div class="col-md-6 panel-group cancel">取消退货</div>-->
+        <!--<div class="col-md-6 panel-group bg-red billing">结算</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="col-md-3 panel-group">件数：<%= itemamount %></div>
+<div class="col-md-3 panel-group text-teal">优惠： - <%= toDecimal2(discountamount) %></div>
+<div class="col-md-3 panel-group text-red">总计： <%= toDecimal2(totalamount-discountamount) %></div>
+<div class="col-md-3">
+    <div class="panel-group bg-red billing">结算</div>
 </div>

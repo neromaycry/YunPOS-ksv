@@ -71,26 +71,25 @@ define([
             }
             this.renderRtInfo();
             this.renderRtcart();
-            this.renderRtPayedlist();
-            //this.initLayoutHeight();
+            //this.renderRtPayedlist();
         },
 
         initTemplates: function () {
             this.template_returninfo = _.template(this.template_returninfo);
             this.template_rtcart = _.template(this.template_rtcart);
-            this.template_rtpayedlist = _.template(this.template_rtpayedlist);
+            //this.template_rtpayedlist = _.template(this.template_rtpayedlist);
         },
 
         initLayoutHeight: function () {
             var dh = $(document).height();
             var navbar =$('.navbar').height();
             var panel_head = $('.panel-heading').height();
+            var panel_footer = $('.panel-footer').height();
             //console.log('dh:' + dh + ' navbar:' + navbar + ' panel head:' + panel_head*2);
-            var payedlist = (dh - (navbar + panel_head)*4)/2;
-            var rtcart = payedlist;
+            var payedlist = (dh - navbar*2 - panel_head*2 - panel_footer - 45);
             //console.log('payedlist:' + payedlist);
-            $('.rtcart-content').height(rtcart);
-            $('.payedlist-content').height(payedlist);
+            $('.rtcart-content').height(payedlist);
+            //$('.payedlist-content').height(payedlist);
         },
 
         renderRtInfo: function () {
@@ -103,10 +102,10 @@ define([
             return this;
         },
 
-        renderRtPayedlist: function () {
-            this.$el.find('.payedlist-content').html(this.template_rtpayedlist(this.RtPayedlistCollection.toJSON()));
-            return this;
-        },
+        //renderRtPayedlist: function () {
+        //    this.$el.find('.payedlist-content').html(this.template_rtpayedlist(this.RtPayedlistCollection.toJSON()));
+        //    return this;
+        //},
 
         requestOrder: function () {
             var _self = this;
