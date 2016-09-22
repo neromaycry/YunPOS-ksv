@@ -5,8 +5,8 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a style="color: #ffffff">帮助</a></li>
-                <li><a style="color: #ffffff">返回销售首页</a></li>
+                <li class="billing_help"><a style="color: #ffffff">帮助</a></li>
+                <li class="return_main"><a style="color: #ffffff">返回销售首页</a></li>
             </ul>
         </div>
     </div>
@@ -20,11 +20,11 @@
 
         </div>
         <ul class="list-group">
-            <li class="list-group-item">现金类支付</li>
-            <li class="list-group-item">礼券类支付</li>
-            <li class="list-group-item">银行POS</li>
-            <li class="list-group-item">第三方支付</li>
-            <li class="list-group-item">一卡通支付</li>
+            <li class="list-group-item" data-index="00">现金类支付</li>
+            <li class="list-group-item" data-index="01">礼券类支付</li>
+            <li class="list-group-item" data-index="02">银行POS</li>
+            <li class="list-group-item" data-index="03">第三方支付</li>
+            <li class="list-group-item" data-index="04">一卡通支付</li>
         </ul>
     </div>
     <div class="col-md-9 no-padding left-padding">
@@ -43,22 +43,22 @@
             <div class="panel-footer text-center no-padding bg-white border-top">
                 <div class="row no-margining">
                     <div class="col-md-2 border-right no-padding">
-                        <div class="panel-group ">删除</div>
+                        <div class="panel-group billing_delete">删除</div>
                     </div>
                     <div class="col-md-2 border-right no-padding">
-                        <div class="panel-group">清空付款方式</div>
+                        <div class="panel-group billing_clean">清空付款方式</div>
                     </div>
                     <div class="col-md-2 border-right no-padding">
-                        <div class="panel-group">整单优惠</div>
+                        <div class="panel-group totaldiscount">整单优惠</div>
                     </div>
                     <div class="col-md-2 border-right no-padding">
-                        <div class="panel-group">取消优惠</div>
+                        <div class="panel-group cancel_totaldiscount">取消优惠</div>
                     </div>
                     <div class="col-md-2 border-right no-padding">
-                        <div class="panel-group">↑</div>
+                        <div class="panel-group billing_keyup">↑</div>
                     </div>
                     <div class="col-md-2 no-padding">
-                        <div class="panel-group">↓</div>
+                        <div class="panel-group billing_keydown">↓</div>
                     </div>
                 </div>
             </div>

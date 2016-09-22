@@ -43,7 +43,16 @@ define([
         template_billingdetailtpl:billingdetailtpl,
 
         events: {
-
+            'click .billing_help':'onBillHelpClicked',
+            'click .return_main':'onReturnMainClicked',
+            'click .billing_delete':'onBillDelete',
+            'click .totaldiscount':'onTotalDiscountClicked',
+            'click .cancel_totaldiscount':'onCancelTotalDiscount',
+            'click .billing_keyup':'onKeyUp',
+            'click .billing_keydown':'onKeyDown',
+            'click .billing':'onBillingClicked',
+            'click .billing_clean':'onBillingCleanClicked',
+            'click [data-index]': 'onPayClick',
         },
 
         pageInit: function () {
@@ -186,218 +195,312 @@ define([
             });
             //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
-                var item = _self.collection.at(_self.i);
-                _self.collection.remove(item);
-                console.log(_self.collection);
-                var totalreceived = 0;
-                var trlist = _self.collection.pluck('gather_money');
-                for(var i = 0;i < trlist.length; i++) {
-                    totalreceived += trlist[i];
-                }
-                if(totalreceived >= _self.totalamount) {
-                    _self.unpaidamount = 0;
-                    _self.oddchange = totalreceived - _self.totalamount;
-                }else{
-                    _self.oddchange = 0;
-                    _self.unpaidamount = _self.totalamount - totalreceived;
-                }
-                _self.model.set({
-                    receivedsum: totalreceived,
-                    unpaidamount: _self.unpaidamount,
-                    oddchange:_self.oddchange
-                });
-                _self.renderBillInfo();
-                _self.renderBillDetail();
-                toastr.success('删除成功');
+                _self.deleteItem();
             });
             //结算
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
-                var confirmBill = new BillModel();
-                if(_self.unpaidamount != 0){
-                    toastr.warning('还有未支付的金额，请支付完成后再进行结算');
-                } else {
-                    var confirmView = new ConfirmView({
-                        pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
-                        is_navigate:true,
-                        navigate_page: window.PAGE_ID.MAIN,
-                        callback: function () { //
-                            _self.unpaidamount = _self.unpaidamount.toFixed(2);
-                            if(_self.percentage != 0){
-                                _self.totalDiscount(_self.percentage);
-                            }
-                            var data = {};
-                            data['mode'] = '00';
-                            if (storage.isSet(system_config.VIP_KEY)) {
-                                data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                                data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                                data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-                            } else {
-                                data['medium_id'] = "*";
-                                data['medium_type'] = "*";
-                                data['cust_id'] = "*";
-                            }
-                            data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
-                            data['gather_detail'] = _self.collection.toJSON();
-                            console.log(data);
-                            confirmBill.trade_confirm(data, function (resp) {
-                                if (resp.status == '00') {
-                                    storage.remove(system_config.SALE_PAGE_KEY);
-                                    storage.remove(system_config.ONE_CARD_KEY);
-                                    if (storage.isSet(system_config.VIP_KEY)) {
-                                        storage.remove(system_config.VIP_KEY);
-                                    }
-                                    router.navigate("main", {trigger: true,replace:true});
-                                    //f7app.alert("订单号：" + resp.bill_no,'提示');
-                                    toastr.success("订单号：" + resp.bill_no);
-                                    var send_data = {};
-                                    send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
-                                    send_data['content'] = resp.printf;
-                                    send_data = JSON.stringify(send_data) + '<EOF>';
-                                    _self.sendLargeData2Socket(send_data);
-                                } else {
-                                    toastr.error(resp.msg);
-                                }
-                            });
-                        },
-                        content:'确定结算此单？'
-                    });
-                    _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
-                }
-
+                _self.billing();
             });
             //方向下
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
-                if (_self.i < _self.collection.length - 1) {
-                    _self.i++;
-                }
-                if (_self.i % _self.listnum == 0) {
-                    _self.n++;
-                    $('.for-billdetail').scrollTop(_self.listheight * _self.n);
-                }
-                $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+               _self.scrollDown();
             });
             //方向上
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Up, function() {
-                if (_self.i > 0) {
-                    _self.i--;
-                }
-                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
-                    _self.n--;
-                    $('.for-billdetail').scrollTop(_self.listheight * _self.n );
-                }
-                $('#billdetail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+               _self.scrollUp();
             });
             //现金支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
-                var unpaidamount = _self.model.get('unpaidamount');
-                if(unpaidamount == 0){
-                    toastr.warning('待支付金额为零,请进行结算');
-                }else {
-                    this.billtype = new BilltypeView('00');
-                    _self.showModal(window.PAGE_ID.BILLING_TYPE,_self.billtype);
-                    var attrData = {};
-                    attrData['unpaidamount'] = unpaidamount;//本次应收的金额
-                    Backbone.trigger('onunpaidamount',attrData);
-                    $('.modal').on('shown.bs.modal',function(e) {
-                        $('input[name = receivedsum]').focus();
-                        //$('#li' + _self.i).addClass('cus-selected');
-                    });
-                }
+               _self.payByCash();
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
-                var unpaidamount = _self.model.get('unpaidamount');
-                if(unpaidamount == 0){
-                    toastr.warning('待支付金额为零,请进行结算');
-                }else {
-                    this.billtype = new BilltypeView('01');
-                    _self.showModal(window.PAGE_ID.BILLING_TYPE,_self.billtype);
-                    var attrData = {};
-                    attrData['unpaidamount'] = _self.model.get('unpaidamount');//本次应收的金额
-                    Backbone.trigger('onunpaidamount',attrData);
-                    $('.modal').on('shown.bs.modal',function(e) {
-                        $('input[name = receivedsum]').focus();
-                        //$('#li' + _self.i).addClass('cus-selected');
-                    });
-                }
+               _self.payByGiftCard();
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
-                var unpaidamount = _self.model.get('unpaidamount');
-                if(unpaidamount == 0){
-                    toastr.warning('待支付金额为零,请进行结算');
-                }else {
-                    this.billtype = new BilltypeView('02');
-                    _self.showModal(window.PAGE_ID.BILLING_TYPE,_self.billtype);
-                    var attrData = {};
-                    attrData['unpaidamount'] = _self.model.get('unpaidamount');//本次应收的金额
-                    Backbone.trigger('onunpaidamount',attrData);
-                    $('.modal').on('shown.bs.modal',function(e) {
-                        $('input[name = receivedsum]').focus();
-                        //$('#li' + _self.i).addClass('cus-selected');
-                    });
-                }
+                _self.payByPos();
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
-                var unpaidamount = _self.model.get('unpaidamount');
-                if(unpaidamount == 0){
-                    toastr.warning('待支付金额为零,请进行结算');
-                }else {
-                    this.billtype = new BilltypeView('03');
-                    _self.showModal(window.PAGE_ID.BILLING_TYPE,_self.billtype);
-                    var attrData = {};
-                    attrData['unpaidamount'] = _self.model.get('unpaidamount');//本次应收的金额
-                    Backbone.trigger('onunpaidamount',attrData);
-                    $('.modal').on('shown.bs.modal',function(e) {
-                        $('input[name = receivedsum]').focus();
-                        //$('#li' + _self.i).addClass('cus-selected');
-                    });
-                }
+               _self.payByThird();
             });
             //整单优惠
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Y, function () {
-                if(_self.model.get('totaldiscount') != 0) {
-                    toastr.warning('不能重复整单优惠');
-                }else if(_self.model.get('receivedsum') != 0) {
-                    toastr.warning('您已选择支付方式，不能再进行整单优惠');
-                } else {
-                    var billdiscountview = new BilldiscountView();
-                    _self.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
-                    $('.modal').on('shown.bs.modal', function (){
-                        $('input[name = percentage]').focus();
-                    });
-                }
+                _self.billTotalDiscount();
             });
             //取消整单优惠
             this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.C, function () {
-                if(_self.model.get('totaldiscount') == 0){
-                    toastr.info('您未进行任何优惠');
-                }else if(_self.model.get('receivedsum') != 0){
-                    toastr.warning('您已选择支付方式，不能取消整单优惠');
-                }else{
-                    _self.totalamount = parseFloat(_self.model.get("totalamount")) + parseFloat(_self.model.get("totaldiscount"));
-                    _self.unpaidamount = _self.totalamount;
-                    _self.model.set({
-                        totalamount:_self.totalamount,
-                        unpaidamount:_self.unpaidamount,
-                        totaldiscount:0
-                    });
-                    _self.renderBillInfo();
-                    toastr.success('取消整单优惠成功');
-                }
+               _self.cancelTotalDiscount();
             });
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
-                var tipsView = new KeyTipsView('BILLING_PAGE');
-                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+               _self.openHelp();
             });
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
+                _self.payByOneCard();
             });
+            //清空支付方式列表
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.E, function () {
+                _self.cleanPaylist();
+            });
+
         },
         /**
-         * 计算整单优惠
+         * 帮助
+         */
+        openHelp:function () {
+            var tipsView = new KeyTipsView('BILLING_PAGE');
+            this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+        },
+        /**
+         * 删除单独的支付方式
+         */
+        deleteItem: function () {
+            var item = this.collection.at(this.i);
+            this.collection.remove(item);
+            var totalreceived = 0;
+            var trlist = this.collection.pluck('gather_money');
+            for(var i = 0;i < trlist.length; i++) {
+                totalreceived += trlist[i];
+            }
+            if(totalreceived >= this.totalamount) {
+                this.unpaidamount = 0;
+                this.oddchange = totalreceived - this.totalamount;
+            }else{
+                this.oddchange = 0;
+                this.unpaidamount = this.totalamount - totalreceived;
+            }
+            this.model.set({
+                receivedsum: totalreceived,
+                unpaidamount: this.unpaidamount,
+                oddchange:this.oddchange
+            });
+            this.renderBillInfo();
+            this.renderBillDetail();
+            toastr.success('删除成功');
+        },
+        /**
+         * 整单优惠
+         */
+        billTotalDiscount:function (){
+            if(this.model.get('totaldiscount') != 0) {
+                toastr.warning('不能重复整单优惠');
+            }else if(this.model.get('receivedsum') != 0) {
+                toastr.warning('您已选择支付方式，不能再进行整单优惠');
+            } else {
+                var billdiscountview = new BilldiscountView();
+                this.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
+                $('.modal').on('shown.bs.modal', function (){
+                    $('input[name = percentage]').focus();
+                });
+            }
+        },
+        /**
+         * 取消整单优惠
+         */
+        cancelTotalDiscount: function () {
+            if(this.model.get('totaldiscount') == 0){
+                toastr.info('您未进行任何优惠');
+            }else if(this.model.get('receivedsum') != 0){
+                toastr.warning('您已选择支付方式，不能取消整单优惠');
+            }else{
+                this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.model.get("totaldiscount"));
+                this.unpaidamount = this.totalamount;
+                this.model.set({
+                    totalamount:this.totalamount,
+                    unpaidamount:this.unpaidamount,
+                    totaldiscount:0
+                });
+                this.renderBillInfo();
+                toastr.success('取消整单优惠成功');
+            }
+        },
+        /**
+         * 光标向下
+         */
+        scrollDown: function () {
+            if (this.i < this.collection.length - 1) {
+                this.i++;
+            }
+            if (this.i % this.listnum == 0) {
+                this.n++;
+                $('.for-billdetail').scrollTop(this.listheight * this.n);
+            }
+            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+
+        /**
+         * 光标向上
+         */
+        scrollUp: function () {
+            if (this.i > 0) {
+                this.i--;
+            }
+            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
+                this.n--;
+                $('.for-billdetail').scrollTop(this.listheight * this.n );
+            }
+            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+        /**
+         * 结算
+         */
+        billing: function () {
+            var _self = this;
+            var confirmBill = new BillModel();
+            if(_self.unpaidamount != 0){
+                toastr.warning('还有未支付的金额，请支付完成后再进行结算');
+            } else {
+                var confirmView = new ConfirmView({
+                    pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
+                    is_navigate:true,
+                    navigate_page: window.PAGE_ID.MAIN,
+                    callback: function () { //
+                        _self.unpaidamount = _self.unpaidamount.toFixed(2);
+                        if(_self.percentage != 0){
+                            _self.totalDiscount(_self.percentage);
+                        }
+                        var data = {};
+                        data['mode'] = '00';
+                        if (storage.isSet(system_config.VIP_KEY)) {
+                            data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                            data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                            data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                        } else {
+                            data['medium_id'] = "*";
+                            data['medium_type'] = "*";
+                            data['cust_id'] = "*";
+                        }
+                        data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
+                        data['gather_detail'] = _self.collection.toJSON();
+                        console.log(data);
+                        confirmBill.trade_confirm(data, function (resp) {
+                            if (resp.status == '00') {
+                                storage.remove(system_config.SALE_PAGE_KEY);
+                                storage.remove(system_config.ONE_CARD_KEY);
+                                if (storage.isSet(system_config.VIP_KEY)) {
+                                    storage.remove(system_config.VIP_KEY);
+                                }
+                                router.navigate("main", {trigger: true,replace:true});
+                                //f7app.alert("订单号：" + resp.bill_no,'提示');
+                                toastr.success("订单号：" + resp.bill_no);
+                                var send_data = {};
+                                send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
+                                send_data['content'] = resp.printf;
+                                send_data = JSON.stringify(send_data) + '<EOF>';
+                                _self.sendLargeData2Socket(send_data);
+                            } else {
+                                toastr.error(resp.msg);
+                            }
+                        });
+                    },
+                    content:'确定结算此单？'
+                });
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+            }
+        },
+        /**
+         * 清空已支付列表
+         */
+        cleanPaylist: function () {
+            this.collection.reset();
+            this.model.set({
+                receivedsum:0,
+                oddchange:0,
+                unpaidamount:this.totalamount
+            });
+            this.renderBillDetail();
+            this.renderBillInfo();
+            toastr.success('清空支付方式列表');
+        },
+        /**
+         * 现金类支付
+         */
+        payByCash: function () {
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零,请进行结算');
+            }else {
+                this.billtype = new BilltypeView('00');
+                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
+                var attrData = {};
+                attrData['unpaidamount'] = unpaidamount;//本次应收的金额
+                Backbone.trigger('onunpaidamount',attrData);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = receivedsum]').focus();
+                    //$('#li' + _self.i).addClass('cus-selected');
+                });
+            }
+        },
+        /**
+         * 礼券类支付
+         */
+        payByGiftCard: function () {
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零,请进行结算');
+            }else {
+                this.billtype = new BilltypeView('01');
+                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
+                var attrData = {};
+                attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
+                Backbone.trigger('onunpaidamount',attrData);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = receivedsum]').focus();
+                    //$('#li' + _self.i).addClass('cus-selected');
+                });
+            }
+        },
+        /**
+         * 银行pos支付
+         */
+        payByPos: function () {
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零,请进行结算');
+            }else {
+                this.billtype = new BilltypeView('02');
+                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
+                var attrData = {};
+                attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
+                Backbone.trigger('onunpaidamount',attrData);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = receivedsum]').focus();
+                    //$('#li' + _self.i).addClass('cus-selected');
+                });
+            }
+        },
+        /**
+         * 第三方支付
+         */
+        payByThird:function () {
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零,请进行结算');
+            }else {
+                this.billtype = new BilltypeView('03');
+                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
+                var attrData = {};
+                attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
+                Backbone.trigger('onunpaidamount',attrData);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = receivedsum]').focus();
+                    //$('#li' + _self.i).addClass('cus-selected');
+                });
+            }
+        },
+
+        /**
+         * 一卡通支付
+         */
+        payByOneCard: function () {
+
+        },
+
+        /**
+         * 整单优惠平均到每个商品
          */
         totalDiscount:function(percentage){
             var _self = this;
@@ -438,6 +541,84 @@ define([
             //console.log(_self.discountcollection);
             //console.log('final');
         },
+        /**
+         * 帮助按钮点击事件
+         */
+        onBillHelpClicked: function () {
+            this.openHelp();
+        },
+        /**
+         * 返回销售首页
+         */
+        onReturnMainClicked: function () {
+            router.navigate('main',{trigger:true});
+        },
+        /**
+         * 删除按钮点击事件
+         */
+        onBillDelete: function () {
+            this.deleteItem();
+        },
+        /**
+         * 整单优惠点击事件
+         */
+        onTotalDiscountClicked:function() {
+            this.billTotalDiscount();
+        },
+        /**
+         *取消整单优惠点击事件
+         */
+        onCancelTotalDiscount: function () {
+            this.cancelTotalDiscount();
+        },
+        /**
+         * 向上按钮点击事件
+         */
+        onKeyUp: function () {
+            this.scrollUp();
+        },
+        /**
+         * 向下按钮点击事件
+         */
+        onKeyDown: function () {
+            this.scrollDown();
+        },
+        /**
+         * 结算按钮点击事件
+         */
+        onBillingClicked: function () {
+            this.billing();
+        },
+        /**
+         * 清空支付方式列表
+         */
+        onBillingCleanClicked: function () {
+            this.cleanPaylist();
+        },
+        /**
+         *
+         */
+        onPayClick:function(e) {
+            var index = $(e.currentTarget).data('index');
+            $(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
+            switch (index) {
+                case '00':
+                    this.payByCash();
+                    break;
+                case '01':
+                    this.payByGiftCard();
+                    break;
+                case '02':
+                    this.payByPos();
+                    break;
+                case '03':
+                    this.payByThird();
+                    break;
+                case '04':
+                    this.payByOneCard();
+                    break;
+            }
+        }
 
 
 
