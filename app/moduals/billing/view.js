@@ -230,7 +230,7 @@ define([
                 _self.billTotalDiscount();
             });
             //取消整单优惠
-            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.C, function () {
+            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.E, function () {
                _self.cancelTotalDiscount();
             });
             //帮助
@@ -242,7 +242,7 @@ define([
                 _self.payByOneCard();
             });
             //清空支付方式列表
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.E, function () {
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.C, function () {
                 _self.cleanPaylist();
             });
 
@@ -413,7 +413,7 @@ define([
             });
             this.renderBillDetail();
             this.renderBillInfo();
-            toastr.success('清空支付方式列表');
+            toastr.success('清空支付方式列表成功');
         },
         /**
          * 现金类支付

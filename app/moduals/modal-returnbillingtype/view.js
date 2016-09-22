@@ -20,6 +20,18 @@ define([
 
         i:0,
 
+        input: 'input[name = receivedsum]',
+
+        events:{
+            'click .cancel':'onCancelClicked',
+            'click .ok':'onOkClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
+            'click .keyup':'onKeyUp',
+            'click .keydown':'onKeyDown'
+        },
+
         modalInitPage: function () {
             console.log(this.attrs);
             if(storage.isSet(system_config.GATHER_KEY)) {
@@ -67,41 +79,66 @@ define([
                 $('input[name = billingrt]').focus();
             });
             this.bindModalKeyEvents(window.PAGE_ID.RETURN_BILLING_TYPE, window.KEYS.Down, function() {
-                if (_self.i < _self.collection.length - 1) {
-                    _self.i++;
-                }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                _self.scrollDown();
             });
 
             this.bindModalKeyEvents(window.PAGE_ID.RETURN_BILLING_TYPE, window.KEYS.Up, function() {
-                if (_self.i > 0) {
-                    _self.i--;
-                }
-
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                _self.scrollUp();
             });
 
             this.bindModalKeyEvents(window.PAGE_ID.RETURN_BILLING_TYPE, window.KEYS.Enter, function() {
-                var receivedsum = $('#receivedsum').val();
-                if(receivedsum == '') {
-                    toastr.warning('您输入的支付金额为空，请重新输入');
-                }else if(receivedsum == 0) {
-                    toastr.warning('支付金额不能为零，请重新输入');
-                }else {
-                    var attrData = {};
-                    attrData['gather_id'] = _self.collection.at(_self.i).get('gather_id');
-                    attrData['gather_name'] = _self.collection.at(_self.i).get('gather_name');
-                    attrData['receivedsum'] = receivedsum;
-                    $(".modal-backdrop").remove();
-                    _self.hideModal(window.PAGE_ID.BILLING_RETURN);
-                    this.billaccountview = new BillaccountView(attrData);
-                    _self.showModal(window.PAGE_ID.RETURN_BILLING_ACCOUNT,_self.billaccountview);
-                    $('.modal').on('shown.bs.modal',function(e) {
-                        $('input[name = receive_account]').focus();
-                    });
-                }
+                _self.onReceived();
             });
         },
+
+        /**
+         * Enter和确定
+         */
+        onReceived:function() {
+            var _self = this;
+            var receivedsum = $('#receivedsum').val();
+            if(receivedsum == '') {
+                toastr.warning('您输入的支付金额为空，请重新输入');
+            }else if(receivedsum == 0) {
+                toastr.warning('支付金额不能为零，请重新输入');
+            }else {
+                var attrData = {};
+                attrData['gather_id'] = _self.collection.at(_self.i).get('gather_id');
+                attrData['gather_name'] = _self.collection.at(_self.i).get('gather_name');
+                attrData['receivedsum'] = receivedsum;
+                $(".modal-backdrop").remove();
+                _self.hideModal(window.PAGE_ID.BILLING);
+                this.billaccountview = new BillaccountView(attrData);
+                _self.showModal(window.PAGE_ID.BILLING_ACCOUNT,_self.billaccountview);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = receive_account]').focus();
+                });
+            }
+        },
+
+        onOkClicked:function(){
+            this.onReceived();
+        },
+        /**
+         * 方向下
+         */
+        scrollDown: function () {
+            if (this.i < this.collection.length - 1) {
+                this.i++;
+            }
+            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+        /**
+         * 方向上
+         */
+        scrollUp:function () {
+            if (this.i > 0) {
+                this.i--;
+            }
+
+            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+
 
         bindModalKeyEvents: function (id,keyCode,callback) {
             $(document).keydown(function (e) {
@@ -117,6 +154,35 @@ define([
             this.$el.find('.for-billingtype').html(this.template_billingtype(this.collection.toJSON()));
             return this;
         },
+
+        onCancelClicked: function () {
+            this.hideModal(window.PAGE_ID.BILLING);
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
+
+        onKeyUp: function () {
+            this.scrollUp();
+        },
+
+        onKeyDown: function () {
+            this.scrollDown();
+        }
 
     });
 
