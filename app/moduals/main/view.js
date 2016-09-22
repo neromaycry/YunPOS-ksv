@@ -54,12 +54,12 @@ define([
         isDeleteKey:false,
 
         events: {
-            'click .help':'openHelp',
+            'click .main_help':'openHelp',
             'click .billing':'onBillingClicked',
             'click .salesman':'onSalesmanClicked',
             'click .member':'onMemberClicked',
             'click .discount':'onDiscountClicked',
-            'click .delete':'onDeleteClicked',
+            'click .main_delete':'onDeleteClicked',
             'click .modify-item-num':'onModifyItemNum',
             'click .clean':'onCleanClicked',
             'click .keyup':'onKeyUpClicked',
