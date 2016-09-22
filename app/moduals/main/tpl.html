@@ -27,30 +27,19 @@
     </div>
 </nav>
 <div class="row" style="margin-right: 15px;margin-left: 15px;z-index: 0;">
-    <div class="main-left col-md-3 no-padding" style="padding-left: 0px">
-        <div class="form-group">
-            <input type="text" id="input_main" name="main" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
-        </div>
-        <div class="panel panel-primary for-posinfo" >
-
-        </div>
-        <div class="panel panel-primary for-salesman">
-
-        </div>
-    </div>
-    <div class="col-md-9 no-padding left-padding">
-        <div class="cart-panel panel panel-primary" style="z-index: 0;position: absolute;min-width: 1000px">
+    <div class="col-md-9 no-padding">
+        <div class="cart-panel panel panel-primary" style="z-index: 0;position: absolute;min-width: 440px">
             <div class="panel-heading text-center">
-              <div class="row">
-                  <div class="col-md-1">序号</div>
-                  <div class="col-md-2">编码</div>
-                  <div class="col-md-2">名称</div>
-                  <div class="col-md-1">规格</div>
-                  <div class="col-md-2">单价</div>
-                  <div class="col-md-1 text-left">优惠</div>
-                  <div class="col-md-1 text-left">数量</div>
-                  <div class="col-md-1 text-right">小计</div>
-              </div>
+                <div class="row">
+                    <div class="col-md-1">序号</div>
+                    <div class="col-md-2">编码</div>
+                    <div class="col-md-2">名称</div>
+                    <div class="col-md-1">规格</div>
+                    <div class="col-md-2">单价</div>
+                    <div class="col-md-1 text-left">优惠</div>
+                    <div class="col-md-1 text-left">数量</div>
+                    <div class="col-md-1 text-right">小计</div>
+                </div>
             </div>
             <div class="panel-body for-cartlist" style="padding: 0; overflow-y: scroll"></div>
             <div class="panel-footer no-padding border-top bg-white">
@@ -146,6 +135,18 @@
             </div>
         </div>
     </div>
+    <div class="main-left col-md-3 no-padding">
+        <div class="form-group">
+            <input type="text" id="input_main" name="main" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
+        </div>
+        <div class="panel panel-primary for-posinfo" >
+
+        </div>
+        <div class="panel panel-primary for-salesman">
+
+        </div>
+    </div>
+
 </div>
 
 
