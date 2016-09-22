@@ -77,13 +77,13 @@ define([
             });
         },
 
-        encodeUTF8: function (str) {
-            var newStr = '';
-            for (var i = 0; i < str.length; i++) {
-                newStr += '\\u' + str.charCodeAt(i).toString(16);
-            }
-            return newStr;
-        },
+        //encodeUTF8: function (str) {
+        //    var newStr = '';
+        //    for (var i = 0; i < str.length; i++) {
+        //        newStr += '\\u' + str.charCodeAt(i).toString(16);
+        //    }
+        //    return newStr;
+        //},
 
         bindKeys: function () {
             var _self = this;
