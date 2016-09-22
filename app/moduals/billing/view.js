@@ -42,6 +42,8 @@ define([
 
         template_billingdetailtpl:billingdetailtpl,
 
+        input:'input[name = billing]',
+
         events: {
             'click .billing_help':'onBillHelpClicked',
             'click .return_main':'onReturnMainClicked',
@@ -53,6 +55,11 @@ define([
             'click .billing':'onBillingClicked',
             'click .billing_clean':'onBillingCleanClicked',
             'click [data-index]': 'onPayClick',
+            'click .btn-floatpad':'onFloatPadClicked',
+            'click .main-ok':'onOKClicked',
+            'click .main-btn-num':'onNumClicked',
+            'click .main-btn-backspace':'onBackspaceClicked',
+            'click .main-btn-clear':'onClearClicked',
         },
 
         pageInit: function () {
@@ -618,7 +625,48 @@ define([
                     this.payByOneCard();
                     break;
             }
-        }
+        },
+        onFloatPadClicked: function () {
+            var isDisplay = $('.float-numpad').css('display') == 'none';
+            if (isDisplay) {
+                $('.float-numpad').css('display','block');
+                $('.btn-floatpad').text('关闭小键盘')
+            } else {
+                $('.float-numpad').css('display','none');
+                $('.btn-floatpad').text('开启小键盘')
+            }
+        },
+        onOKClicked: function () {
+            var _self = this;
+            _self.receivedsum = $('#input_billing').val();
+            if(_self.model.get('unpaidamount') == 0) {
+                toastr.warning('待支付金额为零，请进行结算');
+            }else if($('#input_billing').val() == '') {
+                toastr.warning('支付金额不能为空，请重新输入');
+            }else if($('#input_billing').val() == 0){
+                toastr.warning('支付金额不能为零，请重新输入');
+            }else{
+                _self.addToPaymentList(_self.totalamount,"现金",_self.receivedsum,"*","00");
+            }
+            $('#input_billing').val("");
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function () {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
 
 
 

@@ -16,23 +16,19 @@ s += '0';
 return s;
 }%>
 
-<div class="modal-dialog modal-lg modal-type">
+<div class="modal-dialog modal-type">
     <div class="modal-content">
         <div class="modal-body" style="padding: 0">
             <div class="panel panel-primary" style="border: none;margin: 0;">
                 <div class="panel-heading">应收金额：<%= toDecimal2(unpaidamount) %></div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-7">
+                        <div class="col-md-6">
                             <form>
                                 <input type="text" id="receivedsum"  name="receivedsum" class="form-control" placeholder="请输入付款金额"/>
                                 <input type="text" style="display: none">
                             </form>
-                        </div>
-                    </div>
-                    <div class="row" style="padding-top: 15px;">
-                        <div class="col-md-7">
-                            <div class="panel panel-primary left-margin" style="margin-right: 15px">
+                            <div class="panel panel-primary" style="margin-top: 15px;">
                                 <div class="row no-margining text-center">
                                     <div class="col-md-3 no-padding">
                                         <div class="btn-num panel-group border-right-bottom" data-num="7">7</div>
@@ -96,11 +92,9 @@ return s;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-5">
-                            <div class="panel">
-                                <div class="row for-billingtype" style="padding: 15px">
+                        <div class="col-md-6">
+                            <div class="row for-billingtype" style="padding-right: 15px">
 
-                                </div>
                             </div>
                         </div>
                     </div>

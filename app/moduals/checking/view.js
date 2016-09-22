@@ -30,8 +30,17 @@ define([
 
         isCashierReport:true,
 
-        events: {
+        input: 'input[name = checking_date]',
 
+        events: {
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
+            'click .back-to-main':'onBackClicked',
+            'click .help':'onHelpClicked',
+            'click .keyup':'onKeyUpClicked',
+            'click .keydown':'onKeyDownClicked'
         },
 
         pageInit: function () {
@@ -89,86 +98,15 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Enter, function () {
-                var date = $('input[name = checking_date]').val();
-                console.log(date);
-                if(date == ''){
-                    toastr.warning('输入的收银对账日期不能为空');
-                }else {
-                    var data = {};
-                    data['date'] = date;
-                    data['type'] = '02';
-                    this.request = new CheckingModel();
-                    this.request.report(data,function(resp) {
-                        if(resp.status == '00'){
-                            _self.model.set({
-                                pos: resp.pos,
-                                name: resp.cashier,
-                                date: resp.date,
-                                money: resp.sum_money,
-                                sale_num: resp.sale_num,//销售
-                                sale_money: resp.sale_money,//销售金额
-                                refund_num: resp.refund_num,//退货次数
-                                refund_money: resp.refund_money,//退货金额
-                                sub_num: resp.sub_num,//小计次数
-                                sub_money: resp.sub_money//小计金额
-                            });
-                           _self.collection.set(resp.master_detail);
-                            _self.renderCashierreport();
-                            _self.renderCashierdetail();
-                            _self.renderCashierdaily();
-                            _self.renderCashierdailyDetail();
-                        }else {
-                            toastr.error(resp.msg);
-                        }
-                    });
-                }
-                $('input[name = checking_date]').val("");
+                _self.checkingDate();
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Down, function () {
-                if(_self.isCashierReport){
-                    if (_self.i < _self.collection.length - 1) {
-                        _self.i++;
-                    }
-                    if (_self.i % _self.listnum == 0) {
-                        _self.n++;
-                        $('.for-cashier-detail').scrollTop(_self.listheight * _self.n);
-                    }
-                    $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                }else{
-                    if (_self.i < _self.collection.length - 1) {
-                        _self.i++;
-                    }
-                    if (_self.i % _self.listnum == 0) {
-                        _self.n++;
-                        $('.for-daily-detail').scrollTop(_self.listheight * _self.n);
-                    }
-                    $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                }
+                _self.scrollDown();
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Up, function() {
-                if(_self.isCashierReport) {
-                    if (_self.i > 0) {
-                        _self.i--;
-                    }
-                    if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
-                        _self.n--;
-
-                        $('.for-cashier-detail').scrollTop(_self.listheight * _self.n );
-                    }
-                    $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                }else {
-                    if (_self.i > 0) {
-                        _self.i--;
-                    }
-                    if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
-                        _self.n--;
-
-                        $('.for-daily-detail').scrollTop(_self.listheight * _self.n );
-                    }
-                    $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                }
+               _self.scrollUp();
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.T, function () {
@@ -195,6 +133,128 @@ define([
         renderCashierdailyDetail: function () {
             this.$el.find('.for-daily-detail').html(this.template_dailydetailtpl(this.collection.toJSON()));
             return this;
+        },
+
+        scrollDown:function (){
+            var _self = this;
+            if(_self.isCashierReport){
+                if (_self.i < _self.collection.length - 1) {
+                    _self.i++;
+                }
+                if (_self.i % _self.listnum == 0) {
+                    _self.n++;
+                    $('.for-cashier-detail').scrollTop(_self.listheight * _self.n);
+                }
+                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            }else{
+                if (_self.i < _self.collection.length - 1) {
+                    _self.i++;
+                }
+                if (_self.i % _self.listnum == 0) {
+                    _self.n++;
+                    $('.for-daily-detail').scrollTop(_self.listheight * _self.n);
+                }
+                $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            }
+        },
+
+        scrollUp:function() {
+            var _self = this;
+            if(_self.isCashierReport) {
+                if (_self.i > 0) {
+                    _self.i--;
+                }
+                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                    _self.n--;
+
+                    $('.for-cashier-detail').scrollTop(_self.listheight * _self.n );
+                }
+                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            }else {
+                if (_self.i > 0) {
+                    _self.i--;
+                }
+                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                    _self.n--;
+
+                    $('.for-daily-detail').scrollTop(_self.listheight * _self.n );
+                }
+                $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            }
+        },
+
+        checkingDate:function() {
+            var _self = this;
+            var date = $('input[name = checking_date]').val();
+            console.log(date);
+            if(date == ''){
+                toastr.warning('输入的收银对账日期不能为空');
+            }else {
+                var data = {};
+                data['date'] = date;
+                data['type'] = '02';
+                this.request = new CheckingModel();
+                this.request.report(data,function(resp) {
+                    if(resp.status == '00'){
+                        _self.model.set({
+                            pos: resp.pos,
+                            name: resp.cashier,
+                            date: resp.date,
+                            money: resp.sum_money,
+                            sale_num: resp.sale_num,//销售
+                            sale_money: resp.sale_money,//销售金额
+                            refund_num: resp.refund_num,//退货次数
+                            refund_money: resp.refund_money,//退货金额
+                            sub_num: resp.sub_num,//小计次数
+                            sub_money: resp.sub_money//小计金额
+                        });
+                        _self.collection.set(resp.master_detail);
+                        _self.renderCashierreport();
+                        _self.renderCashierdetail();
+                        _self.renderCashierdaily();
+                        _self.renderCashierdailyDetail();
+                    }else {
+                        toastr.error(resp.msg);
+                    }
+                });
+            }
+            $('input[name = checking_date]').val("");
+        },
+
+        onOKClicked: function () {
+           this.checkingDate();
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
+
+        onKeyUpClicked:function () {
+            this.scrollUp();
+        },
+        onKeyDownClicked: function () {
+            this.scrollDown();
+        },
+        onHelpClicked:function () {
+            var tipsView = new KeyTipsView('CHECKING_PAGE');
+            this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+        },
+        onBackClicked:function () {
+            router.navigate('main',{trigger:true});
         }
     });
 
