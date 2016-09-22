@@ -129,7 +129,6 @@ define([
         initPlugins: function () {
             var _self = this;
             $(this.input).focus();
-            this.initLayoutHeight();
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
@@ -150,10 +149,14 @@ define([
          */
         initLayoutHeight: function () {
             var dh = $(window).height();
+            var dw = $(window).width();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
             var panelfooter = $('.panel-footer').height();
             var cart = dh - nav * 2 - panelheading * 2 - panelfooter;
+            var leftWidth = $('.main-left').width();
+            var cartWidth = dw - leftWidth - 45;
+            $('.cart-panel').width(cartWidth);
             $('.for-cartlist').height(cart);
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
             this.listnum = 8;//设置商品列表中的条目数
