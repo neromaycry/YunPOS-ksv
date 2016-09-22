@@ -14,8 +14,56 @@ define([
 
         template: tpl,
 
+        input: 'input[name = receive_account]',
+
+        events:{
+            'click .cancel':'onCancelClicked',
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked'
+        },
+
         modalInitPage: function () {
 
+        },
+        onCancelClicked: function () {
+            this.hideModal(window.PAGE_ID.BILLING);
+        },
+        onOKClicked: function () {
+            var _self = this;
+            var receivedaccount = $('#receive_account').val();
+            if(receivedaccount == '') {
+                toastr.warning('æ‚¨è¾“å…¥çš„æ”¯ä»˜è´¦å·ä¸ºç©ºï¼Œè¯·é‡æ–°è¾“å…¥');
+            } else if(receivedaccount == 0){
+                toastr.warning('æ”¯ä»˜è´¦å·ä¸èƒ½ä¸ºé›¶ï¼Œè¯·é‡æ–°è¾“å…¥');
+            } else {
+                var attrData = {};
+                attrData['gather_id'] = _self.attrs['gather_id'];
+                attrData['receivedsum'] = _self.attrs['receivedsum'];
+                attrData['gather_name'] = _self.attrs['gather_name'];
+                attrData['gather_no'] = receivedaccount;
+                Backbone.trigger('onReceivedsum',attrData);
+                _self.hideModal(window.PAGE_ID.BILLING);
+                $('input[name = billing]').focus();
+            }
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function (e) {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
         },
 
         bindModalKeys: function () {
@@ -27,9 +75,9 @@ define([
             this.bindModalKeyEvents(window.PAGE_ID.BILLING_ACCOUNT, window.KEYS.Enter , function () {
                 var receivedaccount = $('#receive_account').val();
                 if(receivedaccount == '') {
-                    toastr.warning('ÄúÊäÈëµÄÖ§¸¶ÕËºÅÎª¿Õ£¬ÇëÖØĞÂÊäÈë');
+                    toastr.warning('æ‚¨è¾“å…¥çš„æ”¯ä»˜è´¦å·ä¸ºç©ºï¼Œè¯·é‡æ–°è¾“å…¥');
                 } else if(receivedaccount == 0){
-                    toastr.warning('Ö§¸¶ÕËºÅ²»ÄÜÎªÁã£¬ÇëÖØĞÂÊäÈë');
+                    toastr.warning('æ”¯ä»˜è´¦å·ä¸èƒ½ä¸ºé›¶ï¼Œè¯·é‡æ–°è¾“å…¥');
                 } else {
                     var attrData = {};
                     attrData['gather_id'] = _self.attrs['gather_id'];
