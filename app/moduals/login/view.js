@@ -22,7 +22,7 @@ define([
         events: {
             //'click #btn_login':'doLogin',
             'click .btn-doinit':'doInitialize',
-            'click .numpad':'onNumpadClicked',
+            'click .btn-numpad':'onNumpadClicked',
             'click .ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
             'click .btn-backspace':'onBackspaceClicked',
@@ -69,13 +69,13 @@ define([
         },
 
         onNumpadClicked: function () {
-            var isDisplay = $('.float-numpad').css('display') == 'none';
+            var isDisplay = $('.numpad').css('display') == 'none';
             if (isDisplay) {
-                $('.float-numpad').css('display','block');
-                $('.numpad').text('关闭小键盘')
+                $('.numpad').css('display','block');
+                $('.btn-numpad').text('关闭小键盘')
             } else {
-                $('.float-numpad').css('display','none');
-                $('.numpad').text('打开小键盘')
+                $('.numpad').css('display','none');
+                $('.btn-numpad').text('打开小键盘')
             }
         },
 

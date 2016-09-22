@@ -161,7 +161,7 @@ define([
             $('.cart-panel').width(cartWidth);
             $('.for-cartlist').height(cart);
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
-            this.listnum = 8;//设置商品列表中的条目数
+            this.listnum = 6;//设置商品列表中的条目数
         },
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
