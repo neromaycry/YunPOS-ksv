@@ -607,7 +607,7 @@ define([
          */
         onPayClick:function(e) {
             var index = $(e.currentTarget).data('index');
-            $(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
+            //$(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
             switch (index) {
                 case '00':
                     this.payByCash();

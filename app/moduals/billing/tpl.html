@@ -4,6 +4,23 @@
             <a class="navbar-brand" style="color: #ffffff">结算</a>
         </div>
         <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color: #ffffff">支付方式 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li data-index="00"><a>现金类</a></li>
+                        <li class="divider"></li>
+                        <li data-index="01"><a>礼券类</a></li>
+                        <li class="divider"></li>
+                        <li data-index="02"><a>银行POS</a></li>
+                        <li class="divider"></li>
+                        <li data-index="03"><a>第三方支付</a></li>
+                        <li class="divider"></li>
+                        <li data-index="04"><a>一卡通</a></li>
+                        <li class="divider"></li>
+                    </ul>
+                </li>
+            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="billing_help"><a style="color: #ffffff">帮助</a></li>
                 <li class="return_main"><a style="color: #ffffff">返回销售首页</a></li>
@@ -12,23 +29,8 @@
     </div>
 </nav>
 <div class="row" style="margin-right: 15px;margin-left: 15px">
-    <div class="col-md-3  no-padding" style="padding-left: 0px">
-        <div class="form-group">
-            <input type="text" id="input_billing" placeholder="请输入现金支付金额" name="billing" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
-        </div>
-        <div class="panel panel-primary for-billinfo">
-
-        </div>
-        <ul class="list-group">
-            <li class="list-group-item" data-index="00">现金类支付</li>
-            <li class="list-group-item" data-index="01">礼券类支付</li>
-            <li class="list-group-item" data-index="02">银行POS</li>
-            <li class="list-group-item" data-index="03">第三方支付</li>
-            <li class="list-group-item" data-index="04">一卡通支付</li>
-        </ul>
-    </div>
-    <div class="col-md-9 no-padding left-padding">
-        <div class="panel panel-primary" style="z-index: 0;position: absolute;min-width: 1000px">
+    <div class="col-md-8 no-padding left-padding">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-3">序号</div>
@@ -63,71 +65,85 @@
                 </div>
             </div>
         </div>
-        <div class="float-numpad">
-            <div class="panel panel-primary no-bottom-margin">
-                <div class="row no-margining text-center">
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="7">7</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="8">8</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="9">9</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-backspace panel-group border-bottom">←</div>
-                    </div>
-                </div>
-                <div class="row no-margining text-center">
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="4">4</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="5">5</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="6">6</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-clear panel-group border-bottom">C</div>
-                    </div>
-                </div>
-                <div class="row no-margining text-center">
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="1">1</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="2">2</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right-bottom" data-num="3">3</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-bottom" data-num="00">00</div>
-                    </div>
-                </div>
-                <div class="row no-margining text-center">
-                    <div class="col-md-6 no-padding">
-                        <div class="main-btn-num panel-group border-right" data-num="0">0</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="main-btn-num panel-group border-right" data-num=".">.</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="panel-group bg-red main-ok">确定</div>
-                    </div>
-                </div>
-                <!--<div class="row no-margining text-center">-->
-                <!--<div class="col-md-6 no-padding">-->
-                <!--<div class="panel-group border-right bg-red cancel">取消</div>-->
-                <!--</div>-->
-                <!--<div class="col-md-6 no-padding">-->
-                <!--<div class="panel-group bg-teal ok">确定</div>-->
-                <!--</div>-->
-                <!--</div>-->
-            </div>
+    </div>
+    <div class="col-md-4 left-padding">
+        <div class="panel panel-primary for-billinfo">
+
         </div>
+        <div class="form-group">
+            <input type="text" id="input_billing" placeholder="请输入现金支付金额" name="billing" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
+        </div>
+        <div class="panel panel-primary">
+            <div class="row no-margining text-center">
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="7">7</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="8">8</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="9">9</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-backspace panel-group border-bottom">←</div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="4">4</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="5">5</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="6">6</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-clear panel-group border-bottom">C</div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="1">1</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="2">2</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right-bottom" data-num="3">3</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-bottom" data-num="00">00</div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-md-6 no-padding">
+                    <div class="main-btn-num panel-group border-right" data-num="0">0</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="main-btn-num panel-group border-right" data-num=".">.</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="panel-group bg-red main-ok">确定</div>
+                </div>
+            </div>
+            <!--<div class="row no-margining text-center">-->
+            <!--<div class="col-md-6 no-padding">-->
+            <!--<div class="panel-group border-right bg-red cancel">取消</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-6 no-padding">-->
+            <!--<div class="panel-group bg-teal ok">确定</div>-->
+            <!--</div>-->
+            <!--</div>-->
+        </div>
+
+        <!--<ul class="list-group">-->
+            <!--<li class="list-group-item" data-index="00">现金类支付</li>-->
+            <!--<li class="list-group-item" data-index="01">礼券类支付</li>-->
+            <!--<li class="list-group-item" data-index="02">银行POS</li>-->
+            <!--<li class="list-group-item" data-index="03">第三方支付</li>-->
+            <!--<li class="list-group-item" data-index="04">一卡通支付</li>-->
+        <!--</ul>-->
     </div>
 </div>
 
