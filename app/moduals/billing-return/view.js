@@ -37,6 +37,8 @@ define([
 
         i:0,
 
+        input:'input[name = billingrt]',
+
         events: {
             'click .billing-help':'onHelpClicked',
             'click .return':'onReturnClicked',
@@ -45,7 +47,12 @@ define([
             'click .returnbilling_clean':'onCleanClicked',
             'click .returnbilling_keyup':'onKeyUpClicked',
             'click .returnbilling_keydown':'onKeyDownClicked',
-            'click .billing':'onBillingClicked'
+            'click .billing':'onBillingClicked',
+            'click .btn-floatpad':'onFloatPadClicked',
+            'click .main-ok':'onOKClicked',
+            'click .main-btn-num':'onNumClicked',
+            'click .main-btn-backspace':'onBackspaceClicked',
+            'click .main-btn-clear':'onClearClicked',
         },
 
         pageInit: function () {
@@ -489,7 +496,48 @@ define([
         },
         onBillingClicked: function () {
             this.doBilling();
-        }
+        },
+        onFloatPadClicked: function () {
+            var isDisplay = $('.float-numpad').css('display') == 'none';
+            if (isDisplay) {
+                $('.float-numpad').css('display','block');
+                $('.btn-floatpad').text('关闭小键盘')
+            } else {
+                $('.float-numpad').css('display','none');
+                $('.btn-floatpad').text('开启小键盘')
+            }
+        },
+        onOKClicked: function () {
+            var _self = this;
+            _self.receivedsum = $('#input_billingrt').val();
+            if(_self.model.get('unpaidamount') == 0) {
+                toastr.warning('待支付金额为零，请进行结算');
+            }else if($('#input_billingrt').val() == '') {
+                toastr.warning('支付金额不能为空，请重新输入');
+            }else if($('#input_billingrt').val() == 0){
+                toastr.warning('支付金额不能为零，请重新输入');
+            }else{
+                _self.addToPaymentList(_self.totalamount,"现金",_self.receivedsum,"*","00");
+            }
+            $('#input_billingrt').val("");
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function () {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
     });
 
     return billingRtView;
