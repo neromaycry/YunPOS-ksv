@@ -5,8 +5,8 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a style="color: #ffffff">帮助</a></li>
-                <li><a style="color: #ffffff">返回销售首页</a></li>
+                <li class="returnforce_help"><a style="color: #ffffff">帮助</a></li>
+                <li class="returnforce_return"><a style="color: #ffffff">返回销售首页</a></li>
             </ul>
         </div>
     </div>
@@ -15,6 +15,69 @@
     <div class="col-md-3 no-padding" style="padding-left: 0px">
         <div class="form-group">
             <input type="text" id="input_main" name="main" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
+        </div>
+        <div class="panel panel-primary">
+            <div class="row no-margining text-center">
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="7">7</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="8">8</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="9">9</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-backspace panel-group border-bottom">←</div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="4">4</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="5">5</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="6">6</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-clear panel-group border-bottom">C</div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="1">1</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="2">2</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right-bottom" data-num="3">3</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-bottom" data-num="00">00</div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-md-6 no-padding">
+                    <div class="btn-num panel-group border-right" data-num="0">0</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="btn-num panel-group border-right" data-num=".">.</div>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <div class="panel-group bg-red ok">确定</div>
+                </div>
+            </div>
+            <!--<div class="row no-margining text-center">-->
+            <!--<div class="col-md-6 no-padding">-->
+            <!--<div class="panel-group border-right bg-red cancel">取消</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-6 no-padding">-->
+            <!--<div class="panel-group bg-teal ok">确定</div>-->
+            <!--</div>-->
+            <!--</div>-->
         </div>
         <div class="panel panel-primary for-posinfo" >
 
@@ -40,26 +103,23 @@
 
             <div class="panel-footer no-padding border-top bg-white">
                 <div class="row text-center no-margining">
-                    <div class="col-md-1 no-padding">
-                        <div class="panel-group border-right">单品优惠</div>
-                    </div>
-                    <div class="col-md-1 no-padding">
-                        <div class="panel-group border-right">删除商品</div>
+                    <div class="col-md-2 no-padding">
+                        <div class="panel-group border-right returnforce_discount">单品优惠</div>
                     </div>
                     <div class="col-md-2 no-padding">
-                        <div class="panel-group border-right">修改数量</div>
+                        <div class="panel-group border-right returnforce_delete">删除商品</div>
                     </div>
                     <div class="col-md-2 no-padding">
-                        <div class="panel-group border-right">清空</div>
+                        <div class="panel-group border-right modify_num">修改数量</div>
                     </div>
                     <div class="col-md-2 no-padding">
-                        <div class="panel-group border-right">挂单/解挂</div>
+                        <div class="panel-group border-right returnforce_clean">清空</div>
                     </div>
                     <div class="col-md-2 no-padding" style="">
-                        <div id="btn_up" class="panel-group border-right">↑</div>
+                        <div class="panel-group border-right returnforce_keyup">↑</div>
                     </div>
                     <div class="col-md-2 no-padding" style="">
-                        <div id="btn_down" class="panel-group">↓</div>
+                        <div id="btn_down" class="panel-group returnforce_keydown">↓</div>
                     </div>
                 </div>
             </div>
