@@ -44,7 +44,8 @@ define([
             'click .btn-clear':'onClearClicked',
             'click .cancel':'onCancelClicked',
             'click .billing':'onBillingClicked',
-            'click .back-to-main':'onBackClicked'
+            'click .back-to-main':'onBackClicked',
+            'click .returnwhole_help':'onHelpClicked'
         },
 
         pageInit: function () {
@@ -273,6 +274,10 @@ define([
         onClearClicked: function () {
             $(this.input).val('');
         },
+        onHelpClicked:function () {
+            var tipsView = new KeyTipsView('RETURNWHOLE_PAGE');
+            this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+        }
 
     });
 
