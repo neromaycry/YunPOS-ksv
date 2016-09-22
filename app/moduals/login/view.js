@@ -17,8 +17,18 @@ define([
 
         template: tpl,
 
+        input:'input[name = username]',
+
         events: {
-            'click #btn_login':'doLogin'
+            //'click #btn_login':'doLogin',
+            'click .btn-doinit':'doInitialize',
+            'click .numpad':'onNumpadClicked',
+            'click .ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
+            'click input[name = username]':'focusInputUser',
+            'click input[name = password]':'focusInputPasswd'
         },
 
         pageInit: function () {
@@ -41,6 +51,61 @@ define([
 
         initPlugins: function () {
             $('input[name = username]').focus();
+        },
+
+        iniSettngs: function () {
+            var confirmView = new ConfirmView({
+                pageid: window.PAGE_ID.LOGIN,
+                is_navigate:true,
+                navigate_page:window.PAGE_ID.SETDNS,
+                callback: function () {
+                    storage.remove(system_config.SETTING_DATA_KEY);
+                    storage.remove(system_config.IS_FIRST_KEY);
+                    router.navigate("setdns",{trigger:true,replace:true});
+                },
+                content:'确定初始化吗？'
+            });
+            this.showModal(window.PAGE_ID.CONFIRM, confirmView);
+        },
+
+        onNumpadClicked: function () {
+            var isDisplay = $('.float-numpad').css('display') == 'none';
+            if (isDisplay) {
+                $('.float-numpad').css('display','block');
+                $('.numpad').text('关闭小键盘')
+            } else {
+                $('.float-numpad').css('display','none');
+                $('.numpad').text('打开小键盘')
+            }
+        },
+
+        onOKClicked: function () {
+            this.doLogin();
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function () {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
+
+        focusInputUser: function () {
+            this.input = 'input[name = username]';
+        },
+
+        focusInputPasswd: function () {
+            this.input = 'input[name = password]';
         },
 
         doLogin: function () {
@@ -77,13 +142,17 @@ define([
             });
         },
 
-        encodeUTF8: function (str) {
-            var newStr = '';
-            for (var i = 0; i < str.length; i++) {
-                newStr += '\\u' + str.charCodeAt(i).toString(16);
-            }
-            return newStr;
+        doInitialize: function () {
+            this.iniSettngs();
         },
+
+        //encodeUTF8: function (str) {
+        //    var newStr = '';
+        //    for (var i = 0; i < str.length; i++) {
+        //        newStr += '\\u' + str.charCodeAt(i).toString(16);
+        //    }
+        //    return newStr;
+        //},
 
         bindKeys: function () {
             var _self = this;
@@ -112,20 +181,8 @@ define([
                 }
             });
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
-                var confirmView = new ConfirmView({
-                    pageid: window.PAGE_ID.LOGIN,
-                    is_navigate:true,
-                    navigate_page:window.PAGE_ID.SETDNS,
-                    callback: function () {
-                        storage.remove(system_config.SETTING_DATA_KEY);
-                        storage.remove(system_config.IS_FIRST_KEY);
-                        router.navigate("setdns",{trigger:true,replace:true});
-                    },
-                    content:'确定初始化吗？'
-                });
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                _self.iniSettngs();
             });
-
         }
 
     });
