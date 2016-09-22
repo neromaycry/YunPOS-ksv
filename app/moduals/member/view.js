@@ -76,7 +76,7 @@ define([
                     }
                 }
             });
-            this.bindKeyEvents(window.PAGE_ID.MEMBER,window.KEYS.Left, function () {
+            this.bindKeyEvents(window.PAGE_ID.MEMBER,window.KEYS.Up, function () {
                 var isUserFocused = $('input[name = custid]').is(':focus');
                 if (isUserFocused) {
                     $('input[name = custpwd]').focus();
@@ -84,7 +84,7 @@ define([
                     $('input[name = custid]').focus();
                 }
             });
-            this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.Right, function () {
+            this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.Down, function () {
                 var isUserFocused = $('input[name = custid]').is(':focus');
                 if (isUserFocused) {
                     $('input[name = custpwd]').focus();
