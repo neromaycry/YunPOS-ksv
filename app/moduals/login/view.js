@@ -47,6 +47,7 @@ define([
                     toastr.error(resp.msg);
                 }
             });
+            storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
         },
 
         initPlugins: function () {
@@ -72,10 +73,10 @@ define([
             var isDisplay = $('.numpad').css('display') == 'none';
             if (isDisplay) {
                 $('.numpad').css('display','block');
-                $('.btn-numpad').text('关闭小键盘')
+                $('.btn-numpad').text('关闭小键盘');
             } else {
                 $('.numpad').css('display','none');
-                $('.btn-numpad').text('打开小键盘')
+                $('.btn-numpad').text('打开小键盘');
             }
         },
 
@@ -182,6 +183,9 @@ define([
             });
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
                 _self.iniSettngs();
+            });
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
+                window.location.reload();
             });
         }
 

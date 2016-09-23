@@ -181,6 +181,8 @@ define([
             this.initOtherView();
             this.initPlugins();
             this.initLayoutHeight();
+            var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
+            $('input').attr('readonly',!isKeyboardPlugged);
             return this;
         }
 
