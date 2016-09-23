@@ -187,6 +187,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
                 window.location.reload();
             });
+
         }
 
     });
