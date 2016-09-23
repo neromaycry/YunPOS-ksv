@@ -108,7 +108,7 @@ require([
     };
 
     var SOCKET_ADDR = 'ws://127.0.0.1:2001/';
-    //var SOCKET_ADDR = 'ws://192.168.1.126:2001/';
+    //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';
 
     window.wsClient = new WebSocket(SOCKET_ADDR);
     window.wsClient.onopen = function (e) {
