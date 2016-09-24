@@ -37,6 +37,9 @@ define([
             this.bindModalKeyEvents(window.PAGE_ID.TIP_MEMBER, window.KEYS.Esc , function () {
                 _self.tipsModalHide(_self.attrs);
             });
+            this.bindModalKeyEvents(window.PAGE_ID.TIP_MEMBER, window.KEYS.T , function () {
+                _self.tipsModalHide(_self.attrs);
+            });
         },
 
         onCloseClicked: function () {
