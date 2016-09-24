@@ -242,7 +242,7 @@ define([
                     callback: function () { //点击确认键的回调
                         _self.clearCart();
                     },
-                    content:'确定清空购物车？' //confirm模态框的提示内容
+                    content:'确定取消交易？' //confirm模态框的提示内容
                 });
                 _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
@@ -544,7 +544,7 @@ define([
             this.renderPosInfo();
             this.renderCartList();
             storage.remove(system_config.SALE_PAGE_KEY);
-            toastr.success('清空购物车成功');
+            toastr.success('交易已取消');
         },
 
         /**
@@ -675,7 +675,7 @@ define([
                 callback: function () { //点击确认键的回调
                     _self.clearCart();
                 },
-                content:'确定清空购物车？' //confirm模态框的提示内容
+                content:'确定取消交易？' //confirm模态框的提示内容
             });
             _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
         },

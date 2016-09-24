@@ -13,6 +13,10 @@ div .float-numpad {
     opacity: 0.9;
 }
 
+body .top-margin-15 {
+    margin-top: 15px;
+}
+
 body .no-padding {
     padding: 0px;
 }
@@ -49,6 +53,11 @@ div .bg-red {
 div .bg-teal {
     color: #FFF;
     background-color: #4db6ac;
+}
+
+div .bg-highlight {
+    color: #FFF;
+    background-color: #FEAE1B;
 }
 
 div .bg-white{
@@ -118,7 +127,7 @@ div .numpad-ok {
     display: block;
     height: 55px;
     line-height: 55px;
-    font-size: 18px;
+    font-size: 16px;
     vertical-align: middle;
     margin-bottom: 0;
 }
