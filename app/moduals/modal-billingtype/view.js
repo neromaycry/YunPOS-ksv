@@ -33,7 +33,7 @@ define([
         },
 
         modalInitPage: function () {
-            console.log(this.attrs);
+            var _self = this;
             if(storage.isSet(system_config.GATHER_KEY)) {
                 this.collection = new BilltypeCollection();
                 var tlist = storage.get(system_config.GATHER_KEY);
@@ -52,12 +52,16 @@ define([
             }
             this.initTemplates();
             this.handleEvents();
+            $('.modal').on('shown.bs.modal',function(e) {
+                $('input[name = receivedsum]').focus();
+                $('input[name = receivedsum]').val(_self.model.get('unpaidamount'));
+            });
+
         },
 
         initTemplates: function () {
             this.template_billingtype = _.template(this.template_billingtype);
         },
-
         handleEvents: function () {
             Backbone.off('onunpaidamount');
             Backbone.on('onunpaidamount',this.onunpaidamount,this);
@@ -114,6 +118,7 @@ define([
                 var attrData = {};
                 attrData['gather_id'] = _self.collection.at(_self.i).get('gather_id');
                 attrData['gather_name'] = _self.collection.at(_self.i).get('gather_name');
+                attrData['gather_type'] = _self.collection.at(_self.i).get('gather_type');
                 attrData['receivedsum'] = receivedsum;
                 $(".modal-backdrop").remove();
                 _self.hideModal(window.PAGE_ID.BILLING);

@@ -164,7 +164,9 @@ window.PAGE_ID = {
     'LOGOUT':19,
     'BILL_DISCOUNT':20,
     'CHECKING':21,
-    'CONFIRM':22
+    'CONFIRM':22,
+    'ONECARD_LOGIN':23,
+    'ONECARD_PAY':24
 };
 
 window.KEYS = {

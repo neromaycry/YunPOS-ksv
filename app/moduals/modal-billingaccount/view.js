@@ -42,6 +42,7 @@ define([
                 attrData['gather_id'] = _self.attrs['gather_id'];
                 attrData['receivedsum'] = _self.attrs['receivedsum'];
                 attrData['gather_name'] = _self.attrs['gather_name'];
+                attrData['gather_type'] = _self.attrs['gather_type'];
                 attrData['gather_no'] = receivedaccount;
                 Backbone.trigger('onReceivedsum',attrData);
                 _self.hideModal(window.PAGE_ID.BILLING);
