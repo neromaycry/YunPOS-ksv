@@ -114,7 +114,9 @@ define([
                 toastr.warning('您输入的支付金额为空，请重新输入');
             }else if(receivedsum == 0) {
                 toastr.warning('支付金额不能为零，请重新输入');
-            }else {
+            }else if(receivedsum > (_self.model.get('unpaidamount') + 100)){
+                toastr.warning('找零金额超限');
+            }else{
                 var attrData = {};
                 attrData['gather_id'] = _self.collection.at(_self.i).get('gather_id');
                 attrData['gather_name'] = _self.collection.at(_self.i).get('gather_name');

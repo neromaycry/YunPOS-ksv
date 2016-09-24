@@ -79,6 +79,7 @@ define([
                 receivedsum:this.receivedsum,//实付金额
                 unpaidamount:this.unpaidamount,//未付金额
                 oddchange:this.oddchange,
+                discountamount:this.discountamount//单品优惠的总金额
             });
             this.initTemplates();
             this.handleEvents();
@@ -125,7 +126,7 @@ define([
             this.totalamount = (this.totalamount - this.totaldiscount).toFixed(2);//折扣后的支付金额
             this.unpaidamount = this.totalamount;
             this.model.set({
-                totaldiscount:this.totaldiscount,
+                totaldiscount:parseFloat(this.totaldiscount) ,//整单优惠的金额
                 totalamount:parseFloat(this.totalamount),
                 unpaidamount:parseFloat(this.unpaidamount),
                 percentage:percentage
@@ -194,17 +195,7 @@ define([
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Enter, function () {
-                _self.receivedsum = $('#input_billing').val();
-                if(_self.model.get('unpaidamount') == 0) {
-                    toastr.warning('待支付金额为零，请进行结算');
-                }else if($('#input_billing').val() == '') {
-                    toastr.warning('支付金额不能为空，请重新输入');
-                }else if($('#input_billing').val() == 0){
-                    toastr.warning('支付金额不能为零，请重新输入');
-                }else{
-                    _self.addToPaymentList(_self.totalamount,"现金",_self.receivedsum,"*","00");
-                }
-                $('#input_billing').val("");
+                _self.confirm();
             });
             //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
@@ -260,6 +251,26 @@ define([
             });
 
         },
+
+        /**
+         * 确认事件
+         */
+        confirm:function() {
+            var receivedsum = $('#input_billing').val();
+            if(this.unpaidamount == 0) {
+                toastr.warning('待支付金额为零，请进行结算');
+            }else if(receivedsum == '') {
+                toastr.warning('支付金额不能为空，请重新输入');
+            }else if(receivedsum == 0){
+                toastr.warning('支付金额不能为零，请重新输入');
+            }else if(receivedsum > (this.unpaidamount + 100)){
+                toastr.warning('找零金额超限');
+            }else{
+                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00");
+            }
+            $('#input_billing').val("");
+        },
+
         /**
          * 帮助
          */
@@ -333,9 +344,9 @@ define([
          * 整单优惠
          */
         billTotalDiscount:function (){
-            if(this.model.get('totaldiscount') != 0) {
+            if(this.totaldiscount != 0) {//先判断整单优惠金额
                 toastr.warning('不能重复整单优惠');
-            }else if(this.model.get('receivedsum') != 0) {
+            }else if(this.receivedsum != 0) {//判断是否已经付款
                 toastr.warning('您已选择支付方式，不能再进行整单优惠');
             } else {
                 var billdiscountview = new BilldiscountView();
@@ -349,17 +360,18 @@ define([
          * 取消整单优惠
          */
         cancelTotalDiscount: function () {
-            if(this.model.get('totaldiscount') == 0){
+            if(this.totaldiscount == 0){
                 toastr.info('您未进行任何优惠');
-            }else if(this.model.get('receivedsum') != 0){
+            }else if(this.receivedsum != 0){
                 toastr.warning('您已选择支付方式，不能取消整单优惠');
             }else{
-                this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.model.get("totaldiscount"));
+                this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
                 this.unpaidamount = this.totalamount;
+                this.totaldiscount = 0;
                 this.model.set({
                     totalamount:this.totalamount,
                     unpaidamount:this.unpaidamount,
-                    totaldiscount:0
+                    totaldiscount:this.totaldiscount
                 });
                 this.renderBillInfo();
                 toastr.success('取消整单优惠成功');
@@ -453,10 +465,12 @@ define([
          * 清空已支付列表
          */
         cleanPaylist: function () {
+            this.receivedsum = 0;
+            this.oddchange = 0;
             this.collection.reset();
             this.model.set({
-                receivedsum:0,
-                oddchange:0,
+                receivedsum:this.receivedsum,
+                oddchange:this.oddchange,
                 unpaidamount:this.totalamount
             });
             storage.remove(system_config.ONE_CARD_KEY);
@@ -562,7 +576,7 @@ define([
          */
         totalDiscount:function(percentage){
             var _self = this;
-            var finaldiscount = 0;
+            var finaldiscount = 0;//最后一项的优惠
             _self.discountcollection = new BillCollection();
             this.localObj = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
             storage.set(system_config.SALE_PAGE_KEY,'totaldiscountamount',_self.totaldiscount);
@@ -574,9 +588,9 @@ define([
                 var num = item.get('num');
                 var money = item.get('money');
                 var discount = parseFloat(item.get('discount'));
-                var totaldiscount = (1 - percentage) * (money * num - discount);//前n-1项每个单品的单品折扣
-                finaldiscount = finaldiscount + totaldiscount;
-                discount = discount + totaldiscount;//前n-1项每个单品的单品优惠和整单优惠平平均之后的总和
+                var tdiscount = (1 - percentage) * (money * num - discount);//前n-1项每个单品的单品折扣
+                discount = discount + tdiscount;//前n-1项每个单品的单品优惠和整单优惠平平均之后的总和
+                finaldiscount = finaldiscount + discount;//前n-1项总的折扣
                 discount = discount.toFixed(2);
                 console.log('第' + i + '的整单折扣' + discount);
                 item.set({
@@ -585,10 +599,14 @@ define([
                 console.log(item);
                 _self.discountcollection.push(item);
             }
-            console.log(_self.discountcollection);
-            console.log('>>>>>>>>>>>>>>>>>>>>');
+            //console.log(_self.discountcollection);
+            //console.log('>>>>>>>>>>>>>>>>>>>>');
+            //console.log(_self.totaldiscount + '整单折扣');
+            //console.log(_self.discountamount + '单品优惠之和');
+            //console.log(typeof (_self.totaldiscount));
+            //console.log(typeof (_self.discountamount));
             //最后一项的折扣为
-            finaldiscount = this.totaldiscount - finaldiscount;
+            finaldiscount = parseFloat(_self.totaldiscount) + _self.discountamount - finaldiscount;
             finaldiscount = finaldiscount.toFixed(2);
             console.log(finaldiscount + '最后一项的优惠');
             var tmp = new BillModel();
@@ -677,29 +695,9 @@ define([
                     break;
             }
         },
-        onFloatPadClicked: function () {
-            var isDisplay = $('.float-numpad').css('display') == 'none';
-            if (isDisplay) {
-                $('.float-numpad').css('display','block');
-                $('.btn-floatpad').text('关闭小键盘')
-            } else {
-                $('.float-numpad').css('display','none');
-                $('.btn-floatpad').text('开启小键盘')
-            }
-        },
+
         onOKClicked: function () {
-            var _self = this;
-            _self.receivedsum = $('#input_billing').val();
-            if(_self.model.get('unpaidamount') == 0) {
-                toastr.warning('待支付金额为零，请进行结算');
-            }else if($('#input_billing').val() == '') {
-                toastr.warning('支付金额不能为空，请重新输入');
-            }else if($('#input_billing').val() == 0){
-                toastr.warning('支付金额不能为零，请重新输入');
-            }else{
-                _self.addToPaymentList(_self.totalamount,"现金",_self.receivedsum,"*","00");
-            }
-            $('#input_billing').val("");
+           this.confirm();
         },
 
         onNumClicked: function (e) {

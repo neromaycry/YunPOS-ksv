@@ -462,9 +462,7 @@ define([
             }else{
                 if(value == '') {
                     toastr.warning('输入的优惠金额不能为空，请重新输入');
-                }else if(value == 0){
-                    toastr.warning('输入的优惠金额不能为零，请重新输入');
-                } else{
+                }else{
                     var item = _self.collection.at(_self.i);
                     var price = item.get('price');
                     if (value <= parseFloat(price) ) {
