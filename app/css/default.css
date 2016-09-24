@@ -123,10 +123,25 @@ div .numpad-ok {
     margin-bottom: 0;
 }
 
+div .text-primary {
+    color: #3277B2; !important;
+}
+
+div .cart-billing {
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
 div .cart-bottom-btn {
     display: block;
     height: 50px;
     line-height: 50px;
+    font-size: 16px;
+    color: #3277B2;
     vertical-align: middle;
     margin-bottom: 0;
 }
@@ -146,6 +161,10 @@ div .border-bottom {
 
 div .border-top {
     border-top: solid thin #3277B2;
+}
+
+div .border-left {
+    border-left: solid thin #3277B2;
 }
 
 div .bg-gray {
