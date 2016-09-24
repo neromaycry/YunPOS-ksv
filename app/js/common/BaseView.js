@@ -154,6 +154,9 @@ define([
         },
 
         sendLargeData2Socket: function (str) {
+            var SOCKET_ADDR = 'ws://127.0.0.1:2001/';
+            wsClient.close();
+            wsClient = new WebSocket(SOCKET_ADDR);
             var slicelength = 42;
             var n = str.length/slicelength+1;
             var i = 0;
@@ -181,6 +184,10 @@ define([
             this.initOtherView();
             this.initPlugins();
             this.initLayoutHeight();
+            if (storage.isSet(system_config.IS_KEYBOARD_PLUGGED)) {
+                var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
+                $('input').attr('readonly',!isKeyboardPlugged);
+            }
             return this;
         }
 

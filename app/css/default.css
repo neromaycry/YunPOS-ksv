@@ -37,6 +37,10 @@ div .no-padding {
     padding: 0px;
 }
 
+input[readonly=readonly] {
+
+}
+
 div .bg-red {
     color: #FFF;
     background-color: #f36c60;

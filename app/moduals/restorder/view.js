@@ -35,7 +35,8 @@ define([
             'click .keyup':'onKeyUpClicked',
             'click .keydown':'onKeyDownClicked',
             'click .keyright':'onKeyRightClicked',
-            'click .keyleft':'onKeyLeftClicked'
+            'click .keyleft':'onKeyLeftClicked',
+            'click .restorder-ok':'onOKClicked'
         },
 
         pageInit: function () {
@@ -215,6 +216,14 @@ define([
             var tipsView = new KeyTipsView('RESTORDER_PAGE');
             this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
         },
+
+        onOKClicked: function () {
+            Backbone.trigger('onReleaseOrder',this.orderSelectedDetail);
+            storage.remove(system_config.RESTORDER_KEY,this.orderNum);
+            router.navigate('main',{trigger:true});
+            toastr.success('解挂成功');
+        },
+
         onReturnClicked:function() {
             router.navigate('main',{trigger:true});
         },

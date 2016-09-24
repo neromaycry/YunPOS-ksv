@@ -17,6 +17,7 @@ require.config({
         'toastr':'../toastr/toastr.min',
         'sockjs':'../sockjs/sockjs',
         'bootstrap':'../bootstrap/js/bootstrap',
+        'pscrollbar':'../perfect-scrollbar/js/perfect-scrollbar.jquery',
         'text': 'requirePlugin/text',
         'css': 'requirePlugin/css',
         'json': 'requirePlugin/json',
@@ -59,6 +60,10 @@ require.config({
         },
         'sockjs':{
             'exports':'sockjs'
+        },
+        'pscrollbar':{
+            'deps':['css!../perfect-scrollbar/css/perfect-scrollbar.min.css'],
+            'exports':'pscrollbar'
         }
     }
 });
@@ -76,13 +81,16 @@ require([
     'storage',
     'toastr',
     'sockjs',
+    'pscrollbar',
     'md5',
-], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,sockjs,md5) {
+], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,sockjs,pscrollbar,md5) {
     window.storage = $.localStorage;
 
     window.pageId = 0;
 
     window.isfromForce = false;
+
+    window.psbar = pscrollbar;
 
     var options = {
         hashTracking:false
@@ -99,7 +107,8 @@ require([
         'positionClass':'toast-bottom-center'
     };
 
-    var SOCKET_ADDR = 'ws://192.168.1.143:2001/';
+    var SOCKET_ADDR = 'ws://127.0.0.1:2001/';
+    //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';
 
     window.wsClient = new WebSocket(SOCKET_ADDR);
     window.wsClient.onopen = function (e) {

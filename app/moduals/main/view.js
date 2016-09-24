@@ -136,6 +136,7 @@ define([
             this.renderCartList();
             this.buttonSelected();
             $('#li' + _self.i).addClass('cus-selected');
+            $('.for-cartlist').perfectScrollbar();
         },
 
         initTemplates: function () {

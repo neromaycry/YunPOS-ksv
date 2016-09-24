@@ -118,12 +118,9 @@ define([
             data['day'] = '';
             data['bill_no'] = orderNo;
             this.requestModel.getOrderInfo(data, function (resp) {
-                console.log(resp);
                 if (resp.status == '00') {
                     _self.RtcartCollection.set(resp.goods_detail);
                     _self.RtPayedlistCollection.set(resp.gather_detail);
-                    console.log(resp.goods_detail);
-                    console.log(resp.gather_detail);
                     _self.calculateModel();
                 } else {
                     toastr.error(resp.msg);
@@ -148,7 +145,7 @@ define([
             });
             this.renderRtcart();
             this.renderRtInfo();
-            this.renderRtPayedlist();
+            //this.renderRtPayedlist();
             storage.set(system_config.RETURN_KEY,'cartlist',this.RtcartCollection.toJSON());
             storage.set(system_config.RETURN_KEY,'paymentlist',this.RtPayedlistCollection.toJSON());
             storage.set(system_config.RETURN_KEY,'panel',this.model.toJSON());

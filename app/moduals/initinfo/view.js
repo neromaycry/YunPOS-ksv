@@ -17,7 +17,7 @@ define([
         template: tpl,
 
         events: {
-
+            'click .init-done':'onInitDoneClicked'
         },
 
         pageInit: function () {
@@ -62,29 +62,27 @@ define([
 
         bindKeys: function () {
             this.bindKeyEvents(window.PAGE_ID.INITINFO,window.KEYS.Enter, function () {
-                console.log('enter');
                 storage.set(system_config.IS_FIRST_KEY, true);
                 if (storage.isSet(system_config.IS_FIRST_KEY)) {
                     router.navigate('login', {trigger:true});
                 }
             });
 
-            this.bindKeyEvents(window.PAGE_ID.INITINFO, window.KEYS.Esc, function () {
-                console.log('esc');
-                router.navigate('setposkey', {trigger:true});
-            });
+            //this.bindKeyEvents(window.PAGE_ID.INITINFO, window.KEYS.Esc, function () {
+            //    router.navigate('setposkey', {trigger:true});
+            //});
         },
 
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '会员页面', '挂单', '解挂',
                  '营业员登录', '结算', '清空购物车', '删除商品', '修改数量',
-                 '单品优惠', '向上选择', '向下选择', '强制退货页面', '整单退货页面'];
+                 '单品优惠', '向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账'];
             var keys = ['ESC','ENTER','M','G','J',
                 'S','B','C','D','N',
-                'Y','↑','↓','F','W'];
+                'Y','↑','↓','F','W','A'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.M, window.KEYS.G, window.KEYS.J,
                 window.KEYS.S, window.KEYS.B, window.KEYS.C, window.KEYS.D, window.KEYS.N,
-                window.KEYS.Y, window.KEYS.Up, window.KEYS.Down, window.KEYS.F, window.KEYS.W];
+                window.KEYS.Y, window.KEYS.Up, window.KEYS.Down, window.KEYS.F, window.KEYS.W, window.KEYS.A];
             var mainKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -212,9 +210,14 @@ define([
                 checkingKeys.push(checkingKey);
                 storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'CHECKING_PAGE', checkingKeys);
             }
+        },
+
+        onInitDoneClicked: function () {
+            storage.set(system_config.IS_FIRST_KEY, true);
+            if (storage.isSet(system_config.IS_FIRST_KEY)) {
+                router.navigate('login', {trigger:true});
+            }
         }
-
-
 
     });
 
