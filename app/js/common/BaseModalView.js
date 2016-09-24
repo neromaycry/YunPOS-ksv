@@ -30,6 +30,14 @@ define([
             }
             this.modalInitPage();
             this.bindModalKeys();
+            $('.modal').on('shown.bs.modal', function () {
+                $('.cbtn').mousedown(function () {
+                    $(this).addClass('clicked');
+                });
+                $('.cbtn').mouseup(function () {
+                    $(this).removeClass('clicked');
+                });
+            });
         },
 
         modalInitPage: function () {

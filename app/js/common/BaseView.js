@@ -188,6 +188,12 @@ define([
                 var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
                 $('input').attr('readonly',!isKeyboardPlugged);
             }
+            $('.cbtn').mousedown(function () {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').mouseup(function () {
+                $(this).removeClass('clicked');
+            });
             return this;
         }
 

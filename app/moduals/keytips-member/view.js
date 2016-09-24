@@ -24,9 +24,7 @@ define([
             this.collection = new KeyTipsCollection();
             this.collection.set(storage.get(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,this.attrs));
             this.renderHotKeys();
-            $('.modal').on('shown.bs.modal', function () {
-                _self.renderHotKeys();
-            });
+
         },
 
         renderHotKeys: function () {

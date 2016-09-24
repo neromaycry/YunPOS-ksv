@@ -110,6 +110,10 @@ div .panel-group {
     margin-bottom: 0;
 }
 
+div .clicked {
+    background-color: #e0e0e0;
+}
+
 div .numpad-ok {
     display: block;
     height: 60px;
