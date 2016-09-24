@@ -103,7 +103,18 @@ div .no-margining {
 div .panel-group {
     display: block;
     height: 60px;
+    font-size: 22px;
+    font-weight: bold;
     line-height: 60px;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+div .numpad-ok {
+    display: block;
+    height: 60px;
+    line-height: 60px;
+    font-size: 18px;
     vertical-align: middle;
     margin-bottom: 0;
 }
