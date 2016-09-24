@@ -195,17 +195,7 @@ define([
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Enter, function () {
-                _self.receivedsum = $('#input_billing').val();
-                if(_self.model.get('unpaidamount') == 0) {
-                    toastr.warning('待支付金额为零，请进行结算');
-                }else if($('#input_billing').val() == '') {
-                    toastr.warning('支付金额不能为空，请重新输入');
-                }else if($('#input_billing').val() == 0){
-                    toastr.warning('支付金额不能为零，请重新输入');
-                }else{
-                    _self.addToPaymentList(_self.totalamount,"现金",_self.receivedsum,"*","00");
-                }
-                $('#input_billing').val("");
+                _self.confirm();
             });
             //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
@@ -261,6 +251,26 @@ define([
             });
 
         },
+
+        /**
+         * 确认事件
+         */
+        confirm:function() {
+            var receivedsum = $('#input_billing').val();
+            if(this.unpaidamount == 0) {
+                toastr.warning('待支付金额为零，请进行结算');
+            }else if(receivedsum == '') {
+                toastr.warning('支付金额不能为空，请重新输入');
+            }else if(receivedsum == 0){
+                toastr.warning('支付金额不能为零，请重新输入');
+            }else if(receivedsum > (this.unpaidamount + 100)){
+                toastr.warning('找零金额超限');
+            }else{
+                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00");
+            }
+            $('#input_billing').val("");
+        },
+
         /**
          * 帮助
          */
@@ -685,29 +695,9 @@ define([
                     break;
             }
         },
-        onFloatPadClicked: function () {
-            var isDisplay = $('.float-numpad').css('display') == 'none';
-            if (isDisplay) {
-                $('.float-numpad').css('display','block');
-                $('.btn-floatpad').text('关闭小键盘')
-            } else {
-                $('.float-numpad').css('display','none');
-                $('.btn-floatpad').text('开启小键盘')
-            }
-        },
+
         onOKClicked: function () {
-            var _self = this;
-            _self.receivedsum = $('#input_billing').val();
-            if(_self.model.get('unpaidamount') == 0) {
-                toastr.warning('待支付金额为零，请进行结算');
-            }else if($('#input_billing').val() == '') {
-                toastr.warning('支付金额不能为空，请重新输入');
-            }else if($('#input_billing').val() == 0){
-                toastr.warning('支付金额不能为零，请重新输入');
-            }else{
-                _self.addToPaymentList(_self.totalamount,"现金",_self.receivedsum,"*","00");
-            }
-            $('#input_billing').val("");
+           this.confirm();
         },
 
         onNumClicked: function (e) {
