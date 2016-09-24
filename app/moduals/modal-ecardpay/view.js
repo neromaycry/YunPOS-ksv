@@ -5,7 +5,7 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-ecardpay/model',
     '../../moduals/modal-ecardpay/collection',
-    'text!../../moduals/modal-ecardpay/tpl.html',
+    'text!../../moduals/modal-ecardpay/ecardpaytpl.html',
     'text!../../moduals/modal-ecardpay/ecarddetailtpl.html'
 ], function (BaseModalView,EcardpayModel,EcardpayCollection, tpl, ecarddetailtpl) {
 
