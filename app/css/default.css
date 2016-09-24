@@ -102,10 +102,10 @@ div .no-margining {
 
 div .panel-group {
     display: block;
-    height: 60px;
+    height: 55px;
     font-size: 22px;
     font-weight: bold;
-    line-height: 60px;
+    line-height: 55px;
     vertical-align: middle;
     margin-bottom: 0;
 }
@@ -116,8 +116,8 @@ div .clicked {
 
 div .numpad-ok {
     display: block;
-    height: 60px;
-    line-height: 60px;
+    height: 55px;
+    line-height: 55px;
     font-size: 18px;
     vertical-align: middle;
     margin-bottom: 0;
