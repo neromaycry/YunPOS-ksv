@@ -102,6 +102,14 @@ div .no-margining {
 
 div .panel-group {
     display: block;
+    height: 60px;
+    line-height: 60px;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+div .cart-bottom-btn {
+    display: block;
     height: 50px;
     line-height: 50px;
     vertical-align: middle;
