@@ -10,10 +10,11 @@ define([
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
+    '../../../../moduals/modal-ecardlogin/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,billinfotpl, billingdetailtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -37,6 +38,8 @@ define([
         totaldiscount:0,//整单优惠的总价格
 
         visibleTypes:{},
+
+        card_id:'',//一卡通界面传过来的card_id
 
         template_billinfo:billinfotpl,
 
@@ -112,7 +115,9 @@ define([
             var gatherNo = data['gather_no'];
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
-            this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId);
+            var gatherType = data['gather_type'];
+            this.card_id = data['card_id'];
+            this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId,gatherType);
         },
         onBillDiscount: function (data) {
             this.percentage = data['percentage'] / 100;
@@ -135,14 +140,15 @@ define([
          * @param gatherAccount 付款账号
          * @param gatherId 付款方式Id
          */
-        addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId) {
+        addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId,gatherType) {
             var model = new BillModel();
             model.set({
                 fact_money:0,
                 gather_id:gatherId,
                 gather_name:gatherName,
                 gather_money:parseFloat(receivedsum),
-                gather_no:gatherAccount
+                gather_no:gatherAccount,
+                gather_type:gatherType
             });
             this.collection.add(model);
             var totalreceived = 0;
@@ -265,6 +271,41 @@ define([
          * 删除单独的支付方式
          */
         deleteItem: function () {
+            var item = this.collection.at(this.i);
+            var gather_type = item.get('gather_type');
+            if(gather_type == '04'){
+                //当删除的那条数据里面gather_type = 04
+                var gatherid = item.get('gather_id');
+                //取出对应的ONE_CARD_KEY的值
+                var ecardcollection = storage.get(system_config.ONE_CARD_KEY,this.card_id,'detail');
+                this.tempcollection = new BillCollection();
+                for(var i in ecardcollection) {
+                    if(ecardcollection[i].gather_id == gatherid){
+                        var temp = ecardcollection[i];
+                        var gather_money = parseFloat(temp.gather_money);
+                        gather_money = gather_money + item.get('gather_money');
+                        temp['gather_money'] = gather_money
+                        this.tempcollection.push(temp);
+                    } else {
+                        this.tempcollection.push(ecardcollection[i]);
+                    }
+                }
+                storage.remove(system_config.ONE_CARD_KEY);
+                storage.set(system_config.ONE_CARD_KEY,this.card_id,'detail',this.tempcollection);
+                this.delete();
+            }else{
+                this.delete();
+            }
+            var isExist = this.collection.findWhere({gather_type: "04"});
+            if(isExist == undefined){
+                if(storage.isSet(system_config.ONE_CARD_KEY)){
+                    storage.remove(system_config.ONE_CARD_KEY);
+                }
+            }
+        },
+
+
+        delete:function(){
             var item = this.collection.at(this.i);
             this.collection.remove(item);
             var totalreceived = 0;
@@ -418,6 +459,7 @@ define([
                 oddchange:0,
                 unpaidamount:this.totalamount
             });
+            storage.remove(system_config.ONE_CARD_KEY);
             this.renderBillDetail();
             this.renderBillInfo();
             toastr.success('清空支付方式列表成功');
@@ -435,10 +477,10 @@ define([
                 var attrData = {};
                 attrData['unpaidamount'] = unpaidamount;//本次应收的金额
                 Backbone.trigger('onunpaidamount',attrData);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = receivedsum]').focus();
-                    //$('#li' + _self.i).addClass('cus-selected');
-                });
+                //$('.modal').on('shown.bs.modal',function(e) {
+                //    $('input[name = receivedsum]').focus();
+                //    //$('#li' + _self.i).addClass('cus-selected');
+                //});
             }
         },
         /**
@@ -454,10 +496,10 @@ define([
                 var attrData = {};
                 attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
                 Backbone.trigger('onunpaidamount',attrData);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = receivedsum]').focus();
-                    //$('#li' + _self.i).addClass('cus-selected');
-                });
+                //$('.modal').on('shown.bs.modal',function(e) {
+                //    $('input[name = receivedsum]').focus();
+                //    //$('#li' + _self.i).addClass('cus-selected');
+                //});
             }
         },
         /**
@@ -473,10 +515,10 @@ define([
                 var attrData = {};
                 attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
                 Backbone.trigger('onunpaidamount',attrData);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = receivedsum]').focus();
-                    //$('#li' + _self.i).addClass('cus-selected');
-                });
+                //$('.modal').on('shown.bs.modal',function(e) {
+                //    $('input[name = receivedsum]').focus();
+                //    //$('#li' + _self.i).addClass('cus-selected');
+                //});
             }
         },
         /**
@@ -492,10 +534,10 @@ define([
                 var attrData = {};
                 attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
                 Backbone.trigger('onunpaidamount',attrData);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = receivedsum]').focus();
-                    //$('#li' + _self.i).addClass('cus-selected');
-                });
+                //$('.modal').on('shown.bs.modal',function(e) {
+                //    $('input[name = receivedsum]').focus();
+                //    //$('#li' + _self.i).addClass('cus-selected');
+                //});
             }
         },
 
@@ -503,7 +545,16 @@ define([
          * 一卡通支付
          */
         payByOneCard: function () {
-
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零，请进行结算');
+            }else{
+                this.onecardview = new OneCardView(this.model.get('unpaidamount'));
+                this.showModal(window.PAGE_ID.ONECARD_LOGIN,this.onecardview);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = medium_id]').focus();
+                });
+            }
         },
 
         /**
