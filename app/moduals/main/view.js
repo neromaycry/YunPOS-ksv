@@ -75,10 +75,10 @@ define([
             'click .return_force':'onReturnForceClicked',
             'click .checking':'onCheckingClicked',
             'click .login_out':'onLoginOutClicked',
-            'click .main-ok':'onOKClicked',
-            'click .main-btn-num':'onNumClicked',
-            'click .main-btn-backspace':'onBackspaceClicked',
-            'click .main-btn-clear':'onClearClicked',
+            'click .numpad-ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
             //'click .btn-floatpad':'onFloatPadClicked'
         },
 

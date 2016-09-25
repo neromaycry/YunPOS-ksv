@@ -62,10 +62,10 @@ define([
             'click .billing_clean':'onBillingCleanClicked',
             'click [data-index]': 'onPayClick',
             'click .btn-floatpad':'onFloatPadClicked',
-            'click .main-ok':'onOKClicked',
-            'click .main-btn-num':'onNumClicked',
-            'click .main-btn-backspace':'onBackspaceClicked',
-            'click .main-btn-clear':'onClearClicked',
+            'click .numpad-ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
         },
 
         pageInit: function () {

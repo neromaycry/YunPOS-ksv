@@ -27,7 +27,7 @@ define([
         input:'input[name = custid]',
 
         events: {
-            'click .ok':'onOKClicked',
+            'click .numpad-ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
             'click input[name = custid]':'focusInputCustid',
             'click input[name = custpwd]':'focusInputPasswd',
