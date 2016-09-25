@@ -13,8 +13,9 @@ define([
     '../../../../moduals/modal-ecardlogin/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
+    'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView, billinfotpl, billingdetailtpl, numpadtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -44,6 +45,8 @@ define([
         template_billinfo:billinfotpl,
 
         template_billingdetailtpl:billingdetailtpl,
+
+        template_numpad:numpadtpl,
 
         input:'input[name = billing]',
 
@@ -89,6 +92,7 @@ define([
             var _self = this;
             this.renderBillInfo();
             $('input[name = billing]').focus();
+            this.$el.find('.for-numpad').html(this.template_numpad);
             this.initLayoutHeight();
         },
         /**

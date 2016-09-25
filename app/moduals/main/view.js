@@ -14,8 +14,9 @@ define([
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
+    'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView,  posinfotpl,salesmantpl,cartlisttpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView,  posinfotpl,salesmantpl,cartlisttpl, numpadtpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -42,6 +43,8 @@ define([
         template_salesman:salesmantpl,
 
         template_cartlisttpl:cartlisttpl,
+
+        template_numpad:numpadtpl,
 
         salesmanView:null,
 
@@ -137,6 +140,7 @@ define([
             this.buttonSelected();
             $('#li' + _self.i).addClass('cus-selected');
             $('.for-cartlist').perfectScrollbar();
+            this.$el.find('.for-numpad').html(this.template_numpad);
         },
 
         initTemplates: function () {

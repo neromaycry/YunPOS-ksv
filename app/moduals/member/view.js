@@ -6,8 +6,9 @@ define([
     '../../../../moduals/member/model',
     '../../../../moduals/keytips-member/view',
     'text!../../../../moduals/member/memberinfotpl.html',
+    'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/member/tpl.html',
-], function (BaseView, MemberModel, KMemberView, memberinfotpl, tpl) {
+], function (BaseView, MemberModel, KMemberView, memberinfotpl,numpadtpl, tpl) {
 
     var memberView = BaseView.extend({
 
@@ -18,6 +19,8 @@ define([
         template: tpl,
 
         template_memberinfo:memberinfotpl,
+
+        template_numpad:numpadtpl,
 
         isRequestSuccess:false,
 
@@ -43,6 +46,7 @@ define([
 
         initPlugins: function () {
             $('input[name = custid]').focus();
+            this.$el.find('.for-numpad').html(this.template_numpad);
             this.renderMemberInfo();
         },
 
