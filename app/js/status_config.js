@@ -166,7 +166,9 @@ window.PAGE_ID = {
     'CHECKING':21,
     'CONFIRM':22,
     'ONECARD_LOGIN':23,
-    'ONECARD_PAY':24
+    'ONECARD_PAY':24,
+    'BR_ONECARD_LOGIN':25,
+    'BR_ONECARD_PAY':26
 };
 
 window.KEYS = {

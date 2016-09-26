@@ -65,7 +65,7 @@ define([
         },
 
         onCancelClicked: function () {
-            this.hideModal(window.PAGE_ID.BILLING);
+            this.hideModal(window.PAGE_ID.BILLING_RETURN);
         },
         onOKClicked: function () {
             var _self = this;
@@ -81,7 +81,7 @@ define([
                 attrData['gather_name'] = _self.attrs['gather_name'];
                 attrData['gather_no'] = receivedaccount;
                 Backbone.trigger('onReceivedsum',attrData);
-                _self.hideModal(window.PAGE_ID.BILLING);
+                _self.hideModal(window.PAGE_ID.BILLING_RETURN);
                 $('input[name = billing]').focus();
             }
         },

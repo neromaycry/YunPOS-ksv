@@ -7,7 +7,7 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color: #ffffff">支付方式 <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
+                    <ul class="dropdown-menu no-margining" role="menu">
                         <li data-index="00"><a>现金类</a></li>
                         <li class="divider"></li>
                         <li data-index="01"><a>礼券类</a></li>
@@ -17,41 +17,40 @@
                         <li data-index="03"><a>第三方支付</a></li>
                         <li class="divider"></li>
                         <li data-index="04"><a>一卡通</a></li>
-                        <li class="divider"></li>
                     </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="billing_help"><a style="color: #ffffff">帮助</a></li>
-                <li class="return_main"><a style="color: #ffffff">返回销售首页</a></li>
+                <li class="billing-help"><a style="color: #ffffff">帮助</a></li>
+                <li class="billing-return"><a style="color: #ffffff">返回</a></li>
             </ul>
         </div>
     </div>
 </nav>
-<div class="row" style="margin-right: 15px;margin-left: 15px">
-    <div class="col-md-8 no-padding left-padding">
-        <div class="panel panel-primary">
+<div class="row" style="margin-right: 15px;margin-left: 15px;z-index: 0;">
+    <div class="col-md-8 no-padding">
+        <div class="cart-panel panel panel-primary"  style="z-index: 0;position: absolute;min-width: 440px">
             <div class="panel-heading">
-                <div class="row">
-                    <div class="col-md-3">序号</div>
-                    <div class="col-md-3">付款方式</div>
+                <div class="row text-center">
+                    <div class="col-md-2">序号</div>
+                    <div class="col-md-3 ">付款方式</div>
                     <div class="col-md-3">付款金额</div>
                     <div class="col-md-3">付款账号</div>
                 </div>
             </div>
-            <div class="panel-body for-billdetail" style="padding: 0;overflow-y: scroll">
-
+            <div class="panel-body" style="padding: 0; overflow-y: hidden">
+                <div class="for-billdetail" style="overflow: hidden;position:relative;"></div>
             </div>
-            <div class="panel-footer text-center no-padding bg-white border-top">
+            <div class="panel-footer text-center no-padding bg-white">
                 <div class="row text-center no-margining">
                     <div class="col-md-12 button-group">
                         <div class="row">
-                            <button type="button" class="col-md-2 button button-border button-primary keyup">↑</button>
-                            <button type="button" class="col-md-2 button button-border button-primary keydown">↓</button>
-                            <button type="button" class="col-md-2 button button-border button-primary billing_delete">删除</button>
-                            <button type="button" class="col-md-2 button button-border button-primary billing_clean">清空付款方式</button>
+                            <button type="button" class="col-md-2 button button-border button-primary billing-keyup">↑</button>
+                            <button type="button" class="col-md-2 button button-border button-primary billing-keydown">↓</button>
+                            <button type="button" class="col-md-2 button button-border button-primary billing-delete">删除</button>
+                            <button type="button" class="col-md-2 button button-border button-primary billing-clean">清空付款方式</button>
                             <button type="button" class="col-md-2 button button-border button-primary totaldiscount">整单优惠</button>
-                            <button type="button" class="col-md-2 button button-border button-primary cancel_totaldiscount">取消优惠</button>
+                            <button type="button" class="col-md-2 button button-border button-primary cancel-totaldiscount">取消优惠</button>
                         </div>
                     </div>
                 </div>
@@ -78,22 +77,14 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 left-padding">
-        <div class="panel panel-primary for-billinfo">
-
-        </div>
+    <div class="main-left col-md-4 no-padding">
         <div class="form-group">
             <input type="text" id="input_billing" placeholder="请输入现金支付金额" name="billing" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
         </div>
         <div class="for-numpad"></div>
+        <div class="panel panel-primary for-billinfo">
 
-        <!--<ul class="list-group">-->
-            <!--<li class="list-group-item" data-index="00">现金类支付</li>-->
-            <!--<li class="list-group-item" data-index="01">礼券类支付</li>-->
-            <!--<li class="list-group-item" data-index="02">银行POS</li>-->
-            <!--<li class="list-group-item" data-index="03">第三方支付</li>-->
-            <!--<li class="list-group-item" data-index="04">一卡通支付</li>-->
-        <!--</ul>-->
+        </div>
     </div>
 </div>
 

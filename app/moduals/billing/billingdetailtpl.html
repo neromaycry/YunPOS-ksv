@@ -16,11 +16,11 @@ s += '0';
 return s;
 }%>
 
-<ul class="list-group">
+<ul class="list-group no-margining">
     <% _.each(obj,function(e,i){ %>
-    <li id="billdetail<%=i%>" class="list-group-item" data-index="<%= i %>" style="border-radius: 0">
-        <div class="row">
-            <div class="col-md-3"><%=i+1%></div>
+    <li id="billdetail<%=i%>" class="list-group-item li-billdetail" data-index="<%= i %>" style="border-radius: 0">
+        <div class="row text-center">
+            <div class="col-md-2"><%=i+1%></div>
             <div class="col-md-3"><%=e.gather_name%></div>
             <div class="col-md-3"><%= toDecimal2(e.gather_money)%></div>
             <div class="col-md-3"><%=e.gather_no%></div>

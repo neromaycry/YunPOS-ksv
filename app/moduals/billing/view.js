@@ -51,21 +51,21 @@ define([
         input:'input[name = billing]',
 
         events: {
-            'click .billing_help':'onBillHelpClicked',
-            'click .return_main':'onReturnMainClicked',
-            'click .billing_delete':'onBillDelete',
-            'click .totaldiscount':'onTotalDiscountClicked',
-            'click .cancel_totaldiscount':'onCancelTotalDiscount',
-            'click .billing_keyup':'onKeyUp',
-            'click .billing_keydown':'onKeyDown',
-            'click .billing':'onBillingClicked',
-            'click .billing_clean':'onBillingCleanClicked',
-            'click [data-index]': 'onPayClick',
-            'click .btn-floatpad':'onFloatPadClicked',
             'click .numpad-ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
+            'click .billing-help':'onBillHelpClicked',
+            'click .billing-return':'onReturnMainClicked',
+            'click .billing-delete':'onBillDelete',
+            'click .totaldiscount':'onTotalDiscountClicked',
+            'click .cancel-totaldiscount':'onCancelTotalDiscount',
+            'click .billing-keyup':'onKeyUp',
+            'click .billing-keydown':'onKeyDown',
+            'click .billing':'onBillingClicked',
+            'click .billing-clean':'onBillingCleanClicked',
+            'click [data-index]': 'onPayClick',
+            //'click .btn-floatpad':'onFloatPadClicked',
         },
 
         pageInit: function () {
@@ -92,6 +92,7 @@ define([
             var _self = this;
             this.renderBillInfo();
             $('input[name = billing]').focus();
+            $('.for-billdetail').perfectScrollbar();
             this.$el.find('.for-numpad').html(this.template_numpad);
             this.initLayoutHeight();
         },
@@ -100,14 +101,20 @@ define([
          */
         initLayoutHeight: function () {
             var dh = $(window).height();
+            var dw = $(window).width();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
             var panelfooter = $('.panel-footer').height();
-            var billdetail = dh - nav * 2 - panelheading * 3 - panelfooter;
+            var billdetail = dh - nav * 2 - panelheading * 2 - panelfooter;
+            var leftWidth = $('.main-left').width();
+            var cartWidth = dw - leftWidth - 45;
+            $('.cart-panel').width(cartWidth);
             $('.for-billdetail').height(billdetail);
             this.listheight = $('.for-billdetail').height();
-            this.itemheight = $('li').height() + 20;
-            this.listnum = parseInt(this.listheight / this.itemheight);//商品列表中的条目数
+            this.listnum = 10;//设置商品列表中的条目数
+            $('.li-billdetail').height(this.listheight / this.listnum - 21);
+            //this.itemheight = $('li').height() + 20;
+            //this.listnum = parseInt(this.listheight / this.itemheight);//商品列表中的条目数
         },
         handleEvents: function () {
             Backbone.off('onReceivedsum');
@@ -189,6 +196,7 @@ define([
         },
         renderBillDetail: function () {
             this.$el.find('.for-billdetail').html(this.template_billingdetailtpl(this.collection.toJSON()));
+            $('.li-billdetail').height(this.listheight / this.listnum - 21);
             return this;
         },
         bindKeys: function () {
@@ -265,7 +273,9 @@ define([
                 toastr.warning('待支付金额为零，请进行结算');
             }else if(receivedsum == '') {
                 toastr.warning('支付金额不能为空，请重新输入');
-            }else if(receivedsum == 0){
+            }else if(receivedsum == '.'){
+                toastr.warning('请输入有效金额');
+            } else if(receivedsum == 0){
                 toastr.warning('支付金额不能为零，请重新输入');
             }else if(receivedsum > (this.unpaidamount + 100)){
                 toastr.warning('找零金额超限');
@@ -486,7 +496,7 @@ define([
          * 现金类支付
          */
         payByCash: function () {
-            var unpaidamount = this.model.get('unpaidamount');
+            var unpaidamount = this.unpaidamount;
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零,请进行结算');
             }else {
@@ -495,62 +505,51 @@ define([
                 var attrData = {};
                 attrData['unpaidamount'] = unpaidamount;//本次应收的金额
                 Backbone.trigger('onunpaidamount',attrData);
-                //$('.modal').on('shown.bs.modal',function(e) {
-                //    $('input[name = receivedsum]').focus();
-                //    //$('#li' + _self.i).addClass('cus-selected');
-                //});
             }
         },
         /**
          * 礼券类支付
          */
         payByGiftCard: function () {
-            var unpaidamount = this.model.get('unpaidamount');
+            var unpaidamount = this.unpaidamount;
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零,请进行结算');
             }else {
                 this.billtype = new BilltypeView('01');
                 this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
                 var attrData = {};
-                attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
+                attrData['unpaidamount'] = unpaidamount;//本次应收的金额
                 Backbone.trigger('onunpaidamount',attrData);
-                //$('.modal').on('shown.bs.modal',function(e) {
-                //    $('input[name = receivedsum]').focus();
-                //    //$('#li' + _self.i).addClass('cus-selected');
-                //});
             }
         },
         /**
          * 银行pos支付
          */
         payByPos: function () {
-            var unpaidamount = this.model.get('unpaidamount');
+            var unpaidamount = this.unpaidamount;
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零,请进行结算');
             }else {
                 this.billtype = new BilltypeView('02');
                 this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
                 var attrData = {};
-                attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
+                attrData['unpaidamount'] = unpaidamount;//本次应收的金额
                 Backbone.trigger('onunpaidamount',attrData);
-                //$('.modal').on('shown.bs.modal',function(e) {
-                //    $('input[name = receivedsum]').focus();
-                //    //$('#li' + _self.i).addClass('cus-selected');
-                //});
+
             }
         },
         /**
          * 第三方支付
          */
         payByThird:function () {
-            var unpaidamount = this.model.get('unpaidamount');
+            var unpaidamount = this.unpaidamount;
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零,请进行结算');
             }else {
                 this.billtype = new BilltypeView('03');
                 this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
                 var attrData = {};
-                attrData['unpaidamount'] = this.model.get('unpaidamount');//本次应收的金额
+                attrData['unpaidamount'] = unpaidamount;//本次应收的金额
                 Backbone.trigger('onunpaidamount',attrData);
                 //$('.modal').on('shown.bs.modal',function(e) {
                 //    $('input[name = receivedsum]').focus();
@@ -563,11 +562,11 @@ define([
          * 一卡通支付
          */
         payByOneCard: function () {
-            var unpaidamount = this.model.get('unpaidamount');
+            var unpaidamount = this.unpaidamount;
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零，请进行结算');
             }else{
-                this.onecardview = new OneCardView(this.model.get('unpaidamount'));
+                this.onecardview = new OneCardView(unpaidamount);
                 this.showModal(window.PAGE_ID.ONECARD_LOGIN,this.onecardview);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = medium_id]').focus();

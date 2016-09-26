@@ -33,6 +33,7 @@ define([
         },
 
         modalInitPage: function () {
+            var _self = this;
             console.log(this.attrs);
             if(storage.isSet(system_config.GATHER_KEY)) {
                 this.collection = new BilltypeCollection();
@@ -52,6 +53,10 @@ define([
             }
             this.initTemplates();
             this.handleEvents();
+            $('.modal').on('shown.bs.modal',function(e) {
+                $('input[name = receivedsum]').focus();
+                $('input[name = receivedsum]').val(_self.model.get('unpaidamount'));
+            });
         },
 
         initTemplates: function () {
@@ -98,18 +103,20 @@ define([
             var _self = this;
             var receivedsum = $('#receivedsum').val();
             if(receivedsum == '') {
-                toastr.warning('您输入的支付金额为空，请重新输入');
+                toastr.warning('您输入的退货为空，请重新输入');
             }else if(receivedsum == 0) {
-                toastr.warning('支付金额不能为零，请重新输入');
-            }else {
+                toastr.warning('退货金额不能为零，请重新输入');
+            }else if(receivedsum > _self.model.get('unpaidamount')){
+                toastr.warning('不设找零');
+            }else{
                 var attrData = {};
                 attrData['gather_id'] = _self.collection.at(_self.i).get('gather_id');
                 attrData['gather_name'] = _self.collection.at(_self.i).get('gather_name');
                 attrData['receivedsum'] = receivedsum;
                 $(".modal-backdrop").remove();
-                _self.hideModal(window.PAGE_ID.BILLING);
+                _self.hideModal(window.PAGE_ID.BILLING_RETURN);
                 this.billaccountview = new BillaccountView(attrData);
-                _self.showModal(window.PAGE_ID.BILLING_ACCOUNT,_self.billaccountview);
+                _self.showModal(window.PAGE_ID.RETURN_BILLING_ACCOUNT,_self.billaccountview);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = receive_account]').focus();
                 });
@@ -156,7 +163,7 @@ define([
         },
 
         onCancelClicked: function () {
-            this.hideModal(window.PAGE_ID.BILLING);
+            this.hideModal(window.PAGE_ID.BILLING_RETURN);
         },
 
         onNumClicked: function (e) {
