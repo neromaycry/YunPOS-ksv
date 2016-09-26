@@ -5,124 +5,49 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="returnforce_help"><a style="color: #ffffff">帮助</a></li>
-                <li class="returnforce_return"><a style="color: #ffffff">返回销售首页</a></li>
+                <li class="rt-help"><a style="color: #ffffff">帮助</a></li>
+                <li class="rt-return"><a style="color: #ffffff">返回</a></li>
             </ul>
         </div>
     </div>
 </nav>
-<div class="row" style="margin-right: 15px;margin-left: 15px">
-    <div class="col-md-3 no-padding" style="padding-left: 0px">
-        <div class="form-group">
-            <input type="text" id="input_main" name="main" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
-        </div>
-        <div class="panel panel-primary">
-            <div class="row no-margining text-center">
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="7">7</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="8">8</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="9">9</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-backspace panel-group border-bottom">←</div>
+<div class="row" style="margin-right: 15px;margin-left: 15px;z-index: 0;">
+    <div class="col-md-8 no-padding">
+        <div class="cart-panel panel panel-primary"  style="z-index: 0;position: absolute;min-width: 440px">
+            <div class="panel-heading text-center">
+                <div class="row">
+                    <div class="col-md-2 text-left">序号</div>
+                    <div class="col-md-7">商品详情</div>
+                    <div class="col-md-3 text-center">小计</div>
                 </div>
             </div>
-            <div class="row no-margining text-center">
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="4">4</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="5">5</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="6">6</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-clear panel-group border-bottom">C</div>
-                </div>
+            <div class="panel-body" style="padding: 0; overflow-y: hidden">
+                <div class="for-cartlist" style="overflow: hidden;position:relative;"></div>
             </div>
-            <div class="row no-margining text-center">
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="1">1</div>
+            <div class="panel-footer no-padding  bg-white">
+                <div class="col-md-12 button-group">
+                    <div class="row">
+                        <button type="button" class="col-md-2 col-md-2 button button-border button-primary rt-keyup">↑</button>
+                        <button type="button" class="col-md-2 col-md-2 button button-border button-primary rt-keydown">↓</button>
+                        <button type="button" class="col-md-2 col-md-2 button button-border button-primary rt-discount">优惠</button>
+                        <button type="button" class="col-md-2 col-md-2 button button-border button-primary rt-delete">删除</button>
+                        <button type="button" class="col-md-2 col-md-2 button button-border button-primary rt-modify-num">数量</button>
+                        <button type="button" class="col-md-2 col-md-2 button button-border button-primary returnforce_clean">清空</button>
+                    </div>
                 </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="2">2</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right-bottom" data-num="3">3</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-bottom" data-num="00">00</div>
-                </div>
-            </div>
-            <div class="row no-margining text-center">
-                <div class="col-md-6 no-padding">
-                    <div class="btn-num panel-group border-right" data-num="0">0</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="btn-num panel-group border-right" data-num=".">.</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="numpad-ok bg-red ok">确定</div>
-                </div>
-            </div>
-            <!--<div class="row no-margining text-center">-->
-            <!--<div class="col-md-6 no-padding">-->
-            <!--<div class="panel-group border-right bg-red cancel">取消</div>-->
-            <!--</div>-->
-            <!--<div class="col-md-6 no-padding">-->
-            <!--<div class="panel-group bg-teal ok">确定</div>-->
-            <!--</div>-->
-            <!--</div>-->
-        </div>
-        <div class="panel panel-primary for-posinfo" >
+                <div class="row text-center for-posinfo no-margining">
 
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-9 no-padding left-padding">
-        <div class="panel panel-primary">
-            <div class="panel-heading text-center">
-              <div class="row">
-                  <div class="col-md-1">序号</div>
-                  <div class="col-md-2">编码</div>
-                  <div class="col-md-2">名称</div>
-                  <div class="col-md-1">规格</div>
-                  <div class="col-md-2">单价</div>
-                  <div class="col-md-1 text-left">优惠</div>
-                  <div class="col-md-1 text-left">数量</div>
-                  <div class="col-md-1 text-right">小计</div>
-              </div>
-            </div>
-            <div class="panel-body for-cartlist" style="padding: 0; overflow-y: scroll">
-
-            </div>
-
-            <div class="panel-footer no-padding border-top bg-white">
-                <div class="row text-center no-margining">
-                    <div class="col-md-2 no-padding">
-                        <div class="cbtn cart-bottom-btn border-right returnforce_discount">单品优惠</div>
-                    </div>
-                    <div class="col-md-2 no-padding">
-                        <div class="cbtn cart-bottom-btn border-right returnforce_delete">删除商品</div>
-                    </div>
-                    <div class="col-md-2 no-padding">
-                        <div class="cbtn cart-bottom-btn border-right modify_num">修改数量</div>
-                    </div>
-                    <div class="col-md-2 no-padding">
-                        <div class="cbtn cart-bottom-btn border-right returnforce_clean">清空</div>
-                    </div>
-                    <div class="col-md-2 no-padding" style="">
-                        <div class="cbtn cart-bottom-btn border-right returnforce_keyup">↑</div>
-                    </div>
-                    <div class="col-md-2 no-padding" style="">
-                        <div id="btn_down" class="cbtn cart-bottom-btn returnforce_keydown">↓</div>
-                    </div>
-                </div>
-            </div>
+    <div class="main-left col-md-4 no-padding">
+        <div class="form-group">
+            <input type="text" id="sku_id" name="sku_id" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
         </div>
+        <div class="for-numpad"></div>
+        <!--<div class="panel panel-primary for-posinfo" >-->
+
+        <!--</div>-->
     </div>
 </div>

@@ -62,19 +62,25 @@ break;
 return text;
 }%>
 
-<ul class="list-group">
-<% _.each(obj,function(e,i){ %>
-    <li id="li<%=i%>" class="list-group-item" data-index="<%= i %>" style="border-radius: 0">
+<ul class="list-group ul-cart no-margining">
+    <% _.each(obj,function(e,i){ %>
+    <li id="li<%=i%>" class="list-group-item li-cartlist" data-index="<%= i %>" style="border-radius: 0">
         <div class="row text-center">
             <div class="col-md-1"><%= i + 1%></div>
-            <div class="col-md-2" style="color:#757575"><%= e.barcode%></div>
-            <div class="col-md-2"><%= e.goods_name%>(<%=convertPricetypeToText(e.price_type)%>)</div>
-            <div class="col-md-1" style="padding:5px;color: red"><%= e.spec%></div>
-            <div class="col-md-2"><%= toDecimal2(e.price) %></div>
-            <div class="col-md-1" style="color: #4db6ac;">- <%= toDecimal2(e.discount) %></div>
-            <div class="col-md-1"><%= toDecimal3(e.num) %></div>
-            <div class="col-md-2" style="color:#f36c60;"><%= toDecimal2(e.num*e.price-e.discount) %></div>
+            <div class="col-md-8">
+                <div class="row bottom-margin">
+                    <div class="col-md-4 text-left" style="color:#757575"><%= e.barcode%></div>
+                    <div class="col-md-4 text-left" style="display: block;word-break: keep-all;white-space: nowrap;overflow:hidden;text-overflow: ellipsis">(<%=convertPricetypeToText(e.price_type)%>)<%= e.goods_name%></div>
+                    <div class="col-md-4 text-red text-right"><%= e.spec%></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-left">数量：<%= toDecimal3(e.num) %></div>
+                    <div class="col-md-4 text-left">单价：<%= toDecimal2(e.price) %></div>
+                    <div class="col-md-4" style="color: #4db6ac;">优惠：- <%= toDecimal2(e.discount) %></div>
+                </div>
+            </div>
+            <div class="col-md-3" style="color:#f36c60;"><%= toDecimal2(e.num*e.price-e.discount) %></div>
         </div>
     </li>
-<% }) %>
+    <% }) %>
 </ul>

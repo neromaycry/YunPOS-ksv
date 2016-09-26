@@ -59,26 +59,26 @@ define([
         input:'input[name = main]',
 
         events: {
-            'click .main_help':'openHelp',
-            'click .billing':'onBillingClicked',
-            'click .salesman':'onSalesmanClicked',
-            'click .member':'onMemberClicked',
-            'click .discount':'onDiscountClicked',
-            'click .main_delete':'onDeleteClicked',
-            'click .modify-item-num':'onModifyItemNum',
-            'click .clean':'onCleanClicked',
-            'click .keyup':'onKeyUpClicked',
-            'click .keydown':'onKeyDownClicked',
-            'click #restorder':'onRestorderClicked',
-            'click #unrestorder':'onUnRestOrderClicked',
-            'click .return_whole':'onReturnWholeClicked',
-            'click .return_force':'onReturnForceClicked',
-            'click .checking':'onCheckingClicked',
-            'click .login_out':'onLoginOutClicked',
             'click .numpad-ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
+            'click .main-help':'openHelp',
+            'click .main-billing':'onBillingClicked',
+            'click .salesman':'onSalesmanClicked',
+            'click .member':'onMemberClicked',
+            'click .main-discount':'onDiscountClicked',
+            'click .main-delete':'onDeleteClicked',
+            'click .main-modify-num':'onModifyItemNum',
+            'click .main-cancel':'onCleanClicked',
+            'click .main-keyup':'onKeyUpClicked',
+            'click .main-keydown':'onKeyDownClicked',
+            'click #restorder':'onRestorderClicked',
+            'click #unrestorder':'onUnRestOrderClicked',
+            'click .return-whole':'onReturnWholeClicked',
+            'click .return-force':'onReturnForceClicked',
+            'click .checking':'onCheckingClicked',
+            'click .login-out':'onLoginOutClicked',
             //'click .btn-floatpad':'onFloatPadClicked'
         },
 
@@ -134,12 +134,12 @@ define([
         initPlugins: function () {
             var _self = this;
             $(this.input).focus();
+            $('#li' + _self.i).addClass('cus-selected');
+            $('.for-cartlist').perfectScrollbar();
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
             this.buttonSelected();
-            $('#li' + _self.i).addClass('cus-selected');
-            $('.for-cartlist').perfectScrollbar();
             this.$el.find('.for-numpad').html(this.template_numpad);
         },
 
@@ -167,6 +167,7 @@ define([
             $('.for-cartlist').height(cart);
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
             this.listnum = 6;//设置商品列表中的条目数
+            $('.li-cartlist').height(this.listheight / this.listnum - 21);
         },
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));

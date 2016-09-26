@@ -10,8 +10,9 @@ define([
     '../../../../moduals/modal-login/view',
     'text!../../../../moduals/return-force/posinfotpl.html',
     'text!../../../../moduals/return-force/cartlisttpl.html',
+    'text!../../../../moduals/return-force/numpadtpl.html',
     'text!../../../../moduals/return-force/tpl.html',
-], function (BaseView, ReturnForceModel, ReturnForceCollection,KeyTipsView,ConfirmView,SecondLoginView, posinfotpl,cartlisttpl, tpl) {
+], function (BaseView, ReturnForceModel, ReturnForceCollection,KeyTipsView,ConfirmView,SecondLoginView, posinfotpl,cartlisttpl,numpadtpl, tpl) {
 
     var returnForceView = BaseView.extend({
 
@@ -33,28 +34,30 @@ define([
 
         deleteKey:{},
 
-        input: 'input[name = main]',
+        input: 'input[name = sku_id]',
 
         template_posinfo:posinfotpl,
 
         template_cartlisttpl:cartlisttpl,
 
+        template_numpad:numpadtpl,
+
 
         events: {
-            'click .ok':'onOKClicked',
+            'click .numpad-ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
-            'click .returnforce_billing':'onBillingClicked',
-            'click .returnforce_cancel':'onCancelClicked',
-            'click .returnforce_discount':'onDiscountClicked',
-            'click .returnforce_delete':'onDeleteClicked',
-            'click .modify_num':'onModifyNumClicked',
+            'click .rt-billing':'onBillingClicked',
+            'click .rt-cancel':'onCancelClicked',
+            'click .rt-discount':'onDiscountClicked',
+            'click .rt-delete':'onDeleteClicked',
+            'click .rt-modify-num':'onModifyNumClicked',
             'click .returnforce_clean':'onCleanClicked',
-            'click .returnforce_keyup':'onKeyUpClicked',
-            'click .returnforce_keydown':'onKeyDownClicked',
-            'click .returnforce_help':'onHelpClicked',
-            'click .returnforce_return':'onReturnClicked'
+            'click .rt-keyup':'onKeyUpClicked',
+            'click .rt-keydown':'onKeyDownClicked',
+            'click .rt-help':'onHelpClicked',
+            'click .rt-return':'onReturnClicked',
         },
 
         pageInit: function () {
@@ -82,11 +85,13 @@ define([
 
         initPlugins: function () {
             var _self = this;
-            $('input[name = main]').focus();
-            this.renderPosInfo();
-            this.renderCartList();
+            $('input[name = sku_id]').focus();
             //this.initLayoutHeight();
             $('#li' + _self.i).addClass('cus-selected');
+            $('.for-cartlist').perfectScrollbar();
+            this.$el.find('.for-numpad').html(this.template_numpad);
+            this.renderPosInfo();
+            this.renderCartList();
         },
 
         initTemplates: function () {
@@ -98,13 +103,18 @@ define([
          */
         initLayoutHeight: function () {
             var dh = $(window).height();
+            var dw = $(window).width();
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
             var panelfooter = $('.panel-footer').height();
             var cart = dh - nav * 2 - panelheading * 2 - panelfooter;
+            var leftWidth = $('.main-left').width();
+            var cartWidth = dw - leftWidth - 45;
+            $('.cart-panel').width(cartWidth);
             $('.for-cartlist').height(cart);
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
-            this.listnum = 8;//设置商品列表中的条目数
+            this.listnum = 6;//设置商品列表中的条目数
+            $('.li-cartlist').height(this.listheight / this.listnum - 21);
         },
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
@@ -113,7 +123,7 @@ define([
 
         renderCartList: function() {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
-            $('li').height(this.listheight / this.listnum - 21);
+            $('.li-cartlist').height(this.listheight / this.listnum - 21);
             return this;
         },
 
@@ -245,7 +255,7 @@ define([
          */
         searchGoods:function (){
             var _self = this;
-            search = $('#input_main').val();
+            search = $('#sku_id').val();
             if(search == ''){
                 toastr.warning('您输入的商品编码为空，请重新输入');
             }else{
@@ -268,7 +278,7 @@ define([
                         toastr.warning(resp.msg);
                     }
                 });
-                $('#input_main').val('');
+                $('#sku_id').val('');
                 _self.i = 0;
             }
         },
@@ -288,7 +298,7 @@ define([
          * 单品优惠
          */
         onDiscount: function () {
-            var value = $('#input_main').val();
+            var value = $('#sku_id').val();
             if(value == '') {
                 toastr.warning('您输入的优惠金额为零，请重新输入');
             }else {
@@ -305,14 +315,14 @@ define([
                     toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
                 }
             }
-            $('#input_main').val('');
+            $('#sku_id').val('');
         },
         /**
          * 修改数量
          */
         modifyItemNum: function () {
             var _self = this;
-            var number = $('#input_main').val();
+            var number = $('#sku_id').val();
             if(number == ''){
                 toastr.warning('您未输入任何数量，请重新输入');
             }else if (number == 0) {
@@ -337,7 +347,7 @@ define([
                 }
                 _self.calculateModel();
             }
-            $('#input_main').val('');
+            $('#sku_id').val('');
             console.log(_self.i);
             $('#li' + _self.i).addClass('cus-selected');
         },
@@ -459,7 +469,8 @@ define([
         },
         onReturnClicked: function () {
             router.navigate('main',{trigger:true});
-        }
+        },
+
     });
 
     return returnForceView;

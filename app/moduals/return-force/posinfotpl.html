@@ -1,37 +1,49 @@
-<div class="panel-heading">退款详情</div>
-<div class="panel-body">
-    <div class="row bottom-margin">
-        <div class="col-md-6 text-center">
-            件数：
-        </div>
-        <div class="col-md-3 text-right">
-            <%= itemamount %>
-        </div>
-    </div>
-    <div class="row bottom-margin">
-        <div class="col-md-6 text-center">
-            优惠：
-        </div>
-        <div class="col-md-3 text-right text-teal">
-            - <%= toDecimal2(discountamount) %>
-        </div>
-    </div>
-    <div class="row bottom-margin" style="margin-top: 10px;margin-bottom: 10px;">
-        <div class="col-md-6 text-center">
-            退款：
-        </div>
-        <div class="col-md-3 text-right text-red">
-           <%= toDecimal2(totalamount-discountamount) %>
-        </div>
-    </div>
+<!--<div class="panel-heading">退款详情</div>-->
+<!--<div class="panel-body">-->
+    <!--<div class="row bottom-margin">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--件数：-->
+        <!--</div>-->
+        <!--<div class="col-md-3 text-right">-->
+            <!--<%= itemamount %>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row bottom-margin">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--优惠：-->
+        <!--</div>-->
+        <!--<div class="col-md-3 text-right text-teal">-->
+            <!-&#45;&#45; <%= toDecimal2(discountamount) %>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row bottom-margin" style="margin-top: 10px;margin-bottom: 10px;">-->
+        <!--<div class="col-md-6 text-center">-->
+            <!--退款：-->
+        <!--</div>-->
+        <!--<div class="col-md-3 text-right text-red">-->
+           <!--<%= toDecimal2(totalamount-discountamount) %>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<div class="panel-footer no-padding text-center border-top bg-white">-->
+    <!--<div class="row text-center no-margining">-->
+        <!--<div class="col-md-6  no-padding border-right">-->
+            <!--<div class="cart-bottom-btn returnforce_cancel">取消退货</div>-->
+        <!--</div>-->
+        <!--<div class="col-md-6  no-padding" >-->
+            <!--<div class="cart-bottom-btn returnforce_billing">结算</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+
+
+<div class="col-md-2 cart-billing no-padding">件数：<%= itemamount %></div>
+<div class="col-md-2 cart-billing text-teal">优惠： - <%= toDecimal2(discountamount) %></div>
+<div class="col-md-2 cart-billing text-red">退款：<%= toDecimal2(totalamount-discountamount) %></div>
+<div class="col-md-3 no-padding">
+    <div class="cart-billing button-highlight rt-cancel">取消退货</div>
 </div>
-<div class="panel-footer no-padding text-center border-top bg-white">
-    <div class="row text-center no-margining">
-        <div class="col-md-6  no-padding border-right">
-            <div class="cart-bottom-btn returnforce_cancel">取消退货</div>
-        </div>
-        <div class="col-md-6  no-padding" >
-            <div class="cart-bottom-btn returnforce_billing">结算</div>
-        </div>
-    </div>
+<div class="col-md-3 no-padding">
+    <div class="cart-billing bg-red rt-billing button-caution button-glow">进行结算</div>
 </div>
