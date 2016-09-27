@@ -56,6 +56,7 @@ define([
                     if (resp.status == "00") {
                         _self.confirmHideModal(_self.attrs.pageid);
                         _self.attrs.callback();
+                        $('input[name = sku_id]').focus();
                     } else {
                         toastr.error(resp.msg);
                     }
@@ -109,6 +110,7 @@ define([
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.SECONDLOGIN, window.KEYS.Esc, function () {
                 _self.confirmHideModal(_self.attrs.pageid);
+                $('input[name = sku_id]').focus();
             });
             this.bindModalKeyEvents(window.PAGE_ID.SECONDLOGIN, window.KEYS.Enter, function () {
                 var isUserFocused = $('input[name = secondlogin_user]').is(':focus');

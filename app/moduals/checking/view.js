@@ -40,7 +40,9 @@ define([
             'click .back-to-main':'onBackClicked',
             'click .help':'onHelpClicked',
             'click .keyup':'onKeyUpClicked',
-            'click .keydown':'onKeyDownClicked'
+            'click .keydown':'onKeyDownClicked',
+            'click #report':'onReportClicked',
+            'click #daily-report':'onDailyReportClicked'
         },
 
         pageInit: function () {
@@ -122,6 +124,7 @@ define([
         renderCashierdetail: function () {
             this.$el.find('.for-cashier-detail').html(this.template_cashierdetail(this.collection.toJSON()));
             $('.li-detail').height(this.listheight / this.listnum - 21);
+            $('#li' + this.i).addClass('cus-selected');
             return this;
         },
 
@@ -132,6 +135,7 @@ define([
 
         renderCashierdailyDetail: function () {
             this.$el.find('.for-daily-detail').html(this.template_dailydetailtpl(this.collection.toJSON()));
+            $('#detail' + this.i).addClass('cus-selected');
             $('.li-detail').height(this.listheight / this.listnum - 21);
             return this;
         },
@@ -256,6 +260,15 @@ define([
         },
         onBackClicked:function () {
             router.navigate('main',{trigger:true});
+        },
+        onReportClicked:function () {
+            this.isCashierReport = true;
+            this.i = 0;
+        },
+
+        onDailyReportClicked:function () {
+            this.isCashierReport = false;
+            this.i = 0;
         }
     });
 
