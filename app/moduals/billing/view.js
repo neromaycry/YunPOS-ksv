@@ -270,7 +270,7 @@ define([
          */
         confirm:function() {
             var receivedsum = $('#input_billing').val();
-            if(this.unpaidamount == 0) {
+            if(this.model.get('unpaidamount') == 0) {
                 toastr.warning('待支付金额为零，请进行结算');
             }else if(receivedsum == '') {
                 toastr.warning('支付金额不能为空，请重新输入');

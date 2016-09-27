@@ -69,8 +69,9 @@ define([
             $('.for-restordernum-list').perfectScrollbar();
             $('.for-restorderdetail-list').perfectScrollbar();
             _self.listheight = $('.for-restordernum-list').height();//挂单列表高度
-            _self.listnum = 10;
+            _self.listnum = 9;
             $('.li-num').height(_self.listheight / _self.listnum - 21);
+
             _self.restorderdetail();
         },
 
