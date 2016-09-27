@@ -1,9 +1,9 @@
 
-    <ul class="list-group">
+    <ul class="list-group no-margining">
         <% _.each(obj,function(e,i){ %>
-            <li class="list-group-item" id="li<%=i%>"style="border-radius: 0">
-                <div class="row">
-                    <div class="col-md-3"><%= e.gather_id %></div>
+            <li class="list-group-item li-detail" id="li<%=i%>"style="border-radius: 0">
+                <div class="row text-center">
+                    <div class="col-md-2"><%= e.gather_id %></div>
                     <div class="col-md-3"><%= e.gather_name %></div>
                     <div class="col-md-3"><%= e.gather_money %></div>
                     <div class="col-md-3"><%= e.gather_num %></div>

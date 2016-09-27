@@ -84,7 +84,7 @@ define([
         },
 
         initPlugins: function () {
-            var _self = this;
+            $(this.input).focus();
             $('input[name = sku_id]').focus();
             //this.initLayoutHeight();
             //$('#li' + _self.i).addClass('cus-selected');

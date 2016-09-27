@@ -73,8 +73,7 @@ define([
             $('.for-cashier-detail').height(cashierdetail);
             $('.for-daily-detail').height(cashierdetail);
             this.listheight = cashierdetail;
-            this.itemheight = $('li').height() + 20;
-            this.listnum = parseInt(this.listheight / this.itemheight);//商品列表中的条目数
+            this.listnum = 4;
         },
 
         bindKeys: function () {
@@ -122,6 +121,7 @@ define([
 
         renderCashierdetail: function () {
             this.$el.find('.for-cashier-detail').html(this.template_cashierdetail(this.collection.toJSON()));
+            $('.li-detail').height(this.listheight / this.listnum - 21);
             return this;
         },
 
@@ -132,6 +132,7 @@ define([
 
         renderCashierdailyDetail: function () {
             this.$el.find('.for-daily-detail').html(this.template_dailydetailtpl(this.collection.toJSON()));
+            $('.li-detail').height(this.listheight / this.listnum - 21);
             return this;
         },
 
