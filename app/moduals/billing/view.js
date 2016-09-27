@@ -212,7 +212,7 @@ define([
             });
             //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
-                _self.deleteItem();
+                _self.judgeEcardExistance();
             });
             //结算
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
@@ -295,9 +295,9 @@ define([
             this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
         },
         /**
-         * 删除单独的支付方式
+         * 判断删除的已支付方式里面是否含有一卡通支付。
          */
-        deleteItem: function () {
+        judgeEcardExistance: function () {
             var item = this.collection.at(this.i);
             var gather_type = item.get('gather_type');
             if(gather_type == '04'){
@@ -319,9 +319,9 @@ define([
                 }
                 storage.remove(system_config.ONE_CARD_KEY);
                 storage.set(system_config.ONE_CARD_KEY,this.card_id,'detail',this.tempcollection);
-                this.delete();
+                this.deleteItem();
             }else{
-                this.delete();
+                this.deleteItem();
             }
             var isExist = this.collection.findWhere({gather_type: "04"});
             if(isExist == undefined){
@@ -332,7 +332,7 @@ define([
         },
 
 
-        delete:function(){
+        deleteItem:function(){
             var item = this.collection.at(this.i);
             this.collection.remove(item);
             var totalreceived = 0;

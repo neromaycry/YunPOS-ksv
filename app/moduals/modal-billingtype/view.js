@@ -53,8 +53,9 @@ define([
             this.initTemplates();
             this.handleEvents();
             $('.modal').on('shown.bs.modal',function(e) {
+                var unpaidamount = _self.model.get('unpaidamount').toFixed(2);
                 $('input[name = receivedsum]').focus();
-                $('input[name = receivedsum]').val(_self.model.get('unpaidamount'));
+                $('input[name = receivedsum]').val(unpaidamount);
             });
 
         },
