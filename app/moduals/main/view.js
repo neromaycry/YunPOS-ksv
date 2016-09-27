@@ -134,7 +134,7 @@ define([
         initPlugins: function () {
             var _self = this;
             $(this.input).focus();
-            $('#li' + _self.i).addClass('cus-selected');
+            //$('#li' + _self.i).addClass('cus-selected');
             $('.for-cartlist').perfectScrollbar();
             this.renderPosInfo();
             this.renderSalesman();
@@ -182,6 +182,7 @@ define([
         renderCartList: function() {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
+            $('#li' + this.i).addClass('cus-selected');
             return this;
         },
 
@@ -264,6 +265,7 @@ define([
                     });
                     _self.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
                 }
+
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
@@ -492,6 +494,7 @@ define([
             if($('li').hasClass('cus-selected')){
                 var item = this.collection.at(this.i);
                 this.collection.remove(item);
+                this.i = 0;
                 this.renderCartList();
                 this.calculateModel();
             }

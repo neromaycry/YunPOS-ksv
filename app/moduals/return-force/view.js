@@ -87,7 +87,7 @@ define([
             var _self = this;
             $('input[name = sku_id]').focus();
             //this.initLayoutHeight();
-            $('#li' + _self.i).addClass('cus-selected');
+            //$('#li' + _self.i).addClass('cus-selected');
             $('.for-cartlist').perfectScrollbar();
             this.$el.find('.for-numpad').html(this.template_numpad);
             this.renderPosInfo();
@@ -124,6 +124,7 @@ define([
         renderCartList: function() {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
+            $('#li' + this.i).addClass('cus-selected');
             return this;
         },
 
@@ -216,6 +217,7 @@ define([
             if($('li').hasClass('cus-selected')){
                 var item = this.collection.at(this.i);
                 this.collection.remove(item);
+                this.i = 0;
                 this.renderCartList();
                 this.calculateModel();
             }

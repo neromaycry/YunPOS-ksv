@@ -159,6 +159,7 @@ define([
 
         renderBilltype: function () {
             this.$el.find('.for-billingtype').html(this.template_billingtype(this.collection.toJSON()));
+            $('#li'+ this.i).addClass('cus-selected');
             return this;
         },
 

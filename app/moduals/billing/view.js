@@ -197,6 +197,7 @@ define([
         renderBillDetail: function () {
             this.$el.find('.for-billdetail').html(this.template_billingdetailtpl(this.collection.toJSON()));
             $('.li-billdetail').height(this.listheight / this.listnum - 21);
+            $('#billdetail' + this.i).addClass('cus-selected');
             return this;
         },
         bindKeys: function () {
@@ -280,6 +281,7 @@ define([
             }else if(receivedsum > (this.unpaidamount + 100)){
                 toastr.warning('找零金额超限');
             }else{
+                this.i = 0;
                 this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00");
             }
             $('#input_billing').val("");
@@ -350,6 +352,7 @@ define([
                 unpaidamount: this.unpaidamount,
                 oddchange:this.oddchange
             });
+            this.i = 0;
             this.renderBillInfo();
             this.renderBillDetail();
             toastr.success('删除成功');

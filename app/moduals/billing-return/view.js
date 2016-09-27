@@ -140,6 +140,7 @@ define([
         renderBillDetail: function () {
             this.$el.find('.for-billdetail').html(this.template_billingdetailtpl(this.collection.toJSON()));
             $('.li-billdetail').height(this.listheight / this.listnum - 21);
+            $('#billdetail' + this.i).addClass('cus-selected');
             return this;
         },
 
@@ -178,6 +179,7 @@ define([
                 receivedsum: totalreceived,
                 unpaidamount: _self.unpaidamount
             });
+            this.i = 0;
             this.renderBillInfo();
             this.renderBillDetail();
         },
@@ -272,6 +274,7 @@ define([
                 this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00");
             }
             $('#input_billingrt').val("");
+
         },
 
         payByCash: function () {
@@ -376,6 +379,7 @@ define([
                 unpaidamount: _self.unpaidamount,
                 oddchange:_self.oddchange
             });
+            _self.i = 0;
             _self.renderBillInfo();
             _self.renderBillDetail();
             toastr.success('删除成功');
