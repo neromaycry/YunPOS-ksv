@@ -1,6 +1,18 @@
 /**
  * Created by gjwlg on 2016/9/10.
  */
+//保留两位小数
+//功能：将浮点数四舍五入，取小数点后2位
+function toDecimal(x) {
+    var f = parseFloat(x);
+    if (isNaN(f)) {
+        return;
+    }
+    f = Math.round(x*100)/100;
+    return f;
+}
+
+// 强制保留2位小数，如：2，会在2后面补上00.即2.00
 function toDecimal2(x) {
     var f = parseFloat(x);
     if (isNaN(f)) {
@@ -17,6 +29,10 @@ function toDecimal2(x) {
         s += '0';
     }
     return s;
+}
+
+function fomatFloat(src,pos){
+    return Math.round(src*Math.pow(10, pos))/Math.pow(10, pos);
 }
 
 function ValidateFloat(e, pnumber){
