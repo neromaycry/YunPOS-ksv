@@ -5,8 +5,8 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="returnwhole_help"><a style="color: #ffffff">帮助</a></li>
-                <li class="back-to-main" ><a style="color: #ffffff">返回销售首页</a></li>
+                <li class="rt-help"><a style="color: #ffffff">帮助</a></li>
+                <li class="rt-return" ><a style="color: #ffffff">返回</a></li>
             </ul>
         </div>
     </div>
@@ -52,72 +52,7 @@
             <input type="text" id="whole_return_order" name="whole_return_order" class="form-control" onkeyup="return ValidateNumber($(this),value)" placeholder="请输入订单编号"/>
             <input type="text" style="display: none">
         </div>
-        <div class="panel panel-primary">
-            <div class="row no-margining text-center">
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="7">7</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="8">8</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="9">9</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-backspace panel-group border-bottom">←</div>
-                </div>
-            </div>
-            <div class="row no-margining text-center">
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="4">4</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="5">5</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="6">6</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-clear panel-group border-bottom">C</div>
-                </div>
-            </div>
-            <div class="row no-margining text-center">
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="1">1</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="2">2</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="3">3</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-bottom" data-num="00">00</div>
-                </div>
-            </div>
-            <div class="row no-margining text-center">
-                <div class="col-md-6 no-padding">
-                    <div class="cbtn btn-num panel-group border-right" data-num="0">0</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn btn-num panel-group border-right" data-num=".">.</div>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <div class="cbtn numpad-ok bg-red ok">确定</div>
-                </div>
-            </div>
-            <!--<div class="row no-margining text-center">-->
-            <!--<div class="col-md-6 no-padding">-->
-            <!--<div class="panel-group border-right bg-red cancel">取消</div>-->
-            <!--</div>-->
-            <!--<div class="col-md-6 no-padding">-->
-            <!--<div class="panel-group bg-teal ok">确定</div>-->
-            <!--</div>-->
-            <!--</div>-->
-        </div>
-        <!--<div class="panel panel-primary for-rtinfo">-->
-
-        <!--</div>-->
+        <div class="for-numpad"></div>
     </div>
 
 </div>

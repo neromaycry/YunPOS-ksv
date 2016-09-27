@@ -30,12 +30,12 @@ define([
         isOrdernum:true,
 
         events: {
-            'click .restorder_help':'onHelpClicked',
-            'click .restorder_return':'onReturnClicked',
-            'click .keyup':'onKeyUpClicked',
-            'click .keydown':'onKeyDownClicked',
-            'click .keyright':'onKeyRightClicked',
-            'click .keyleft':'onKeyLeftClicked',
+            'click .restorder-help':'onHelpClicked',
+            'click .restorder-return':'onReturnClicked',
+            'click .restorder-keyup':'onKeyUpClicked',
+            'click .restorder-keydown':'onKeyDownClicked',
+            'click .restorder-keyright':'onKeyRightClicked',
+            'click .restorder-keyleft':'onKeyLeftClicked',
             'click .restorder-ok':'onOKClicked'
         },
 
@@ -66,9 +66,11 @@ define([
             this.initLayoutHeight();
             this.renderRestorder();
             $('#li' + _self.i).addClass('cus-selected');
-            _self.listheight = $('.for-restordernum-list').height();
-            _self.itemheight = $('li').height() + 20;
-            _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数
+            $('.for-restordernum-list').perfectScrollbar();
+            $('.for-restorderdetail-list').perfectScrollbar();
+            _self.listheight = $('.for-restordernum-list').height();//挂单列表高度
+            _self.listnum = 10;
+            $('.li-num').height(_self.listheight / _self.listnum - 21);
             _self.restorderdetail();
         },
 

@@ -5,8 +5,8 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="restorder_help"><a style="color: #ffffff">帮助</a></li>
-                <li class="restorder_return"><a style="color: #ffffff">返回销售首页</a></li>
+                <li class="restorder-help"><a style="color: #ffffff">帮助</a></li>
+                <li class="restorder-return"><a style="color: #ffffff">返回</a></li>
             </ul>
         </div>
     </div>
@@ -15,22 +15,18 @@
     <div class="col-md-4">
         <div class="panel panel-primary">
             <div class="panel-heading">订单编号</div>
-            <div class="panel-body for-restordernum-list" style="padding: 0; overflow-y: scroll;">
-
+            <div class="panel-body" style="padding: 0; overflow-y: hidden">
+                <div class="for-restordernum-list" style="overflow: hidden;position:relative;"></div>
             </div>
-            <div class="panel-footer no-padding text-center bg-white border-top">
-                <div class="row no-margining">
-                    <div class="col-md-3 no-padding border-right">
-                        <div class="cbtn cart-bottom-btn keyup">↑</div>
-                    </div>
-                    <div class="col-md-3 no-padding border-right">
-                        <div class="cbtn cart-bottom-btn keydown">↓</div>
-                    </div>
-                    <div class="col-md-3 no-padding border-right">
-                        <div class="cbtn cart-bottom-btn keyleft">←</div>
-                    </div>
-                    <div class="col-md-3 no-padding">
-                        <div class="cbtn cart-bottom-btn keyright">→</div>
+            <div class="panel-footer no-padding text-center bg-white">
+                <div class="row text-center no-margining">
+                    <div class="col-md-12 button-group">
+                        <div class="row">
+                            <button type="button" class="col-md-3 button button-border button-primary restorder-keyup">↑</button>
+                            <button type="button" class="col-md-3 button button-border button-primary restorder-keydown">↓</button>
+                            <button type="button" class="col-md-3 button button-border button-primary restorder-keyleft">←</button>
+                            <button type="button" class="col-md-3 button button-border button-primary restorder-keyright">→</button>
+                        </div>
                     </div>
                 </div>
                 <div class="row no-margining">
@@ -42,13 +38,16 @@
     <div class="col-md-8">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <div class="row">
-                    <div class="col-md-4">商品名称</div>
-                    <div class="col-md-4">数量</div>
-                    <div class="col-md-4">单价</div>
+                <div class="row text-center">
+                    <div class="col-md-2">序号</div>
+                    <div class="col-md-3">商品名称</div>
+                    <div class="col-md-3">数量</div>
+                    <div class="col-md-3">单价</div>
                 </div>
             </div>
-            <div class="panel-body for-restorderdetail-list" style="padding: 0;overflow-y: scroll;"></div>
+            <div class="panel-body" style="padding: 0; overflow-y: hidden">
+                <div class="for-restorderdetail-list" style="overflow: hidden;position:relative;"></div>
+            </div>
         </div>
     </div>
 </div>

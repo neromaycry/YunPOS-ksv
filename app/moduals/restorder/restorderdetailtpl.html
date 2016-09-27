@@ -15,13 +15,14 @@ s += '0';
 }
 return s;
 }%>
-<ul class="list-group">
+<ul class="list-group no-margining">
 <% _.each(obj,function(e,i){ %>
 <li class="list-group-item" id="detail<%= i %>" style="border-radius: 0">
-    <div class="row">
-        <div class="col-md-4"><%=e.goods_name%></div>
-        <div class="col-md-4"><%=e.num%></div>
-        <div class="col-md-4"><%= toDecimal2(e.price) %></div>
+    <div class="row text-center">
+        <div class="col-md-2"><%= (i + 1)%></div>
+        <div class="col-md-3"><%= e.goods_name%></div>
+        <div class="col-md-3"><%= e.num%></div>
+        <div class="col-md-3"><%= toDecimal2(e.price) %></div>
     </div>
 </li>
 <% }) %>

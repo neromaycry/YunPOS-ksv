@@ -10,8 +10,9 @@ define([
     'text!../../../../moduals/return-whole/returninfotpl.html',
     'text!../../../../moduals/return-whole/rtcarttpl.html',
     'text!../../../../moduals/return-whole/rtpayedlisttpl.html',
+    'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, RtWholeModel, RtWholeCollection, KeyTipsView,ConfirmView, returninfotpl, rtcarttpl, rtpayedlisttpl, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, KeyTipsView,ConfirmView, returninfotpl, rtcarttpl, rtpayedlisttpl,numpadtpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -27,6 +28,8 @@ define([
 
         template_rtpayedlist:rtpayedlisttpl,
 
+        template_numpad:numpadtpl,
+
         totalamount: 0,
 
         itemamount: 0,
@@ -38,14 +41,14 @@ define([
         input: 'input[name = whole_return_order]',
 
         events: {
-            'click .ok':'onOKClicked',
+            'click .numpad-ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
             'click .cancel':'onCancelClicked',
             'click .billing':'onBillingClicked',
-            'click .back-to-main':'onBackClicked',
-            'click .returnwhole_help':'onHelpClicked'
+            'click .rt-return':'onBackClicked',
+            'click .rt-help':'onHelpClicked'
         },
 
         pageInit: function () {
@@ -71,6 +74,7 @@ define([
             }
             this.renderRtInfo();
             this.renderRtcart();
+            this.$el.find('.for-numpad').html(this.template_numpad);
             //this.renderRtPayedlist();
         },
 
@@ -208,6 +212,7 @@ define([
             var confirmView = new ConfirmView({
                 pageid:window.PAGE_ID.RETURN_WHOLE, //当前打开confirm模态框的页面id
                 callback: function () { //
+                    console.log('************');
                     //_self.showModal(window.PAGE_ID.CONFIRM, confirmView);
                     _self.RtcartCollection.reset();
                     _self.RtPayedlistCollection.reset();
@@ -218,7 +223,7 @@ define([
                     });
                     _self.renderRtcart();
                     _self.renderRtInfo();
-                    _self.renderRtPayedlist();
+                    //_self.renderRtPayedlist();
                     toastr.success('取消退货成功');
                     storage.remove(system_config.RETURN_KEY);
                 },
