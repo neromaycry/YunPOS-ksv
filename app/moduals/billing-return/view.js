@@ -260,7 +260,7 @@ define([
          */
         confirm:function(){
             var receivedsum = $('#input_billingrt').val();
-            if(this.unpaidamount == 0) {
+            if(this.model.get('unpaidamount') == 0) {
                 toastr.warning('退货金额为零，请进行结算');
             }else if(receivedsum == '') {
                 toastr.warning('退货金额不能为空，请重新输入');
