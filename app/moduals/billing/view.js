@@ -499,7 +499,7 @@ define([
          * 现金类支付
          */
         payByCash: function () {
-            var unpaidamount = this.unpaidamount;
+            var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零,请进行结算');
             }else {
@@ -514,7 +514,7 @@ define([
          * 礼券类支付
          */
         payByGiftCard: function () {
-            var unpaidamount = this.unpaidamount;
+            var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零,请进行结算');
             }else {
@@ -529,7 +529,7 @@ define([
          * 银行pos支付
          */
         payByPos: function () {
-            var unpaidamount = this.unpaidamount;
+            var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零,请进行结算');
             }else {
@@ -545,7 +545,7 @@ define([
          * 第三方支付
          */
         payByThird:function () {
-            var unpaidamount = this.unpaidamount;
+            var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零,请进行结算');
             }else {
@@ -565,7 +565,7 @@ define([
          * 一卡通支付
          */
         payByOneCard: function () {
-            var unpaidamount = this.unpaidamount;
+            var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
                 toastr.warning('待支付金额为零，请进行结算');
             }else{
