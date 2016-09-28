@@ -260,6 +260,7 @@ define([
          */
         confirm:function(){
             var receivedsum = $('#input_billingrt').val();
+            var unpaidamount = this.model.get('unpaidamount');
             if(this.model.get('unpaidamount') == 0) {
                 toastr.warning('退货金额为零，请进行结算');
             }else if(receivedsum == '') {
@@ -268,7 +269,7 @@ define([
                 toastr.warning('退货金额不能为零，请重新输入');
             }else if(receivedsum == '.'){
                 toastr.warning('请输入有效退货金额');
-            } else if(receivedsum > this.unpaidamount){
+            } else if(receivedsum > unpaidamount){
                 toastr.warning('不设找零，请重新输入');
             }else{
                 this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00");

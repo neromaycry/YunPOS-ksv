@@ -46,9 +46,10 @@ define([
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
             'click .cancel':'onCancelClicked',
-            'click .billing':'onBillingClicked',
+            'click .rt-billing':'onBillingClicked',
             'click .rt-return':'onBackClicked',
-            'click .rt-help':'onHelpClicked'
+            'click .rt-help':'onHelpClicked',
+            'click .rt-cancel':'onCancelClicked'
         },
 
         pageInit: function () {
@@ -86,11 +87,14 @@ define([
 
         initLayoutHeight: function () {
             var dh = $(document).height();
+            var dw = $(window).width();
             var navbar =$('.navbar').height();
-            var panel_head = $('.panel-heading').height();
-            var panel_footer = $('.panel-footer').height();
-            //console.log('dh:' + dh + ' navbar:' + navbar + ' panel head:' + panel_head*2);
-            var payedlist = (dh - navbar*2 - panel_head*2 - panel_footer - 45);
+            var panelheading = $('.panel-heading').height();
+            var panelfooter = $('.panel-footer').height();
+            var payedlist = dh - navbar * 2 - panelheading * 2 - panelfooter;
+            var leftWidth = $('.main-left').width();
+            var cartWidth = dw - leftWidth - 45;
+            $('.cart-panel').width(cartWidth);
             //console.log('payedlist:' + payedlist);
             $('.rtcart-content').height(payedlist);
             //$('.payedlist-content').height(payedlist);
@@ -278,7 +282,7 @@ define([
         onHelpClicked:function () {
             var tipsView = new KeyTipsView('RETURNWHOLE_PAGE');
             this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
-        }
+        },
 
     });
 

@@ -107,6 +107,7 @@ define([
             }else{
                 toastr.warning('您输入的营业员编号为空');
             }
+            $('#salesman_id').val('');
         }
 
     });
