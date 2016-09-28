@@ -56,6 +56,8 @@ define([
 
         isDeleteKey:false,
 
+        isDiscountPercent:false,
+
         input:'input[name = main]',
 
         events: {
@@ -68,6 +70,7 @@ define([
             'click .salesman':'onSalesmanClicked',
             'click .member':'onMemberClicked',
             'click .main-discount':'onDiscountClicked',
+            'click .main-discountpercent':'onDiscountPercentClicked',
             'click .main-delete':'onDeleteClicked',
             'click .main-modify-num':'onModifyItemNum',
             'click .main-cancel':'onCleanClicked',
@@ -418,6 +421,18 @@ define([
             }
         },
 
+        onDiscountPercentClicked: function () {
+            if (this.isDiscountPercent) {
+                this.isDiscountPercent = false;
+                $('#main-input').removeClass('input-group');
+                $('#input-percent').hide();
+            } else {
+                this.isDiscountPercent = true;
+                $('#main-input').addClass('input-group');
+                $('#input-percent').show();
+            }
+        },
+
         /**
          * 修改单品数量
          */
@@ -467,20 +482,24 @@ define([
             if(_self.model.get('itemamount') == 0){
                 toastr.warning('当前购物车内无商品');
             }else{
-                if(value == '') {
-                    toastr.warning('输入的优惠金额不能为空，请重新输入');
-                }else{
-                    var item = _self.collection.at(_self.i);
-                    var price = item.get('price');
-                    if (value <= parseFloat(price) ) {
-                        _self.collection.at(_self.i).set({
-                            discount: value
-                        });
-                        _self.calculateModel();
-                        $('#li' + _self.i).addClass('cus-selected');
+                if(this.isDiscountPercent) {
+                    toastr.info('单品百分比折扣');
+                } else {
+                    if(value == '') {
+                        toastr.warning('输入的优惠金额不能为空，请重新输入');
+                    }else{
+                        var item = _self.collection.at(_self.i);
+                        var price = item.get('price');
+                        if (value <= parseFloat(price) ) {
+                            _self.collection.at(_self.i).set({
+                                discount: value
+                            });
+                            _self.calculateModel();
+                            $('#li' + _self.i).addClass('cus-selected');
 
-                    }else {
-                        toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
+                        }else {
+                            toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
+                        }
                     }
                 }
             }

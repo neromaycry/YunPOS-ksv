@@ -37,6 +37,8 @@ define([
             pageId = window.PAGE_ID.LOGIN;
             storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY,'http://114.55.62.102:9000/v1');
             storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.POS_KEY,'1');
+
+
             this.requestModel = new LoginModel();
             this.model = new LoginModel();
             var data = {};
@@ -153,6 +155,14 @@ define([
                     toastr.error(response.msg);
                 }
             });
+            var loginDate = new Date();
+            if (storage.isSet(system_config.LOGIN_DATE)) {
+                var lastLoginDate = storage.get(system_config.LOGIN_DATE);
+                if (loginDate != lastLoginDate) {
+                    storage.remove(system_config.RESTORDER_KEY);
+                }
+            }
+            storage.set(system_config.LOGIN_DATE,loginDate.getDate());
         },
 
         doInitialize: function () {

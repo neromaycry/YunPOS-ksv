@@ -35,7 +35,8 @@
                         <div class="row">
                             <button type="button" class="col-md-2 button button-border button-primary main-keyup">↑</button>
                             <button type="button" class="col-md-2 button button-border button-primary main-keydown">↓</button>
-                            <button type="button" class="col-md-2 button button-border button-primary main-discount">优惠</button>
+                            <button type="button" class="col-md-1 button button-border button-primary main-discount">优惠</button>
+                            <button type="button" class="col-md-1 button button-border button-primary main-discountpercent">折让</button>
                             <button type="button" class="col-md-2 button button-border button-primary main-delete">删除</button>
                             <button type="button" class="col-md-2 button button-border button-primary main-modify-num">数量</button>
                             <button type="button" class="col-md-2 button button-border button-primary restorder" id="restorder" style="display: none">挂单</button>
@@ -72,8 +73,9 @@
         </div>
     </div>
     <div class="main-left col-md-4 no-padding">
-        <div class="form-group">
+        <div id="main-input" class="form-group">
             <input type="text" id="input_main" name="main" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
+            <span id="input-percent" class="input-group-addon" style="display: none">%</span>
         </div>
         <!--<div class="panel panel-primary for-posinfo" >-->
 
