@@ -46,9 +46,10 @@ define([
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
             'click .cancel':'onCancelClicked',
-            'click .billing':'onBillingClicked',
+            'click .rt-billing':'onBillingClicked',
             'click .rt-return':'onBackClicked',
-            'click .rt-help':'onHelpClicked'
+            'click .rt-help':'onHelpClicked',
+            'click .rt-cancel':'onCancelClicked'
         },
 
         pageInit: function () {
@@ -278,7 +279,7 @@ define([
         onHelpClicked:function () {
             var tipsView = new KeyTipsView('RETURNWHOLE_PAGE');
             this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
-        }
+        },
 
     });
 

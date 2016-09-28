@@ -32,9 +32,15 @@
     <!--</div>-->
 <!--</div>-->
 
-<div class="col-md-3 cart-bottom-btn">件数：<%= itemamount %></div>
-<div class="col-md-3 cart-bottom-btn text-teal">优惠： - <%= toDecimal2(discountamount) %></div>
-<div class="col-md-3 cart-bottom-btn text-red">总计： <%= toDecimal2(totalamount-discountamount) %></div>
-<div class="col-md-3">
-    <div class="cart-bottom-btn bg-red billing">结算</div>
+<div class="col-md-2 cart-bottom-btn no-padding">件数：<%= itemamount %></div>
+<div class="col-md-2 cart-bottom-btn text-teal">优惠： - <%= toDecimal2(discountamount) %></div>
+<div class="col-md-2 cart-bottom-btn text-red">总计： <%= toDecimal2(totalamount-discountamount) %></div>
+<!--<div class="col-md-3">-->
+    <!--<div class="cart-bottom-btn bg-red billing">进行结算</div>-->
+<!--</div>-->
+<div class="col-md-3 no-padding">
+    <div class="cart-billing button-highlight rt-cancel">取消交易</div>
+</div>
+<div class="col-md-3 no-padding">
+    <div class="cart-billing bg-red button-caution button-glow rt-billing">进行结算</div>
 </div>
