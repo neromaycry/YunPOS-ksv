@@ -11,12 +11,13 @@ define([
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-login/view',
+    '../../../../moduals/modal-restorder/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView,  posinfotpl,salesmantpl,cartlisttpl, numpadtpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -390,7 +391,12 @@ define([
             if(itemamount != 0){
                 toastr.warning('购物车内有商品，不能执行解挂操作');
             }else {
-                router.navigate('restorder',{trigger:true});
+                //router.navigate('restorder',{trigger:true});
+                var restOrderView = new RestOrderView();
+                this.showModal(window.PAGE_ID.MODAL_RESTORDER, restOrderView);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = restorder]').focus();
+                });
             }
         },
 
