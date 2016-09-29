@@ -55,36 +55,39 @@ define([
         },
 
         onOKClicked: function () {
-
+            this.releaseOrder();
         },
 
         bindModalKeys: function () {
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.MODAL_RESTORDER, window.KEYS.Enter, function () {
-                var value = $(_self.input).val();
-                if (value == '') {
-                    toastr.warning('请输入挂单号');
-                } else {
-                    var orderSelected = _.pick(_self.obj, value);
-                    if (_.isEmpty(orderSelected)) {
-                        toastr.warning('没有这个挂单号');
-                        $(_self.input).val('');
-                    } else {
-                        var orderSelectedDetail = orderSelected[value];
-                        console.log(orderSelectedDetail);
-                        Backbone.trigger('onReleaseOrder',orderSelectedDetail);
-                        storage.remove(system_config.RESTORDER_KEY,value);
-                        _self.hideModal(window.PAGE_ID.MAIN);
-                        toastr.success('解挂成功');
-                    }
-                }
-
+                _self.releaseOrder();
             });
             this.bindModalKeyEvents(window.PAGE_ID.MODAL_RESTORDER, window.KEYS.Esc, function () {
                 _self.hideModal(window.PAGE_ID.MAIN);
                 $('input[name = main]').focus();
             });
         },
+
+        releaseOrder: function () {
+            var value = $(this.input).val();
+            if (value == '') {
+                toastr.warning('请输入挂单号');
+            } else {
+                var orderSelected = _.pick(this.obj, value);
+                if (_.isEmpty(orderSelected)) {
+                    toastr.warning('没有这个挂单号');
+                    $(this.input).val('');
+                } else {
+                    var orderSelectedDetail = orderSelected[value];
+                    console.log(orderSelectedDetail);
+                    Backbone.trigger('onReleaseOrder',orderSelectedDetail);
+                    storage.remove(system_config.RESTORDER_KEY,value);
+                    this.hideModal(window.PAGE_ID.MAIN);
+                    toastr.success('解挂成功');
+                }
+            }
+        }
 
     });
 
