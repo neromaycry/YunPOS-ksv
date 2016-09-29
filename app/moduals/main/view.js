@@ -11,12 +11,13 @@ define([
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-login/view',
+    '../../../../moduals/modal-restorder/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView,  posinfotpl,salesmantpl,cartlisttpl, numpadtpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -301,6 +302,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
                 router.navigate('checking',{trigger:true});
             });
+            //折让
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
+
+            });
 
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
@@ -386,7 +391,12 @@ define([
             if(itemamount != 0){
                 toastr.warning('购物车内有商品，不能执行解挂操作');
             }else {
-                router.navigate('restorder',{trigger:true});
+                //router.navigate('restorder',{trigger:true});
+                var restOrderView = new RestOrderView();
+                this.showModal(window.PAGE_ID.MODAL_RESTORDER, restOrderView);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = restorder]').focus();
+                });
             }
         },
 
@@ -398,7 +408,20 @@ define([
             if (itemamount == 0) {
                 toastr.warning('当前购物车内无商品，无法执行挂单操作');
             }else {
-                var orderNum = new Date().getTime();
+                //var orderNum = new Date().getTime();
+                var orderNumFromStorage = storage.get(system_config.RESTORDER_NUM);
+                var orderNum = orderNumFromStorage;
+                orderNumFromStorage = parseInt(orderNumFromStorage);
+                if (orderNumFromStorage < 9) {
+                    orderNumFromStorage++;
+                    orderNumFromStorage = '0' + orderNumFromStorage;
+                } else {
+                    orderNumFromStorage++;
+                    orderNumFromStorage = orderNumFromStorage.toString();
+                }
+                console.log(orderNumFromStorage);
+                storage.set(system_config.RESTORDER_NUM, orderNumFromStorage);
+
                 if (storage.isSet(system_config.RESTORDER_KEY)) {
                     var pre = storage.get(system_config.RESTORDER_KEY);
                     pre[orderNum] = this.collection.toJSON();
@@ -417,10 +440,11 @@ define([
                 this.renderCartList();
                 this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
-                toastr.success('挂单成功');
+                toastr.success('挂单号：' + orderNum);
             }
         },
 
+        //切换优惠模式
         onDiscountPercentClicked: function () {
             if (this.isDiscountPercent) {
                 this.isDiscountPercent = false;
@@ -483,7 +507,20 @@ define([
                 toastr.warning('当前购物车内无商品');
             }else{
                 if(this.isDiscountPercent) {
-                    toastr.info('单品百分比折扣');
+                    if (value == '') {
+                        toastr.warning('输入的折扣不能为空');
+                    } else if (value >= 100) {
+                        toastr.warning('折扣比率不能大于100%');
+                    } else {
+                        var rate = value/100;
+                        var item = _self.collection.at(_self.i);
+                        var price = item.get('price');
+                        _self.collection.at(_self.i).set({
+                            discount:price*(1-rate)
+                        }) ;
+                        _self.calculateModel();
+                        $('#li' + _self.i).addClass('cus-selected');
+                    }
                 } else {
                     if(value == '') {
                         toastr.warning('输入的优惠金额不能为空，请重新输入');

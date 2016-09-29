@@ -160,7 +160,10 @@ define([
                 var lastLoginDate = storage.get(system_config.LOGIN_DATE);
                 if (loginDate != lastLoginDate) {
                     storage.remove(system_config.RESTORDER_KEY);
+                    storage.set(system_config.RESTORDER_NUM,'00');
                 }
+            } else {
+                storage.set(system_config.RESTORDER_NUM,'00');
             }
             storage.set(system_config.LOGIN_DATE,loginDate.getDate());
         },

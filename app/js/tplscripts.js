@@ -47,6 +47,15 @@ function ValidateFloat(e, pnumber){
 
 }
 
+function ValidateFloat2(e, pnumber)
+{
+    if (!/^\d+[.]?[1-9]?$/.test(pnumber))
+    {
+        e.value = /\d+[.]?[1-9]?/.exec(e.value);
+    }
+    return false;
+}
+
 function ValidateNumber(e, pnumber){
 
     if (!/^\d+$/.test(pnumber)){
@@ -57,4 +66,22 @@ function ValidateNumber(e, pnumber){
 
     return false;
 
+}
+
+function myNumberic(e,len) {
+    var obj=e.srcElement || e.target;
+    var dot=obj.value.indexOf(".");//alert(e.which);
+    len =(typeof(len)=="undefined")?2:len;
+    var  key=e.keyCode|| e.which;
+    if(key==8 || key==9 || key==46 || (key>=37  && key<=40))//这里为了兼容Firefox的backspace,tab,del,方向键
+        return true;
+    if (key<=57 && key>=48) { //数字
+        if(dot==-1)//没有小数点
+            return true;
+        else if(obj.value.length<=dot+len)//小数位数
+            return true;
+    } else if((key==46) && dot==-1){//小数点
+        return true;
+    }
+    return false;
 }
