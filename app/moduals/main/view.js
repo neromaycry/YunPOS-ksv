@@ -301,6 +301,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
                 router.navigate('checking',{trigger:true});
             });
+            //折让
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
+
+            });
 
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
@@ -398,7 +402,20 @@ define([
             if (itemamount == 0) {
                 toastr.warning('当前购物车内无商品，无法执行挂单操作');
             }else {
-                var orderNum = new Date().getTime();
+                //var orderNum = new Date().getTime();
+                var orderNumFromStorage = storage.get(system_config.RESTORDER_NUM);
+                var orderNum = orderNumFromStorage;
+                orderNumFromStorage = parseInt(orderNumFromStorage);
+                if (orderNumFromStorage < 9) {
+                    orderNumFromStorage++;
+                    orderNumFromStorage = '0' + orderNumFromStorage;
+                } else {
+                    orderNumFromStorage++;
+                    orderNumFromStorage = orderNumFromStorage.toString();
+                }
+                console.log(orderNumFromStorage);
+                storage.set(system_config.RESTORDER_NUM, orderNumFromStorage);
+
                 if (storage.isSet(system_config.RESTORDER_KEY)) {
                     var pre = storage.get(system_config.RESTORDER_KEY);
                     pre[orderNum] = this.collection.toJSON();
@@ -417,10 +434,11 @@ define([
                 this.renderCartList();
                 this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
-                toastr.success('挂单成功');
+                toastr.success('挂单号：' + orderNum);
             }
         },
 
+        //切换优惠模式
         onDiscountPercentClicked: function () {
             if (this.isDiscountPercent) {
                 this.isDiscountPercent = false;
@@ -483,7 +501,20 @@ define([
                 toastr.warning('当前购物车内无商品');
             }else{
                 if(this.isDiscountPercent) {
-                    toastr.info('单品百分比折扣');
+                    if (value == '') {
+                        toastr.warning('输入的折扣不能为空');
+                    } else if (value >= 100) {
+                        toastr.warning('折扣比率不能大于100%');
+                    } else {
+                        var rate = value/100;
+                        var item = _self.collection.at(_self.i);
+                        var price = item.get('price');
+                        _self.collection.at(_self.i).set({
+                            discount:price*(1-rate)
+                        }) ;
+                        _self.calculateModel();
+                        $('#li' + _self.i).addClass('cus-selected');
+                    }
                 } else {
                     if(value == '') {
                         toastr.warning('输入的优惠金额不能为空，请重新输入');
