@@ -20,61 +20,46 @@ define([
 
         i:0,
 
-        input: 'input[name = receivedsum]',
+        //input: 'input[name = gather-no]',
 
         events:{
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOkClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
+            //'click .cancel':'onCancelClicked',
+            //'click .ok':'onOkClicked',
+            //'click .btn-num':'onNumClicked',
+            //'click .btn-backspace':'onBackspaceClicked',
+            //'click .btn-clear':'onClearClicked',
             'click .keyup':'onKeyUp',
             'click .keydown':'onKeyDown'
         },
 
         modalInitPage: function () {
             var _self = this;
+            var gatherKind = _self.attrs['gather_kind'];
             if(storage.isSet(system_config.GATHER_KEY)) {
                 this.collection = new BilltypeCollection();
                 var tlist = storage.get(system_config.GATHER_KEY);
                 var visibleTypes = _.where(tlist,{visible_flag:'1'});
-                if(this.attrs != '00'){
-                    var gathertype = _.where(visibleTypes,{gather_type:this.attrs});
-                    console.log(gathertype);
-                    this.collection.set(gathertype);
-                }else {
-                    var gathertype = _.where(visibleTypes,{gather_type:this.attrs});
-                    for(var i = 1;i < gathertype.length;i++){
-                        this.collection.push(gathertype[i]);
-                    }
-                    console.log(this.collection);
+                var gatherList = _.where(visibleTypes,{gather_kind:gatherKind});
+                for(var i in gatherList){
+                    var item = new BilltypeModel();
+                    item.set({
+                        gather_id:gatherList[i].gather_id,
+                        gather_name:gatherList[i].gather_name
+                    });
+                   this.collection.push(item);
                 }
             }
             this.initTemplates();
-            this.handleEvents();
-            $('.modal').on('shown.bs.modal',function(e) {
-                var unpaidamount = _self.model.get('unpaidamount').toFixed(2);
-                $('input[name = receivedsum]').focus();
-                $('input[name = receivedsum]').val(unpaidamount);
+            this.model = new BilltypeModel();
+            this.model.set({
+                receivedsum:this.attrs['receivedsum']
             });
-
+            this.render();
+            this.renderBilltype();
         },
 
         initTemplates: function () {
             this.template_billingtype = _.template(this.template_billingtype);
-        },
-        handleEvents: function () {
-            Backbone.off('onunpaidamount');
-            Backbone.on('onunpaidamount',this.onunpaidamount,this);
-        },
-
-        onunpaidamount: function (data) {
-            this.model = new BilltypeModel();
-            this.model.set({
-                unpaidamount:data['unpaidamount']
-            });
-            this.render();
-            this.renderBilltype();
         },
 
         bindModalKeys: function () {
@@ -95,47 +80,42 @@ define([
             });
         },
 
-        bindModalKeyEvents: function (id,keyCode,callback) {
-            $(document).keydown(function (e) {
-                e = e || window.event;
-                console.log(e.which);
-                if(e.which == keyCode && pageId == id) {
-                    callback();
-                }
-            });
-        },
+        //bindModalKeyEvents: function (id,keyCode,callback) {
+        //    $(document).keydown(function (e) {
+        //        e = e || window.event;
+        //        console.log(e.which);
+        //        if(e.which == keyCode && pageId == id) {
+        //            callback();
+        //        }
+        //    });
+        //},
 
         /**
          * Enter和确定
          */
         onReceived:function() {
-            var _self = this;
-            var receivedsum = $('#receivedsum').val();
-            if(receivedsum == '') {
-                toastr.warning('您输入的支付金额为空，请重新输入');
-            }else if(receivedsum == 0) {
-                toastr.warning('支付金额不能为零，请重新输入');
-            }else if(receivedsum > (_self.model.get('unpaidamount') + 100)){
-                toastr.warning('找零金额超限');
-            }else{
-                var attrData = {};
-                attrData['gather_id'] = _self.collection.at(_self.i).get('gather_id');
-                attrData['gather_name'] = _self.collection.at(_self.i).get('gather_name');
-                attrData['gather_type'] = _self.collection.at(_self.i).get('gather_type');
-                attrData['receivedsum'] = receivedsum;
-                $(".modal-backdrop").remove();
-                _self.hideModal(window.PAGE_ID.BILLING);
-                this.billaccountview = new BillaccountView(attrData);
-                _self.showModal(window.PAGE_ID.BILLING_ACCOUNT,_self.billaccountview);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = receive_account]').focus();
-                });
-            }
+            //var gatherNo = $('input[name = gather-no]').val();
+            //if(gatherNo == '') {
+            //    toastr.warning('账号不能为空');
+            //}else{
+            var attrData = {};
+            attrData['gather_id'] = this.collection.at(this.i).get('gather_id');
+            attrData['gather_name'] = this.collection.at(this.i).get('gather_name');
+            //attrData['gather_no'] = gatherNo;
+            attrData['receivedsum'] = this.attrs['receivedsum'];
+            ////Backbone.trigger('onReceivedsum',attrData);
+            $('.modal-backdrop').remove();
+            this.hideModal(window.PAGE_ID.BILLING);
+            this.billaccountview = new BillaccountView(attrData);
+            this.showModal(window.PAGE_ID.BILLING_ACCOUNT,this.billaccountview);
+            $('.modal').on('shown.bs.modal',function(e) {
+                $('input[name = receive_account]').focus();
+            });
         },
 
-        onOkClicked:function(){
-          this.onReceived();
-        },
+        //onOkClicked:function(){
+        //  this.onReceived();
+        //},
         /**
          * 方向下
          */
@@ -162,34 +142,34 @@ define([
             return this;
         },
 
-        onCancelClicked: function () {
-            this.hideModal(window.PAGE_ID.BILLING);
-        },
+        //onCancelClicked: function () {
+        //    this.hideModal(window.PAGE_ID.BILLING);
+        //},
+        //
+        //onNumClicked: function (e) {
+        //    var value = $(e.currentTarget).data('num');
+        //    var str = $(this.input).val();
+        //    str += value;
+        //    $(this.input).val(str);
+        //},
 
-        onNumClicked: function (e) {
-            var value = $(e.currentTarget).data('num');
-            var str = $(this.input).val();
-            str += value;
-            $(this.input).val(str);
-        },
+        //onBackspaceClicked: function (e) {
+        //    var str = $(this.input).val();
+        //    str = str.substring(0, str.length-1);
+        //    $(this.input).val(str);
+        //},
 
-        onBackspaceClicked: function (e) {
-            var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
-            $(this.input).val(str);
-        },
+        //onClearClicked: function () {
+        //    $(this.input).val('');
+        //},
 
-        onClearClicked: function () {
-            $(this.input).val('');
-        },
-
-        onKeyUp: function () {
-            this.scrollUp();
-        },
-
-        onKeyDown: function () {
-            this.scrollDown();
-        }
+        //onKeyUp: function () {
+        //    this.scrollUp();
+        //},
+        //
+        //onKeyDown: function () {
+        //    this.scrollDown();
+        //}
 
     });
 

@@ -1,16 +1,33 @@
-<div class="modal-dialog modal-sm modal-account">
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+<div class="modal-dialog modal-sm">
     <div class="modal-content">
-        <div class="modal-body" style="padding: 0">
+        <div class="modal-body" style="padding:0;">
             <div class="panel panel-primary" style="border: none;margin: 0;">
-                <div class="panel-heading">整单优惠</div>
-                <div class="panel-body">
+                <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-12">
-                            <div id="main-input" class="input-group">
-                                <input type="text" id="percentage" name="percentage" maxlength="2" class="form-control" onkeyup="return ValidateNumber($(this),value)" placeholder="请输入折扣百分比，如：80"/>
-                                <span id="input-percent" class="input-group-addon">%</span>
-                            </div>
-                        </div>
+                        <div class="col-md-6"><%= gather_name %></div>
+                        <div class="col-md-6">支付金额：<%= toDecimal2(unpaidamount) %></div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="quickpay-account" name="quickpay-account" placeholder="请输入付款账号">
                     </div>
                 </div>
             </div>
@@ -54,7 +71,7 @@
                         <div class="cbtn btn-num panel-group border-right-bottom" data-num="3">3</div>
                     </div>
                     <div class="col-md-3 no-padding">
-                        <div class="cbtn numpad-ok border-bottom cancel">取消</div>
+                        <div class="cbtn numpad-ok border-bottom bg-highlight cancel">取消</div>
                     </div>
                 </div>
                 <div class="row no-margining text-center">
@@ -65,11 +82,18 @@
                         <div class="cbtn btn-num panel-group border-right" data-num=".">.</div>
                     </div>
                     <div class="col-md-3 no-padding">
-                        <div class="cbtn numpad-ok ok">确定</div>
+                        <div class="cbtn numpad-ok bg-red ok">确定</div>
                     </div>
                 </div>
+                <!--<div class="row no-margining text-center">-->
+                    <!--<div class="col-md-6 no-padding">-->
+                        <!--<div class="panel-group border-right bg-red cancel">取消</div>-->
+                    <!--</div>-->
+                    <!--<div class="col-md-6 no-padding">-->
+                        <!--<div class="panel-group bg-teal ok">确定</div>-->
+                    <!--</div>-->
+                <!--</div>-->
             </div>
         </div>
-    </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
-
+    </div>
+</div>

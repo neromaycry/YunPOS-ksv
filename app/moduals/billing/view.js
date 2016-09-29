@@ -11,11 +11,12 @@ define([
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-ecardlogin/view',
+    '../../../../moduals/modal-quickpay/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView, billinfotpl, billingdetailtpl, numpadtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView, QuickPayView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -65,6 +66,8 @@ define([
             'click .billing':'onBillingClicked',
             'click .billing-clean':'onBillingCleanClicked',
             'click [data-index]': 'onPayClick',
+            'click .quick-pay':'onQuickPayClicked',//快捷支付
+            'click .check':'onCheckClicked',//支票类付款
             //'click .btn-floatpad':'onFloatPadClicked',
         },
 
@@ -92,6 +95,7 @@ define([
             var _self = this;
             this.renderBillInfo();
             $('input[name = billing]').focus();
+            $('button[name = cancel-totaldiscount]').css('display','none');
             $('.for-billdetail').perfectScrollbar();
             this.$el.find('.for-numpad').html(this.template_numpad);
             this.initLayoutHeight();
@@ -124,12 +128,12 @@ define([
         },
         onReceivedsum: function (data) {
             var receivedsum = data['receivedsum'];
-            var gatherNo = data['gather_no'];
+            var gatherNo = data['gather_no'];//付款账号
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
-            var gatherType = data['gather_type'];
+            //var gatherType = data['gather_type'];
             this.card_id = data['card_id'];
-            this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId,gatherType);
+            this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId);
         },
         onBillDiscount: function (data) {
             this.percentage = data['percentage'] / 100;
@@ -152,7 +156,7 @@ define([
          * @param gatherAccount 付款账号
          * @param gatherId 付款方式Id
          */
-        addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId,gatherType) {
+        addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId) {
             var model = new BillModel();
             model.set({
                 fact_money:0,
@@ -160,7 +164,7 @@ define([
                 gather_name:gatherName,
                 gather_money:parseFloat(receivedsum),
                 gather_no:gatherAccount,
-                gather_type:gatherType
+                //gather_type:gatherType
             });
             this.collection.add(model);
             var totalreceived = 0;
@@ -228,7 +232,7 @@ define([
             });
             //现金支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
-               _self.payByCash();
+               _self.onCheckClicked();
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
@@ -262,6 +266,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.C, function () {
                 _self.cleanPaylist();
             });
+            //快捷支付
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F, function () {
+                _self.QuickPay();
+            });
 
         },
 
@@ -269,7 +277,7 @@ define([
          * 确认事件
          */
         confirm:function() {
-            var receivedsum = $('#input_billing').val();
+            var receivedsum = $(this.input).val();
             if(this.model.get('unpaidamount') == 0) {
                 toastr.warning('待支付金额为零，请进行结算');
             }else if(receivedsum == '') {
@@ -496,88 +504,6 @@ define([
             toastr.success('清空支付方式列表成功');
         },
         /**
-         * 现金类支付
-         */
-        payByCash: function () {
-            var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
-                toastr.warning('待支付金额为零,请进行结算');
-            }else {
-                this.billtype = new BilltypeView('00');
-                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
-                var attrData = {};
-                attrData['unpaidamount'] = unpaidamount;//本次应收的金额
-                Backbone.trigger('onunpaidamount',attrData);
-            }
-        },
-        /**
-         * 礼券类支付
-         */
-        payByGiftCard: function () {
-            var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
-                toastr.warning('待支付金额为零,请进行结算');
-            }else {
-                this.billtype = new BilltypeView('01');
-                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
-                var attrData = {};
-                attrData['unpaidamount'] = unpaidamount;//本次应收的金额
-                Backbone.trigger('onunpaidamount',attrData);
-            }
-        },
-        /**
-         * 银行pos支付
-         */
-        payByPos: function () {
-            var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
-                toastr.warning('待支付金额为零,请进行结算');
-            }else {
-                this.billtype = new BilltypeView('02');
-                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
-                var attrData = {};
-                attrData['unpaidamount'] = unpaidamount;//本次应收的金额
-                Backbone.trigger('onunpaidamount',attrData);
-
-            }
-        },
-        /**
-         * 第三方支付
-         */
-        payByThird:function () {
-            var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
-                toastr.warning('待支付金额为零,请进行结算');
-            }else {
-                this.billtype = new BilltypeView('03');
-                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtype);
-                var attrData = {};
-                attrData['unpaidamount'] = unpaidamount;//本次应收的金额
-                Backbone.trigger('onunpaidamount',attrData);
-                //$('.modal').on('shown.bs.modal',function(e) {
-                //    $('input[name = receivedsum]').focus();
-                //    //$('#li' + _self.i).addClass('cus-selected');
-                //});
-            }
-        },
-
-        /**
-         * 一卡通支付
-         */
-        payByOneCard: function () {
-            var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
-                toastr.warning('待支付金额为零，请进行结算');
-            }else{
-                this.onecardview = new OneCardView(unpaidamount);
-                this.showModal(window.PAGE_ID.ONECARD_LOGIN,this.onecardview);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = medium_id]').focus();
-                });
-            }
-        },
-
-        /**
          * 整单优惠平均到每个商品
          */
         totalDiscount:function(percentage){
@@ -722,6 +648,79 @@ define([
         onClearClicked: function () {
             $(this.input).val('');
         },
+        /**
+         * 快捷支付按钮的点击事件
+         */
+        onQuickPayClicked: function () {
+            this.QuickPay();
+        },
+        /**
+         * 快捷支付
+         */
+        QuickPay: function () {
+            var gatherId = $(this.input).val();
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零,请进行结算');
+            }else{
+                if(gatherId == ''){
+                    toastr.warning('付款方式编码不能为空');
+                }else{
+                    if(storage.isSet(system_config.GATHER_KEY)){
+                        //从gather_key里面把visible_flag = ‘0’ 的付款方式的id都取出来
+                        var tlist = storage.get(system_config.GATHER_KEY);
+                        var visibleTypes = _.where(tlist,{visible_flag:'1'});
+                        var gatheridlist = _.pluck(visibleTypes, 'gather_id');
+                        var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
+                        if(result == - 1){
+                            toastr.warning('付款方式编码无效');
+                        }else{
+                            var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
+                            var data = {};
+                            data['unpaidamount'] = this.model.get('unpaidamount');
+                            data['gather_id'] = gatherId;
+                            data['gather_name'] = gathermodel[0].gather_name;
+                            this.quickpayview = new QuickPayView(data);
+                            this.showModal(window.PAGE_ID.QUICK_PAY,this.quickpayview);
+                            $('.modal').on('shown.bs.modal',function(e){
+                                $('input[name = quickpay-account]').focus();
+                            });
+                        }
+                    }
+                }
+            }
+            $(this.input).val('');
+        },
+        /**
+         *支票类付款
+         */
+        onCheckClicked:function () {
+            var receivedsum = $(this.input).val();
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零，请进行结算');
+            }else{
+                if(receivedsum == ''){
+                    toastr.warning('支付金额不能为空');
+                }else if(receivedsum == 0){
+                    toastr.warning('支付金额不能为零');
+                }else if(receivedsum == '.'){
+                    toastr.warning('无效的支付金额');
+                }else if(receivedsum > (unpaidamount + 100)){
+                    toastr.warning('不设找零');
+                }else{
+                    var data = {};
+                    data['gather_kind'] = '01';
+                    data['receivedsum'] = receivedsum;
+                    this.billtypeview = new BilltypeView(data);
+                    this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
+                    $('.modal').on('shown.bs.modal',function(e) {
+                        $('input[name = gather-no]').focus();
+                    });
+                }
+            }
+            $('input[name = billing]').val('');
+        }
 
 
 

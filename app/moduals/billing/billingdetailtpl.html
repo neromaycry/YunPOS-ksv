@@ -20,10 +20,15 @@ return s;
     <% _.each(obj,function(e,i){ %>
     <li id="billdetail<%=i%>" class="list-group-item li-billdetail" data-index="<%= i %>" style="border-radius: 0">
         <div class="row text-center">
-            <div class="col-md-2"><%=i+1%></div>
-            <div class="col-md-3"><%=e.gather_name%></div>
-            <div class="col-md-3"><%= toDecimal2(e.gather_money)%></div>
-            <div class="col-md-3"><%=e.gather_no%></div>
+            <!--<div class="col-md-2"><%=i+1%></div>-->
+            <!--<div class="col-md-3"><%=e.gather_name%></div>-->
+            <!--<div class="col-md-3"><%= toDecimal2(e.gather_money)%></div>-->
+            <!--<div class="col-md-3"><%=e.gather_no%></div>-->
+            <div class="col-md-1"><%= i+1 %></div>
+            <div class="col-md-3"><%= e.gather_id %></div>
+            <div class="col-md-3 "><%=e.gather_name %></div>
+            <div class="col-md-2"><%= toDecimal2(e.gather_money) %></div>
+            <div class="col-md-3"><%= e.gather_no %></div>
         </div>
     </li>
     <% }) %>

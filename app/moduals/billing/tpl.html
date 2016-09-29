@@ -4,22 +4,22 @@
             <a class="navbar-brand" style="color: #ffffff">结算</a>
         </div>
         <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color: #ffffff">支付方式 <span class="caret"></span></a>
-                    <ul class="dropdown-menu no-margining" role="menu">
-                        <li data-index="00"><a>现金类</a></li>
-                        <li class="divider"></li>
-                        <li data-index="01"><a>礼券类</a></li>
-                        <li class="divider"></li>
-                        <li data-index="02"><a>银行POS</a></li>
-                        <li class="divider"></li>
-                        <li data-index="03"><a>第三方支付</a></li>
-                        <li class="divider"></li>
-                        <li data-index="04"><a>一卡通</a></li>
-                    </ul>
-                </li>
-            </ul>
+            <!--<ul class="nav navbar-nav">-->
+                <!--<li class="dropdown">-->
+                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color: #ffffff">支付方式 <span class="caret"></span></a>-->
+                    <!--<ul class="dropdown-menu no-margining" role="menu">-->
+                        <!--<li data-index="00"><a>现金类</a></li>-->
+                        <!--<li class="divider"></li>-->
+                        <!--<li data-index="01"><a>礼券类</a></li>-->
+                        <!--<li class="divider"></li>-->
+                        <!--<li data-index="02"><a>银行POS</a></li>-->
+                        <!--<li class="divider"></li>-->
+                        <!--<li data-index="03"><a>第三方支付</a></li>-->
+                        <!--<li class="divider"></li>-->
+                        <!--<li data-index="04"><a>一卡通</a></li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+            <!--</ul>-->
             <ul class="nav navbar-nav navbar-right">
                 <li class="billing-help"><a style="color: #ffffff">帮助</a></li>
                 <li class="billing-return"><a style="color: #ffffff">返回</a></li>
@@ -32,9 +32,10 @@
         <div class="cart-panel panel panel-primary"  style="z-index: 0;position: absolute;min-width: 440px">
             <div class="panel-heading">
                 <div class="row text-center">
-                    <div class="col-md-2">序号</div>
+                    <div class="col-md-1">序号</div>
+                    <div class="col-md-3">付款方式编号</div>
                     <div class="col-md-3 ">付款方式</div>
-                    <div class="col-md-3">付款金额</div>
+                    <div class="col-md-2">付款金额</div>
                     <div class="col-md-3">付款账号</div>
                 </div>
             </div>
@@ -47,11 +48,27 @@
                         <div class="row">
                             <button type="button" class="col-md-2 button button-border button-primary billing-keyup">↑</button>
                             <button type="button" class="col-md-2 button button-border button-primary billing-keydown">↓</button>
+                            <!--<button type="button" class="col-md-2 button button-border button-primary billing-clean">清空付款方式</button>-->
+                            <button type="button" class="col-md-2 button button-border button-primary totaldiscount" name="totaldiscount">整单优惠</button>
+                            <button type="button" class="col-md-2 button button-border button-primary cancel-totaldiscount" name="cancel-totaldiscount">取消优惠</button>
                             <button type="button" class="col-md-2 button button-border button-primary billing-delete">删除</button>
-                            <button type="button" class="col-md-2 button button-border button-primary billing-clean">清空付款方式</button>
-                            <button type="button" class="col-md-2 button button-border button-primary totaldiscount">整单优惠</button>
-                            <button type="button" class="col-md-2 button button-border button-primary cancel-totaldiscount">取消优惠</button>
+                            <div class="col-md-2 no-padding">
+                                <div class="cart-billing button-highlight billing-clean">清空支付列表</div>
+                            </div>
+                            <div class="col-md-2 no-padding">
+                                <div class="cart-billing bg-red button-caution button-glow billing">结算</div>
+                            </div>
+
                         </div>
+                        <div class="row">
+                            <button type="button" class="col-md-2 button button-border button-primary check">支票</button>
+                            <button type="button" class="col-md-2 button button-border button-primary gift-certificate">礼券</button>
+                            <button type="button" class="col-md-2 button button-border button-primary pos">银行卡</button>
+                            <button type="button" class="col-md-2 button button-border button-primary ecard">一卡通</button>
+                            <button type="button" class="col-md-2 button button-border button-primary third-pay">第三方支付</button>
+                            <button type="button" class="col-md-2 button button-border button-primary quick-pay">快捷支付</button>
+                        </div>
+
                     </div>
                 </div>
                 <!--<div class="row no-margining">-->
