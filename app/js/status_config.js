@@ -171,6 +171,8 @@ window.PAGE_ID = {
     'ONECARD_PAY':24,
     'BR_ONECARD_LOGIN':25,
     'BR_ONECARD_PAY':26,
+    'QUICK_PAY':27
+    'BR_ONECARD_PAY':26,
     "MODAL_RESTORDER":27
 };
 
