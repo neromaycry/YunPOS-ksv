@@ -11,11 +11,12 @@ define([
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-ecardlogin/view',
+    '../../../../moduals/modal-changing/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView, billinfotpl, billingdetailtpl, numpadtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView, ChangingView, billinfotpl, billingdetailtpl, numpadtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -430,7 +431,7 @@ define([
             if(_self.unpaidamount != 0){
                 toastr.warning('还有未支付的金额，请支付完成后再进行结算');
             } else {
-                var confirmView = new ConfirmView({
+                var changingView = new ChangingView({
                     pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
                     is_navigate:true,
                     navigate_page: window.PAGE_ID.MAIN,
@@ -473,9 +474,9 @@ define([
                             }
                         });
                     },
-                    content:'确定结算此单？'
+                    content:_self.oddchange
                 });
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                _self.showModal(window.PAGE_ID.CONFIRM, changingView);
             }
         },
         /**
