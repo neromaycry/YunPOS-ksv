@@ -77,6 +77,41 @@ define([
             });
         },
 
+        confirmHideModal:function(pageid) {
+            switch (pageid) {
+                case window.PAGE_ID.LOGIN:
+                    this.hideModal(window.PAGE_ID.LOGIN);
+                    break;
+                case window.PAGE_ID.SETDNS:
+                    this.hideModal(window.PAGE_ID.SETDNS);
+                    break;
+                case window.PAGE_ID.MAIN:
+                    this.hideModal(window.PAGE_ID.MAIN);
+                    break;
+                case window.PAGE_ID.MEMBER:
+                    this.hideModal(window.PAGE_ID.MEMBER);
+                    break;
+                case window.PAGE_ID.RESTORDER:
+                    this.hideModal(window.PAGE_ID.RESTORDER);
+                    break;
+                case window.PAGE_ID.RETURN_WHOLE:
+                    this.hideModal(window.PAGE_ID.RETURN_WHOLE);
+                    break;
+                case window.PAGE_ID.BILLING:
+                    this.hideModal(window.PAGE_ID.BILLING);
+                    break;
+                case window.PAGE_ID.BILLING_RETURN:
+                    this.hideModal(window.PAGE_ID.BILLING_RETURN);
+                    break;
+                case window.PAGE_ID.RETURN_FORCE:
+                    this.hideModal(window.PAGE_ID.RETURN_FORCE);
+                    break;
+                case window.PAGE_ID.CHECKING:
+                    this.hideModal(window.PAGE_ID.CHECKING);
+                    break;
+            }
+        },
+
         render: function () {
             console.log('modal render');
             this.$el.html(this.template(this.model.toJSON()));

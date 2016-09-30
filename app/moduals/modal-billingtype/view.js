@@ -7,9 +7,10 @@ define([
     '../../moduals/modal-billingtype/collection',
     '../../moduals/modal-billingaccount/view',
     '../../moduals/modal-alipay/view',
+    '../../moduals/modal-gatherui/view',
     'text!../../moduals/modal-billingtype/billingtypetpl.html',
     'text!../../moduals/modal-billingtype/tpl.html',
-], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView,AliPayView,billingtypetpl, tpl) {
+], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView,AliPayView, GatherUIView, billingtypetpl, tpl) {
 
     var billtypeView = BaseModalView.extend({
 
@@ -111,8 +112,12 @@ define([
             this.hideModal(window.PAGE_ID.BILLING);
             ////Backbone.trigger('onReceivedsum',attrData);
             if(gatherUI == '01'){
-                this.billaccountview = new BillaccountView(attrData);
-                this.showModal(window.PAGE_ID.BILLING_ACCOUNT,this.billaccountview);
+                var gaterUIView = new GatherUIView({
+                    gather_ui:gatherUI
+                });
+                this.showModal(window.PAGE_ID.BILLING_ACCOUNT, gaterUIView);
+                //this.billaccountview = new BillaccountView(attrData);
+                //this.showModal(window.PAGE_ID.BILLING_ACCOUNT, this.billaccountview);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = receive_account]').focus();
                 });
