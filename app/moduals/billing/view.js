@@ -19,7 +19,7 @@ define([
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView, QuickPayView,AliPayView,WeChatView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,AliPayView,WeChatView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
