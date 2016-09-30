@@ -144,13 +144,18 @@ define([
             var _self = this;
             var cardid = $('input[name = custid]').val();
             var pwd = $('input[name = custpwd]').val();
-            if (cardid == '' || pwd == '') {
-                toastr.warning('卡号或密码不能为空');
+            if (cardid == '') {
+                toastr.warning('卡号不能为空');
             } else {
                 var data = {};
-                var md5pwd = $.md5(pwd);
+                if (pwd != '') {
+                    var md5pwd = $.md5(pwd);
+                    data['password'] = md5pwd;
+                } else {
+                    data['password'] = '';
+                }
+
                 data['cardid'] = cardid;
-                data['password'] = md5pwd;
                 data['type'] = '00';
                 this.requestModel.getMemberInfo(data, function (resp) {
                     if (resp.status == '00') {

@@ -11,6 +11,7 @@ define([
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-ecardlogin/view',
+    '../../../../moduals/modal-changing/view',
     '../../../../moduals/modal-quickpay/view',
     '../../../../moduals/modal-alipay/view',
     '../../../../moduals/modal-wechat/view',
@@ -385,7 +386,6 @@ define([
                 $('.modal').on('shown.bs.modal', function (){
                     $('input[name = percentage]').focus();
                 });
-
             }
         },
         /**
