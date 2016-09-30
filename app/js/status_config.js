@@ -174,7 +174,9 @@ window.PAGE_ID = {
     'QUICK_PAY':27,
     "MODAL_RESTORDER":28,
     'ALIPAY':29,
-    'WECHAT':30
+    'WECHAT':30,
+    'QP_ALIPAY':31,
+    'QP_WECHAT':32
 };
 
 window.KEYS = {

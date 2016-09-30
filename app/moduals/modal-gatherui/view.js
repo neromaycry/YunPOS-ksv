@@ -52,16 +52,15 @@ define([
 
         bindModalKeys: function () {
             var _self = this;
-            this.bindModalKeyEvents(window.PAGE_ID.CONFIRM, window.KEYS.Esc , function () {
+            this.bindModalKeyEvents(this.attrs.currentid, window.KEYS.Esc , function () {
                _self.confirmHideModal(_self.attrs.pageid);
             });
-            this.bindModalKeyEvents(window.PAGE_ID.CONFIRM, window.KEYS.Enter, function () {
-                _self.attrs.callback();
+            this.bindModalKeyEvents(this.attrs.currentid, window.KEYS.Enter, function () {
+                _self.attrs.callback(_self.attrs);
                 _self.confirmHideModal(_self.attrs.pageid);
 
             });
         },
-
 
 
 

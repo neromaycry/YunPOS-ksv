@@ -1,0 +1,42 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+
+<div class="modal-dialog modal-sm modal-type">
+    <div class="modal-content">
+        <div class="modal-body" style="padding: 0">
+            <div class="panel panel-primary" style="border: none;margin: 0;">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-6">微信</div>
+                        <div class="col-md-6">已付金额：<%= toDecimal2(receivedsum) %></div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                   <div class="row">
+                       <div class="col-md-12">
+                           <div class="form-group">
+                               <input type="text" class="form-control" id="wechat-account" name="wechat-account" onkeypress="return myNumberic(event)"/>
+                           </div>
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+

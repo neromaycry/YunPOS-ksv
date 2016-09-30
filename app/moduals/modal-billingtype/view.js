@@ -83,38 +83,44 @@ define([
             });
         },
 
-        //bindModalKeyEvents: function (id,keyCode,callback) {
-        //    $(document).keydown(function (e) {
-        //        e = e || window.event;
-        //        console.log(e.which);
-        //        if(e.which == keyCode && pageId == id) {
-        //            callback();
-        //        }
-        //    });
-        //},
-
         /**
          * Enter和确定
          */
         onReceived:function() {
-            //var gatherNo = $('input[name = gather-no]').val();
-            //if(gatherNo == '') {
-            //    toastr.warning('账号不能为空');
-            //}else{
+            var _self = this;
             var gatherId = this.collection.at(this.i).get('gather_id');
+            var gatherName = this.collection.at(this.i).get('gather_name');
+            var receivedSum = this.attrs['receivedsum'];
             var gathermodel = _.where(this.visibleTypes,{gather_id:gatherId});
             var gatherUI = gathermodel[0].gather_ui;
-            var attrData = {};
-            attrData['gather_id'] = this.collection.at(this.i).get('gather_id');
-            attrData['gather_name'] = this.collection.at(this.i).get('gather_name');
-            attrData['receivedsum'] = this.attrs['receivedsum'];
             $('.modal-backdrop').remove();
             this.hideModal(window.PAGE_ID.BILLING);
-            ////Backbone.trigger('onReceivedsum',attrData);
             if(gatherUI == '01'){
                 var gaterUIView = new GatherUIView({
                     gather_ui:gatherUI,
-                    pageid:window.PAGE_ID.BILLING
+                    pageid:window.PAGE_ID.BILLING,
+                    currentid:window.PAGE_ID.BILLING_ACCOUNT,
+                    gather_id:gatherId,
+                    gather_name:gatherName,
+                    receivedsum:receivedSum,
+                    callback: function (attrs) {
+                        var receivedaccount = $('#receive_account').val();
+                        if(receivedaccount == '') {
+                            toastr.warning('您输入的支付账号为空，请重新输入');
+                        } else if(receivedaccount == 0){
+                            toastr.warning('支付账号不能为零，请重新输入');
+                        } else {
+                            var attrData = {};
+                            attrData['gather_id'] = attrs.gather_id;
+                            attrData['receivedsum'] = attrs.receivedsum;
+                            attrData['gather_name'] = attrs.gather_name;
+                            attrData['gather_no'] = receivedaccount;
+                            console.log(attrData);
+                            Backbone.trigger('onReceivedsum',attrData);
+                            _self.hideModal(window.PAGE_ID.BILLING);
+                            $('input[name = billing]').focus();
+                        }
+                    }
                 });
                 this.showModal(window.PAGE_ID.BILLING_ACCOUNT, gaterUIView);
                 //this.billaccountview = new BillaccountView(attrData);
