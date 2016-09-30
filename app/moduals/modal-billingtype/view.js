@@ -113,7 +113,8 @@ define([
             ////Backbone.trigger('onReceivedsum',attrData);
             if(gatherUI == '01'){
                 var gaterUIView = new GatherUIView({
-                    gather_ui:gatherUI
+                    gather_ui:gatherUI,
+                    pageid:window.PAGE_ID.BILLING
                 });
                 this.showModal(window.PAGE_ID.BILLING_ACCOUNT, gaterUIView);
                 //this.billaccountview = new BillaccountView(attrData);
