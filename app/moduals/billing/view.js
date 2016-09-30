@@ -285,7 +285,8 @@ define([
          */
         confirm:function() {
             var receivedsum = $(this.input).val();
-            if(this.model.get('unpaidamount') == 0) {
+            var unpaidamount = this.model.get('unpaiamount');
+            if(unpaidamount == 0) {
                 toastr.warning('待支付金额为零，请进行结算');
             }else if(receivedsum == '') {
                 toastr.warning('支付金额不能为空，请重新输入');
@@ -293,7 +294,7 @@ define([
                 toastr.warning('请输入有效金额');
             } else if(receivedsum == 0){
                 toastr.warning('支付金额不能为零，请重新输入');
-            }else if(receivedsum > (this.unpaidamount + 100)){
+            }else if(receivedsum > (unpaidamount + 100)){
                 toastr.warning('找零金额超限');
             }else{
                 this.i = 0;
