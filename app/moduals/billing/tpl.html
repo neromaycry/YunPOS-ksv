@@ -61,12 +61,12 @@
 
                         </div>
                         <div class="row">
-                            <button type="button" class="col-md-2 button button-border button-primary check">支票</button>
-                            <button type="button" class="col-md-2 button button-border button-primary gift-certificate">礼券</button>
-                            <button type="button" class="col-md-2 button button-border button-primary pos">银行卡</button>
-                            <button type="button" class="col-md-2 button button-border button-primary ecard">一卡通</button>
-                            <button type="button" class="col-md-2 button button-border button-primary third-pay">第三方支付</button>
-                            <button type="button" class="col-md-2 button button-border button-primary quick-pay">快捷支付</button>
+                            <button type="button" class="col-md-2 button button-border button-primary check" name="check">支票</button>
+                            <button type="button" class="col-md-2 button button-border button-primary gift-certificate" name="gift-certificate">礼券</button>
+                            <button type="button" class="col-md-2 button button-border button-primary pos" name="pos">银行卡</button>
+                            <button type="button" class="col-md-2 button button-border button-primary third-pay" name="third-pay">第三方支付</button>
+                            <button type="button" class="col-md-2 button button-border button-primary ecard" name="ecard">一卡通</button>
+                            <button type="button" class="col-md-2 button button-border button-primary quick-pay" name="quick-pay">快捷支付</button>
                         </div>
 
                     </div>
@@ -96,7 +96,7 @@
     </div>
     <div class="main-left col-md-4 no-padding">
         <div class="form-group">
-            <input type="text" id="input_billing" placeholder="请输入现金支付金额" name="billing" class="form-control" onkeyup="return ValidateFloat($(this),value)"/>
+            <input type="text" id="input_billing" placeholder="请输入现金支付金额" name="billing" class="form-control" onkeypress="return myNumberic(event)"/>
         </div>
         <div class="for-numpad"></div>
         <div class="panel panel-primary for-billinfo">

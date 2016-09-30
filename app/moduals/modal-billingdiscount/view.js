@@ -38,6 +38,8 @@ define([
             Backbone.trigger('onBillDiscount',attrData);
             this.hideModal(window.PAGE_ID.BILLING);
             $('input[name = billing]').focus();
+            $('button[name = totaldiscount]').css('display','none');
+            $('button[name = cancel-totaldiscount]').css('display','block');
         },
 
         onNumClicked: function (e) {
@@ -69,6 +71,8 @@ define([
                 Backbone.trigger('onBillDiscount',attrData);
                 _self.hideModal(window.PAGE_ID.BILLING);
                 $('input[name = billing]').focus();
+                $('button[name = totaldiscount]').css('display','none');
+                $('button[name = cancel-totaldiscount]').css('display','block');
             });
         },
 

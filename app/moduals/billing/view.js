@@ -12,11 +12,13 @@ define([
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-ecardlogin/view',
     '../../../../moduals/modal-quickpay/view',
+    '../../../../moduals/modal-alipay/view',
+    '../../../../moduals/modal-wechat/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView, QuickPayView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView, QuickPayView,AliPayView,WeChatView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -68,6 +70,10 @@ define([
             'click [data-index]': 'onPayClick',
             'click .quick-pay':'onQuickPayClicked',//快捷支付
             'click .check':'onCheckClicked',//支票类付款
+            'click .gift-certificate':'onGiftClicked',//礼券类
+            'click .pos':'onPosClicked',//银行pos
+            'click .ecard':'onEcardClicked',
+            'click .third-pay':'onThirdPayClicked'
             //'click .btn-floatpad':'onFloatPadClicked',
         },
 
@@ -230,21 +236,21 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Up, function() {
                _self.scrollUp();
             });
-            //现金支付
+            //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
-               _self.onCheckClicked();
+               _self.payment('01');
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
-               _self.payByGiftCard();
+                _self.payment('02');
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
-                _self.payByPos();
+                _self.payment('03');
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
-               _self.payByThird();
+               _self.payment('05');
             });
             //整单优惠
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Y, function () {
@@ -379,6 +385,7 @@ define([
                 $('.modal').on('shown.bs.modal', function (){
                     $('input[name = percentage]').focus();
                 });
+
             }
         },
         /**
@@ -399,6 +406,8 @@ define([
                     totaldiscount:this.totaldiscount
                 });
                 this.renderBillInfo();
+                $('button[name = totaldiscount]').css('display','block');
+                $('button[name = cancel-totaldiscount]').css('display','none');
                 toastr.success('取消整单优惠成功');
             }
         },
@@ -603,30 +612,6 @@ define([
         onBillingCleanClicked: function () {
             this.cleanPaylist();
         },
-        /**
-         *
-         */
-        onPayClick:function(e) {
-            var index = $(e.currentTarget).data('index');
-            //$(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
-            switch (index) {
-                case '00':
-                    this.payByCash();
-                    break;
-                case '01':
-                    this.payByGiftCard();
-                    break;
-                case '02':
-                    this.payByPos();
-                    break;
-                case '03':
-                    this.payByThird();
-                    break;
-                case '04':
-                    this.payByOneCard();
-                    break;
-            }
-        },
 
         onOKClicked: function () {
            this.confirm();
@@ -676,15 +661,38 @@ define([
                             toastr.warning('付款方式编码无效');
                         }else{
                             var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
-                            var data = {};
-                            data['unpaidamount'] = this.model.get('unpaidamount');
-                            data['gather_id'] = gatherId;
-                            data['gather_name'] = gathermodel[0].gather_name;
-                            this.quickpayview = new QuickPayView(data);
-                            this.showModal(window.PAGE_ID.QUICK_PAY,this.quickpayview);
-                            $('.modal').on('shown.bs.modal',function(e){
-                                $('input[name = quickpay-account]').focus();
-                            });
+                            var gatherUI = gathermodel[0].gather_ui;
+                            if(gatherUI == '01'){
+                                var data = {};
+                                data['unpaidamount'] = this.model.get('unpaidamount');
+                                data['gather_id'] = gatherId;
+                                data['gather_name'] = gathermodel[0].gather_name;
+                                this.quickpayview = new QuickPayView(data);
+                                this.showModal(window.PAGE_ID.QUICK_PAY,this.quickpayview);
+                                $('.modal').on('shown.bs.modal',function(e){
+                                    $('input[name = quickpay-account]').focus();
+                                });
+                            }else if(gatherUI == '04'){
+                                var data = {};
+                                data['receivedsum'] = this.model.get('unpaidamount');
+                                data['gather_id'] = gatherId;
+                                data['gather_name'] = gathermodel[0].gather_name;
+                                this.alipayview = new AliPayView(data);
+                                this.showModal(window.PAGE_ID.ALIPAY,this.alipayview);
+                                $('.modal').on('shown.bs.modal',function(e){
+                                    $('input[name = alipay-account]').focus();
+                                });
+                            }else if(gatherUI == '05') {
+                                var data = {};
+                                data['unpaidamount'] = this.model.get('unpaidamount');
+                                data['gather_id'] = gatherId;
+                                data['gather_name'] = gathermodel[0].gather_name;
+                                this.wechatview = new WeChatView(data);
+                                this.showModal(window.PAGE_ID.WECHAT,this.wechatview);
+                                $('.modal').on('shown.bs.modal',function(e) {
+                                    $('input[name = wechat-account]').focus();
+                                });
+                            }
                         }
                     }
                 }
@@ -695,6 +703,43 @@ define([
          *支票类付款
          */
         onCheckClicked:function () {
+            this.payment('01');
+            $('button[name = check]').blur();
+        },
+        /**
+         * 礼券
+         */
+        onGiftClicked: function () {
+            this.payment('02');
+            $('button[name = gift-certificate]').blur();
+        },
+        onPosClicked:function () {
+            this.payment('03');
+            $('button[name = pos]').blur();
+        },
+
+        onEcardClicked: function () {
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零，请进行结算');
+            }else{
+                this.onecard = new OneCardView(unpaidamount);
+                this.showModal(window.PAGE_ID.ONECARD_LOGIN,this.onecard);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = medium_id]').focus();
+                });
+                $('input[name = billing]').val('');
+            }
+        },
+
+        onThirdPayClicked: function () {
+            this.payment('05');
+            $('button[name = third-pay]').blur();
+        },
+        /**
+         *点击支付大类按钮的点击事件
+         */
+        payment:function (gatherkind){
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
@@ -710,13 +755,10 @@ define([
                     toastr.warning('不设找零');
                 }else{
                     var data = {};
-                    data['gather_kind'] = '01';
+                    data['gather_kind'] = gatherkind;
                     data['receivedsum'] = receivedsum;
                     this.billtypeview = new BilltypeView(data);
                     this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
-                    $('.modal').on('shown.bs.modal',function(e) {
-                        $('input[name = gather-no]').focus();
-                    });
                 }
             }
             $('input[name = billing]').val('');

@@ -171,9 +171,10 @@ window.PAGE_ID = {
     'ONECARD_PAY':24,
     'BR_ONECARD_LOGIN':25,
     'BR_ONECARD_PAY':26,
-    'QUICK_PAY':27
-    'BR_ONECARD_PAY':26,
-    "MODAL_RESTORDER":27
+    'QUICK_PAY':27,
+    "MODAL_RESTORDER":28,
+    'ALIPAY':29,
+    'WECHAT':30
 };
 
 window.KEYS = {

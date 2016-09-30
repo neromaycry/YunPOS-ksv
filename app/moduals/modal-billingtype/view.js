@@ -6,9 +6,10 @@ define([
     '../../moduals/modal-billingtype/model',
     '../../moduals/modal-billingtype/collection',
     '../../moduals/modal-billingaccount/view',
+    '../../moduals/modal-alipay/view',
     'text!../../moduals/modal-billingtype/billingtypetpl.html',
     'text!../../moduals/modal-billingtype/tpl.html',
-], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView,billingtypetpl, tpl) {
+], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView,AliPayView,billingtypetpl, tpl) {
 
     var billtypeView = BaseModalView.extend({
 
@@ -38,8 +39,9 @@ define([
             if(storage.isSet(system_config.GATHER_KEY)) {
                 this.collection = new BilltypeCollection();
                 var tlist = storage.get(system_config.GATHER_KEY);
-                var visibleTypes = _.where(tlist,{visible_flag:'1'});
-                var gatherList = _.where(visibleTypes,{gather_kind:gatherKind});
+                this.visibleTypes = new BilltypeCollection();
+                this.visibleTypes = _.where(tlist,{visible_flag:'1'});
+                var gatherList = _.where(this.visibleTypes ,{gather_kind:gatherKind});
                 for(var i in gatherList){
                     var item = new BilltypeModel();
                     item.set({
@@ -98,19 +100,31 @@ define([
             //if(gatherNo == '') {
             //    toastr.warning('账号不能为空');
             //}else{
+            var gatherId = this.collection.at(this.i).get('gather_id');
+            var gathermodel = _.where(this.visibleTypes,{gather_id:gatherId});
+            var gatherUI = gathermodel[0].gather_ui;
             var attrData = {};
             attrData['gather_id'] = this.collection.at(this.i).get('gather_id');
             attrData['gather_name'] = this.collection.at(this.i).get('gather_name');
-            //attrData['gather_no'] = gatherNo;
             attrData['receivedsum'] = this.attrs['receivedsum'];
-            ////Backbone.trigger('onReceivedsum',attrData);
             $('.modal-backdrop').remove();
             this.hideModal(window.PAGE_ID.BILLING);
-            this.billaccountview = new BillaccountView(attrData);
-            this.showModal(window.PAGE_ID.BILLING_ACCOUNT,this.billaccountview);
-            $('.modal').on('shown.bs.modal',function(e) {
-                $('input[name = receive_account]').focus();
-            });
+            ////Backbone.trigger('onReceivedsum',attrData);
+            if(gatherUI == '01'){
+                this.billaccountview = new BillaccountView(attrData);
+                this.showModal(window.PAGE_ID.BILLING_ACCOUNT,this.billaccountview);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = receive_account]').focus();
+                });
+            }else if(gatherUI == '04'){
+                this.alipayview = new AliPayView(attrData);
+                this.showModal(window.PAGE_ID.ALIPAY,this.alipayview);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = alipay-account]').focus();
+                });
+            }else if(gatherUI == '05'){
+                alert('微信');
+            }
         },
 
         //onOkClicked:function(){
