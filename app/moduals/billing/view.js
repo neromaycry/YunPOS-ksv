@@ -448,7 +448,7 @@ define([
             if(_self.unpaidamount != 0){
                 toastr.warning('还有未支付的金额，请支付完成后再进行结算');
             } else {
-                var confirmView = new ConfirmView({
+                var changingView = new ChangingView({
                     pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
                     is_navigate:true,
                     navigate_page: window.PAGE_ID.MAIN,
@@ -491,9 +491,9 @@ define([
                             }
                         });
                     },
-                    content:'确定结算此单？'
+                    content: _self.model.get('oddchange')
                 });
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                _self.showModal(window.PAGE_ID.CONFIRM, changingView);
             }
         },
         /**
