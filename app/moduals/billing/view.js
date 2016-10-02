@@ -13,13 +13,13 @@ define([
     '../../../../moduals/modal-ecardlogin/view',
     '../../../../moduals/modal-changing/view',
     '../../../../moduals/modal-quickpay/view',
-    '../../../../moduals/modal-alipay/view',
-    '../../../../moduals/modal-wechat/view',
+    '../../../../moduals/modal-qpalipay/view',
+    '../../../../moduals/modal-qpwechat/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,AliPayView,WeChatView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -678,18 +678,18 @@ define([
                                 data['receivedsum'] = this.model.get('unpaidamount');
                                 data['gather_id'] = gatherId;
                                 data['gather_name'] = gathermodel[0].gather_name;
-                                this.alipayview = new AliPayView(data);
-                                this.showModal(window.PAGE_ID.ALIPAY,this.alipayview);
+                                this.alipayview = new QPAliPayView(data);
+                                this.showModal(window.PAGE_ID.QP_ALIPAY,this.alipayview);
                                 $('.modal').on('shown.bs.modal',function(e){
                                     $('input[name = alipay-account]').focus();
                                 });
                             }else if(gatherUI == '05') {
                                 var data = {};
-                                data['unpaidamount'] = this.model.get('unpaidamount');
+                                data['receivedsum'] = this.model.get('unpaidamount');
                                 data['gather_id'] = gatherId;
                                 data['gather_name'] = gathermodel[0].gather_name;
-                                this.wechatview = new WeChatView(data);
-                                this.showModal(window.PAGE_ID.WECHAT,this.wechatview);
+                                this.wechatview = new QPWeChatView(data);
+                                this.showModal(window.PAGE_ID.QP_WECHAT,this.wechatview);
                                 $('.modal').on('shown.bs.modal',function(e) {
                                     $('input[name = wechat-account]').focus();
                                 });

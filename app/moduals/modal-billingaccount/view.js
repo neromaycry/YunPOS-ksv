@@ -5,6 +5,7 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-billingaccount/model',
     '../../moduals/modal-billingaccount/collection',
+    //'../../moduals/modal-billingtype/view',
     'text!../../moduals/modal-billingaccount/tpl.html',
 ], function (BaseModalView,BillaccountModel,BillaccountCollection, tpl) {
 
@@ -25,10 +26,15 @@ define([
         },
 
         modalInitPage: function () {
-
+            console.log(this.attrs);
         },
         onCancelClicked: function () {
+            var data = {};
+            data['gather_kind'] = this.attrs['gather_kind'];
+            data['receivedsum'] = this.attrs['receivedsum'];
             this.hideModal(window.PAGE_ID.BILLING);
+            this.billtypeview = new BillTypeView(data);
+            this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
         },
         onOKClicked: function () {
             var _self = this;
@@ -70,8 +76,13 @@ define([
         bindModalKeys: function () {
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.BILLING_ACCOUNT, window.KEYS.Esc , function () {
+                console.log(_self.attrs['gather_kind']);
+                var data = {};
+                data['gather_kind'] = _self.attrs['gather_kind'];
+                data['receivedsum'] = _self.attrs['receivedsum'];
                 _self.hideModal(window.PAGE_ID.BILLING);
-                $('input[name = billing]').focus();
+                this.billtypeview = new BillTypeView(data);
+                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
             });
             this.bindModalKeyEvents(window.PAGE_ID.BILLING_ACCOUNT, window.KEYS.Enter , function () {
                 var receivedaccount = $('#receive_account').val();
@@ -92,18 +103,15 @@ define([
             });
         },
 
-        bindModalKeyEvents: function (id,keyCode,callback) {
-            $(document).keydown(function (e) {
-                e = e || window.event;
-                console.log(e.which);
-                if(e.which == keyCode && pageId == id) {
-                    callback();
-                }
-            });
-        },
-
-
-
+        //bindModalKeyEvents: function (id,keyCode,callback) {
+        //    $(document).keydown(function (e) {
+        //        e = e || window.event;
+        //        console.log(e.which);
+        //        if(e.which == keyCode && pageId == id) {
+        //            callback();
+        //        }
+        //    });
+        //},
 
     });
 
