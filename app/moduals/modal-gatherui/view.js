@@ -17,7 +17,6 @@ define([
 
         template: tpl,
 
-
         events: {
 
         },
