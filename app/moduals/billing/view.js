@@ -735,7 +735,7 @@ define([
                                 data['gather_id'] = gatherId;
                                 data['gather_name'] = gathermodel[0].gather_name;
                                 this.quickpayview = new QuickPayView(data);
-                                this.showModal(window.PAGE_ID.QUICK_PAY,gatherUIView);
+                                this.showModal(window.PAGE_ID.QUICK_PAY,this.quickpayview);
                                 $('.modal').on('shown.bs.modal',function(e){
                                     $('input[name = quickpay-account]').focus();
                                 });
