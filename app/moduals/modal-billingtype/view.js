@@ -228,11 +228,13 @@ define([
         },
 
         onOkClicked: function () {
-            var index = $('.cus-selected').data('index');
-            this.onReceived(index);
+            //var index = $('.cus-selected').data('index');
+            console.log(this.index);
+            this.onReceived(this.index);
         },
 
         onBillTypeClicked: function (e) {
+            this.index = $(e.currentTarget).data('index');
             $(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
         }
 
