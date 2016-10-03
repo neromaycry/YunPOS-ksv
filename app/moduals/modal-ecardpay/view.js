@@ -26,18 +26,16 @@ define([
         events:{
             'click .cancel':'onCancelClicked',
             'click .ok':'onOkClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .keyup':'onKeyUp',
-            'click .keydown':'onKeyDown'
+            'click [data-index]':'onAccountClicked'
         },
 
         modalInitPage: function () {
+            console.log(this.attrs);
             var _self = this;
             this.initTemplates();
             var card_id = this.attrs['card_id'];
             this.unpaidamount = this.attrs['unpaidamount'];
+            this.receivedsum = this.attrs['receivedsum'];
             var data = {};
             data['cust_id'] = this.attrs['cust_id'];
             data['gather_detail'] = this.attrs['gather_detail'];
@@ -46,12 +44,13 @@ define([
             this.model = new EcardpayModel();
             this.collection = new EcardpayCollection();
             this.model.set({
-                unpaidamount:this.unpaidamount
+                unpaidamount:this.unpaidamount,
+                receivedsum:this.receivedsum
             });
             this.render();
             $('.modal').on('shown.bs.modal',function(e) {
                 $('input[name = ecard_receivedsum]').focus();
-                $('input[name = ecard_receivedsum]').val(_self.unpaidamount);
+                $('input[name = ecard_receivedsum]').val(_self.receivedsum);
 
             });
             if(storage.isSet(system_config.ONE_CARD_KEY,card_id)){
@@ -88,7 +87,7 @@ define([
             });
 
             this.bindModalKeyEvents(window.PAGE_ID.ONECARD_PAY, window.KEYS.Enter, function() {
-               _self.doPay();
+               _self.doPay(_self.i);
             });
         },
 
@@ -110,41 +109,41 @@ define([
         /**
          * enter和确定点击事件
          */
-        doPay:function (){
+        doPay:function (index){
             var _self = this;
-            var receivedsum = $('#ecard_receivedsum').val();
+            //var receivedsum = $('#ecard_receivedsum').val();
             var card_id = _self.attrs['card_id'];
-            if(_self.i == -1){
+            if(index == -1){
                 //初始时设置i=-1,如果i=-1则为选中任何支付方式
                 toastr.warning('请选择支付方式');
             }else {
-                var item = _self.collection.at(_self.i);
+                var item = _self.collection.at(index);
                 var gather_money = parseFloat(item.get('gather_money'));
-                if(receivedsum == ''){
-                    toastr.warning('输入金额不能为空');
-                }else if(receivedsum == 0){
-                    toastr.warning('输入金额不能为零');
-                }else if(receivedsum > _self.unpaidamount){
-                    toastr.warning('输入金额不能大于待支付金额');
-                }else if(receivedsum > gather_money){
-                    toastr.warning('输入金额不能大于卡内余额');
-                }else {
+                //if(receivedsum == ''){
+                //    toastr.warning('输入金额不能为空');
+                //}else if(receivedsum == 0){
+                //    toastr.warning('输入金额不能为零');
+                //}else if(receivedsum > _self.unpaidamount){
+                //    toastr.warning('输入金额不能大于待支付金额');
+                //}else if(receivedsum > gather_money){
+                //    toastr.warning('输入金额不能大于卡内余额');
+                //}else {
                     item.set({
                         gather_money:_self.model.get('gather_money')
                     });
-                    _self.collection.at(_self.i).set(item.toJSON());
+                    _self.collection.at(index).set(item.toJSON());
                     var data = {};
                     data['gather_id'] = _self.model.get('gather_id');
                     data['gather_name'] = _self.model.get('gather_name');
                     data['receivedsum'] = _self.model.get('receivedsum');
                     data['gather_no'] = _self.model.get('gather_no');
-                    data['gather_type'] = '04';
+                    data['gather_kind'] = '06';
                     data['card_id'] = _self.attrs['card_id'];
                     Backbone.trigger('onReceivedsum',data);
                     storage.set(system_config.ONE_CARD_KEY,card_id,'detail',_self.collection);
                     _self.hideModal(window.PAGE_ID.BILLING);
                     $('input[name = billing]').focus();
-                }
+                //}
             }
         },
 
@@ -158,7 +157,7 @@ define([
                 toastr.warning('请先输入支付金额');
             }else if(this.i > 0){
                 this.i--;
-                this.choiceCard();
+                this.choiceCard(this.i);
                 $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             }
         },
@@ -167,30 +166,31 @@ define([
          * 方向下
          */
         scrollDown:function(){
-            var receivedsum = $('#ecard_receivedsum').val();
-            if(receivedsum == ''){
-                toastr.warning('请先输入支付金额');
-            }else if(this.i < this.collection.length - 1){
-                    this.i++;
-                this.choiceCard();
-                    $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                }
+            //var receivedsum = $('#ecard_receivedsum').val();
+            //if(receivedsum == ''){
+            //    toastr.warning('请先输入支付金额');
+            //}else if(this.i < this.collection.length - 1){
+                this.i++;
+                this.choiceCard(this.i);
+                $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                //}
             },
         /**
          * 选择支付的方式
          */
-        choiceCard:function(){
-            var receivedsum = $('#ecard_receivedsum').val();
+        choiceCard:function(index){
+            //var receivedsum = $('#ecard_receivedsum').val();
+            var receivedsum = this.attrs.receivedsum;
             var card_id = this.attrs['card_id'];
             this.collection.set(storage.get(system_config.ONE_CARD_KEY,card_id,'detail'));
-            var item = this.collection.at(this.i);
+            var item = this.collection.at(index);
             var gather_money = parseFloat(item.get('gather_money'));
             gather_money = gather_money - receivedsum;
             gather_money = gather_money.toFixed(2);
             item.set({
                 gather_money: gather_money
             });
-            this.collection.at(this.i).set(item.toJSON());
+            this.collection.at(index).set(item.toJSON());
             this.model.set({
                 gather_id:item.get('gather_id'),
                 gather_name:item.get('gather_name'),
@@ -205,7 +205,8 @@ define([
         },
 
         onOkClicked: function () {
-            this.doPay();
+            var index = $('.cus-selected').data('index');
+            this.doPay(index);
         },
 
         onNumClicked: function (e) {
@@ -230,6 +231,11 @@ define([
         },
         onKeyDown:function (){
             this.scrollDown();
+        },
+        onAccountClicked: function (e) {
+            var index = $(e.currentTarget).data('index');
+            this.choiceCard(index);
+            $('#li' + index).addClass('cus-selected').siblings().removeClass('cus-selected');
         }
     });
 

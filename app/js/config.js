@@ -7,7 +7,7 @@ require.config({
     paths:{
         'jquery':'jquery-2.2.3',
         "serializeObject": "jquery.serializeObject",
-        'storage':'../jquery-storageapi/jquery.storageapi.min',
+        'storage':'../jquery-storageapi/jquery.storageapi',
         'underscore':'underscore',
         'backbone':'backbone.min',
         "md5": "jQuery.md5",

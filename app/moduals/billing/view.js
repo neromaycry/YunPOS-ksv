@@ -15,11 +15,12 @@ define([
     '../../../../moduals/modal-quickpay/view',
     '../../../../moduals/modal-qpalipay/view',
     '../../../../moduals/modal-qpwechat/view',
+    '../../../../moduals/modal-gatherui/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -138,9 +139,9 @@ define([
             var gatherNo = data['gather_no'];//付款账号
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
-            //var gatherType = data['gather_type'];
+            var gatherKind = data['gather_kind'];
             this.card_id = data['card_id'];
-            this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId);
+            this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId,gatherKind,this.card_id);
         },
         onBillDiscount: function (data) {
             this.percentage = data['percentage'] / 100;
@@ -155,15 +156,18 @@ define([
             });
             this.renderBillInfo();
         },
+
         /**
-         * 向已付款列表中插入新的行
+         *向已付款列表中插入新的行
          * @param totalamount 总金额
          * @param gatherName 付款方式名称
          * @param receivedsum 付款金额
          * @param gatherAccount 付款账号
          * @param gatherId 付款方式Id
+         * @param gatherKind 付款方式类别
+         * @param cardId 一卡通付款卡号
          */
-        addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId) {
+        addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId,gatherKind,cardId) {
             var model = new BillModel();
             model.set({
                 fact_money:0,
@@ -171,7 +175,8 @@ define([
                 gather_name:gatherName,
                 gather_money:parseFloat(receivedsum),
                 gather_no:gatherAccount,
-                //gather_type:gatherType
+                gather_kind:gatherKind,
+                card_id:cardId
             });
             this.collection.add(model);
             var totalreceived = 0;
@@ -267,7 +272,7 @@ define([
             });
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
-                _self.payByOneCard();
+                _self.payByECard();
             });
             //清空支付方式列表
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.C, function () {
@@ -285,7 +290,7 @@ define([
          */
         confirm:function() {
             var receivedsum = $(this.input).val();
-            var unpaidamount = this.model.get('unpaiamount');
+            var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0) {
                 toastr.warning('待支付金额为零，请进行结算');
             }else if(receivedsum == '') {
@@ -298,7 +303,7 @@ define([
                 toastr.warning('找零金额超限');
             }else{
                 this.i = 0;
-                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00");
+                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
             }
             $('#input_billing').val("");
         },
@@ -314,35 +319,41 @@ define([
          * 判断删除的已支付方式里面是否含有一卡通支付。
          */
         judgeEcardExistance: function () {
-            var item = this.collection.at(this.i);
-            var gather_type = item.get('gather_type');
-            if(gather_type == '04'){
-                //当删除的那条数据里面gather_type = 04
-                var gatherid = item.get('gather_id');
-                //取出对应的ONE_CARD_KEY的值
-                var ecardcollection = storage.get(system_config.ONE_CARD_KEY,this.card_id,'detail');
-                this.tempcollection = new BillCollection();
-                for(var i in ecardcollection) {
-                    if(ecardcollection[i].gather_id == gatherid){
-                        var temp = ecardcollection[i];
-                        var gather_money = parseFloat(temp.gather_money);
-                        gather_money = gather_money + item.get('gather_money');
-                        temp['gather_money'] = gather_money
-                        this.tempcollection.push(temp);
-                    } else {
-                        this.tempcollection.push(ecardcollection[i]);
-                    }
-                }
-                storage.remove(system_config.ONE_CARD_KEY);
-                storage.set(system_config.ONE_CARD_KEY,this.card_id,'detail',this.tempcollection);
-                this.deleteItem();
+            var receivedSum = this.model.get('receivedsum');
+            if(receivedSum == 0){
+                toastr.warning('您尚未付款');
             }else{
-                this.deleteItem();
-            }
-            var isExist = this.collection.findWhere({gather_type: "04"});
-            if(isExist == undefined){
-                if(storage.isSet(system_config.ONE_CARD_KEY)){
+                var item = this.collection.at(this.i);
+                var gatherKind = item.get('gather_kind');
+                if(gatherKind == '06'){
+                    var gatherid = item.get('gather_id');
+                    var cardId = item.get('card_id');
+                    //取出对应的ONE_CARD_KEY的值
+                    var ecardcollection = storage.get(system_config.ONE_CARD_KEY,cardId,'detail');
+                    console.log(ecardcollection);
+                    this.tempcollection = new BillCollection();
+                    for(var i in ecardcollection) {
+                        if(ecardcollection[i].gather_id == gatherid){
+                            var temp = ecardcollection[i];
+                            var gather_money = parseFloat(temp.gather_money);
+                            gather_money = gather_money + item.get('gather_money');
+                            temp['gather_money'] = gather_money
+                            this.tempcollection.push(temp);
+                        } else {
+                            this.tempcollection.push(ecardcollection[i]);
+                        }
+                    }
                     storage.remove(system_config.ONE_CARD_KEY);
+                    storage.set(system_config.ONE_CARD_KEY,cardId,'detail',this.tempcollection);
+                    this.deleteItem();
+                }else{
+                    this.deleteItem();
+                }
+                var isExist = this.collection.findWhere({gather_kind: "06"});
+                if(isExist == undefined){
+                    if(storage.isSet(system_config.ONE_CARD_KEY)){
+                        storage.remove(system_config.ONE_CARD_KEY);
+                    }
                 }
             }
         },
@@ -377,9 +388,10 @@ define([
          * 整单优惠
          */
         billTotalDiscount:function (){
+            var receivedsum = this.model.get('receivedsum');
             if(this.totaldiscount != 0) {//先判断整单优惠金额
                 toastr.warning('不能重复整单优惠');
-            }else if(this.receivedsum != 0) {//判断是否已经付款
+            }else if(receivedsum != 0) {//判断是否已经付款
                 toastr.warning('您已选择支付方式，不能再进行整单优惠');
             } else {
                 var billdiscountview = new BilldiscountView();
@@ -559,6 +571,33 @@ define([
             //console.log(_self.discountcollection);
             //console.log('final');
         },
+
+        /**
+         * 一卡通支付
+         */
+        payByECard: function () {
+            var unpaidamount = this.model.get('unpaidamount');
+            var receivedSum = $(this.input).val();
+            if(unpaidamount == 0){
+                toastr.warning('待支付金额为零，请进行结算');
+            }else if(receivedSum == ''){
+                toastr.warning('支付金额不能为空');
+            }else if(receivedSum == 0){
+                toastr.warning('支付金额不能为零');
+            }else if(receivedSum > unpaidamount){
+                toastr.warning('支付金额不能大于待支付金额');
+            }else{
+                var data = {};
+                data['unpaidamount'] = unpaidamount;
+                data['receivedsum'] = receivedSum;
+                this.onecard = new OneCardView(data);
+                this.showModal(window.PAGE_ID.ONECARD_LOGIN,this.onecard);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = medium_id]').focus();
+                });
+                $('input[name = billing]').val('');
+            }
+        },
         /**
          * 帮助按钮点击事件
          */
@@ -575,7 +614,7 @@ define([
          * 删除按钮点击事件
          */
         onBillDelete: function () {
-            this.deleteItem();
+            this.judgeEcardExistance();
         },
         /**
          * 整单优惠点击事件
@@ -663,13 +702,40 @@ define([
                         }else{
                             var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
                             var gatherUI = gathermodel[0].gather_ui;
+                            var gatherName = gathermodel[0].gather_name;
                             if(gatherUI == '01'){
+                            //    var gatherUIView = new GatherUIView({
+                            //        gather_ui:gatherUI,
+                            //        pageid:window.PAGE_ID.BILLING,
+                            //        currentid:window.PAGE_ID.QUICK_PAY,
+                            //        gather_id:gatherId,
+                            //        gather_name:gatherName,
+                            //        receivedsum:unpaidamount,
+                            //        callback: function (attrs) {
+                            //            var receivedaccount = $('input[name = quickpay-account]').val();
+                            //            if(receivedaccount == '') {
+                            //                toastr.warning('您输入的支付账号为空，请重新输入');
+                            //            }else if(receivedaccount == 0){
+                            //                toastr.warning('支付账号不能为零，请重新输入');
+                            //            }else{
+                            //                var attrData = {};
+                            //                attrData['gather_id'] = attrs.gather_id;
+                            //                attrData['receivedsum'] = attrs.receivedsum;
+                            //                attrData['gather_name'] = attrs.gather_name;
+                            //                attrData['gather_no'] = receivedaccount;
+                            //                console.log(attrData);
+                            //                Backbone.trigger('onReceivedsum',attrData);
+                            //                _self.hideModal(window.PAGE_ID.BILLING);
+                            //                $('input[name = billing]').focus();
+                            //            }
+                            //        }
+                            //    });
                                 var data = {};
                                 data['unpaidamount'] = this.model.get('unpaidamount');
                                 data['gather_id'] = gatherId;
                                 data['gather_name'] = gathermodel[0].gather_name;
                                 this.quickpayview = new QuickPayView(data);
-                                this.showModal(window.PAGE_ID.QUICK_PAY,this.quickpayview);
+                                this.showModal(window.PAGE_ID.QUICK_PAY,gatherUIView);
                                 $('.modal').on('shown.bs.modal',function(e){
                                     $('input[name = quickpay-account]').focus();
                                 });
@@ -718,19 +784,11 @@ define([
             this.payment('03');
             $('button[name = pos]').blur();
         },
-
+        /**
+         * 一卡通支付按钮点击事件
+         */
         onEcardClicked: function () {
-            var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
-                toastr.warning('待支付金额为零，请进行结算');
-            }else{
-                this.onecard = new OneCardView(unpaidamount);
-                this.showModal(window.PAGE_ID.ONECARD_LOGIN,this.onecard);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = medium_id]').focus();
-                });
-                $('input[name = billing]').val('');
-            }
+           this.payByECard();
         },
 
         onThirdPayClicked: function () {

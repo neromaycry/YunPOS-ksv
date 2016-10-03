@@ -1,10 +1,31 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
 <div class="panel panel-primary" style="border: none;margin: 0;">
-    <div class="panel-heading">支付账号</div>
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-6"><%= gather_name %></div>
+            <div class="col-md-6">支付金额：<%= toDecimal2(unpaidamount) %></div>
+        </div>
+    </div>
     <div class="panel-body">
-        <form>
-            <input type="text" id="receive_account" name="receive_account" class="form-control" placeholder="请输入付款账号" onkeypress="return myNumberic(event)"/>
-            <input type="text" style="display: none">
-        </form>
+        <div class="form-group">
+            <input type="text" class="form-control" id="quickpay-account" name="quickpay-account" onkeypress="return myNumberic(event)" placeholder="请输入付款账号">
+        </div>
     </div>
 </div>
 <div class="panel panel-primary left-margin" style="margin-right: 15px">
@@ -58,7 +79,7 @@
             <div class="cbtn btn-num panel-group border-right" data-num=".">.</div>
         </div>
         <div class="col-md-3 no-padding">
-            <div class="cbtn numpad-ok ok bg-red">确定</div>
+            <div class="cbtn numpad-ok bg-red ok">确定</div>
         </div>
     </div>
 </div>

@@ -1,1 +1,43 @@
-<div>支付宝</div>
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+
+<div class="panel panel-primary" style="border: none;margin: 0;">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-6">支付宝</div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="alipay-account" name="alipay-account" placeholder="请输入支付宝账号" onkeypress="return myNumberic(event)"/>
+                </div>
+            </div>
+        </div>
+        <div class="row no-margining">
+            <div class="col-md-12 button-group">
+                <div class="row ">
+                    <button type="button" class="col-md-6 button button-block button-highlight button-rounded button-border no-padding alipay-cancel">取消</button>
+                    <button type="button" class="col-md-6 button button-block button-caution  button-rounded button-border no-padding alipay-ok">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

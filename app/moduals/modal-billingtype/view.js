@@ -6,11 +6,10 @@ define([
     '../../moduals/modal-billingtype/model',
     '../../moduals/modal-billingtype/collection',
     '../../moduals/modal-billingaccount/view',
-    '../../moduals/modal-alipay/view',
     '../../moduals/modal-gatherui/view',
     'text!../../moduals/modal-billingtype/billingtypetpl.html',
     'text!../../moduals/modal-billingtype/tpl.html',
-], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView,AliPayView, GatherUIView, billingtypetpl, tpl) {
+], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView, GatherUIView, billingtypetpl, tpl) {
 
     var billtypeView = BaseModalView.extend({
 
@@ -25,13 +24,9 @@ define([
         //input: 'input[name = gather-no]',
 
         events:{
-            //'click .cancel':'onCancelClicked',
-            //'click .ok':'onOkClicked',
-            //'click .btn-num':'onNumClicked',
-            //'click .btn-backspace':'onBackspaceClicked',
-            //'click .btn-clear':'onClearClicked',
-            'click .keyup':'onKeyUp',
-            'click .keydown':'onKeyDown'
+            'click .cancel':'onCancelClicked',
+            'click .ok':'onOkClicked',
+            'click [data-index]':'onBillTypeClicked'
         },
 
         modalInitPage: function () {
@@ -79,18 +74,19 @@ define([
             });
 
             this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Enter, function() {
-                _self.onReceived();
+                _self.onReceived(_self.i);
             });
         },
 
         /**
          * Enter和确定
          */
-        onReceived:function() {
+        onReceived:function(index) {
             var _self = this;
-            var gatherId = this.collection.at(this.i).get('gather_id');
-            var gatherName = this.collection.at(this.i).get('gather_name');
-            var receivedSum = this.attrs['receivedsum'];
+            var gatherId = this.collection.at(index).get('gather_id');
+            var gatherName = this.collection.at(index).get('gather_name');
+            var receivedSum = this.attrs.receivedsum;
+            var gatherKind = this.attrs.gather_kind;
             var gathermodel = _.where(this.visibleTypes,{gather_id:gatherId});
             var gatherUI = gathermodel[0].gather_ui;
             $('.modal-backdrop').remove();
@@ -103,7 +99,9 @@ define([
                     gather_id:gatherId,
                     gather_name:gatherName,
                     receivedsum:receivedSum,
+                    gatherKind:gatherKind,
                     callback: function (attrs) {
+                        console.log(attrs);
                         var receivedaccount = $('#receive_account').val();
                         if(receivedaccount == '') {
                             toastr.warning('您输入的支付账号为空，请重新输入');
@@ -115,7 +113,7 @@ define([
                             attrData['receivedsum'] = attrs.receivedsum;
                             attrData['gather_name'] = attrs.gather_name;
                             attrData['gather_no'] = receivedaccount;
-                            console.log(attrData);
+                            attrData['gather_kind'] = attrs.gatherKind;
                             Backbone.trigger('onReceivedsum',attrData);
                             _self.hideModal(window.PAGE_ID.BILLING);
                             $('input[name = billing]').focus();
@@ -129,13 +127,69 @@ define([
                     $('input[name = receive_account]').focus();
                 });
             }else if(gatherUI == '04'){
-                this.alipayview = new AliPayView(attrData);
-                this.showModal(window.PAGE_ID.ALIPAY,this.alipayview);
+                var gaterUIView = new GatherUIView({
+                    gather_ui:gatherUI,
+                    pageid:window.PAGE_ID.BILLING,
+                    currentid:window.PAGE_ID.ALIPAY,
+                    gather_id:gatherId,
+                    gather_name:gatherName,
+                    receivedsum:receivedSum,
+                    callback:function (attrs) {
+                        var receivedaccount = $('input[name = alipay-account]').val();
+                        if(receivedaccount == '') {
+                            toastr.warning('您输入的支付账号为空，请重新输入');
+                        } else if(receivedaccount == 0) {
+                            toastr.warning('支付账号不能为零，请重新输入');
+                        }else{
+                            var attrData = {};
+                            attrData['gather_id'] = attrs.gather_id;
+                            attrData['receivedsum'] = attrs.receivedsum;
+                            attrData['gather_name'] = attrs.gather_name;
+                            attrData['gather_no'] = receivedaccount;
+                            attrData['gather_kind'] = attrs.gatherKind;
+                            console.log(attrData);
+                            Backbone.trigger('onReceivedsum',attrData);
+                            _self.hideModal(window.PAGE_ID.BILLING);
+                            $('input[name = billing]').focus();
+                        }
+                    }
+                });
+                this.showModal(window.PAGE_ID.ALIPAY,gaterUIView);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = alipay-account]').focus();
                 });
             }else if(gatherUI == '05'){
-                alert('微信');
+                var gaterUIView = new GatherUIView({
+                    gather_ui:gatherUI,
+                    pageid:window.PAGE_ID.BILLING,
+                    currentid:window.PAGE_ID.WECHAT,
+                    gather_id:gatherId,
+                    gather_name:gatherName,
+                    receivedsum:receivedSum,
+                    callback:function (attrs) {
+                        var receivedaccount = $('input[name = wechat-account]').val();
+                        if(receivedaccount == '') {
+                            toastr.warning('您输入的支付账号为空，请重新输入');
+                        } else if(receivedaccount == 0) {
+                            toastr.warning('支付账号不能为零，请重新输入');
+                        }else{
+                            var attrData = {};
+                            attrData['gather_id'] = attrs.gather_id;
+                            attrData['receivedsum'] = attrs.receivedsum;
+                            attrData['gather_name'] = attrs.gather_name;
+                            attrData['gather_no'] = receivedaccount;
+                            attrData['gather_kind'] = attrs.gatherKind;
+                            console.log(attrData);
+                            Backbone.trigger('onReceivedsum',attrData);
+                            _self.hideModal(window.PAGE_ID.BILLING);
+                            $('input[name = billing]').focus();
+                        }
+                    }
+                });
+                this.showModal(window.PAGE_ID.WECHAT,gaterUIView);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = wechat-account]').focus();
+                });
             }
         },
 
@@ -168,34 +222,19 @@ define([
             return this;
         },
 
-        //onCancelClicked: function () {
-        //    this.hideModal(window.PAGE_ID.BILLING);
-        //},
-        //
-        //onNumClicked: function (e) {
-        //    var value = $(e.currentTarget).data('num');
-        //    var str = $(this.input).val();
-        //    str += value;
-        //    $(this.input).val(str);
-        //},
+        onCancelClicked: function () {
+            this.hideModal(window.PAGE_ID.BILLING);
+            $('input[name = billing]').focus();
+        },
 
-        //onBackspaceClicked: function (e) {
-        //    var str = $(this.input).val();
-        //    str = str.substring(0, str.length-1);
-        //    $(this.input).val(str);
-        //},
+        onOkClicked: function () {
+            var index = $('.cus-selected').data('index');
+            this.onReceived(index);
+        },
 
-        //onClearClicked: function () {
-        //    $(this.input).val('');
-        //},
-
-        //onKeyUp: function () {
-        //    this.scrollUp();
-        //},
-        //
-        //onKeyDown: function () {
-        //    this.scrollDown();
-        //}
+        onBillTypeClicked: function (e) {
+            $(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
+        }
 
     });
 

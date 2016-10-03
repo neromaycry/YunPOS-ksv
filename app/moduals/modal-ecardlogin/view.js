@@ -141,7 +141,8 @@ define([
                     _self.request.vipinfo(data,function(resp) {
                         if(resp.status == '00'){
                             var dataAccount = {};
-                            dataAccount['unpaidamount'] = _self.attrs;
+                            dataAccount['unpaidamount'] = _self.attrs.unpaidamount;
+                            dataAccount['receivedsum'] = _self.attrs.receivedsum;
                             dataAccount['card_id'] = cardid;
                             dataAccount['cust_id'] = resp.cust_id;
                             dataAccount['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
