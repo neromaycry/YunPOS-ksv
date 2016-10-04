@@ -57,6 +57,7 @@ define([
                 data['receivedsum'] = _self.attrs['receivedsum'];
                 Backbone.trigger('onReceivedsum',data);
                 _self.hideModal(window.PAGE_ID.BILLING);
+                $('input[name = billing]').focus();
             }
         },
         onCancelClicked: function () {
