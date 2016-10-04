@@ -292,15 +292,15 @@ define([
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0) {
-                toastr.warning('待支付金额为零，请进行结算');
+                toastr.info('待支付金额为零，请进行结算');
             }else if(receivedsum == '') {
-                toastr.warning('支付金额不能为空，请重新输入');
+                toastr.info('支付金额不能为空，请重新输入');
             }else if(receivedsum == '.'){
-                toastr.warning('请输入有效金额');
+                toastr.info('请输入有效金额');
             } else if(receivedsum == 0){
-                toastr.warning('支付金额不能为零，请重新输入');
+                toastr.info('支付金额不能为零，请重新输入');
             }else if(receivedsum > (unpaidamount + 100)){
-                toastr.warning('找零金额超限');
+                toastr.info('找零金额超限');
             }else{
                 this.i = 0;
                 this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
@@ -321,7 +321,7 @@ define([
         judgeEcardExistance: function () {
             var receivedSum = this.model.get('receivedsum');
             if(receivedSum == 0){
-                toastr.warning('您尚未付款');
+                toastr.info('您尚未付款');
             }else{
                 var item = this.collection.at(this.i);
                 var gatherKind = item.get('gather_kind');
@@ -390,9 +390,9 @@ define([
         billTotalDiscount:function (){
             var receivedsum = this.model.get('receivedsum');
             if(this.totaldiscount != 0) {//先判断整单优惠金额
-                toastr.warning('不能重复整单优惠');
+                toastr.info('不能重复整单优惠');
             }else if(receivedsum != 0) {//判断是否已经付款
-                toastr.warning('您已选择支付方式，不能再进行整单优惠');
+                toastr.info('您已选择支付方式，不能再进行整单优惠');
             } else {
                 var billdiscountview = new BilldiscountView();
                 this.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
@@ -408,7 +408,7 @@ define([
             if(this.totaldiscount == 0){
                 toastr.info('您未进行任何优惠');
             }else if(this.receivedsum != 0){
-                toastr.warning('您已选择支付方式，不能取消整单优惠');
+                toastr.info('您已选择支付方式，不能取消整单优惠');
             }else{
                 this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
                 this.unpaidamount = this.totalamount;
@@ -458,7 +458,7 @@ define([
             var _self = this;
             var confirmBill = new BillModel();
             if(_self.unpaidamount != 0){
-                toastr.warning('还有未支付的金额，请支付完成后再进行结算');
+                toastr.info('还有未支付的金额，请支付完成后再进行结算');
             } else {
                 var changingView = new ChangingView({
                     pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
@@ -579,15 +579,15 @@ define([
             var unpaidamount = this.model.get('unpaidamount');
             var receivedSum = $(this.input).val();
             if(unpaidamount == 0){
-                toastr.warning('待支付金额为零，请进行结算');
+                toastr.info('待支付金额为零，请进行结算');
             }else if(receivedSum == ''){
-                toastr.warning('支付金额不能为空');
+                toastr.info('支付金额不能为空');
             }else if(receivedSum == 0){
-                toastr.warning('支付金额不能为零');
+                toastr.info('支付金额不能为零');
             }else if(receivedSum == '.'){
-                toastr.warning('无效的支付金额');
+                toastr.info('无效的支付金额');
             }else if(receivedSum > unpaidamount){
-                toastr.warning('支付金额不能大于待支付金额');
+                toastr.info('支付金额不能大于待支付金额');
             }else{
                 var data = {};
                 data['unpaidamount'] = unpaidamount;
@@ -688,10 +688,10 @@ define([
             var gatherId = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
-                toastr.warning('待支付金额为零,请进行结算');
+                toastr.info('待支付金额为零,请进行结算');
             }else{
                 if(gatherId == ''){
-                    toastr.warning('付款方式编码不能为空');
+                    toastr.info('付款方式编码不能为空');
                 }else{
                     if(storage.isSet(system_config.GATHER_KEY)){
                         //从gather_key里面把visible_flag = ‘0’ 的付款方式的id都取出来
@@ -700,7 +700,7 @@ define([
                         var gatheridlist = _.pluck(visibleTypes, 'gather_id');
                         var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
                         if(result == - 1){
-                            toastr.warning('付款方式编码无效');
+                            toastr.info('付款方式编码无效');
                         }else{
                             var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
                             var gatherUI = gathermodel[0].gather_ui;
@@ -716,9 +716,9 @@ define([
                             //        callback: function (attrs) {
                             //            var receivedaccount = $('input[name = quickpay-account]').val();
                             //            if(receivedaccount == '') {
-                            //                toastr.warning('您输入的支付账号为空，请重新输入');
+                            //                toastr.info('您输入的支付账号为空，请重新输入');
                             //            }else if(receivedaccount == 0){
-                            //                toastr.warning('支付账号不能为零，请重新输入');
+                            //                toastr.info('支付账号不能为零，请重新输入');
                             //            }else{
                             //                var attrData = {};
                             //                attrData['gather_id'] = attrs.gather_id;
@@ -804,16 +804,16 @@ define([
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
-                toastr.warning('待支付金额为零，请进行结算');
+                toastr.info('待支付金额为零，请进行结算');
             }else{
                 if(receivedsum == ''){
-                    toastr.warning('支付金额不能为空');
+                    toastr.info('支付金额不能为空');
                 }else if(receivedsum == 0){
-                    toastr.warning('支付金额不能为零');
+                    toastr.info('支付金额不能为零');
                 }else if(receivedsum == '.'){
-                    toastr.warning('无效的支付金额');
+                    toastr.info('无效的支付金额');
                 }else if(receivedsum > (unpaidamount + 100)){
-                    toastr.warning('不设找零');
+                    toastr.info('不设找零');
                 }else{
                     var data = {};
                     data['gather_kind'] = gatherkind;
