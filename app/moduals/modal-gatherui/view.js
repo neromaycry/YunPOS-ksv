@@ -24,8 +24,8 @@ define([
             'click .ok':'onOKClicked',
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
-            'click .alipay-cancel':'onAliCancelClicked',
-            'click .alipay-ok':'onAliOkClicked'
+            //'click .alipay-cancel':'onAliCancelClicked',
+            //'click .alipay-ok':'onAliOkClicked'
         },
 
         modalInitPage: function () {
@@ -33,6 +33,10 @@ define([
             this.switchTemplate(gatherUI);
             this.template_content = _.template(this.template_content);
             this.model = new GatherUIModel();
+            this.model.set({
+                gather_name:this.attrs.gather_name
+            });
+            this.render();
             this.renderContent();
         },
 
@@ -62,6 +66,7 @@ define([
             var _self = this;
             this.bindModalKeyEvents(this.attrs.currentid, window.KEYS.Esc , function () {
                _self.confirmHideModal(_self.attrs.pageid);
+                $('input[name = billing]').focus();
             });
             this.bindModalKeyEvents(this.attrs.currentid, window.KEYS.Enter, function () {
                 _self.attrs.callback(_self.attrs);

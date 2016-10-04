@@ -128,6 +128,8 @@ define([
                     toastr.warning('输入金额不能大于待退货金额');
                 }else if(receivedsum > gather_money){
                     toastr.warning('输入金额不能大于卡内余额');
+                }else if(receivedsum != _self.model.get('receivedsum')){
+                    toastr.warning('请重新选择支付方式');
                 }else {
                     item.set({
                         gather_money:_self.model.get('gather_money')

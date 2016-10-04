@@ -157,14 +157,14 @@ define([
 
         setBillingKeys: function () {
             var effects = ['返回', '确定', '删除已支付的方式','结算', '向上选择', '向下选择',
-                '支票/汇票支付', '礼券类支付', '银行POS支付', '第三方支付', '整单优惠',
-                '取消整单优惠', '一卡通支付'];
+                '支票类支付', '礼券类支付', '银行POS支付', '第三方支付', '整单优惠',
+                '取消整单优惠', '一卡通支付','清空支付方式列表','快捷支付'];
             var keys = ['ESC','ENTER','D','B','↑','↓',
                 'S','A','P','Q','Y',
-                'C','O'];
+                'E','O','C','F'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.D,window.KEYS.B, window.KEYS.Up, window.KEYS.Down,
                 window.KEYS.S, window.KEYS.A, window.KEYS.P, window.KEYS.Q, window.KEYS.Y,
-                window.KEYS.C, window.KEYS.O];
+                window.KEYS.E, window.KEYS.O, window.KEYS.C,window.KEYS.F];
             var billingKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];

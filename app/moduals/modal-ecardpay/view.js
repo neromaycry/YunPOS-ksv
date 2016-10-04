@@ -26,7 +26,12 @@ define([
         events:{
             'click .cancel':'onCancelClicked',
             'click .ok':'onOkClicked',
-            'click [data-index]':'onAccountClicked'
+            'click .btn-num':'onNumClicked',
+            'click .btn-clear':'onClearClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click [data-index]':'onAccountClicked',
+            'click .keydown':'onKeyDownClicked',
+            'click .keyup':'onKeyUpClicked'
         },
 
         modalInitPage: function () {
@@ -111,23 +116,28 @@ define([
          */
         doPay:function (index){
             var _self = this;
-            //var receivedsum = $('#ecard_receivedsum').val();
+            var receivedsum = $('#ecard_receivedsum').val();
             var card_id = _self.attrs['card_id'];
             if(index == -1){
                 //初始时设置i=-1,如果i=-1则为选中任何支付方式
                 toastr.warning('请选择支付方式');
-            }else {
+            }else if(index == undefined){
+                toastr.warning('请选择支付方式');
+            }else{
                 var item = _self.collection.at(index);
+                console.log(item);
                 var gather_money = parseFloat(item.get('gather_money'));
-                //if(receivedsum == ''){
-                //    toastr.warning('输入金额不能为空');
-                //}else if(receivedsum == 0){
-                //    toastr.warning('输入金额不能为零');
-                //}else if(receivedsum > _self.unpaidamount){
-                //    toastr.warning('输入金额不能大于待支付金额');
-                //}else if(receivedsum > gather_money){
-                //    toastr.warning('输入金额不能大于卡内余额');
-                //}else {
+                if(receivedsum == ''){
+                    toastr.warning('输入金额不能为空');
+                }else if(receivedsum == 0){
+                    toastr.warning('输入金额不能为零');
+                }else if(receivedsum > _self.unpaidamount){
+                    toastr.warning('输入金额不能大于待支付金额');
+                }else if(receivedsum > gather_money){
+                    toastr.warning('输入金额不能大于卡内余额');
+                }else if(_self.model.get('receivedsum') != receivedsum){
+                    toastr.warning('请重新选择支付方式');
+                }else{
                     item.set({
                         gather_money:_self.model.get('gather_money')
                     });
@@ -143,7 +153,7 @@ define([
                     storage.set(system_config.ONE_CARD_KEY,card_id,'detail',_self.collection);
                     _self.hideModal(window.PAGE_ID.BILLING);
                     $('input[name = billing]').focus();
-                //}
+                }
             }
         },
 
@@ -166,21 +176,20 @@ define([
          * 方向下
          */
         scrollDown:function(){
-            //var receivedsum = $('#ecard_receivedsum').val();
-            //if(receivedsum == ''){
-            //    toastr.warning('请先输入支付金额');
-            //}else if(this.i < this.collection.length - 1){
+            var receivedsum = $('#ecard_receivedsum').val();
+            if(receivedsum == ''){
+                toastr.warning('请先输入支付金额');
+            }else if(this.i < this.collection.length - 1){
                 this.i++;
                 this.choiceCard(this.i);
                 $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                //}
+                }
             },
         /**
          * 选择支付的方式
          */
         choiceCard:function(index){
-            //var receivedsum = $('#ecard_receivedsum').val();
-            var receivedsum = this.attrs.receivedsum;
+            var receivedsum = $('#ecard_receivedsum').val();
             var card_id = this.attrs['card_id'];
             this.collection.set(storage.get(system_config.ONE_CARD_KEY,card_id,'detail'));
             var item = this.collection.at(index);
@@ -226,10 +235,11 @@ define([
             $(this.input).val('');
         },
 
-        onKeyUp:function (){
+        onKeyUpClicked:function (){
             this.scrollUp();
         },
-        onKeyDown:function (){
+
+        onKeyDownClicked:function (){
             this.scrollDown();
         },
         onAccountClicked: function (e) {

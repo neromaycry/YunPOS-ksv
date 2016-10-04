@@ -584,6 +584,8 @@ define([
                 toastr.warning('支付金额不能为空');
             }else if(receivedSum == 0){
                 toastr.warning('支付金额不能为零');
+            }else if(receivedSum == '.'){
+                toastr.warning('无效的支付金额');
             }else if(receivedSum > unpaidamount){
                 toastr.warning('支付金额不能大于待支付金额');
             }else{
@@ -595,8 +597,8 @@ define([
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = medium_id]').focus();
                 });
-                $('input[name = billing]').val('');
             }
+            $('input[name = billing]').val('');
         },
         /**
          * 帮助按钮点击事件
