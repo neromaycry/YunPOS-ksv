@@ -73,9 +73,11 @@ define([
                 this.RtcartCollection.set(storage.get(system_config.RETURN_KEY,'cartlist'));
                 this.model.set(storage.get(system_config.RETURN_KEY,'panel'));
             }
+            $('.rtcart-content').perfectScrollbar();
             this.renderRtInfo();
             this.renderRtcart();
             this.$el.find('.for-numpad').html(this.template_numpad);
+            $('#li' + this.i).addClass('cus-selected');
             //this.renderRtPayedlist();
         },
 
@@ -95,12 +97,10 @@ define([
             var leftWidth = $('.main-left').width();
             var cartWidth = dw - leftWidth - 45;
             $('.cart-panel').width(cartWidth);
-            console.log('payedlist:' + payedlist);
-            console.log('dh' + dh);
-            console.log('panelheading' + panelheading);
-            console.log('panelfooter' + panelfooter);
             $('.rtcart-content').height(payedlist);
-            //$('.payedlist-content').height(payedlist);
+            this.listheight = $('.rtcart-content').height();//购物车列表的高度
+            this.listnum = 10;//设置商品列表中的条目数
+            $('.li-cartlist').height(this.listheight / this.listnum - 21);
         },
 
         renderRtInfo: function () {
@@ -110,6 +110,8 @@ define([
 
         renderRtcart: function () {
             this.$el.find('.rtcart-content').html(this.template_rtcart(this.RtcartCollection.toJSON()));
+            $('.rtcart-content').height(this.listheight / this.listnum - 21);
+            $('#li' + this.i).addClass('cus-selected');
             return this;
         },
 
@@ -203,12 +205,13 @@ define([
                 //    $('input[name = whole_return_order]').val("");
                 //}
             });
-            //this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Down, function () {
-            //    $('input[name = whole_return_order]').focus();
-            //});
-            //this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Up, function () {
-            //    $('input[name = return_order_date]').focus();
-            //})
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Down, function () {
+                _self.scrollDown();
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Up, function () {
+                _self.scrollUp();
+            });
         },
 
         /**
@@ -219,7 +222,6 @@ define([
             var confirmView = new ConfirmView({
                 pageid:window.PAGE_ID.RETURN_WHOLE, //当前打开confirm模态框的页面id
                 callback: function () { //
-                    console.log('************');
                     //_self.showModal(window.PAGE_ID.CONFIRM, confirmView);
                     _self.RtcartCollection.reset();
                     _self.RtPayedlistCollection.reset();
@@ -237,6 +239,34 @@ define([
                 content:'确定取消整单退货？'
             });
             _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+        },
+
+        scrollDown: function () {
+            console.log(this.i);
+            if (this.i < this.RtcartCollection.length - 1) {
+                this.i++;
+            }
+            if (this.i % this.listnum == 0 && this.n < parseInt(this.RtcartCollection.length / this.listnum)) {
+                this.n++;
+                //alert(_self.n);
+                $('.rtcart-content').scrollTop(this.listheight * this.n);
+            }
+            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+
+        /**
+         * 购物车光标向上
+         */
+        scrollUp: function () {
+            if (this.i > 0) {
+                this.i--;
+            }
+            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
+                this.n--;
+                //alert(_self.n);
+                $('.rtcart-content').scrollTop(this.listheight * this.n );
+            }
+            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
         onBackClicked: function () {
