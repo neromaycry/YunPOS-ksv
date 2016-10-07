@@ -168,6 +168,8 @@ define([
          * @param cardId 一卡通付款卡号
          */
         addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId,gatherKind,cardId) {
+            console.log(this.collection);
+            console.log('**************');
             var model = new BillModel();
             model.set({
                 fact_money:0,

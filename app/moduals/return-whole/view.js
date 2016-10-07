@@ -86,7 +86,7 @@ define([
         },
 
         initLayoutHeight: function () {
-            var dh = $(document).height();
+            var dh = $(window).height();
             var dw = $(window).width();
             var navbar =$('.navbar').height();
             var panelheading = $('.panel-heading').height();
@@ -95,7 +95,10 @@ define([
             var leftWidth = $('.main-left').width();
             var cartWidth = dw - leftWidth - 45;
             $('.cart-panel').width(cartWidth);
-            //console.log('payedlist:' + payedlist);
+            console.log('payedlist:' + payedlist);
+            console.log('dh' + dh);
+            console.log('panelheading' + panelheading);
+            console.log('panelfooter' + panelfooter);
             $('.rtcart-content').height(payedlist);
             //$('.payedlist-content').height(payedlist);
         },

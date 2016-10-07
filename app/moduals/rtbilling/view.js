@@ -608,6 +608,7 @@ define([
                 var data = {};
                 data['unpaidamount'] = unpaidamount;
                 data['receivedsum'] = receivedSum;
+                data['isfromForce'] = isfromForce;
                 this.onecard = new OneCardView(data);
                 this.showModal(window.PAGE_ID.RT_ONECARD_LOGIN,this.onecard);
                 $('.modal').on('shown.bs.modal',function(e) {

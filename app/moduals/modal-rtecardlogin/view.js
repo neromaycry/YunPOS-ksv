@@ -145,7 +145,11 @@ define([
                             dataAccount['receivedsum'] = _self.attrs.receivedsum;
                             dataAccount['card_id'] = cardid;
                             dataAccount['cust_id'] = resp.cust_id;
-                            dataAccount['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
+                            if(_self.attrs.isfromForce){
+                                dataAccount['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY,'cartlist');
+                            }else{
+                                dataAccount['goods_detail'] = storage.get(system_config.RETURN_KEY,'cartlist');
+                            }
                             dataAccount['gather_detail'] = storage.get(system_config.GATHER_KEY);
                             $('.modal-backdrop').remove();
                             _self.hideModal(window.PAGE_ID.BILLING_RETURN);
