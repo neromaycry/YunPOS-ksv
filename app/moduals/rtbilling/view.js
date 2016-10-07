@@ -49,7 +49,23 @@ define([
         input:'input[name = billingrt]',
 
         events: {
-
+            'click .numpad-ok':'onOKClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
+            'click .rtbilling-help':'onHelpClicked',
+            'click .rtbilling-return':'onReturnClicked',
+            'click .billing-delete':'onDeleteClicked',
+            'click .rtbilling-keyup':'onKeyUpClicked',
+            'click .rtbilling-keydown':'onKeyDownClicked',
+            'click .billing-clean':'onBillCleanClicked',
+            'click .billing':'onBillingClicked',
+            'click .quick-pay':'onQuickPayClicked',//快捷支付
+            'click .check':'onCheckClicked',//支票类付款
+            'click .gift-certificate':'onGiftClicked',//礼券类
+            'click .pos':'onPosClicked',//银行pos
+            'click .ecard':'onEcardClicked',
+            'click .third-pay':'onThirdPayClicked'
         },
 
         pageInit: function () {
@@ -559,7 +575,7 @@ define([
                     toastr.info('退款金额不能为零');
                 }else if(receivedsum == '.'){
                     toastr.info('无效的退款金额');
-                }else if(receivedsum > (unpaidamount + 100)){
+                }else if(receivedsum > unpaidamount){
                     toastr.info('不设找零');
                 }else{
                     var data = {};
@@ -599,6 +615,114 @@ define([
                 });
             }
             $(this.input).val('');
+        },
+
+        /**
+         * 帮助按钮点击事件
+         */
+        onHelpClicked: function () {
+            this.openHelp();
+        },
+
+        onReturnClicked: function () {
+            if (isfromForce) {
+                router.navigate('returnforce',{trigger:true});
+            } else {
+                router.navigate('returnwhole',{trigger:true});
+            }
+        },
+
+        onOKClicked: function () {
+            this.confirm();
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function () {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
+
+        /**
+         * 删除按钮点击事件
+         */
+        onDeleteClicked: function () {
+            this.judgeEcardExistance();
+        },
+
+        /**
+         * 向上按钮点击事件
+         */
+        onKeyUpClicked: function () {
+            this.scrollUp();
+        },
+        /**
+         * 向下按钮点击事件
+         */
+        onKeyDownClicked: function () {
+            this.scrollDown();
+        },
+
+        /**
+         * 清空支付方式列表
+         */
+        onBillCleanClicked: function () {
+            this.cleanPaylist();
+        },
+
+
+        /**
+         * 结算按钮点击事件
+         */
+        onBillingClicked: function () {
+            this.doBilling();
+        },
+
+        /**
+         * 快捷支付按钮的点击事件
+         */
+        onQuickPayClicked: function () {
+            this.QuickPay();
+        },
+
+        /**
+         *支票类付款
+         */
+        onCheckClicked:function () {
+            this.payment('01');
+            $('button[name = check]').blur();
+        },
+        /**
+         * 礼券
+         */
+        onGiftClicked: function () {
+            this.payment('02');
+            $('button[name = gift-certificate]').blur();
+        },
+        onPosClicked:function () {
+            this.payment('03');
+            $('button[name = pos]').blur();
+        },
+        /**
+         * 一卡通支付按钮点击事件
+         */
+        onEcardClicked: function () {
+            this.payByECard();
+        },
+
+        onThirdPayClicked: function () {
+            this.payment('05');
+            $('button[name = third-pay]').blur();
         },
 
 
