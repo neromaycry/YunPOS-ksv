@@ -3,13 +3,12 @@
  */
 define([
     '../../js/common/BaseModalView',
-    '../../moduals/modal-billtype/model',
-    '../../moduals/modal-billtype/collection',
-    '../../moduals/modal-billingaccount/view',
-    '../../moduals/modal-gatherui/view',
-    'text!../../moduals/modal-billtype/billingtypetpl.html',
-    'text!../../moduals/modal-billtype/tpl.html',
-], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView, GatherUIView, billingtypetpl, tpl) {
+    '../../moduals/modal-rtbilltype/model',
+    '../../moduals/modal-rtbilltype/collection',
+    '../../moduals/modal-rtgatherui/view',
+    'text!../../moduals/modal-rtbilltype/billingtypetpl.html',
+    'text!../../moduals/modal-rtbilltype/tpl.html',
+], function (BaseModalView,BilltypeModel,BilltypeCollection, GatherUIView, billingtypetpl, tpl) {
 
     var billtypeView = BaseModalView.extend({
 
@@ -62,18 +61,18 @@ define([
 
         bindModalKeys: function () {
             var _self = this;
-            this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Esc , function () {
-                _self.hideModal(window.PAGE_ID.BILLING);
-                $('input[name = billing]').focus();
+            this.bindModalKeyEvents(window.PAGE_ID.RT_BILLING_TYPE, window.KEYS.Esc , function () {
+                _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                $('input[name = billingrt]').focus();
             });
-            this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Down, function() {
+            this.bindModalKeyEvents(window.PAGE_ID.RT_BILLING_TYPE, window.KEYS.Down, function() {
                _self.scrollDown();
             });
-            this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Up, function() {
+            this.bindModalKeyEvents(window.PAGE_ID.RT_BILLING_TYPE, window.KEYS.Up, function() {
                _self.scrollUp();
             });
 
-            this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Enter, function() {
+            this.bindModalKeyEvents(window.PAGE_ID.RT_BILLING_TYPE, window.KEYS.Enter, function() {
                 _self.onReceived(_self.i);
             });
         },
@@ -90,18 +89,17 @@ define([
             var gathermodel = _.where(this.visibleTypes,{gather_id:gatherId});
             var gatherUI = gathermodel[0].gather_ui;
             $('.modal-backdrop').remove();
-            this.hideModal(window.PAGE_ID.BILLING);
+            this.hideModal(window.PAGE_ID.BILLING_RETURN);
             if(gatherUI == '01'){
                 var gaterUIView = new GatherUIView({
                     gather_ui:gatherUI,
-                    pageid:window.PAGE_ID.BILLING,
-                    currentid:window.PAGE_ID.BILLING_ACCOUNT,
+                    pageid:window.PAGE_ID.BILLING_RETURN,
+                    currentid:window.PAGE_ID.RT_BILLING_ACCOUNT,
                     gather_id:gatherId,
                     gather_name:gatherName,
                     receivedsum:receivedSum,
                     gatherKind:gatherKind,
                     callback: function (attrs) {
-                        console.log(attrs);
                         var receivedaccount = $('#receive_account').val();
                         if(receivedaccount == '') {
                             toastr.warning('您输入的支付账号为空，请重新输入');
@@ -115,22 +113,20 @@ define([
                             attrData['gather_no'] = receivedaccount;
                             attrData['gather_kind'] = attrs.gatherKind;
                             Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING);
-                            $('input[name = billing]').focus();
+                            _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                            $('input[name = billingrt]').focus();
                         }
                     }
                 });
-                this.showModal(window.PAGE_ID.BILLING_ACCOUNT, gaterUIView);
-                //this.billaccountview = new BillaccountView(attrData);
-                //this.showModal(window.PAGE_ID.BILLING_ACCOUNT, this.billaccountview);
+                this.showModal(window.PAGE_ID.RT_BILLING_ACCOUNT, gaterUIView);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = receive_account]').focus();
                 });
             }else if(gatherUI == '04'){
                 var gaterUIView = new GatherUIView({
                     gather_ui:gatherUI,
-                    pageid:window.PAGE_ID.BILLING,
-                    currentid:window.PAGE_ID.ALIPAY,
+                    pageid:window.PAGE_ID.BILLING_RETURN,
+                    currentid:window.PAGE_ID.RT_ALIPAY,
                     gather_id:gatherId,
                     gather_name:gatherName,
                     receivedsum:receivedSum,
@@ -149,20 +145,20 @@ define([
                             attrData['gather_kind'] = attrs.gatherKind;
                             console.log(attrData);
                             Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING);
-                            $('input[name = billing]').focus();
+                            _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                            $('input[name = billingrt]').focus();
                         }
                     }
                 });
-                this.showModal(window.PAGE_ID.ALIPAY,gaterUIView);
+                this.showModal(window.PAGE_ID.RT_ALIPAY,gaterUIView);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = alipay-account]').focus();
                 });
             }else if(gatherUI == '05'){
                 var gaterUIView = new GatherUIView({
                     gather_ui:gatherUI,
-                    pageid:window.PAGE_ID.BILLING,
-                    currentid:window.PAGE_ID.WECHAT,
+                    pageid:window.PAGE_ID.BILLING_RETURN,
+                    currentid:window.PAGE_ID.RT_WECHAT,
                     gather_id:gatherId,
                     gather_name:gatherName,
                     receivedsum:receivedSum,
@@ -181,21 +177,18 @@ define([
                             attrData['gather_kind'] = attrs.gatherKind;
                             console.log(attrData);
                             Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING);
-                            $('input[name = billing]').focus();
+                            _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                            $('input[name = billingrt]').focus();
                         }
                     }
                 });
-                this.showModal(window.PAGE_ID.WECHAT,gaterUIView);
+                this.showModal(window.PAGE_ID.RT_WECHAT,gaterUIView);
                 $('.modal').on('shown.bs.modal',function(e) {
                     $('input[name = wechat-account]').focus();
                 });
             }
         },
 
-        //onOkClicked:function(){
-        //  this.onReceived();
-        //},
         /**
          * 方向下
          */

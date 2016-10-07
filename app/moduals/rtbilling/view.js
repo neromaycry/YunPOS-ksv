@@ -10,11 +10,14 @@ define([
     '../../../../moduals/modal-rtquickpay/view',
     '../../../../moduals/modal-rtqpalipay/view',
     '../../../../moduals/modal-rtqpwechat/view',
+    '../../../../moduals/modal-rtgatherui/view',
+    '../../../../moduals/modal-rtbilltype/view',
+    '../../../../moduals/modal-rtecardlogin/view',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/rtbilling/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/rtbilling/tpl.html'
-], function (BaseView, RTBillModel, RTBillCollection,KeyTipsView,ConfirmView,RTQuickPayView,RTQPAliPayView,RTQPWeChatView, numpadtpl,billinfotpl,billingdetailtpl, tpl) {
+], function (BaseView, RTBillModel, RTBillCollection,KeyTipsView,ConfirmView,RTQuickPayView,RTQPAliPayView,RTQPWeChatView,GatherUIView,BilltypeView,OneCardView, numpadtpl,billinfotpl,billingdetailtpl, tpl) {
     var rtbillingView = BaseView.extend({
 
         id: "rtbillingView",
@@ -171,15 +174,15 @@ define([
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.A, function() {
-                //_self.payment('02');
+                _self.payment('02');
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.P, function() {
-                //_self.payment('03');
+                _self.payment('03');
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Q, function () {
-                //_self.payment('05');
+                _self.payment('05');
             });
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.T, function () {
@@ -187,7 +190,7 @@ define([
             });
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.O, function () {
-                //_self.payByECard();
+                _self.payByECard();
             });
             //清空支付方式列表
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.C, function () {
@@ -324,7 +327,8 @@ define([
                         if(ecardcollection[i].gather_id == gatherid){
                             var temp = ecardcollection[i];
                             var gather_money = parseFloat(temp.gather_money);
-                            gather_money = gather_money + item.get('gather_money');
+                            gather_money = gather_money - item.get('gather_money');
+                            gather_money = gather_money.toFixed(2);
                             temp['gather_money'] = gather_money
                             this.tempcollection.push(temp);
                         } else {
@@ -562,11 +566,40 @@ define([
                     data['gather_kind'] = gatherkind;
                     data['receivedsum'] = receivedsum;
                     this.billtypeview = new BilltypeView(data);
-                    this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
+                    this.showModal(window.PAGE_ID.RT_BILLING_TYPE,this.billtypeview);
                 }
             }
             $(this.input).val('');
-        }
+        },
+
+        /**
+         * 一卡通支付
+         */
+        payByECard: function () {
+            var unpaidamount = this.model.get('unpaidamount');
+            var receivedSum = $(this.input).val();
+            if(unpaidamount == 0){
+                toastr.info('待退款金额为零，请进行结算');
+            }else if(receivedSum == ''){
+                toastr.info('退款金额不能为空');
+            }else if(receivedSum == 0){
+                toastr.info('退款金额不能为零');
+            }else if(receivedSum == '.'){
+                toastr.info('无效的退款金额');
+            }else if(receivedSum > unpaidamount){
+                toastr.info('不设找零');
+            }else{
+                var data = {};
+                data['unpaidamount'] = unpaidamount;
+                data['receivedsum'] = receivedSum;
+                this.onecard = new OneCardView(data);
+                this.showModal(window.PAGE_ID.RT_ONECARD_LOGIN,this.onecard);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = medium_id]').focus();
+                });
+            }
+            $(this.input).val('');
+        },
 
 
 

@@ -337,6 +337,7 @@ define([
                             var temp = ecardcollection[i];
                             var gather_money = parseFloat(temp.gather_money);
                             gather_money = gather_money + item.get('gather_money');
+                            gather_money = gather_money.toFixed(2);
                             temp['gather_money'] = gather_money
                             this.tempcollection.push(temp);
                         } else {

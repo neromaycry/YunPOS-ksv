@@ -1,0 +1,112 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+
+<div class="modal-dialog modal-sm modal-type">
+    <div class="modal-content">
+        <div class="modal-body" style="padding: 0">
+            <div class="panel panel-primary" style="border: none;margin: 0;">
+                <div class="panel-heading">已付金额：<%= toDecimal2(receivedsum) %></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <!--<div class="col-md-6">-->
+                            <!--<form>-->
+                                <!--<input type="text" id="gather-no"  name="gather-no" class="form-control" placeholder="请输入付款账号"/>-->
+                                <!--<input type="text" style="display: none">-->
+                            <!--</form>-->
+                            <!--<div class="panel panel-primary" style="margin-top: 15px;">-->
+                                <!--<div class="row no-margining text-center">-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="7">7</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="8">8</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="9">9</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-backspace panel-group border-bottom">←</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="row no-margining text-center">-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="4">4</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="5">5</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="6">6</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-clear panel-group border-bottom">C</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="row no-margining text-center">-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="1">1</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="2">2</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="3">3</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn panel-group border-bottom keyup">↑</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="row no-margining text-center">-->
+                                    <!--<div class="col-md-6 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num="0">0</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn btn-num panel-group border-right-bottom" data-num=".">.</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 no-padding">-->
+                                        <!--<div class="cbtn panel-group keydown border-bottom">↓</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="row no-margining text-center">-->
+                                    <!--<div class="col-md-6 no-padding">-->
+                                        <!--<div class="cbtn numpad-ok border-right cancel">取消</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-6 no-padding">-->
+                                        <!--<div class="cbtn numpad-ok ok">确定</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="for-billingtype">
+
+                        </div>
+                    </div>
+                    <div class="row no-margining">
+                        <div class="col-md-12 button-group">
+                            <div class="row ">
+                                <button type="button" class="col-md-6 button button-block button-highlight button-rounded button-border no-padding cancel">取消</button>
+                                <button type="button" class="col-md-6 button button-block button-caution  button-rounded button-border no-padding ok">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
