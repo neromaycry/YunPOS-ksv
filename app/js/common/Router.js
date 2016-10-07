@@ -107,7 +107,7 @@ define(['backbone'], function (Backbone) {
         },
 
         billingreturn: function () {
-            var _url = './moduals/billing-return/view.js';
+            var _url = './moduals/rtbilling/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

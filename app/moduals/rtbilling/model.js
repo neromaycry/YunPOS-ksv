@@ -3,20 +3,21 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var brecardpayModel=BaseModel.extend({
+    var rtbillModel=BaseModel.extend({
 
         defaults:{
-
+            totaldiscount:0,
+            receivedsum:0
         },
 
-        account:function (data, callback) {
+        trade_confirm: function (data, callback) {
             this.sendPOST({
-                url:window.API_URL.ACCOUNT,
+                url:window.API_URL.TRADE_CONFIRM,
                 data:data,
                 success:callback
             });
         }
 
     });
-    return brecardpayModel;
+    return rtbillModel;
 });

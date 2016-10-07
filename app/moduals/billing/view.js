@@ -5,7 +5,7 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/billing/model',
     '../../../../moduals/billing/collection',
-    '../../../../moduals/modal-billingtype/view',
+    '../../../../moduals/modal-billtype/view',
     '../../../../moduals/modal-billingaccount/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
@@ -294,11 +294,11 @@ define([
             if(unpaidamount == 0) {
                 toastr.info('待支付金额为零，请进行结算');
             }else if(receivedsum == '') {
-                toastr.info('支付金额不能为空，请重新输入');
+                toastr.info('支付金额不能为空');
             }else if(receivedsum == '.'){
                 toastr.info('请输入有效金额');
             } else if(receivedsum == 0){
-                toastr.info('支付金额不能为零，请重新输入');
+                toastr.info('支付金额不能为零');
             }else if(receivedsum > (unpaidamount + 100)){
                 toastr.info('找零金额超限');
             }else{
@@ -431,7 +431,7 @@ define([
             if (this.i < this.collection.length - 1) {
                 this.i++;
             }
-            if (this.i % this.listnum == 0) {
+            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
                 this.n++;
                 $('.for-billdetail').scrollTop(this.listheight * this.n);
             }

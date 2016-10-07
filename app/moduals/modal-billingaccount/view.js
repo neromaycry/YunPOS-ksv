@@ -5,7 +5,7 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-billingaccount/model',
     '../../moduals/modal-billingaccount/collection',
-    //'../../moduals/modal-billingtype/view',
+    //'../../moduals/modal-billtype/view',
     'text!../../moduals/modal-billingaccount/tpl.html',
 ], function (BaseModalView,BillaccountModel,BillaccountCollection, tpl) {
 

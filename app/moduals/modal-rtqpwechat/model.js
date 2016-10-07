@@ -3,12 +3,12 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var billaccountModel=BaseModel.extend({
+    var rtqpwechatModel=BaseModel.extend({
 
         defaults:{
 
         },
 
     });
-    return billaccountModel;
+    return rtqpwechatModel;
 });

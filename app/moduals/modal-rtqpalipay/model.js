@@ -3,12 +3,12 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var billtypeModel=BaseModel.extend({
+    var rtqpalipayModel=BaseModel.extend({
 
         defaults:{
 
         },
 
     });
-    return billtypeModel;
+    return rtqpalipayModel;
 });

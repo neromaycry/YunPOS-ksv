@@ -1,0 +1,68 @@
+<nav class="navbar" style="background:#337AB7;border-radius: 0px">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" style="color: #ffffff">退货结算</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="rtbilling-help"><a style="color: #ffffff">帮助</a></li>
+                <li class="rtbilling-return"><a style="color: #ffffff">返回</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="row" style="margin-right: 15px;margin-left: 15px;z-index: 0;">
+    <div class="col-md-8 no-padding">
+        <div class="cart-panel panel panel-primary"  style="z-index: 0;position: absolute;min-width: 440px">
+            <div class="panel-heading">
+                <div class="row text-center">
+                    <div class="col-md-1">序号</div>
+                    <div class="col-md-3">退款方式编号</div>
+                    <div class="col-md-3 ">退款方式名称</div>
+                    <div class="col-md-2">退款金额</div>
+                    <div class="col-md-3">退款账号</div>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0; overflow-y: hidden">
+                <div class="for-billdetail" style="overflow: hidden;position:relative;"></div>
+            </div>
+            <div class="panel-footer text-center no-padding bg-white">
+                <div class="row text-center no-margining">
+                    <div class="col-md-12 button-group">
+                        <div class="row">
+                            <button type="button" class="col-md-2 button button-border button-primary rtbilling-keyup">↑</button>
+                            <button type="button" class="col-md-2 button button-border button-primary rtbilling-keydown">↓</button>
+                            <button type="button" class="col-md-2 button button-border button-primary billing-delete">删除</button>
+                            <div class="col-md-3 no-padding">
+                                <div class="cart-billing button-highlight billing-clean">清空支付列表</div>
+                            </div>
+                            <div class="col-md-3 no-padding">
+                                <div class="cart-billing bg-red button-caution button-glow billing">退货结算</div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <button type="button" class="col-md-2 button button-border button-primary check" name="check">支票</button>
+                            <button type="button" class="col-md-2 button button-border button-primary gift-certificate" name="gift-certificate">礼券</button>
+                            <button type="button" class="col-md-2 button button-border button-primary pos" name="pos">银行卡</button>
+                            <button type="button" class="col-md-2 button button-border button-primary third-pay" name="third-pay">第三方支付</button>
+                            <button type="button" class="col-md-2 button button-border button-primary ecard" name="ecard">一卡通</button>
+                            <button type="button" class="col-md-2 button button-border button-primary quick-pay" name="quick-pay">快捷支付</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-left col-md-4 no-padding">
+        <div class="form-group">
+            <input type="text" id="billingrt" placeholder="请输入现金退货金额" name="billingrt" class="form-control" onkeypress="return myNumberic(event)"/>
+        </div>
+        <div class="for-numpad"></div>
+        <div class="panel panel-primary for-billinfo">
+
+        </div>
+    </div>
+</div>
+

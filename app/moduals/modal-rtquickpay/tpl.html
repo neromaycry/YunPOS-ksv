@@ -22,12 +22,12 @@ return s;
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-3"><%= gather_name %></div>
-                        <div class="col-md-9">支付金额：<%= toDecimal2(unpaidamount) %></div>
+                        <div class="col-md-9">退款金额：<%= toDecimal2(unpaidamount) %></div>
                     </div>
                 </div>
                 <div class="panel-body">
                     <form>
-                        <input type="text" class="form-control" id="quickpay-account" name="quickpay-account" onkeypress="return myNumberic(event)" placeholder="请输入付款账号">
+                        <input type="text" class="form-control" id="rtquickpay-account" name="rtquickpay-account" onkeypress="return myNumberic(event)" placeholder="请输入付款账号">
                         <input type="text" style="display: none;"/>
                     </form>
                 </div>
@@ -86,14 +86,6 @@ return s;
                         <div class="cbtn numpad-ok bg-red ok">确定</div>
                     </div>
                 </div>
-                <!--<div class="row no-margining text-center">-->
-                    <!--<div class="col-md-6 no-padding">-->
-                        <!--<div class="panel-group border-right bg-red cancel">取消</div>-->
-                    <!--</div>-->
-                    <!--<div class="col-md-6 no-padding">-->
-                        <!--<div class="panel-group bg-teal ok">确定</div>-->
-                    <!--</div>-->
-                <!--</div>-->
             </div>
         </div>
     </div>

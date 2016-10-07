@@ -3,12 +3,12 @@
  */
 define([
     '../../js/common/BaseModalView',
-    '../../moduals/modal-billingtype/model',
-    '../../moduals/modal-billingtype/collection',
+    '/model',
+    '/collection',
     '../../moduals/modal-billingaccount/view',
     '../../moduals/modal-gatherui/view',
-    'text!../../moduals/modal-billingtype/billingtypetpl.html',
-    'text!../../moduals/modal-billingtype/tpl.html',
+    'text!../../moduals/modal-billtype/billingtypetpl.html',
+    'text!../../moduals/modal-billtype/tpl.html',
 ], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView, GatherUIView, billingtypetpl, tpl) {
 
     var billtypeView = BaseModalView.extend({
