@@ -209,13 +209,14 @@ define([
             }
             console.log('totalreceived:'+totalreceived);
             console.log(totalamount + 'this is totalamount');
-            totalamount = totalamount.toFixed(2);
+            console.log(typeof (totalamount));
+            //totalamount = parseFloat(totalamount).toFixed(2);//如果是整单折扣之后，
             if(totalreceived >= totalamount){
                 this.unpaidamount = 0;
                 this.oddchange = totalreceived - parseFloat(totalamount);
             }else{
                 this.oddchange = 0;
-                this.unpaidamount =  parseFloat(totalamount) - totalreceived;
+                this.unpaidamount = parseFloat(totalamount) - totalreceived;
             }
             console.log(this.unpaidamount);
             this.model.set({
