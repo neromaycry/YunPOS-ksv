@@ -209,13 +209,15 @@ define([
             }
             console.log('totalreceived:'+totalreceived);
             console.log(totalamount + 'this is totalamount');
+            totalamount = totalamount.toFixed(2);
             if(totalreceived >= totalamount){
                 this.unpaidamount = 0;
-                this.oddchange = totalreceived - totalamount;
+                this.oddchange = totalreceived - parseFloat(totalamount);
             }else{
                 this.oddchange = 0;
-                this.unpaidamount = totalamount - totalreceived;
+                this.unpaidamount =  parseFloat(totalamount) - totalreceived;
             }
+            console.log(this.unpaidamount);
             this.model.set({
                 receivedsum: totalreceived,
                 unpaidamount: this.unpaidamount,
@@ -480,6 +482,9 @@ define([
         billing: function () {
             var _self = this;
             var confirmBill = new BillModel();
+            //console.log(_self.unpaidamount);
+            //console.log(_self.model.get('unpaidamount'));
+            //console.log('*******************');
             if(_self.unpaidamount != 0){
                 toastr.info('还有未支付的金额，请支付完成后再进行结算');
             } else {
