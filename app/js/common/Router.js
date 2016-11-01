@@ -19,7 +19,8 @@ define(['backbone'], function (Backbone) {
             'restorder':'restorder',
             'returnforce':'returnforce',
             'returnwhole':'returnwhole',
-            'checking':'checking'
+            'checking':'checking',
+            'hconnection':'hconnection'
         },
 
         //路由初始化可以做一些事
@@ -140,6 +141,14 @@ define(['backbone'], function (Backbone) {
 
         checking: function () {
             var _url = './moduals/checking/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        hconnection: function () {
+            var _url = './moduals/hconnection/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

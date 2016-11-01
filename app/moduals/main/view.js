@@ -67,6 +67,7 @@ define([
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
             'click .main-help':'openHelp',
+            'click .h-connect':'onHConnectClicked',
             'click .main-billing':'onBillingClicked',
             'click .salesman':'onSalesmanClicked',
             'click .member':'onMemberClicked',
@@ -304,7 +305,7 @@ define([
             });
             //折让
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
-
+                _self.onDiscountPercentClicked();
             });
 
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
@@ -845,6 +846,10 @@ define([
                 $('#unrestorder').css('display','block');
             }
         },
+
+        onHConnectClicked: function () {
+            router.navigate('hconnection',{ trigger:true });
+        }
 
 
     });

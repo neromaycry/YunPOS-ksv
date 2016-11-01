@@ -1,7 +1,7 @@
 /**
  * Created by gjwlg on 2016/9/9.
  */
-require.config({
+requirejs.config({
     waitSeconds:0,
     baseUrl:'./js/lib/',
     paths:{
@@ -64,7 +64,7 @@ require.config({
     }
 });
 
-require([
+requirejs([
     'jquery',
     'underscore',
     'backbone',
@@ -105,7 +105,7 @@ require([
         'positionClass':'toast-bottom-center'
     };
 
-    var SOCKET_ADDR = 'ws://127.0.0.1:2001/';
+    var SOCKET_ADDR = 'ws://192.168.31.240:2001/';
     //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';
 
     window.wsClient = new WebSocket(SOCKET_ADDR);

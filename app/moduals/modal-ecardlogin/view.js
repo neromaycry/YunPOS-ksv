@@ -31,6 +31,7 @@ define([
             'click .keydown':'onKeyDown',
             'click input[name = medium_id]':'focusInputUser',
             'click input[name = medium_password]':'focusInputPasswd',
+
         },
 
         modalInitPage: function () {
