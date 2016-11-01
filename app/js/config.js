@@ -15,7 +15,6 @@ require.config({
         'loading':'../loading/jquery.showLoading.min',
         'common':'common',
         'toastr':'../toastr/toastr.min',
-        'sockjs':'../sockjs/sockjs',
         'bootstrap':'../bootstrap/js/bootstrap',
         'pscrollbar':'../perfect-scrollbar/js/perfect-scrollbar.jquery',
         'text': 'requirePlugin/text',
@@ -58,13 +57,10 @@ require.config({
             'deps':['css!../toastr/toastr.css'],
             'exports':'toastr'
         },
-        'sockjs':{
-            'exports':'sockjs'
-        },
         'pscrollbar':{
             'deps':['css!../perfect-scrollbar/css/perfect-scrollbar.min.css'],
             'exports':'pscrollbar'
-        }
+        },
     }
 });
 
@@ -80,10 +76,12 @@ require([
     'loading',
     'storage',
     'toastr',
-    'sockjs',
     'pscrollbar',
     'md5',
-], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,sockjs,pscrollbar,md5) {
+], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,pscrollbar,md5) {
+
+    window.isAndroid = false;
+
     window.storage = $.localStorage;
 
     window.pageId = 0;
