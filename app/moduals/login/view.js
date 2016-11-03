@@ -231,13 +231,13 @@ define([
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '会员页面', '挂单', '解挂',
                 '营业员登录', '结算', '清空购物车', '删除商品', '修改数量',
-                '单品优惠', '向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账'];
+                '单品优惠', '折让','向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账'];
             var keys = ['ESC','ENTER','M','G','J',
                 'S','B','C','D','N',
-                'Y','↑','↓','F','W','A'];
+                'Y','U','↑','↓','F','W','A'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.M, window.KEYS.G, window.KEYS.J,
                 window.KEYS.S, window.KEYS.B, window.KEYS.C, window.KEYS.D, window.KEYS.N,
-                window.KEYS.Y, window.KEYS.Up, window.KEYS.Down, window.KEYS.F, window.KEYS.W, window.KEYS.A];
+                window.KEYS.Y, window.KEYS.U, window.KEYS.Up, window.KEYS.Down, window.KEYS.F, window.KEYS.W, window.KEYS.A];
             var mainKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
