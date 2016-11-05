@@ -117,13 +117,16 @@ define([
             var nav = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
             var panelfooter = $('.panel-footer').height();
-            var billdetail = dh - nav * 2 - panelheading * 2 - panelfooter;
+            //var recvbl = $('.recvbl-panel').height() + 21;  //左侧应收金额单独显示区域的高度
+            var recvbl = 0;
+            var billdetail = dh - nav * 2 - panelheading * 2 - panelfooter - recvbl;
             var leftWidth = $('.main-left').width();
             var cartWidth = dw - leftWidth - 45;
             $('.cart-panel').width(cartWidth);
+            //$('.recvbl-panel').width(cartWidth);  // 设置左侧应收金额单独显示区域的宽度
             $('.for-billdetail').height(billdetail);
             this.listheight = $('.for-billdetail').height();
-            this.listnum = 10;//设置商品列表中的条目数
+            this.listnum = 10; //设置商品列表中的条目数
             $('.li-billdetail').height(this.listheight / this.listnum - 21);
             //this.itemheight = $('li').height() + 20;
             //this.listnum = parseInt(this.listheight / this.itemheight);//商品列表中的条目数
