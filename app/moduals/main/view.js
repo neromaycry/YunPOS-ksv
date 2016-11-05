@@ -90,19 +90,19 @@ define([
         pageInit: function () {
             var _self = this;
             pageId = window.PAGE_ID.MAIN;
-            console.log(pageId);
-            var user = storage.get(system_config.LOGIN_USER_KEY);
-            this.model = new HomeModel();
-            this.salesmanModel = new HomeModel();
-            this.collection = new HomeCollection();
-            this.logincollection = new HomeCollection();
-            this.requestModel = new HomeModel();
+            //console.log(pageId);
+            var user = storage.get(system_config.LOGIN_USER_KEY);  // 从本地取出登录用户属性
+            this.model = new HomeModel();  // 当前view的model
+            this.loginInfoModel = new HomeModel();  // 存放登录用户及营业员信息的model
+            this.collection = new HomeCollection();  //当前view的collection
+            //this.logincollection = new HomeCollection();
+            this.requestModel = new HomeModel();  //网络请求的model
             this.model.set({
                 totalamount: this.totalamount,
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
-            this.salesmanModel.set({
+            this.loginInfoModel.set({
                 name:user.user_name,
                 pos: '收款机(2341)'
             });
@@ -110,25 +110,25 @@ define([
                 this.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
                 this.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
             }
-            if(storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
-                this.salesmanModel.set({
+            if (storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
+                this.loginInfoModel.set({
                     salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman')
                 });
-            }else {
-                this.salesmanModel.set({
+            } else {
+                this.loginInfoModel.set({
                     salesman:'未登录'
                 });
             }
-            if(storage.isSet(system_config.VIP_KEY)) {
-                this.salesmanModel.set({
+            if (storage.isSet(system_config.VIP_KEY)) {
+                this.loginInfoModel.set({
                     member:storage.get(system_config.VIP_KEY,'name')
                 });
-            }else {
-                this.salesmanModel.set({
+            } else {
+                this.loginInfoModel.set({
                     member:'未登录'
                 });
             }
-            if(storage.isSet(system_config.LOGIN_USER_KEY)){
+            if (storage.isSet(system_config.LOGIN_USER_KEY)){
                 this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
             }
             this.onDeleteKey();
@@ -137,10 +137,8 @@ define([
         },
 
         initPlugins: function () {
-            var _self = this;
             $(this.input).focus();
-            //$('#li' + _self.i).addClass('cus-selected');
-            $('.for-cartlist').perfectScrollbar();
+            $('.for-cartlist').perfectScrollbar();  // 定制滚动条外观
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
@@ -162,14 +160,14 @@ define([
         initLayoutHeight: function () {
             var dh = $(window).height();
             var dw = $(window).width();
-            var nav = $('.navbar').height();
-            var panelheading = $('.panel-heading').height();
-            var panelfooter = $('.panel-footer').height();
+            var nav = $('.navbar').height();  // 导航栏高度
+            var panelheading = $('.panel-heading').height();  //面板heading高度
+            var panelfooter = $('.panel-footer').height();  //面板footer高度
             var cart = dh - nav * 2 - panelheading * 2 - panelfooter;
             var leftWidth = $('.main-left').width();
             var cartWidth = dw - leftWidth - 45;
-            $('.cart-panel').width(cartWidth);
-            $('.for-cartlist').height(cart);
+            $('.cart-panel').width(cartWidth);  // 设置购物车面板的宽度
+            $('.for-cartlist').height(cart);  //设置购物车的高度
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
             this.listnum = 6;//设置商品列表中的条目数
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
@@ -180,7 +178,7 @@ define([
         },
 
         renderSalesman: function() {
-            this.$el.find('.for-salesman').html(this.template_salesman(this.salesmanModel.toJSON()));
+            this.$el.find('.for-salesman').html(this.template_salesman(this.loginInfoModel.toJSON()));
             return this;
         },
 
@@ -192,6 +190,7 @@ define([
         },
 
         handleEvents: function () {
+            // 注册backbone事件
             Backbone.off('SalesmanAdd');
             Backbone.off('onReleaseOrder');
             Backbone.off('reBindEvent');
@@ -201,7 +200,7 @@ define([
 
         SalesmanAdd: function (attrData) {
             storage.set(system_config.SALE_PAGE_KEY,'salesman',attrData['name']);
-            this.salesmanModel.set({
+            this.loginInfoModel.set({
                 salesman:attrData['name']
             });
             this.renderSalesman();
@@ -492,7 +491,6 @@ define([
                     _self.calculateModel();
                 }
             }
-
             $('#input_main').val('');
             console.log(_self.i);
             $('#li' + _self.i).addClass('cus-selected');
@@ -644,7 +642,6 @@ define([
             this.updateShopInfo();
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', this.collection.toJSON());
             storage.set(system_config.SALE_PAGE_KEY, 'shopinfo', this.model.toJSON());
-
         },
 
         /**
@@ -851,8 +848,8 @@ define([
             router.navigate('hconnection',{ trigger:true });
         }
 
-
     });
 
     return mainView;
+
 });
