@@ -166,7 +166,7 @@ define([
             } else {
                 storage.set(system_config.RESTORDER_NUM,'00');
             }
-            storage.set(system_config.LOGIN_DATE,loginDate.getDate());
+            storage.set(system_config.LOGIN_DATE, loginDate.getDate());
         },
 
         doInitialize: function () {

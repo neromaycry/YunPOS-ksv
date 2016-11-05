@@ -68,7 +68,7 @@ define([
         },
 
         initLayoutHeight:function(){
-            var dh = $(document).height();
+            var dh = $(window).height();
             var nav = $('.navbar').height();
             var td = $('td').height();
             var cashierdetail = dh - 3 * nav - td * 10 - 110;
@@ -112,7 +112,7 @@ define([
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.T, function () {
                 var tipsView = new KeyTipsView('CHECKING_PAGE');
-                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+                _self.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             });
         },
 
@@ -191,7 +191,7 @@ define([
         checkingDate:function() {
             var _self = this;
             var date = $('input[name = checking_date]').val();
-            console.log(date);
+            //console.log(date);
             if(date == ''){
                 toastr.warning('输入的收银对账日期不能为空');
             }else {

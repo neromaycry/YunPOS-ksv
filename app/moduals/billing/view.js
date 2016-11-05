@@ -134,8 +134,8 @@ define([
         handleEvents: function () {
             Backbone.off('onReceivedsum');
             Backbone.off('onBillDiscount');
-            Backbone.on('onBillDiscount',this.onBillDiscount,this);
-            Backbone.on('onReceivedsum',this.onReceivedsum,this);
+            Backbone.on('onBillDiscount', this.onBillDiscount,this);
+            Backbone.on('onReceivedsum', this.onReceivedsum,this);
         },
         onReceivedsum: function (data) {
             var receivedsum = data['receivedsum'];
@@ -144,7 +144,7 @@ define([
             var gatherId = data['gather_id'];
             var gatherKind = data['gather_kind'];
             this.card_id = data['card_id'];
-            this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId,gatherKind,this.card_id);
+            this.addToPaymentList(this.totalamount, gatherName, receivedsum, gatherNo, gatherId, gatherKind, this.card_id);
         },
         onBillDiscount: function (data) {
             this.percentage = data['percentage'] / 100;
@@ -170,7 +170,7 @@ define([
          * @param gatherKind 付款方式类别
          * @param cardId 一卡通付款卡号
          */
-        addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId,gatherKind,cardId) {
+        addToPaymentList: function (totalamount, gatherName, receivedsum, gatherAccount, gatherId, gatherKind, cardId) {
             //console.log(this.collection);
             var temp = this.collection.findWhere({gather_id: gatherId});
             if(temp != undefined){
@@ -206,13 +206,13 @@ define([
             }
             var totalreceived = 0;
             var trList = this.collection.pluck('gather_money');
-            console.log(trList);
+            //console.log(trList);
             for(var i = 0;i<trList.length;i++){
                 totalreceived += trList[i];
             }
-            console.log('totalreceived:'+totalreceived);
-            console.log(totalamount + 'this is totalamount');
-            console.log(typeof (totalamount));
+            //console.log('totalreceived:'+totalreceived);
+            //console.log(totalamount + 'this is totalamount');
+            //console.log(typeof (totalamount));
             //totalamount = parseFloat(totalamount).toFixed(2);//如果是整单折扣之后，
             if(totalreceived >= totalamount){
                 this.unpaidamount = 0;
@@ -221,7 +221,7 @@ define([
                 this.oddchange = 0;
                 this.unpaidamount = parseFloat(totalamount) - totalreceived;
             }
-            console.log(this.unpaidamount);
+            //console.log(this.unpaidamount);
             this.model.set({
                 receivedsum: totalreceived,
                 unpaidamount: this.unpaidamount,
@@ -341,7 +341,7 @@ define([
          */
         openHelp:function () {
             var tipsView = new KeyTipsView('BILLING_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
         },
         /**
          * 判断删除的已支付方式里面是否含有一卡通支付。
@@ -357,7 +357,7 @@ define([
                     var gatherid = item.get('gather_id');
                     var cardId = item.get('card_id');
                     //取出对应的ONE_CARD_KEY的值
-                    var ecardcollection = storage.get(system_config.ONE_CARD_KEY,cardId,'detail');
+                    var ecardcollection = storage.get(system_config.ONE_CARD_KEY, cardId, 'detail');
                     console.log(ecardcollection);
                     this.tempcollection = new BillCollection();
                     for(var i in ecardcollection) {
@@ -373,7 +373,7 @@ define([
                         }
                     }
                     storage.remove(system_config.ONE_CARD_KEY);
-                    storage.set(system_config.ONE_CARD_KEY,cardId,'detail',this.tempcollection);
+                    storage.set(system_config.ONE_CARD_KEY, cardId, 'detail', this.tempcollection);
                     this.deleteItem();
                 }else{
                     this.deleteItem();
@@ -514,7 +514,7 @@ define([
                         }
                         data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
                         data['gather_detail'] = _self.collection.toJSON();
-                        console.log(data);
+                        //console.log(data);
                         confirmBill.trade_confirm(data, function (resp) {
                             if (resp.status == '00') {
                                 storage.remove(system_config.SALE_PAGE_KEY);
@@ -565,7 +565,7 @@ define([
             var finaldiscount = 0;//最后一项的优惠
             _self.discountcollection = new BillCollection();
             this.localObj = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
-            storage.set(system_config.SALE_PAGE_KEY,'totaldiscountamount',_self.totaldiscount);
+            storage.set(system_config.SALE_PAGE_KEY,'totaldiscountamount', _self.totaldiscount);
             //在SALE_PAGE_KEY里面新加入一个属性，值为总的整单优惠的价格
             console.log('整单优惠的总价格:' + _self.totaldiscount);
             for(var i = 0;i < this.localObj.length - 1;i++){
@@ -594,12 +594,12 @@ define([
             //最后一项的折扣为
             finaldiscount = parseFloat(_self.totaldiscount) + _self.discountamount - finaldiscount;
             finaldiscount = finaldiscount.toFixed(2);
-            console.log(finaldiscount + '最后一项的优惠');
+            //console.log(finaldiscount + '最后一项的优惠');
             var tmp = new BillModel();
             tmp.set(this.localObj[this.localObj.length - 1]);
             tmp.set('discount',finaldiscount);
             _self.discountcollection.push(tmp);
-            storage.set(system_config.SALE_PAGE_KEY,'shopcart',_self.discountcollection);
+            storage.set(system_config.SALE_PAGE_KEY, 'shopcart', _self.discountcollection);
             //console.log(_self.discountcollection);
             //console.log('final');
         },

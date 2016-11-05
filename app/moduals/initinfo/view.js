@@ -29,7 +29,7 @@ define([
         initPlugins: function () {
             var _self = this;
             var data = {};
-            var poskey = storage.get(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,'poskey');
+            var poskey = storage.get(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY, 'poskey');
             data['poskey'] = poskey;
             this.request.init(data,function(resp) {
                 if (resp.status == '00') {
@@ -112,7 +112,7 @@ define([
         setRestOrderKeys: function () {
             var effects = ['返回', '确定', '方向上', '方向下','切换到挂单编号','切换到挂单商品信息'];
             var keys = ['ESC', 'ENTER', '↑', '↓','←','→'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down,window.KEYS.Left,window.KEYS.Right];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down, window.KEYS.Left,window.KEYS.Right];
             var restOrderKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -121,14 +121,14 @@ define([
                 var restOrderKey = { effect:effect, key:key, keyCode:keyCode };
                 restOrderKeys.push(restOrderKey);
             }
-            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'RESTORDER_PAGE',restOrderKeys);
+            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY, 'RESTORDER_PAGE', restOrderKeys);
         },
 
         setReturnForceKeys: function () {
             var effects = ['返回', '确定', '结算', '取消退货', '删除商品','修改数量','单品优惠','方向上', '方向下'];
             var keys = ['ESC', 'ENTER', 'B','C','D','N','Y','↑', '↓'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter,window.KEYS.B,window.KEYS.C,
-                window.KEYS.D,window.KEYS.N,window.KEYS.Y,window.KEYS.Up, window.KEYS.Down];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.B,window.KEYS.C,
+                window.KEYS.D,window.KEYS.N, window.KEYS.Y, window.KEYS.Up, window.KEYS.Down];
             var returnForceKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -137,7 +137,7 @@ define([
                 var returnForceKey = { effect:effect, key:key, keyCode:keyCode };
                 returnForceKeys.push(returnForceKey);
             }
-            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'RETURNFORCE_PAGE',returnForceKeys);
+            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY, 'RETURNFORCE_PAGE', returnForceKeys);
         },
 
         setReturnWholeKeys: function () {
@@ -152,7 +152,7 @@ define([
                 var returnWholeKey = { effect:effect, key:key, keyCode:keyCode };
                 returnWholeKeys.push(returnWholeKey);
             }
-            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'RETURNWHOLE_PAGE',returnWholeKeys);
+            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY, 'RETURNWHOLE_PAGE', returnWholeKeys);
         },
 
         setBillingKeys: function () {
