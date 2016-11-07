@@ -25,6 +25,14 @@ body .no-border-radius {
     border-radius: 0;
 }
 
+div .pos-button-textsize {
+    font-size: 10px;
+}
+
+div .pos-textsize {
+    font-size: 10px;
+}
+
 ul .cus-selected{
     background: #e1f5fe; !important;
 }
