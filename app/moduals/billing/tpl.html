@@ -28,7 +28,7 @@
     </div>
 </nav>
 <div class="row" style="margin-right: 15px;margin-left: 15px;z-index: 0;">
-    <div class="col-md-8 no-padding">
+    <div class="col-xs-8 col-md-8 no-padding">
         <!-- 左侧应收金额单独显示区域 -->
         <!--<div class="recvbl-panel panel panel-primary">-->
             <!--<div class="panel-body">-->
@@ -42,11 +42,11 @@
         <div class="cart-panel panel panel-primary"  style="z-index: 0;position: absolute;min-width: 440px">
             <div class="panel-heading">
                 <div class="row text-center">
-                    <div class="col-md-1">序号</div>
-                    <div class="col-md-3">付款方式编号</div>
-                    <div class="col-md-3 ">付款方式名称</div>
-                    <div class="col-md-2">付款金额</div>
-                    <div class="col-md-3">付款账号</div>
+                    <div class="col-xs-1 col-md-1">序号</div>
+                    <div class="col-xs-3 col-md-3">付款方式编号</div>
+                    <div class="col-xs-3 col-md-3 ">付款方式名称</div>
+                    <div class="col-xs-2 col-md-2">付款金额</div>
+                    <div class="col-xs-3 col-md-3">付款账号</div>
                 </div>
             </div>
             <div class="panel-body" style="padding: 0; overflow-y: hidden">
@@ -54,29 +54,29 @@
             </div>
             <div class="panel-footer text-center no-padding bg-white">
                 <div class="row text-center no-margining">
-                    <div class="col-md-12 button-group">
+                    <div class="col-xs-12 col-md-12 button-group">
                         <div class="row">
-                            <button type="button" class="col-md-2 button button-border button-primary billing-keyup">↑</button>
-                            <button type="button" class="col-md-2 button button-border button-primary billing-keydown">↓</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary billing-keyup">↑</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary billing-keydown">↓</button>
                             <!--<button type="button" class="col-md-2 button button-border button-primary billing-clean">清空付款方式</button>-->
-                            <button type="button" class="col-md-2 button button-border button-primary totaldiscount" name="totaldiscount">整单优惠</button>
-                            <button type="button" class="col-md-2 button button-border button-primary cancel-totaldiscount" name="cancel-totaldiscount">取消优惠</button>
-                            <button type="button" class="col-md-2 button button-border button-primary billing-delete">删除</button>
-                            <div class="col-md-2 no-padding">
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary totaldiscount" name="totaldiscount">整单优惠</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary cancel-totaldiscount" name="cancel-totaldiscount">取消优惠</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary billing-delete">删除</button>
+                            <div class="col-xs-2 col-md-2 no-padding">
                                 <div class="cart-billing button-highlight billing-clean">清空支付列表</div>
                             </div>
-                            <div class="col-md-2 no-padding">
+                            <div class="col-xs-2 col-md-2 no-padding">
                                 <div class="cart-billing bg-red button-caution button-glow billing">结算</div>
                             </div>
 
                         </div>
                         <div class="row">
-                            <button type="button" class="col-md-2 button button-border button-primary check" name="check">支票</button>
-                            <button type="button" class="col-md-2 button button-border button-primary gift-certificate" name="gift-certificate">礼券</button>
-                            <button type="button" class="col-md-2 button button-border button-primary pos" name="pos">银行卡</button>
-                            <button type="button" class="col-md-2 button button-border button-primary third-pay" name="third-pay">第三方支付</button>
-                            <button type="button" class="col-md-2 button button-border button-primary ecard" name="ecard">一卡通</button>
-                            <button type="button" class="col-md-2 button button-border button-primary quick-pay" name="quick-pay">快捷支付</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary check" name="check">支票</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary gift-certificate" name="gift-certificate">礼券</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary pos" name="pos">银行卡</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary third-pay" name="third-pay">第三方支付</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary ecard" name="ecard">一卡通</button>
+                            <button type="button" class="col-xs-2 col-md-2 button button-border button-primary quick-pay" name="quick-pay">快捷支付</button>
                         </div>
 
                     </div>
@@ -104,7 +104,7 @@
             </div>
         </div>
     </div>
-    <div class="main-left col-md-4 no-padding">
+    <div class="main-left col-xs-4 col-md-4 no-padding">
         <div class="form-group">
             <input type="text" id="input_billing" placeholder="请输入现金支付金额" name="billing" class="form-control" onkeypress="return myNumberic(event)"/>
         </div>
