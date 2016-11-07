@@ -27,10 +27,12 @@ body .no-border-radius {
 
 div .pos-button-textsize {
     font-size: 10px;
+    white-space: nowrap;
 }
 
 div .pos-textsize {
     font-size: 10px;
+    white-space: nowrap;
 }
 
 ul .cus-selected{
