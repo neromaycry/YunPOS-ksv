@@ -111,39 +111,40 @@ requirejs([
     window.wsClient = new WebSocket(SOCKET_ADDR);
     window.wsClient.onopen = function (e) {
         window.toastr.success('已与硬件建立连接');
+        window.wsClient.send('INIT_');
     };
     window.wsClient.onmessage = function(e) {
         var jsonData = JSON.parse(e.data);
         console.log(jsonData);
-        switch (jsonData.directive) {
-            case '01':
-                window.toastr.info(jsonData.content);
-                break;
-            case '02':
-                window.toastr.info(jsonData.content);
-                break;
-            case '03':
-                window.toastr.info(jsonData.content);
-                break;
-            case '04':
-                window.toastr.info(jsonData.content);
-                break;
-            case '05':
-                window.toastr.info(jsonData.content);
-                break;
-            case '06':
-                window.toastr.info(jsonData.content);
-                break;
-            case '07':
-                window.toastr.info(jsonData.content);
-                break;
-            case '08':
-                window.toastr.info(jsonData.content);
-                break;
-            case '09':
-                window.toastr.info(jsonData.content);
-                break;
-        }
+        //switch (jsonData.directive) {
+        //    case '01':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //    case '02':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //    case '03':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //    case '04':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //    case '05':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //    case '06':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //    case '07':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //    case '08':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //    case '09':
+        //        window.toastr.info(jsonData.content);
+        //        break;
+        //}
     };
     window.wsClient.onclose = function (e) {
         window.toastr.warning('与硬件连接断开');

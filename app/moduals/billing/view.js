@@ -525,11 +525,13 @@ define([
                                 router.navigate("main", {trigger: true,replace:true});
                                 //f7app.alert("订单号：" + resp.bill_no,'提示');
                                 toastr.success("订单号：" + resp.bill_no);
-                                var send_data = {};
-                                send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
-                                send_data['content'] = resp.printf;
-                                send_data = JSON.stringify(send_data) + '<EOF>';
-                                _self.sendLargeData2Socket(send_data);
+                                window.wsClient.send('PRNT_' + resp.printf);
+                                window.wsClient.send('OpenCashbox_');
+                                //var send_data = {};
+                                //send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
+                                //send_data['content'] = resp.printf;
+                                //send_data = JSON.stringify(send_data) + '<EOF>';
+                                //_self.sendLargeData2Socket(send_data);
                             } else {
                                 toastr.error(resp.msg);
                             }
