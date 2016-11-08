@@ -37,11 +37,20 @@ define([
                 gather_name:this.attrs.gather_name
             });
             this.render();
-            this.renderContent();
+            if(gatherUI == '01') {
+                this.renderContent();
+            }else {
+                this.renderThirdPay();
+            }
         },
 
         renderContent: function () {
             this.$el.find('.gatherui-content').html(this.template_content(this.model.toJSON()));
+            return this;
+        },
+
+        renderThirdPay: function () {
+            this.$el.find('.third-pay').html(this.template_content(this.model.toJSON()));
             return this;
         },
 
