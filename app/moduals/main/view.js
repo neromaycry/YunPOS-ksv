@@ -308,7 +308,7 @@ define([
                 _self.onDiscountPercentClicked();
             });
 
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.E, function() {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.H, function() {
                 router.navigate('print', {trigger:true});
             });
 

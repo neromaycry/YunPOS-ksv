@@ -29,6 +29,8 @@ define([
 
         template_numpad:numpadtpl,
 
+        print_content:'',
+
         input: 'input[name = bill_date]',
 
         events: {
@@ -40,6 +42,7 @@ define([
             'click .help':'onHelpClicked',
             'click input[name = bill_date]':'focusInputDate',
             'click input[name = bill_no]':'focusInputNo',
+            'click .print':'onPrintClicked'
         },
 
         pageInit: function () {
@@ -64,10 +67,10 @@ define([
 
         initLayoutHeight:function(){
             var dh = $(window).height();
-            var nav = $('.navbar').height();  // �������߶�
-            var panelheading = $('.panel-heading').height();  //���heading�߶�
+            var nav = $('.navbar').height();  // 导航栏高度
+            var panelheading = $('.panel-heading').height();  //面板heading高度
             var cart = dh - nav * 2 - panelheading * 4;
-            $('.goods-detail').height(cart);  //���ù��ﳵ�ĸ߶�
+            $('.goods-detail').height(cart);  //设置购物车的高度
             $('.gather-detail').height(cart);
         },
 
@@ -92,6 +95,11 @@ define([
             this.bindKeyEvents(window.PAGE_ID.PRINT, window.KEYS.T, function () {
                 _self.openHelp();
             });
+
+            this.bindKeyEvents(window.PAGE_ID.PRINT, window.KEYS.H, function () {
+                _self.onReprintClicked();
+            })
+
         },
 
         focusInputDate: function () {
@@ -126,11 +134,25 @@ define([
             return this;
         },
 
-        openHelp: function () {
-            var tipsView = new KeyTipsView('PRINT_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+        /**
+         * 打印小票
+         */
+        onReprintClicked: function () {
+            if(this.print_content == '') {
+                toastr.warning('请先查询要打印的小票');
+            }else {
+                data = {};
+                var str = this.print_content;
+                console.log(this.print_content);
+                data['directive'] = window.DIRECTIVES.PRINTTEXT;
+                data['content'] = str;
+                wsClient.send(JSON.stringify(data));
+                console.log('bill print');
+            }
         },
-
+        /**
+         * 查询订单信息
+         */
         queryBillNo: function () {
             var _self = this;
             var date = $('input[name = bill_date]').val();
@@ -150,10 +172,10 @@ define([
                         });
                         _self.goodsCollection.set(resp.goods_detail);
                         _self.gatherCollection.set(resp.gather_detail);
+                        _self.print_content = resp.printf;
                         _self.renderBillNo();
                         _self.renderCartlist();
                         _self.renderPaymentlist();
-                        console.log(_self.model);
                     }else {
                         toastr.error(resp.msg);
                     }
@@ -162,6 +184,16 @@ define([
                 $('input[name = bill_date]').val('');
             }
         },
+
+        openHelp: function () {
+            var tipsView = new KeyTipsView('PRINT_PAGE');
+            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+        },
+
+        onPrintClicked: function () {
+            this.onReprintClicked();
+        },
+
         onOKClicked: function () {
             this.queryBillNo();
         },
