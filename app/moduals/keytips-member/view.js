@@ -72,6 +72,9 @@ define([
                 case 'CHECKING_PAGE':
                     this.hideModal(window.PAGE_ID.CHECKING);
                     break;
+                case 'PRINT_PAGE':
+                    this.hideModal(window.PAGE_ID.PRINT);
+
             }
         }
 

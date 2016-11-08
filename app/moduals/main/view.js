@@ -84,6 +84,7 @@ define([
             'click .return-force':'onReturnForceClicked',
             'click .checking':'onCheckingClicked',
             'click .login-out':'onLoginOutClicked',
+            'click .print':'onPrintClicked'//打印页面
             //'click .btn-floatpad':'onFloatPadClicked'
         },
 
@@ -305,6 +306,10 @@ define([
             //折让
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
                 _self.onDiscountPercentClicked();
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.E, function() {
+                router.navigate('print', {trigger:true});
             });
 
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
@@ -846,6 +851,13 @@ define([
 
         onHConnectClicked: function () {
             router.navigate('hconnection',{ trigger:true });
+        },
+
+        /**
+         * 跳转打印页面
+         */
+        onPrintClicked: function () {
+            router.navigate('print', {trigger:true});
         }
 
     });

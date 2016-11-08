@@ -20,7 +20,8 @@ define(['backbone'], function (Backbone) {
             'returnforce':'returnforce',
             'returnwhole':'returnwhole',
             'checking':'checking',
-            'hconnection':'hconnection'
+            'hconnection':'hconnection',
+            'print':'print'
         },
 
         //路由初始化可以做一些事
@@ -149,6 +150,14 @@ define(['backbone'], function (Backbone) {
 
         hconnection: function () {
             var _url = './moduals/hconnection/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        print:function () {
+            var _url = './moduals/print/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

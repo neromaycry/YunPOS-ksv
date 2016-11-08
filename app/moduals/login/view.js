@@ -226,16 +226,17 @@ define([
             this.setReturnForceKeys();
             this.setReturnWholeKeys();
             this.setCheckingKeys();
+            this.setPrintKeys();
         },
 
         setMainKeys: function () {
-            var effects = ['退出登录', '确定', '会员页面', '挂单', '解挂',
+            var effects = ['退出登录', '确定', '会员页面','打印页面', '挂单', '解挂',
                 '营业员登录', '结算', '清空购物车', '删除商品', '修改数量',
                 '单品优惠', '折让','向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账'];
-            var keys = ['ESC','ENTER','M','G','J',
+            var keys = ['ESC','ENTER','M','E','G','J',
                 'S','B','C','D','N',
                 'Y','U','↑','↓','F','W','A'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.M, window.KEYS.G, window.KEYS.J,
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.M,window.KEYS.E, window.KEYS.G, window.KEYS.J,
                 window.KEYS.S, window.KEYS.B, window.KEYS.C, window.KEYS.D, window.KEYS.N,
                 window.KEYS.Y, window.KEYS.U, window.KEYS.Up, window.KEYS.Down, window.KEYS.F, window.KEYS.W, window.KEYS.A];
             var mainKeys = [];
@@ -366,6 +367,21 @@ define([
                 storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'CHECKING_PAGE', checkingKeys);
             }
         },
+
+        setPrintKeys: function () {
+            var effects = ['返回', '确定', '向上选择', '向下选择'];
+            var keys = ['ESC', 'ENTER','↑', '↓'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down];
+            var printKeys = [];
+            for (var i = 0; i < effects.length; i++) {
+                var effect = effects[i];
+                var key = keys[i];
+                var keyCode = keyCodes[i];
+                var printKey = {effect: effect, key: key, keyCode: keyCode};
+                printKeys.push(printKey);
+                storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'PRINT_PAGE', printKeys);
+            }
+        }
 
     });
 

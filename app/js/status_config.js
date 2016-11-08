@@ -181,7 +181,8 @@ window.PAGE_ID = {
     'RT_WECHAT':34,
     'RT_QUICK_PAY':35,
     'RT_QP_ALIPAY':36,
-    'RT_QP_WECHAT':37
+    'RT_QP_WECHAT':37,
+    'PRINT':38
 };
 
 window.KEYS = {
