@@ -21,6 +21,8 @@ define([
 
         i:0,
 
+        index:0,
+
         //input: 'input[name = gather-no]',
 
         events:{
@@ -230,6 +232,7 @@ define([
         onOkClicked: function () {
             //var index = $('.cus-selected').data('index');
             console.log(this.index);
+            console.log('***********');
             this.onReceived(this.index);
         },
 
