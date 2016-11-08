@@ -20,9 +20,9 @@ return s;
     <% _.each(obj,function(e, i) {%>
         <li class="list-group-item " style="border-radius: 0">
             <div class="row">
-                <div class="col-md-4"><%= e.goods_name %></div>
-                <div class="col-md-4"><%= e.num %></div>
-                <div class="col-md-4"><%= toDecimal2(e.num*e.price-e.discount) %></div>
+                <div class="cols-xs-4 col-md-4"><%= e.goods_name %></div>
+                <div class="cols-xs-4 col-md-4"><%= e.num %></div>
+                <div class="cols-xs-4 col-md-4"><%= toDecimal2(e.num*e.price-e.discount) %></div>
             </div>
         </li>
     <% }) %>

@@ -56,6 +56,8 @@ define([
             $(this.input).focus();
             this.initTemplates();
             this.$el.find('.for-numpad').html(this.template_numpad);
+            $('.goods-detail').perfectScrollbar();  // 定制滚动条外观
+            $('.gather-detail').perfectScrollbar();  // 定制滚动条外观
         },
 
         initTemplates: function () {
