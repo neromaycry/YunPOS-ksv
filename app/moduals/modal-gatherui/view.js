@@ -36,12 +36,39 @@ define([
             this.model.set({
                 gather_name:this.attrs.gather_name
             });
+            this.prepay(gatherUI);
             this.render();
             if(gatherUI == '01') {
                 this.renderContent();
             }else {
                 this.renderThirdPay();
             }
+        },
+
+        prepay: function (gatherUI) {
+            var data = {};
+            if (gatherUI == '04') {
+                data['orderid'] = storage.get(system_config.ORDER_NO_KEY);
+                data['merid'] = '000201504171126553';
+                data['totalfee'] = '0.01';
+                data['body'] = 'test';
+                data['subject'] = 'test';
+                data['paymethod'] = 'zfb';
+                data['payway'] = 'scancode';
+                data['zfbtwo'] = 'zfbtwo';
+            } else if (gatherUI == '05') {
+                data['orderid'] = storage.get(system_config.ORDER_NO_KEY);
+                data['merid'] = '000201504171126553';
+                data['totalfee'] = '0.01';
+                data['body'] = 'test';
+                data['subject'] = 'test';
+                data['paymethod'] = 'wx';
+            }
+            console.log(resource);
+            resource.post('http://127.0.0.1:5000/api/pay/xfb/prepay', data, function (resp) {
+                console.log(resp);
+                $('.qrcode-img').attr('src', resp.data.codeurl);
+            });
         },
 
         renderContent: function () {

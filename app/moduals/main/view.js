@@ -344,6 +344,10 @@ define([
                 toastr.warning('购物车内无商品，请先选择一些商品吧');
             } else {
                 router.navigate('billing',{trigger:true});
+                var time = new Date();
+                var orderNo = time.getTime();
+                console.log(orderNo);
+                storage.set(system_config.ORDER_NO_KEY, orderNo);
             }
         },
 

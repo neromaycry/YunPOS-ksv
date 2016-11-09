@@ -86,6 +86,7 @@ define([
             this.totalamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','totalamount');
             this.discountamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','discountamount');
             this.itemamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','itemamount');
+            //this.orderNo = storage.get(system_config.ORDER_NO_KEY);  //获取后台生成的订单号
             this.totalamount -= this.discountamount;//优惠金额
             this.unpaidamount = this.totalamount;//应收金额
             this.model.set({

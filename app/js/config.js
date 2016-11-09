@@ -21,6 +21,7 @@ requirejs.config({
         'css': 'requirePlugin/css',
         'json': 'requirePlugin/json',
         '_fetchText': 'requirePlugin/_fetchText',
+        'xfb':'jquery-resource'
     },
     shim:{
         'backbone':{
@@ -36,6 +37,10 @@ requirejs.config({
         },
         "serializeObject": {
             "deps": ["jquery"]
+        },
+        'xfb':{
+            'deps':['jquery'],
+            'exports':'xfb'
         },
         'bootstrap':{
             'deps':['jquery','css!../bootstrap/css/bootstrap.css','css!../bootstrap/css/bootstrap-theme.css'],
@@ -78,7 +83,8 @@ requirejs([
     'toastr',
     'pscrollbar',
     'md5',
-], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,pscrollbar,md5) {
+    'xfb'
+], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,pscrollbar,md5, xfb) {
 
     window.isAndroid = false;
 
