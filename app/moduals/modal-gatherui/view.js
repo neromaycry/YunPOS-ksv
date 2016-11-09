@@ -65,7 +65,7 @@ define([
                 data['paymethod'] = 'wx';
             }
             console.log(resource);
-            resource.post('http://127.0.0.1:5000/api/pay/xfb/prepay', data, function (resp) {
+            resource.post('http://114.55.62.102:9090/api/pay/xfb/prepay', data, function (resp) {
                 console.log(resp);
                 $('.qrcode-img').attr('src', resp.data.codeurl);
             });
@@ -107,7 +107,6 @@ define([
             this.bindModalKeyEvents(this.attrs.currentid, window.KEYS.Enter, function () {
                 _self.attrs.callback(_self.attrs);
                 _self.confirmHideModal(_self.attrs.pageid);
-
             });
         },
 

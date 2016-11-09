@@ -150,6 +150,7 @@ define([
                             attrData['gather_no'] = receivedaccount;
                             attrData['gather_kind'] = attrs.gatherKind;
                             console.log(attrData);
+                            _self.prepay(gatherUI);
                             Backbone.trigger('onReceivedsum',attrData);
                             _self.hideModal(window.PAGE_ID.BILLING);
                             $('input[name = billing]').focus();
@@ -182,6 +183,7 @@ define([
                             attrData['gather_no'] = receivedaccount;
                             attrData['gather_kind'] = attrs.gatherKind;
                             console.log(attrData);
+                            _self.prepay(gatherUI);
                             Backbone.trigger('onReceivedsum',attrData);
                             _self.hideModal(window.PAGE_ID.BILLING);
                             $('input[name = billing]').focus();
@@ -195,9 +197,35 @@ define([
             }
         },
 
-        //onOkClicked:function(){
-        //  this.onReceived();
-        //},
+        /**
+         * 调用支付宝接口
+         */
+       prepay: function (gatherUI) {
+            var data = {};
+            if(gatherUI == '04') {
+                data['orderid'] = storage.get(system_config.ORDER_NO_KEY);
+                data['merid'] = '000201504171126553';
+                data['authno'] = '130080228948099519';
+                data['totalfee'] = '0.01';
+                data['body'] = 'test';
+                data['subject'] = 'test';
+                data['paymethod'] = 'zfb';
+                data['payway'] = 'barcode';
+                data['zfbtwo'] = 'zfbtwo';
+            }else if(gatherUI == '05') {
+                data['orderid'] = storage.get(system_config.ORDER_NO_KEY);
+                data['merid'] = '000201504171126553';
+                data['authno'] = '130080228948099519';
+                data['totalfee'] = '0.01';
+                data['body'] = 'test';
+                data['subject'] = 'test';
+                data['paymethod'] = 'wx';
+                data['payway'] = 'barcode';
+            }
+            resource.post('http://114.55.62.102:9090/api/pay/xfb/micropay', data, function (resp) {
+                console.log(resp);
+            });
+       },
         /**
          * 方向下
          */

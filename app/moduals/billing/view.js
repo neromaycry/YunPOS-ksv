@@ -345,7 +345,7 @@ define([
             this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
         },
         /**
-         * 判断删除的已支付方式里面是否含有一卡通支付。
+         * 判断删除的已支付方式里面是否含有一卡通支付。判断删除的支付方式里面是否含有微信支付宝支付
          */
         judgeEcardExistance: function () {
             var receivedSum = this.model.get('receivedsum');
@@ -354,6 +354,9 @@ define([
             }else{
                 var item = this.collection.at(this.i);
                 var gatherKind = item.get('gather_kind');
+                var gatherId = item.get('gather_id');
+                console.log(gatherId);
+                console.log('gather id');
                 if(gatherKind == '06'){
                     var gatherid = item.get('gather_id');
                     var cardId = item.get('card_id');
@@ -376,7 +379,10 @@ define([
                     storage.remove(system_config.ONE_CARD_KEY);
                     storage.set(system_config.ONE_CARD_KEY, cardId, 'detail', this.tempcollection);
                     this.deleteItem();
-                }else{
+                }else if(gatherId == '12' || gatherId == '13'){
+                    this.deleteThirdPay(gatherId);
+                    //this.deleteItem();
+                }else {
                     this.deleteItem();
                 }
                 var isExist = this.collection.findWhere({gather_kind: "06"});
@@ -388,7 +394,34 @@ define([
             }
         },
 
-
+        /**
+         * 第三方支付退款接口调用
+         */
+        deleteThirdPay: function (gatherId) {
+            var _self = this;
+            var data = {};
+            if(gatherId == '12') {
+                data['orderid'] = storage.get(system_config.ORDER_NO_KEY);
+                data['outtradeno'] = '20161110011124337527438164042518';
+                data['merid'] = '000201504171126553';
+                data['paymethod'] = 'wx';
+                data['refundamount'] = '0.01';
+            }else if(gatherId == '13'){
+                data['orderid'] = storage.get(system_config.ORDER_NO_KEY);
+                data['merid'] = '000201504171126553';
+                data['paymethod'] = 'zfb';
+                data['refundamount'] = '0.01';
+                data['zfbtwo'] = 'zfbtwo';
+            }
+            resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
+                //console.log(resp.data['flag']);
+                if(resp.data['flag'] == '00') {
+                    _self.deleteItem();
+                }else {
+                    toastr.error('退款失败');
+                }
+            });
+        },
         deleteItem:function(){
             var item = this.collection.at(this.i);
             this.collection.remove(item);
