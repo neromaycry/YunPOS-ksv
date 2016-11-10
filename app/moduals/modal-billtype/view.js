@@ -104,22 +104,17 @@ define([
                     gatherKind:gatherKind,
                     callback: function (attrs) {
                         console.log(attrs);
+                        console.log('attrs');
                         var receivedaccount = $('#receive_account').val();
-                        if(receivedaccount == '') {
-                            toastr.warning('您输入的支付账号为空，请重新输入');
-                        } else if(receivedaccount == 0){
-                            toastr.warning('支付账号不能为零，请重新输入');
-                        } else {
-                            var attrData = {};
-                            attrData['gather_id'] = attrs.gather_id;
-                            attrData['receivedsum'] = attrs.receivedsum;
-                            attrData['gather_name'] = attrs.gather_name;
-                            attrData['gather_no'] = receivedaccount;
-                            attrData['gather_kind'] = attrs.gatherKind;
-                            Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING);
-                            $('input[name = billing]').focus();
-                        }
+                        var attrData = {};
+                        attrData['gather_id'] = attrs.gather_id;
+                        attrData['receivedsum'] = attrs.receivedsum;
+                        attrData['gather_name'] = attrs.gather_name;
+                        attrData['gather_no'] = receivedaccount;
+                        attrData['gather_kind'] = attrs.gatherKind;
+                        Backbone.trigger('onReceivedsum',attrData);
+                        _self.hideModal(window.PAGE_ID.BILLING);
+                        $('input[name = billing]').focus();
                     }
                 });
                 this.showModal(window.PAGE_ID.BILLING_ACCOUNT, gaterUIView);
@@ -138,23 +133,17 @@ define([
                     receivedsum:receivedSum,
                     callback:function (attrs) {
                         var receivedaccount = $('input[name = alipay-account]').val();
-                        if(receivedaccount == '') {
-                            toastr.warning('您输入的支付账号为空，请重新输入');
-                        } else if(receivedaccount == 0) {
-                            toastr.warning('支付账号不能为零，请重新输入');
-                        }else{
-                            var attrData = {};
-                            attrData['gather_id'] = attrs.gather_id;
-                            attrData['receivedsum'] = attrs.receivedsum;
-                            attrData['gather_name'] = attrs.gather_name;
-                            attrData['gather_no'] = receivedaccount;
-                            attrData['gather_kind'] = attrs.gatherKind;
-                            console.log(attrData);
-                            _self.prepay(gatherUI);
-                            Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING);
-                            $('input[name = billing]').focus();
-                        }
+                        var attrData = {};
+                        attrData['gather_id'] = attrs.gather_id;
+                        attrData['receivedsum'] = attrs.receivedsum;
+                        attrData['gather_name'] = attrs.gather_name;
+                        attrData['gather_no'] = receivedaccount;
+                        attrData['gather_kind'] = attrs.gatherKind;
+                        console.log(attrData);
+                        _self.prepay(gatherUI);
+                        Backbone.trigger('onReceivedsum',attrData);
+                        _self.hideModal(window.PAGE_ID.BILLING);
+                        $('input[name = billing]').focus();
                     }
                 });
                 this.showModal(window.PAGE_ID.ALIPAY,gaterUIView);
@@ -171,23 +160,17 @@ define([
                     receivedsum:receivedSum,
                     callback:function (attrs) {
                         var receivedaccount = $('input[name = wechat-account]').val();
-                        if(receivedaccount == '') {
-                            toastr.warning('您输入的支付账号为空，请重新输入');
-                        } else if(receivedaccount == 0) {
-                            toastr.warning('支付账号不能为零，请重新输入');
-                        }else{
-                            var attrData = {};
-                            attrData['gather_id'] = attrs.gather_id;
-                            attrData['receivedsum'] = attrs.receivedsum;
-                            attrData['gather_name'] = attrs.gather_name;
-                            attrData['gather_no'] = receivedaccount;
-                            attrData['gather_kind'] = attrs.gatherKind;
-                            console.log(attrData);
-                            _self.prepay(gatherUI);
-                            Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING);
-                            $('input[name = billing]').focus();
-                        }
+                        var attrData = {};
+                        attrData['gather_id'] = attrs.gather_id;
+                        attrData['receivedsum'] = attrs.receivedsum;
+                        attrData['gather_name'] = attrs.gather_name;
+                        attrData['gather_no'] = receivedaccount;
+                        attrData['gather_kind'] = attrs.gatherKind;
+                        console.log(attrData);
+                        _self.prepay(gatherUI);
+                        Backbone.trigger('onReceivedsum',attrData);
+                        _self.hideModal(window.PAGE_ID.BILLING);
+                        $('input[name = billing]').focus();
                     }
                 });
                 this.showModal(window.PAGE_ID.WECHAT,gaterUIView);
@@ -259,8 +242,8 @@ define([
 
         onOkClicked: function () {
             //var index = $('.cus-selected').data('index');
-            console.log(this.index);
-            console.log('***********');
+            //console.log(this.index);
+            //console.log('***********');
             this.onReceived(this.index);
         },
 
