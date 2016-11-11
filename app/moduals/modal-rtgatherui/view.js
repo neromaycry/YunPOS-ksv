@@ -93,8 +93,15 @@ define([
         },
 
         onOKClicked: function () {
-            this.attrs.callback(this.attrs);
-            this.confirmHideModal(this.attrs.pageid);
+            var gatherNo = $(this.input).val();
+            if(gatherNo == '') {
+                toastr.warning('退款账号不能为空');
+            }else if(gatherNo == '0') {
+                toastr.warning('退款账号不能为零');
+            }else {
+                this.attrs.callback(this.attrs);
+                this.confirmHideModal(this.attrs.pageid);
+            }
         },
 
         onBackspaceClicked: function (e) {

@@ -50,7 +50,7 @@ define([
         prepay: function (gatherUI) {
             var data = {};
             if (gatherUI == '04') {
-                data['orderid'] = storage.get(system_config.ORDER_NO_KEY);
+                data['orderid'] = this.attrs.orderNo;
                 data['merid'] = '000201504171126553';
                 data['totalfee'] = '0.01';
                 data['body'] = 'test';
@@ -59,14 +59,15 @@ define([
                 data['payway'] = 'scancode';
                 data['zfbtwo'] = 'zfbtwo';
             } else if (gatherUI == '05') {
-                data['orderid'] = storage.get(system_config.ORDER_NO_KEY);
+                data['orderid'] = this.attrs.orderNo;
                 data['merid'] = '000201504171126553';
                 data['totalfee'] = '0.01';
                 data['body'] = 'test';
                 data['subject'] = 'test';
                 data['paymethod'] = 'wx';
+            }else {
+                return false;
             }
-            console.log(resource);
             resource.post('http://114.55.62.102:9090/api/pay/xfb/prepay', data, function (resp) {
                 console.log(resp);
                 $('.qrcode-img').attr('src', resp.data.codeurl);
@@ -131,8 +132,15 @@ define([
         },
 
         onOKClicked: function () {
-            this.attrs.callback(this.attrs);
-            this.confirmHideModal(this.attrs.pageid);
+            var gatherNo = $(this.input).val();
+            if(gatherNo == '') {
+                toastr.warning('账号不能为空');
+            }else if(gatherNo == '0') {
+                toastr.warning('账号不能为零');
+            }else {
+                this.attrs.callback(this.attrs);
+                this.confirmHideModal(this.attrs.pageid);
+            }
         },
 
         onBackspaceClicked: function (e) {
