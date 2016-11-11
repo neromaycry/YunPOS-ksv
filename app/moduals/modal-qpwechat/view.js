@@ -50,15 +50,37 @@ define([
             if(gatherNo == ''){
                 toastr.warning('微信账号不能为空');
             }else{
-                var data = {};
-                data['gather_no'] = gatherNo;
-                data['gather_id'] = _self.attrs['gather_id'];
-                data['gather_name'] = _self.attrs['gather_name'];
-                data['receivedsum'] = _self.attrs['receivedsum'];
-                Backbone.trigger('onReceivedsum',data);
-                _self.hideModal(window.PAGE_ID.BILLING);
-                $('input[name = billing]').focus();
+                var tempdata = {};
+                tempdata['gather_no'] = gatherNo;
+                tempdata['gather_id'] = _self.attrs['gather_id'];
+                tempdata['gather_name'] = _self.attrs['gather_name'];
+                tempdata['receivedsum'] = _self.attrs['receivedsum'];
+                tempdata['orderNo'] = _self.attrs.orderNo;
+                _self.prepay(tempdata);
             }
+        },
+
+        prepay: function (tempdata) {
+            var _self = this;
+            var receivedaccount = $('input[name = wechat-account]').val();
+            var data = {};
+            data['orderid'] = this.attrs.orderNo;
+            data['merid'] = '000201504171126553';
+            data['authno'] = receivedaccount;
+            data['totalfee'] = '0.01';
+            data['body'] = 'test';
+            data['subject'] = 'test';
+            data['paymethod'] = 'wx';
+            data['payway'] = 'barcode';
+            resource.post('http://114.55.62.102:9090/api/pay/xfb/micropay', data, function (resp) {
+                if(resp.data['flag'] == '00') {
+                    Backbone.trigger('onReceivedsum',tempdata);
+                    _self.hideModal(window.PAGE_ID.BILLING);
+                    $('input[name = billing]').focus();
+                }else {
+                    toastr.error('支付失败');
+                }
+            });
         },
         onCancelClicked: function () {
             this.hideModal(window.PAGE_ID.BILLING);

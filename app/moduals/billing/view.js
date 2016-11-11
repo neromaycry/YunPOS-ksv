@@ -819,11 +819,11 @@ define([
                         if(result == - 1){
                             toastr.info('付款方式编码无效');
                         }else{
+                            var data = {};
                             var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
                             var gatherUI = gathermodel[0].gather_ui;
                             var gatherName = gathermodel[0].gather_name;
                             if(gatherUI == '01'){
-                                var data = {};
                                 data['unpaidamount'] = this.model.get('unpaidamount');
                                 data['gather_id'] = gatherId;
                                 data['gather_name'] = gathermodel[0].gather_name;
@@ -833,17 +833,23 @@ define([
                                     $('input[name = quickpay-account]').focus();
                                 });
                             }else if(gatherUI == '04'){
+                                var time = new Date();
+                                var orderNo = time.getTime();
                                 var data = {};
                                 data['receivedsum'] = this.model.get('unpaidamount');
                                 data['gather_id'] = gatherId;
                                 data['gather_name'] = gathermodel[0].gather_name;
+                                data['orderNo'] = orderNo;
                                 this.alipayview = new QPAliPayView(data);
                                 this.showModal(window.PAGE_ID.QP_ALIPAY,this.alipayview);
                                 $('.modal').on('shown.bs.modal',function(e){
                                     $('input[name = alipay-account]').focus();
                                 });
                             }else if(gatherUI == '05') {
+                                var time = new Date();
+                                var orderNo = time.getTime();
                                 var data = {};
+                                data['orderNo'] = orderNo;
                                 data['receivedsum'] = this.model.get('unpaidamount');
                                 data['gather_id'] = gatherId;
                                 data['gather_name'] = gathermodel[0].gather_name;

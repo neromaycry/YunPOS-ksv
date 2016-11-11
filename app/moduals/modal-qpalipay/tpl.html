@@ -23,16 +23,13 @@ return s;
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-4 col-md-4">支付宝</div>
-                        <div class="col-xs-8 col-md-8">支付金额：<%= toDecimal2(receivedsum) %></div>
+                        <div class="col-xs-8 col-md-8" style="text-align: right">支付金额：<%= toDecimal2(receivedsum) %></div>
                     </div>
                 </div>
                 <div class="panel-body">
-                   <div class="row">
-                       <div class="col-xs-12 col-md-12">
-                           <form>
-                                <input type="text" class="form-control" id="alipay-account" name="alipay-account" onkeypress="return myNumberic(event)"/>
-                           </form>
-                       </div>
+                   <div class="form-group no-margining">
+                       <label class="sr-only" for="alipay-account">alipay account</label>
+                        <input type="text" class="form-control" id="alipay-account" name="alipay-account" placeholder="请输入支付宝账号" onkeypress="return myNumberic(event)"/>
                    </div>
                 </div>
             <div class="panel panel-primary left-margin" style="margin-right: 15px">
