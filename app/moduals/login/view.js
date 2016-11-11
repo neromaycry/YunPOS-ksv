@@ -58,6 +58,10 @@ define([
         initPlugins: function () {
             $('input[name = username]').focus();
             this.setKeys();
+            //$('.login-print').on('click', function () {
+            //    console.log('print');
+            //    window.wsClient.send('PRNT_ 打印sdfajsdklfjaldsjfadf');
+            //});
         },
 
         //iniSettngs: function () {
