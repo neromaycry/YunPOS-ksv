@@ -116,12 +116,14 @@ window.system_config = {
     "IS_KEYBOARD_PLUGGED":"IS_KEYBOARD_PLUGGED",
     "LOGIN_DATE":"LOGIN_DATE",
     "RESTORDER_NUM":"RESTORDRE_NUM",
-    "ORDER_NO_KEY":"ORDER_NO_KEY"
+    "ORDER_NO_KEY":"ORDER_NO_KEY",
+    "PRINTF":"PRINTF"
 };
 
 window.DIRECTIVES = {
-    "PRINTTEXT":"01",
-    "BBPOS_PAIRED_DEVICES":"02"
+    "INIT":"INIT_",
+    "PRINTTEXT":"PRNT_",
+    "OpenCashDrawer":"OpenCashbox_"
 
 };
 

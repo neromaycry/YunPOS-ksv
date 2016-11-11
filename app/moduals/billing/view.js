@@ -483,6 +483,7 @@ define([
          * 光标向上
          */
         scrollUp: function () {
+            wsClient.send(DIRECTIVES.PRINTTEXT + 'dfasdfasfdjsadkfhlkjsafd');
             if (this.i > 0) {
                 this.i--;
             }
@@ -532,14 +533,26 @@ define([
                                     storage.remove(system_config.VIP_KEY);
                                 }
                                 router.navigate("main", {trigger: true,replace:true});
+
+                                //f7app.alert("订单号：" + resp.bill_no,'提示');
                                 toastr.success("订单号：" + resp.bill_no);
-                                window.wsClient.send('PRNT_' + resp.printf);
-                                window.wsClient.send('OpenCashbox_');
+                                console.log(resp.prnt);
+                                var SOCKET_ADDR = 'ws://localhost:7110/';
+                                wsClient = new WebSocket(SOCKET_ADDR);
+                                wsClient.onopen = function (e) {
+                                    wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
+                                    wsClient.send(DIRECTIVES.OpenCashDrawer);
+                                };
+                                wsClient.onclose = function (e) {
+                                    toastr.error('socket已断开');
+                                };
+                                //wsClient.close();
                                 //var send_data = {};
                                 //send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
                                 //send_data['content'] = resp.printf;
                                 //send_data = JSON.stringify(send_data) + '<EOF>';
                                 //_self.sendLargeData2Socket(send_data);
+                                router.navigate("main", {trigger: true,replace:true});
                             } else {
                                 toastr.error(resp.msg);
                             }

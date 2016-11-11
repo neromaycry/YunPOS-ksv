@@ -111,53 +111,52 @@ requirejs([
         'positionClass':'toast-bottom-center'
     };
 
-    var SOCKET_ADDR = 'ws://192.168.31.240:2001/';
+    var SOCKET_ADDR = 'ws://localhost:7110/';
     //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';
 
-    window.wsClient = new WebSocket(SOCKET_ADDR);
-    window.wsClient.onopen = function (e) {
-        window.toastr.success('已与硬件建立连接');
-        window.wsClient.send('INIT_');
-    };
-    window.wsClient.onmessage = function(e) {
-        var jsonData = JSON.parse(e.data);
-        console.log(jsonData);
-        //switch (jsonData.directive) {
-        //    case '01':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //    case '02':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //    case '03':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //    case '04':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //    case '05':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //    case '06':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //    case '07':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //    case '08':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //    case '09':
-        //        window.toastr.info(jsonData.content);
-        //        break;
-        //}
-    };
-    window.wsClient.onclose = function (e) {
-        window.toastr.warning('与硬件连接断开');
-    };
-    window.wsClient.onerror = function(e) {
-        window.toastr.warning('与硬件连接出现问题，请检查硬件');
-    };
+    //window.wsClient = new WebSocket(SOCKET_ADDR);
+    //window.wsClient.onopen = function (e) {
+    //    window.toastr.success('已与硬件建立连接');
+    //};
+    //window.wsClient.onmessage = function(e) {
+    //    console.log(e);
+    //    //switch (jsonData.directive) {
+    //    //    case '01':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //    case '02':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //    case '03':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //    case '04':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //    case '05':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //    case '06':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //    case '07':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //    case '08':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //    case '09':
+    //    //        window.toastr.info(jsonData.content);
+    //    //        break;
+    //    //}
+    //};
+    //window.wsClient.onclose = function (e) {
+    //    window.toastr.warning('与硬件连接断开');
+    //};
+    //window.wsClient.onerror = function(e) {
+    //    window.toastr.warning('与硬件连接出现问题，请检查硬件');
+    //};
+
 
     // 定义调试标志
     window.debug = true;

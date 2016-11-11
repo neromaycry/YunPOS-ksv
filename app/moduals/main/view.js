@@ -132,6 +132,12 @@ define([
             if (storage.isSet(system_config.LOGIN_USER_KEY)){
                 this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
             }
+            //if (storage.isSet(system_config.PRINTF)) {
+            //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
+            //    console.log(message);
+            //    window.wsClient.send(message);
+            //    window.wsClient.send(DIRECTIVES.OpenCashDrawer)
+            //}
             this.onDeleteKey();
             this.initTemplates();
             this.handleEvents();
