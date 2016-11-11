@@ -252,6 +252,7 @@ window.resource = {
             "url": url,
             "type": "POST",
             "data": JSON.stringify(_data),
+            "async":false,
             "success": callback
         });
 

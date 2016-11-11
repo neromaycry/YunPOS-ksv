@@ -18,6 +18,8 @@ define([
 
         template: tpl,
 
+        gatherUI:'',
+
         events: {
             'click .cancel':'onCancelClicked',
             'click .btn-num':'onNumClicked',
@@ -27,8 +29,8 @@ define([
         },
 
         modalInitPage: function () {
-            var gatherUI = this.attrs.gather_ui;
-            this.switchTemplate(gatherUI);
+            this.gatherUI = this.attrs.gather_ui;
+            this.switchTemplate(this.gatherUI);
             this.template_content = _.template(this.template_content);
             this.model = new GatherUIModel();
             this.model.set({
@@ -67,9 +69,15 @@ define([
                 $('input[name = billingrt]').focus();
             });
             this.bindModalKeyEvents(this.attrs.currentid, window.KEYS.Enter, function () {
-                _self.attrs.callback(_self.attrs);
-                _self.confirmHideModal(_self.attrs.pageid);
-
+                var gatherNo = $(_self.input).val();
+                if(gatherNo == '') {
+                    toastr.warning('退款账号不能为空');
+                }else if(gatherNo == '0') {
+                    toastr.warning('退款账号不能为零');
+                }else {
+                    _self.attrs.callback(_self.attrs);
+                    _self.confirmHideModal(_self.attrs.pageid);
+                }
             });
         },
 
@@ -85,8 +93,15 @@ define([
         },
 
         onOKClicked: function () {
-            this.attrs.callback(this.attrs);
-            this.confirmHideModal(this.attrs.pageid);
+            var gatherNo = $(this.input).val();
+            if(gatherNo == '') {
+                toastr.warning('退款账号不能为空');
+            }else if(gatherNo == '0') {
+                toastr.warning('退款账号不能为零');
+            }else {
+                this.attrs.callback(this.attrs);
+                this.confirmHideModal(this.attrs.pageid);
+            }
         },
 
         onBackspaceClicked: function (e) {

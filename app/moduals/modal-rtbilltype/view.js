@@ -101,21 +101,21 @@ define([
                     gatherKind:gatherKind,
                     callback: function (attrs) {
                         var receivedaccount = $('#receive_account').val();
-                        if(receivedaccount == '') {
-                            toastr.warning('您输入的支付账号为空，请重新输入');
-                        } else if(receivedaccount == 0){
-                            toastr.warning('支付账号不能为零，请重新输入');
-                        } else {
-                            var attrData = {};
-                            attrData['gather_id'] = attrs.gather_id;
-                            attrData['receivedsum'] = attrs.receivedsum;
-                            attrData['gather_name'] = attrs.gather_name;
-                            attrData['gather_no'] = receivedaccount;
-                            attrData['gather_kind'] = attrs.gatherKind;
-                            Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING_RETURN);
-                            $('input[name = billingrt]').focus();
-                        }
+                        //if(receivedaccount == '') {
+                        //    toastr.warning('您输入的支付账号为空，请重新输入');
+                        //} else if(receivedaccount == 0){
+                        //    toastr.warning('支付账号不能为零，请重新输入');
+                        //} else {
+                        var attrData = {};
+                        attrData['gather_id'] = attrs.gather_id;
+                        attrData['receivedsum'] = attrs.receivedsum;
+                        attrData['gather_name'] = attrs.gather_name;
+                        attrData['gather_no'] = receivedaccount;
+                        attrData['gather_kind'] = attrs.gatherKind;
+                        Backbone.trigger('onReceivedsum',attrData);
+                        _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                        $('input[name = billingrt]').focus();
+                        //}
                     }
                 });
                 this.showModal(window.PAGE_ID.RT_BILLING_ACCOUNT, gaterUIView);
@@ -132,22 +132,22 @@ define([
                     receivedsum:receivedSum,
                     callback:function (attrs) {
                         var receivedaccount = $('input[name = alipay-account]').val();
-                        if(receivedaccount == '') {
-                            toastr.warning('您输入的支付账号为空，请重新输入');
-                        } else if(receivedaccount == 0) {
-                            toastr.warning('支付账号不能为零，请重新输入');
-                        }else{
-                            var attrData = {};
-                            attrData['gather_id'] = attrs.gather_id;
-                            attrData['receivedsum'] = attrs.receivedsum;
-                            attrData['gather_name'] = attrs.gather_name;
-                            attrData['gather_no'] = receivedaccount;
-                            attrData['gather_kind'] = attrs.gatherKind;
-                            console.log(attrData);
-                            Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING_RETURN);
-                            $('input[name = billingrt]').focus();
-                        }
+                        //if(receivedaccount == '') {
+                        //    toastr.warning('您输入的支付账号为空，请重新输入');
+                        //} else if(receivedaccount == 0) {
+                        //    toastr.warning('支付账号不能为零，请重新输入');
+                        //}else{
+                        var attrData = {};
+                        attrData['gather_id'] = attrs.gather_id;
+                        attrData['receivedsum'] = attrs.receivedsum;
+                        attrData['gather_name'] = attrs.gather_name;
+                        attrData['gather_no'] = receivedaccount;
+                        attrData['gather_kind'] = attrs.gatherKind;
+                        console.log(attrData);
+                        Backbone.trigger('onReceivedsum',attrData);
+                        _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                        $('input[name = billingrt]').focus();
+                        //}
                     }
                 });
                 this.showModal(window.PAGE_ID.RT_ALIPAY,gaterUIView);
@@ -164,22 +164,22 @@ define([
                     receivedsum:receivedSum,
                     callback:function (attrs) {
                         var receivedaccount = $('input[name = wechat-account]').val();
-                        if(receivedaccount == '') {
-                            toastr.warning('您输入的支付账号为空，请重新输入');
-                        } else if(receivedaccount == 0) {
-                            toastr.warning('支付账号不能为零，请重新输入');
-                        }else{
-                            var attrData = {};
-                            attrData['gather_id'] = attrs.gather_id;
-                            attrData['receivedsum'] = attrs.receivedsum;
-                            attrData['gather_name'] = attrs.gather_name;
-                            attrData['gather_no'] = receivedaccount;
-                            attrData['gather_kind'] = attrs.gatherKind;
-                            console.log(attrData);
-                            Backbone.trigger('onReceivedsum',attrData);
-                            _self.hideModal(window.PAGE_ID.BILLING_RETURN);
-                            $('input[name = billingrt]').focus();
-                        }
+                        //if(receivedaccount == '') {
+                        //    toastr.warning('您输入的支付账号为空，请重新输入');
+                        //} else if(receivedaccount == 0) {
+                        //    toastr.warning('支付账号不能为零，请重新输入');
+                        //}else{
+                        var attrData = {};
+                        attrData['gather_id'] = attrs.gather_id;
+                        attrData['receivedsum'] = attrs.receivedsum;
+                        attrData['gather_name'] = attrs.gather_name;
+                        attrData['gather_no'] = receivedaccount;
+                        attrData['gather_kind'] = attrs.gatherKind;
+                        console.log(attrData);
+                        Backbone.trigger('onReceivedsum',attrData);
+                        _self.hideModal(window.PAGE_ID.BILLING_RETURN);
+                        $('input[name = billingrt]').focus();
+                        //}
                     }
                 });
                 this.showModal(window.PAGE_ID.RT_WECHAT,gaterUIView);
