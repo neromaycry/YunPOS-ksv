@@ -455,19 +455,6 @@ define([
             }
         },
 
-        //切换优惠模式
-        onDiscountPercentClicked: function () {
-            if (this.isDiscountPercent) {
-                this.isDiscountPercent = false;
-                $('#main-input').removeClass('input-group');
-                $('#input-percent').hide();
-            } else {
-                this.isDiscountPercent = true;
-                $('#main-input').addClass('input-group');
-                $('#input-percent').show();
-            }
-        },
-
         /**
          * 修改单品数量
          */
@@ -551,6 +538,41 @@ define([
                 }
             }
             $('#input_main').val('');
+        },
+
+        //切换优惠模式
+        onDiscountPercentClicked: function () {
+            //if (this.isDiscountPercent) {
+            //    this.isDiscountPercent = false;
+            //    $('#main-input').removeClass('input-group');
+            //    $('#input-percent').hide();
+            //} else {
+            //    this.isDiscountPercent = true;
+            //    $('#main-input').addClass('input-group');
+            //    $('#input-percent').show();
+            //}
+            //var _self = this;
+            var discountpercent = $('input[name = main]').val();
+            if(this.model.get('itemamount') == 0) {
+                toastr.warning('当前购物车内无商品');
+            }else if(discountpercent == '') {
+                toastr.warning('输入的折扣不能为空');
+            }else if(discountpercent >= 100) {
+                toastr.warning('折扣比率不能大于100');
+            }else if(discountpercent == '.') {
+                toastr.warning('请输入有效的折扣比率');
+            }else {
+                var rate = discountpercent / 100;
+                console.log(rate);
+                var item = this.collection.at(this.i);
+                var price = item.get('price');
+                this.collection.at(this.i).set({
+                    discount:price * (1 - rate)
+                });
+                this.calculateModel();
+                $('#li' + this.i).addClass('cus-selected');
+            }
+            $('input[name = main]').val('');
         },
 
         /**
