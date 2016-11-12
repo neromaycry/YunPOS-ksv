@@ -185,7 +185,9 @@ window.PAGE_ID = {
     'RT_QUICK_PAY':35,
     'RT_QP_ALIPAY':36,
     'RT_QP_WECHAT':37,
-    'PRINT':38
+    'PRINT':38,
+    'MODAL_MEMBER_CARD':40,
+
 };
 
 window.KEYS = {

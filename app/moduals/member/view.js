@@ -5,10 +5,11 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/member/model',
     '../../../../moduals/keytips-member/view',
+    '../../../../moduals/modal-membercard/view',
     'text!../../../../moduals/member/memberinfotpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/member/tpl.html',
-], function (BaseView, MemberModel, KMemberView, memberinfotpl,numpadtpl, tpl) {
+], function (BaseView, MemberModel, KMemberView, MemberCard,memberinfotpl,numpadtpl, tpl) {
 
     var memberView = BaseView.extend({
 
@@ -34,7 +35,8 @@ define([
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
             'click .member_help':'onHelpClicked',
-            'click .member_return':'onReturnClicked'
+            'click .member_return':'onReturnClicked',
+            'click [data-index]':'onCardTypeClicked',
         },
 
         pageInit: function () {
@@ -98,6 +100,19 @@ define([
                     $('input[name = custid]').focus();
                 }
             });
+
+            this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.X, function () {
+                _self.onMCardLogin();
+            });
+
+        },
+
+        /**
+         *  磁条卡登陆
+         */
+        onMCardLogin: function () {
+            var memberCard = new MemberCard();
+            this.showModal(window.PAGE_ID.MODAL_MEMBER_CARD, memberCard);
         },
 
         focusInputCustid: function () {
@@ -174,6 +189,10 @@ define([
         },
         onReturnClicked:function() {
             router.navigate('main',{trigger:true});
+        },
+
+        onCardTypeClicked: function () {
+            this.onMCardLogin();
         }
 
     });
