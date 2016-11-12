@@ -16,6 +16,8 @@ define([
 
         is_from_force:false,
 
+        input:null,
+
         listheight:0,//购物车的高度
 
         itemheight:0,//每条商品的高度
@@ -177,6 +179,7 @@ define([
         },
 
         render: function () {
+            var _self = this;
             console.log('render');
             var _data = this.collection || this.model;
             var dataset = _data ? _data.toJSON() : {};
@@ -188,11 +191,20 @@ define([
                 var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
                 $('input').attr('readonly',!isKeyboardPlugged);
             }
-            $('.cbtn').mousedown(function () {
+            $(document).mousedown(function () {
                 $(this).addClass('clicked');
+
             });
-            $('.cbtn').mouseup(function () {
+            $(document).mouseup(function () {
                 $(this).removeClass('clicked');
+                if (!isModal) {
+                    $(_self.input).focus();
+                }
+            });
+            $(document).on('touchend', function (e) {
+                if (!isModal) {
+                    $(_self.input).focus();
+                }
             });
             return this;
         }

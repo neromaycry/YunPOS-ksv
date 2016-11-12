@@ -538,16 +538,8 @@ define([
                                 //f7app.alert("订单号：" + resp.bill_no,'提示');
                                 toastr.success("订单号：" + resp.bill_no);
                                 console.log(resp.prnt);
-                                var SOCKET_ADDR = 'ws://localhost:7110/';
-                                wsClient = new WebSocket(SOCKET_ADDR);
-                                wsClient.onopen = function (e) {
-                                    wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
-                                    wsClient.send(DIRECTIVES.OpenCashDrawer);
-                                };
-                                wsClient.onclose = function (e) {
-                                    toastr.error('socket已断开');
-                                };
-                                //wsClient.close();
+                                wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
+                                wsClient.send(DIRECTIVES.OpenCashDrawer);
                                 //var send_data = {};
                                 //send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
                                 //send_data['content'] = resp.printf;

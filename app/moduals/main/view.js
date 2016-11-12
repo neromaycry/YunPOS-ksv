@@ -37,6 +37,10 @@ define([
 
         memeber:'',
 
+        clientScreen: null,
+
+        isInSale: false,
+
         i: 0,
 
         template_posinfo:posinfotpl,
@@ -59,7 +63,7 @@ define([
 
         isDiscountPercent:false,
 
-        input:'input[name = main]',
+        //input:'input[name = main]',
 
         events: {
             'click .numpad-ok':'onOKClicked',
@@ -91,6 +95,7 @@ define([
         pageInit: function () {
             var _self = this;
             pageId = window.PAGE_ID.MAIN;
+            this.input = 'input[name = main]';
             //console.log(pageId);
             var user = storage.get(system_config.LOGIN_USER_KEY);  // 从本地取出登录用户属性
             this.model = new HomeModel();  // 当前view的model
@@ -144,7 +149,13 @@ define([
         },
 
         initPlugins: function () {
+            //var _self = this;
             $(this.input).focus();
+            //$(this.input).blur(function () {
+            //    console.log('blur');
+            //    console.log(_self.input);
+            //    $(_self.input).focus();
+            //});
             $('.for-cartlist').perfectScrollbar();  // 定制滚动条外观
             this.renderPosInfo();
             this.renderSalesman();
@@ -611,6 +622,10 @@ define([
                 this.requestModel.sku(data , function(resp) {
                     if(resp.status == '00') {
                         _self.onAddItem(resp.goods_detail);
+                        if (!_self.isInSale) {
+                            _self.isInSale = true;
+
+                        }
                     }else{
                         toastr.warning(resp.msg);
                     }

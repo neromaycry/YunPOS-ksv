@@ -17,6 +17,7 @@ define([
             console.log('modal:' + this.id);
             //$(document).unbind('keyup');
             $(document).unbind('keydown');
+            isModal = true;
             this.$el.empty().off();
             if (attrs) {
                 this.attrs = attrs;
@@ -71,6 +72,7 @@ define([
         },
 
         hideModal: function (id) {
+            isModal = false;
             $('.modal').modal('hide');
             $('.modal').on('hidden.bs.modal', function () {
                 pageId = id;
@@ -78,6 +80,7 @@ define([
         },
 
         confirmHideModal:function(pageid) {
+            isModal = false;
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
                     this.hideModal(window.PAGE_ID.LOGIN);
@@ -114,8 +117,12 @@ define([
 
         render: function () {
             console.log('modal render');
+            var _self = this;
             this.$el.html(this.template(this.model.toJSON()));
             this.onModalShown();
+            //$('.cbtn').mouseup(function () {
+            //    $(_self.input).focus();
+            //});
             return this;
         }
 

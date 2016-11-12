@@ -94,7 +94,15 @@ requirejs([
 
     window.isfromForce = false;
 
+    window.isModal = false;
+
     window.psbar = pscrollbar;
+
+    window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);
+
+    if (isClientScreenShow) {
+        this.clientScreen = window.open("client.html", "", "top=0,left=200,width=500,height=400");
+    }
 
     var options = {
         hashTracking:false
@@ -114,10 +122,14 @@ requirejs([
     var SOCKET_ADDR = 'ws://localhost:7110/';
     //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';
 
-    //window.wsClient = new WebSocket(SOCKET_ADDR);
-    //window.wsClient.onopen = function (e) {
-    //    window.toastr.success('已与硬件建立连接');
-    //};
+    window.wsClient = new WebSocket(SOCKET_ADDR);
+    window.wsClient.onopen = function (e) {
+        window.toastr.success('已与硬件建立连接');
+    };
+    window.wsClient.onmessage = function (e) {
+        console.log(e);
+    };
+
     //window.wsClient.onmessage = function(e) {
     //    console.log(e);
     //    //switch (jsonData.directive) {
@@ -150,12 +162,12 @@ requirejs([
     //    //        break;
     //    //}
     //};
-    //window.wsClient.onclose = function (e) {
-    //    window.toastr.warning('与硬件连接断开');
-    //};
-    //window.wsClient.onerror = function(e) {
-    //    window.toastr.warning('与硬件连接出现问题，请检查硬件');
-    //};
+    window.wsClient.onclose = function (e) {
+        window.toastr.warning('与硬件连接断开');
+    };
+    window.wsClient.onerror = function(e) {
+        window.toastr.warning('与硬件连接出现问题，请检查硬件');
+    };
 
 
     // 定义调试标志

@@ -17,6 +17,8 @@ define([
 
         template: tpl,
 
+        clientScreen: null,
+
         input:'input[name = username]',
 
         events: {
@@ -38,8 +40,6 @@ define([
             storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY,'http://111.198.72.128:3000/v1');
             //storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY,'http://192.168.31.197:3000/v1');
             storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.POS_KEY,'1');
-
-
             this.requestModel = new LoginModel();
             this.model = new LoginModel();
             var data = {};
@@ -53,6 +53,7 @@ define([
                 }
             });
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
+            storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
         },
 
         initPlugins: function () {

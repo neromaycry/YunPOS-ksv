@@ -117,7 +117,8 @@ window.system_config = {
     "LOGIN_DATE":"LOGIN_DATE",
     "RESTORDER_NUM":"RESTORDRE_NUM",
     "ORDER_NO_KEY":"ORDER_NO_KEY",
-    "PRINTF":"PRINTF"
+    "PRINTF":"PRINTF",
+    "IS_CLIENT_SCREEN_SHOW":"IS_CLIENT_SCREEN_SHOW"
 };
 
 window.DIRECTIVES = {
