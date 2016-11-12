@@ -101,7 +101,7 @@ requirejs([
     window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);
 
     if (isClientScreenShow) {
-        this.clientScreen = window.open("client.html", "", "top=0,left=200,width=500,height=400");
+        window.clientScreen = window.open("client.html", "", "top=0,left=200,width=500,height=400");
     }
 
     var options = {

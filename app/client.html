@@ -7,27 +7,26 @@
     <link rel="stylesheet" href="js/bootstrap/css/bootstrap.css">
     <script src="js/lib/jquery-2.2.3.js"></script>
     <script src="js/bootstrap/js/bootstrap.js"></script>
+    <script src="js/tplscripts.js"></script>
 </head>
 <body>
 
     <div class="container-fluid">
-        <div class="row client-panel">
+        <div id="curSaleState" class="row client-panel" style="display: none;">
             <div class="col-md-2">件数：</div>
-            <div class="col-md-2">1.000</div>
+            <div id="itemAmount" class="col-md-2">1.000</div>
             <div class="col-md-2">优惠：</div>
-            <div class="col-md-2">-0.00</div>
+            <div id="totalDiscount" class="col-md-2">-0.00</div>
             <div class="col-md-2">总计：</div>
-            <div class="col-md-2">18.80</div>
+            <div id="totalAmount" class="col-md-2">18.80</div>
         </div>
-        <div class="row client-panel">
-            <div class="col-md-2">天康龙骨</div>
-            <div class="col-md-2">500g</div>
-            <div class="col-md-2">1.000</div>
-            <div class="col-md-2">-0.00</div>
-            <div class="col-md-2">18.80</div>
+        <div id="curItem" class="row client-panel" style="display: none">
+            <div id="itemName" class="col-md-2">天康龙骨</div>
+            <div id="itemSpec" class="col-md-2">500g</div>
+            <div id="itemNum" class="col-md-2">1.000</div>
+            <div id="itemDiscount" class="col-md-2">-0.00</div>
+            <div id="itemPrice" class="col-md-2">18.80</div>
         </div>
-
-
     </div>
 
 </body>
