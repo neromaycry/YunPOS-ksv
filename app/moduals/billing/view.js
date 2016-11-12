@@ -446,9 +446,10 @@ define([
          * 取消整单优惠
          */
         cancelTotalDiscount: function () {
+            var receivedsum = this.model.get('receivedsum');
             if(this.totaldiscount == 0){
-                toastr.info('您未进行任何优惠');
-            }else if(this.receivedsum != 0){
+                toastr.info('您未进行任何优惠')
+            }else if(receivedsum != 0){
                 toastr.info('您已选择支付方式，不能取消整单优惠');
             }else{
                 this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);

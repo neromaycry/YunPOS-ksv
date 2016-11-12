@@ -98,7 +98,7 @@ define([
             var cartWidth = dw - leftWidth - 45;
             $('.cart-panel').width(cartWidth);
             $('.rtcart-content').height(payedlist);
-            this.listheight = $('.rtcart-content').height();//购物车列表的高度
+            this.listheight = payedlist;//购物车列表的高度
             this.listnum = 10;//设置商品列表中的条目数
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
         },
@@ -110,7 +110,7 @@ define([
 
         renderRtcart: function () {
             this.$el.find('.rtcart-content').html(this.template_rtcart(this.RtcartCollection.toJSON()));
-            $('.rtcart-content').height(this.listheight / this.listnum - 21);
+            $('.li-cartlist').height(this.listheight / this.listnum - 21);
             $('#li' + this.i).addClass('cus-selected');
             return this;
         },
