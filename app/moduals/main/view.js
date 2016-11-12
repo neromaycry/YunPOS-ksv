@@ -500,41 +500,39 @@ define([
         modifyItemDiscount: function () {
             var _self = this;
             var value = $('#input_main').val();
-            if(_self.model.get('itemamount') == 0){
+            if(_self.model.get('itemamount') == 0) {
                 toastr.warning('当前购物车内无商品');
-            }else{
-                if(this.isDiscountPercent) {
-                    if (value == '') {
-                        toastr.warning('输入的折扣不能为空');
-                    } else if (value >= 100) {
-                        toastr.warning('折扣比率不能大于100%');
-                    } else {
-                        var rate = value/100;
-                        var item = _self.collection.at(_self.i);
-                        var price = item.get('price');
-                        _self.collection.at(_self.i).set({
-                            discount:price*(1-rate)
-                        }) ;
-                        _self.calculateModel();
-                        $('#li' + _self.i).addClass('cus-selected');
-                    }
-                } else {
-                    if(value == '') {
-                        toastr.warning('输入的优惠金额不能为空，请重新输入');
-                    }else{
-                        var item = _self.collection.at(_self.i);
-                        var price = item.get('price');
-                        if (value <= parseFloat(price) ) {
-                            _self.collection.at(_self.i).set({
-                                discount: value
-                            });
-                            _self.calculateModel();
-                            $('#li' + _self.i).addClass('cus-selected');
-
-                        }else {
-                            toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
-                        }
-                    }
+                //}else{
+                //    if(this.isDiscountPercent) {
+                //        if (value == '') {
+                //            toastr.warning('输入的折扣不能为空');
+                //        } else if (value >= 100) {
+                //            toastr.warning('折扣比率不能大于100%');
+                //        } else {
+                //            var rate = value/100;
+                //            var item = _self.collection.at(_self.i);
+                //            var price = item.get('price');
+                //            _self.collection.at(_self.i).set({
+                //                discount:price*(1-rate)
+                //            }) ;
+                //            _self.calculateModel();
+                //            $('#li' + _self.i).addClass('cus-selected');
+                //        }
+                //    }
+                // else {
+            }else if(value == '') {
+                toastr.warning('输入的优惠金额不能为空');
+            }else {
+                var item = _self.collection.at(_self.i);
+                var price = item.get('price');
+                if (value <= parseFloat(price) ) {
+                    _self.collection.at(_self.i).set({
+                        discount: value
+                    });
+                    _self.calculateModel();
+                    $('#li' + _self.i).addClass('cus-selected');
+                }else {
+                    toastr.warning('优惠金额不能大于单品金额');
                 }
             }
             $('#input_main').val('');
