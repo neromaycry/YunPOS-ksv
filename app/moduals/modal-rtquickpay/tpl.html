@@ -19,17 +19,17 @@ return s;
     <div class="modal-content">
         <div class="modal-body" style="padding:0;">
             <div class="panel panel-primary" style="border: none;margin: 0;">
-                <div class="panel-heading">
+                <div class="panel-heading pos-textsize">
                     <div class="row">
                         <div class="col-xs-4 col-md-4"><%= gather_name %></div>
-                        <div class="col-xs-8 col-md-8">退款金额：<%= toDecimal2(unpaidamount) %></div>
+                        <div class="col-xs-8 col-md-8 text-right">退款金额：<%= toDecimal2(unpaidamount) %></div>
                     </div>
                 </div>
                 <div class="panel-body">
-                    <form>
+                    <div class="form-group no-margining">
+                        <label class="sr-only" for="rtquickpay-account">quickpay</label>
                         <input type="text" class="form-control" id="rtquickpay-account" name="rtquickpay-account" onkeypress="return myNumberic(event)" placeholder="请输入付款账号">
-                        <input type="text" style="display: none;"/>
-                    </form>
+                    </div>
                 </div>
             </div>
             <div class="panel panel-primary left-margin" style="margin-right: 15px">

@@ -25,14 +25,18 @@ body .no-border-radius {
     border-radius: 0;
 }
 
-div .pos-button-textsize {
-    font-size: 10px;
+ div.button-group div.row .pos-button-textsize {
+    font-size: 17px;
     white-space: nowrap;
 }
 
 div .pos-textsize {
-    font-size: 10px;
+    font-size: 15px;
     white-space: nowrap;
+}
+
+table .table-textsize {
+    font-size: 15px;
 }
 
 ul .cus-selected{
@@ -137,7 +141,7 @@ div .numpad-ok {
     display: block;
     height: 55px;
     line-height: 55px;
-    font-size: 16px;
+    font-size: 17px;
     vertical-align: middle;
     margin-bottom: 0;
 }
@@ -150,7 +154,7 @@ div .cart-billing {
     display: block;
     height: 50px;
     line-height: 50px;
-    font-size: 16px;
+    font-size: 17px;
     vertical-align: middle;
     margin-bottom: 0;
 }
