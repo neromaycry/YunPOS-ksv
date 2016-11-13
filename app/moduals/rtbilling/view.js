@@ -515,7 +515,7 @@ define([
                             });
                         }
                     },
-                    content:'确定进入退货结算？'
+                    content:'确定结算？'
                 });
                 _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             }
