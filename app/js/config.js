@@ -98,7 +98,7 @@ requirejs([
 
     window.psbar = pscrollbar;
 
-    window.isPacked = true;  //程序是否已打包
+    window.isPacked = false;  //程序是否已打包
 
     console.log(document.body.clientWidth);
 
