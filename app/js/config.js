@@ -86,22 +86,24 @@ requirejs([
     'xfb'
 ], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb) {
 
-    window.isAndroid = false;
+    window.isAndroid = false;  //是否为Android设备
 
     window.storage = $.localStorage;
 
-    window.pageId = 0;
+    window.pageId = 0;  //每个页面的pageid
 
     window.isfromForce = false;
 
-    window.isModal = false;
+    window.isModal = false;  //当前页面是否是模态框
 
     window.psbar = pscrollbar;
 
-    window.isPacked = false;
+    window.isPacked = true;  //程序是否已打包
+
+    console.log(document.body.clientWidth);
 
     if (window.isPacked) {
-        window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);
+        window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显
         if (isClientScreenShow) {
             var gui = window.requireNode(['nw.gui']);
             window.clientScreen = gui.Window.open("client.html", {
@@ -111,17 +113,13 @@ requirejs([
                 toolbar: false
             });
             window.clientScreen.moveTo(1920, 0);
+            window.clientScreen.enterKioskMode();
             window.clientScreen.on ('loaded', function(){
                 // the native onload event has just occurred
                 window.clientDom = window.clientScreen.window.document;
             });
         }
     }
-
-    var options = {
-        hashTracking: false
-    };
-    //window.modal = $('[data-remodal-id = modal]').remodal(options);
 
     Backbone.history.start();
     _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);

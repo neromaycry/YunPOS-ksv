@@ -155,6 +155,12 @@ define([
 
         },
 
+        /**
+         * 控制客显屏中购物信息的显示与隐藏
+         * @param displayMode 是否显示 'none'不显示  'block'显示
+         * @param ids 显示与隐藏区域的id
+         * @param isPacked 是否已打包 true为已打包，false为未打包（通过是否打包来判断是否执行此函数，防止程序因未打包而报错）
+         */
         ctrlClientInfo: function (displayMode, ids, isPacked) {
             if (isPacked) {
                 for (var i = 0;i< ids.length;i++) {

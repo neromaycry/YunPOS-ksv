@@ -625,7 +625,7 @@ define([
                     if(resp.status == '00') {
                         if (!_self.isInSale) {
                             _self.isInSale = true;
-                            _self.ctrlClientInfo('display', _self.ids, isPacked);
+                            _self.ctrlClientInfo('block', _self.ids, isPacked);
                         }
                         _self.onAddItem(resp.goods_detail);
                     }else{
