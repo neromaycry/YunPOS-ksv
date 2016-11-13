@@ -205,12 +205,14 @@ define([
                 var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
                 $('input').attr('readonly',!isKeyboardPlugged);
             }
-            $(document).mousedown(function () {
-                $(this).addClass('clicked');
 
+            $('.cbtn').mousedown(function () {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').mouseup(function () {
+                $(this).removeClass('clicked');
             });
             $(document).mouseup(function () {
-                $(this).removeClass('clicked');
                 if (!isModal) {
                     $(_self.input).focus();
                 }
