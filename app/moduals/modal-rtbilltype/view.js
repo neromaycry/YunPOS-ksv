@@ -20,6 +20,8 @@ define([
 
         i:0,
 
+        index:0,
+
         //input: 'input[name = gather-no]',
 
         events:{

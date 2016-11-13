@@ -75,7 +75,7 @@ define([
             $('.for-cashier-detail').height(cashierdetail);
             $('.for-daily-detail').height(cashierdetail);
             this.listheight = cashierdetail;
-            this.listnum = 4;
+            this.listnum = 5;
         },
 
         bindKeys: function () {

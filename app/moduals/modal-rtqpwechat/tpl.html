@@ -20,19 +20,19 @@ return s;
     <div class="modal-content">
         <div class="modal-body" style="padding: 0">
             <div class="panel panel-primary" style="border: none;margin: 0;">
-                <div class="panel-heading">
+                <div class="panel-heading pos-textsize">
                     <div class="row">
                         <div class="col-xs-4 col-md-4">微信</div>
-                        <div class="col-xs-8 col-md-8">退款金额：<%= toDecimal2(receivedsum) %></div>
+                        <div class="col-xs-8 col-md-8 text-right">退款金额：<%= toDecimal2(receivedsum) %></div>
                     </div>
                 </div>
                 <div class="panel-body">
                    <div class="row">
                        <div class="col-xs-12 col-md-12">
-                           <form>
+                           <div class="form-group no-margining">
+                               <label class="sr-only" for="rtwechat-account">wechat</label>
                                <input type="text" class="form-control" id="rtwechat-account" name="rtwechat-account" onkeypress="return myNumberic(event)"/>
-                               <input type="text" style="display: none"/>
-                           </form>
+                           </div>
                        </div>
                    </div>
                 </div>
