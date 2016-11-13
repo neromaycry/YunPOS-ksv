@@ -37,6 +37,8 @@ define([
 
         memeber:'',
 
+        ids: ['curSaleState', 'curItem'],
+
         clientScreen: null,
 
         isInSale: false,
@@ -623,8 +625,7 @@ define([
                     if(resp.status == '00') {
                         if (!_self.isInSale) {
                             _self.isInSale = true;
-                            clientScreen.document.getElementById("curSaleState").style.display = "block";
-                            clientScreen.document.getElementById("curItem").style.display = "block";
+                            _self.ctrlClientInfo('display', _self.ids, isPacked);
                         }
                         _self.onAddItem(resp.goods_detail);
                     }else{
@@ -638,7 +639,7 @@ define([
 
         onAddItem: function (JSONData) {
             this.collection.set(JSONData, {merge: false});
-            this.updateClientCurItem(this.collection);
+            this.updateClientCurItem(this.collection, isPacked);
             this.insertSerial();
             this.calculateModel();
             this.buttonSelected();
@@ -655,8 +656,7 @@ define([
             this.renderPosInfo();
             this.renderCartList();
             storage.remove(system_config.SALE_PAGE_KEY);
-            clientScreen.document.getElementById("curSaleState").style.display = "none";
-            clientScreen.document.getElementById("curItem").style.display = "none";
+            this.ctrlClientInfo('none', this.ids, isPacked);
             this.isInSale = false;
             toastr.success('交易已取消');
         },
@@ -689,7 +689,7 @@ define([
                 this.itemamount += itemNum[i];
                 this.discountamount += discounts[i];
             }
-            this.updateClientSaleState(this.totalamount, this.itemamount, this.discountamount);
+            this.updateClientSaleState(this.totalamount, this.itemamount, this.discountamount, isPacked);
             this.renderCartList();
             this.updateShopInfo();
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', this.collection.toJSON());
@@ -877,27 +877,28 @@ define([
          * @param itemamount
          * @param discountamount
          */
-        updateClientSaleState: function (totalamount, itemamount, discountamount) {
-            clientScreen.document.getElementById("totalAmount").innerHTML = toDecimal2(totalamount);
-            clientScreen.document.getElementById("itemAmount").innerHTML = itemamount;
-            clientScreen.document.getElementById("totalDiscount").innerHTML = toDecimal2(discountamount);
+        updateClientSaleState: function (totalamount, itemamount, discountamount, isPacked) {
+            if (isPacked) {
+                clientDom.getElementById("totalAmount").innerHTML = toDecimal2(totalamount);
+                clientDom.getElementById("itemAmount").innerHTML = itemamount;
+                clientDom.getElementById("totalDiscount").innerHTML = toDecimal2(discountamount);
+            }
         },
 
         /**
          * 更新客显区当前商品信息
          * @param collection
          */
-        updateClientCurItem: function (collection) {
-            console.log('updateClientCurItem-----');
-            var len = collection.length;
-            console.log(len);
-            var model = collection.at(len-1).toJSON();
-            console.log(model);
-            clientScreen.document.getElementById("itemName").innerHTML = model.goods_name;
-            clientScreen.document.getElementById("itemSpec").innerHTML = model.spec;
-            clientScreen.document.getElementById("itemNum").innerHTML = model.num;
-            clientScreen.document.getElementById("itemDiscount").innerHTML = toDecimal2(model.discount);
-            clientScreen.document.getElementById("itemPrice").innerHTML = toDecimal2(model.price);
+        updateClientCurItem: function (collection, isPacked) {
+            if (isPacked) {
+                var len = collection.length;
+                var model = collection.at(len-1).toJSON();
+                clientDom.getElementById("itemName").innerHTML = model.goods_name;
+                clientDom.getElementById("itemSpec").innerHTML = model.spec;
+                clientDom.getElementById("itemNum").innerHTML = model.num;
+                clientDom.getElementById("itemDiscount").innerHTML = toDecimal2(model.discount);
+                clientDom.getElementById("itemPrice").innerHTML = toDecimal2(model.price);
+            }
         },
 
         //onFloatPadClicked: function () {

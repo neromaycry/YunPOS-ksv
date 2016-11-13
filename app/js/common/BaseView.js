@@ -132,7 +132,7 @@ define([
          * @param callback 对应将要绑定的回调函数
          */
         bindKeyEvents: function (id,keyCode,callback) {
-            $(document).keyup(function (e) {
+            $(window).keyup(function (e) {
                 e = e || window.event;
                 console.log(e.which);
                 if(e.which == keyCode && pageId == id) {
@@ -153,6 +153,14 @@ define([
 
         bindKeys: function () {
 
+        },
+
+        ctrlClientInfo: function (displayMode, ids, isPacked) {
+            if (isPacked) {
+                for (var i = 0;i< ids.length;i++) {
+                    clientDom.getElementById(ids[i]).style.display = displayMode;
+                }
+            }
         },
 
         sendLargeData2Socket: function (str) {

@@ -2,52 +2,52 @@
  * Created by gjwlg on 2016/9/9.
  */
 requirejs.config({
-    waitSeconds:0,
-    baseUrl:'./js/lib/',
-    paths:{
-        'jquery':'jquery-2.2.3',
+    waitSeconds: 0,
+    baseUrl: './js/lib/',
+    paths: {
+        'jquery': 'jquery-2.2.3',
         "serializeObject": "jquery.serializeObject",
-        'storage':'../jquery-storageapi/jquery.storageapi',
-        'underscore':'underscore',
-        'backbone':'backbone.min',
+        'storage': '../jquery-storageapi/jquery.storageapi',
+        'underscore': 'underscore',
+        'backbone': 'backbone.min',
         "md5": "jQuery.md5",
         'validation': 'backbone-validation',
-        'loading':'../loading/jquery.showLoading.min',
-        'common':'common',
-        'toastr':'../toastr/toastr.min',
-        'bootstrap':'../bootstrap/js/bootstrap',
-        'pscrollbar':'../perfect-scrollbar/js/perfect-scrollbar.jquery',
+        'loading': '../loading/jquery.showLoading.min',
+        'common': 'common',
+        'toastr': '../toastr/toastr.min',
+        'bootstrap': '../bootstrap/js/bootstrap',
+        'pscrollbar': '../perfect-scrollbar/js/perfect-scrollbar.jquery',
         'text': 'requirePlugin/text',
         'css': 'requirePlugin/css',
         'json': 'requirePlugin/json',
         '_fetchText': 'requirePlugin/_fetchText',
-        'xfb':'jquery-resource'
+        'xfb': 'jquery-resource'
     },
-    shim:{
-        'backbone':{
-            'deps':['underscore'],
-            'exports':'Backbone'
+    shim: {
+        'backbone': {
+            'deps': ['underscore'],
+            'exports': 'Backbone'
         },
         'validation': {
             'deps': ["backbone"],
             'exports': 'validation'
         },
-        'underscore':{
-            'exports':'_'
+        'underscore': {
+            'exports': '_'
         },
         "serializeObject": {
             "deps": ["jquery"]
         },
-        'xfb':{
-            'deps':['jquery'],
-            'exports':'xfb'
+        'xfb': {
+            'deps': ['jquery'],
+            'exports': 'xfb'
         },
-        'bootstrap':{
-            'deps':['jquery','css!../bootstrap/css/bootstrap.css','css!../bootstrap/css/bootstrap-theme.css'],
-            'exports':'Bootstrap'
+        'bootstrap': {
+            'deps': ['jquery', 'css!../bootstrap/css/bootstrap.css', 'css!../bootstrap/css/bootstrap-theme.css'],
+            'exports': 'Bootstrap'
         },
-        'storage':{
-            'deps':['jquery']
+        'storage': {
+            'deps': ['jquery']
         },
         'loading': {
             "deps": [
@@ -55,16 +55,16 @@ requirejs.config({
                 'jquery'
             ],
         },
-        'md5':{
-            'deps':['jquery']
+        'md5': {
+            'deps': ['jquery']
         },
-        'toastr':{
-            'deps':['css!../toastr/toastr.css'],
-            'exports':'toastr'
+        'toastr': {
+            'deps': ['css!../toastr/toastr.css'],
+            'exports': 'toastr'
         },
-        'pscrollbar':{
-            'deps':['css!../perfect-scrollbar/css/perfect-scrollbar.min.css'],
-            'exports':'pscrollbar'
+        'pscrollbar': {
+            'deps': ['css!../perfect-scrollbar/css/perfect-scrollbar.min.css'],
+            'exports': 'pscrollbar'
         },
     }
 });
@@ -84,7 +84,7 @@ requirejs([
     'pscrollbar',
     'md5',
     'xfb'
-], function ($,_,Backbone,common,serializeObject,BaseRouter,validation,Bootstrap,loading,storage,toastr,pscrollbar,md5, xfb) {
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb) {
 
     window.isAndroid = false;
 
@@ -98,14 +98,28 @@ requirejs([
 
     window.psbar = pscrollbar;
 
-    window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);
+    window.isPacked = false;
 
-    if (isClientScreenShow) {
-        window.clientScreen = window.open("client.html", "", "top=0,left=200,width=500,height=400");
+    if (window.isPacked) {
+        window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);
+        if (isClientScreenShow) {
+            var gui = window.requireNode(['nw.gui']);
+            window.clientScreen = gui.Window.open("client.html", {
+                title: '云POS',
+                height: 1920,
+                width: 1280,
+                toolbar: false
+            });
+            window.clientScreen.moveTo(1920, 0);
+            window.clientScreen.on ('loaded', function(){
+                // the native onload event has just occurred
+                window.clientDom = window.clientScreen.window.document;
+            });
+        }
     }
 
     var options = {
-        hashTracking:false
+        hashTracking: false
     };
     //window.modal = $('[data-remodal-id = modal]').remodal(options);
 
@@ -115,8 +129,8 @@ requirejs([
     //toastr的初始化设置
     window.toastr = toastr;
     window.toastr.options = {
-        'timeOut':'800',
-        'positionClass':'toast-bottom-center'
+        'timeOut': '800',
+        'positionClass': 'toast-bottom-center'
     };
 
     var SOCKET_ADDR = 'ws://localhost:7110/';
@@ -165,7 +179,7 @@ requirejs([
     window.wsClient.onclose = function (e) {
         window.toastr.warning('与硬件连接断开');
     };
-    window.wsClient.onerror = function(e) {
+    window.wsClient.onerror = function (e) {
         window.toastr.warning('与硬件连接出现问题，请检查硬件');
     };
 
@@ -265,6 +279,7 @@ requirejs([
         //判断
         if (flag2 || flag1) return false;
     }
+
     //禁止后退键 作用于Firefox、Opera
     document.onkeypress = forbidBackSpace;
     //禁止后退键  作用于IE、Chrome
@@ -313,7 +328,6 @@ requirejs([
         setScreenWH();
 
     });
-
 
 
 });
