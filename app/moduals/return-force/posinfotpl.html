@@ -38,8 +38,8 @@
 
 
 
-<div class="col-md-2 cart-billing no-padding">件数：<%= itemamount %></div>
-<div class="col-md-2 cart-billing text-teal">优惠： - <%= toDecimal2(discountamount) %></div>
+<div class="col-md-2 cart-billing no-padding text-nowrap">件数：<%= itemamount %></div>
+<div class="col-md-2 cart-billing text-teal text-nowrap">优惠： - <%= toDecimal2(discountamount) %></div>
 <div class="col-md-2 cart-billing text-red text-nowrap">退款：<%= toDecimal2(totalamount-discountamount) %></div>
 <div class="col-md-3 no-padding">
     <div class="cart-billing button-highlight rt-cancel">取消退货</div>
