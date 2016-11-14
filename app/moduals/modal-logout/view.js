@@ -19,24 +19,28 @@ define([
             'click .cancel':'onCancelClicked',
             'click .ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
-            'click input[name = logout_username]':'focusInputUser',
-            'click input[name = logout_passwd]':'focusInputPasswd',
+            //'click input[name = logout_username]':'focusInputUser',
+            //'click input[name = logout_passwd]':'focusInputPasswd',
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked'
         },
 
         modalInitPage: function () {
             this.model = new LogoutModel();
+            $('.modal').on('shown.bs.modal', function () {
+                $('input[name = logout_passwd]').focus();
+            });
         },
 
         doLogout: function () {
             var _self = this;
-            var username = $('input[name = logout_username]').val();
+            //var username = $('input[name = logout_username]').val();
+            var username = storage.get(system_config.LOGIN_USER_KEY, 'user_id');
             var password = $('input[name = logout_passwd]').val();
-            if (username == '') {
-                toastr.warning('请输入用户名');
-                return;
-            }
+            //if (username == '') {
+            //    toastr.warning('请输入用户名');
+            //    return;
+            //}
             if (password == '') {
                 toastr.warning('请输入密码');
                 return;
@@ -65,12 +69,13 @@ define([
         },
 
         onOKClicked: function () {
-            var isUserFocused = $('input[name = logout_username]').is(':focus');
-            if (isUserFocused) {
-                $('input[name = logout_passwd]').focus();
-            } else {
-                this.doLogout();
-            }
+            //var isUserFocused = $('input[name = logout_username]').is(':focus');
+            //if (isUserFocused) {
+            //    $('input[name = logout_passwd]').focus();
+            //} else {
+            //    this.doLogout();
+            //}
+            this.doLogout();
         },
 
         onNumClicked: function (e) {
@@ -98,31 +103,32 @@ define([
             });
 
             this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Enter, function() {
-                var isUserFocused = $('input[name = logout_username]').is(':focus');
-                if (isUserFocused) {
-                    $('input[name = logout_passwd]').focus();
-                } else {
-                    _self.doLogout();
-                }
+                //var isUserFocused = $('input[name = logout_username]').is(':focus');
+                //if (isUserFocused) {
+                //    $('input[name = logout_passwd]').focus();
+                //} else {
+                //    _self.doLogout();
+                //}
+                _self.doLogout();
             });
 
-            this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Up, function () {
-                var isUserFocused = $('input[name = logout_username]').is(':focus');
-                if (isUserFocused) {
-                    $('input[name = logout_passwd]').focus();
-                } else {
-                    $('input[name = logout_username]').focus();
-                }
-            });
-
-            this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Down, function () {
-                var isUserFocused = $('input[name = logout_username]').is(':focus');
-                if (isUserFocused) {
-                    $('input[name = logout_passwd]').focus();
-                } else {
-                    $('input[name = logout_username]').focus();
-                }
-            });
+            //this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Up, function () {
+            //    var isUserFocused = $('input[name = logout_username]').is(':focus');
+            //    if (isUserFocused) {
+            //        $('input[name = logout_passwd]').focus();
+            //    } else {
+            //        $('input[name = logout_username]').focus();
+            //    }
+            //});
+            //
+            //this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Down, function () {
+            //    var isUserFocused = $('input[name = logout_username]').is(':focus');
+            //    if (isUserFocused) {
+            //        $('input[name = logout_passwd]').focus();
+            //    } else {
+            //        $('input[name = logout_username]').focus();
+            //    }
+            //});
         },
 
         focusInputUser: function () {
