@@ -570,9 +570,10 @@ define([
             }else {
                 var item = _self.collection.at(_self.i);
                 var price = item.get('price');
+                var num = item.get('num');
                 if (value <= parseFloat(price) ) {
                     _self.collection.at(_self.i).set({
-                        discount: value
+                        discount: value * num
                     });
                     _self.calculateModel();
                     $('#li' + _self.i).addClass('cus-selected');
