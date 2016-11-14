@@ -2,12 +2,13 @@
     <div class="panel-heading pos-textsize"><%= gather_name %></div>
     <div class="panel-body">
         <div class="form-group no-margining">
+            <label class="sr-only" for="receive_account">commontpl</label>
             <input type="text" id="receive_account" name="receive_account" class="form-control" placeholder="请输入付款账号" onkeypress="return myNumberic(event)"/>
-            <input type="text" style="display: none">
         </div>
     </div>
 </div>
 <div class="panel panel-primary left-margin" style="margin-right: 15px">
+
     <div class="row no-margining text-center">
         <div class="col-xs-3 col-md-3 no-padding">
             <div class="cbtn btn-num panel-group border-right-bottom" data-num="7">7</div>
@@ -47,7 +48,7 @@
             <div class="cbtn btn-num panel-group border-right-bottom" data-num="3">3</div>
         </div>
         <div class="col-xs-3 col-md-3 no-padding">
-            <div class="cbtn numpad-ok border-bottom bg-highlight cancel">取消</div>
+            <div class="cbtn btn-num panel-group border-bottom " data-num="00">00</div>
         </div>
     </div>
     <div class="row no-margining text-center">
@@ -55,7 +56,7 @@
             <div class="cbtn btn-num panel-group border-right" data-num="0">0</div>
         </div>
         <div class="col-xs-3 col-md-3 no-padding">
-            <div class="cbtn btn-num panel-group border-right" data-num=".">.</div>
+            <div class="cbtn numpad-ok border-right bg-highlight cancel">取消</div>
         </div>
         <div class="col-xs-3 col-md-3 no-padding">
             <div class="cbtn numpad-ok ok bg-red">确定</div>

@@ -53,11 +53,11 @@ define([
             'click .rt-discount':'onDiscountClicked',
             'click .rt-delete':'onDeleteClicked',
             'click .rt-modify-num':'onModifyNumClicked',
-            'click .returnforce_clean':'onCleanClicked',
             'click .rt-keyup':'onKeyUpClicked',
             'click .rt-keydown':'onKeyDownClicked',
             'click .rt-help':'onHelpClicked',
             'click .rt-return':'onReturnClicked',
+            'click .rt-discountpercent':'onDiscountpercentClicked'
         },
 
         pageInit: function () {
@@ -164,7 +164,11 @@ define([
             });
             //单品优惠
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Y,function () {
-               _self.onDiscount();
+               _self.modifyItemDiscount();
+            });
+            //单品折扣
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.U, function () {
+                _self.onDiscountPercentClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Down, function () {
@@ -299,16 +303,17 @@ define([
         /**
          * 单品优惠
          */
-        onDiscount: function () {
+        modifyItemDiscount: function () {
             var value = $('#sku_id').val();
             if(value == '') {
                 toastr.warning('您输入的优惠金额为零，请重新输入');
             }else {
                 var item = this.collection.at(this.i);
                 var price = item.get('price');
+                var num = item.get('num');
                 if (value <= parseFloat(price) ) {
                     this.collection.at(this.i).set({
-                        discount: value
+                        discount: value * num
                     });
                     this.calculateModel();
                     $('#li' + this.i).addClass('cus-selected');
@@ -318,6 +323,33 @@ define([
                 }
             }
             $('#sku_id').val('');
+        },
+
+
+        //切换优惠模式
+        onDiscountPercentClicked: function () {
+            var discountpercent = $(this.input).val();
+            if(this.model.get('itemamount') == 0) {
+                toastr.warning('当前购物车内无商品');
+            }else if(discountpercent == '') {
+                toastr.warning('折扣比率不能为空');
+            }else if(discountpercent >= 100) {
+                toastr.warning('折扣比率不能大于100');
+            }else if(discountpercent == '.') {
+                toastr.warning('请输入有效的折扣比率');
+            }else {
+                var rate = discountpercent / 100;
+                console.log(rate);
+                var item = this.collection.at(this.i);
+                var price = item.get('price');
+                var num = item.get('num');
+                this.collection.at(this.i).set({
+                    discount:price * num * (1 - rate)
+                });
+                this.calculateModel();
+                $('#li' + this.i).addClass('cus-selected');
+            }
+            $(this.input).val('');
         },
         /**
          * 修改数量
@@ -437,7 +469,7 @@ define([
             this.cancelForceReturn();
         },
         onDiscountClicked: function () {
-            this.onDiscount();
+            this.modifyItemDiscount();
         },
         onDeleteClicked:function (){
             var _self = this;
@@ -456,9 +488,7 @@ define([
         onModifyNumClicked: function () {
             this.modifyItemNum();
         },
-        onCleanClicked: function () {
-            this.cancelForceReturn();
-        },
+
         onKeyUpClicked:function (){
             this.scrollUp();
         },
