@@ -94,6 +94,8 @@ requirejs([
 
     window.isfromForce = false;
 
+    window.isFromLogin = false;
+
     window.isModal = false;  //当前页面是否是模态框
 
     window.psbar = pscrollbar;

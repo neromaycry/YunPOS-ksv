@@ -165,6 +165,7 @@ define([
                             trigger: true,
                             replace: true
                         });
+                        isFromLogin = true;
                         toastr.success('登录成功');
                     } else {
                         toastr.error(response.msg);

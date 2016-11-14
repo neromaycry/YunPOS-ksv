@@ -146,7 +146,6 @@ define([
             if (storage.isSet(system_config.LOGIN_USER_KEY)){
                 this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
             }
-
             //if (storage.isSet(system_config.PRINTF)) {
             //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
             //    console.log(message);
@@ -170,7 +169,10 @@ define([
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
-            this.renderClientWelcome(isPacked);
+            if (isFromLogin) {
+                this.renderClientWelcome(isPacked);
+                isFromLogin = false;
+            }
             this.buttonSelected();
             this.$el.find('.for-numpad').html(this.template_numpad);
         },
