@@ -68,7 +68,7 @@ return text;
         <div class="row text-center">
             <div class="col-xs-1 col-md-1"><%= i + 1%></div>
             <div class="col-xs-2 col-md-2" style="color:#757575"><%= e.barcode%></div>
-            <div class="col-xs-2 col-md-2 text-left"><%= e.goods_name%></div>
+            <div class="col-xs-2 col-md-2 text-left text-nowrap"><%= e.goods_name%></div>
             <!--<div class="col-md-1" style="padding:5px;color: red"><%= e.Spec%></div>-->
             <div class="col-xs-2 col-md-2"><%= toDecimal2(e.price) %></div>
             <div class="col-xs-2 col-md-2" style="color: #4db6ac;">- <%= toDecimal2(e.discount) %></div>

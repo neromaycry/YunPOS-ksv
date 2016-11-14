@@ -6,7 +6,6 @@ define([
     '../../../../moduals/billing/model',
     '../../../../moduals/billing/collection',
     '../../../../moduals/modal-billtype/view',
-    '../../../../moduals/modal-billingaccount/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
@@ -20,7 +19,7 @@ define([
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BillaccountView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",

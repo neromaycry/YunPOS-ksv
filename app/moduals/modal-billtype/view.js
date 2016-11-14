@@ -5,11 +5,10 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-billtype/model',
     '../../moduals/modal-billtype/collection',
-    '../../moduals/modal-billingaccount/view',
     '../../moduals/modal-gatherui/view',
     'text!../../moduals/modal-billtype/billingtypetpl.html',
     'text!../../moduals/modal-billtype/tpl.html',
-], function (BaseModalView,BilltypeModel,BilltypeCollection,BillaccountView, GatherUIView, billingtypetpl, tpl) {
+], function (BaseModalView,BilltypeModel,BilltypeCollection, GatherUIView, billingtypetpl, tpl) {
 
     var billtypeView = BaseModalView.extend({
 
