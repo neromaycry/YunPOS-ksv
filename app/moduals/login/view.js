@@ -250,7 +250,7 @@ define([
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '会员页面','打印页面', '挂单', '解挂',
                 '营业员登录', '结算', '清空购物车', '删除商品', '修改数量',
-                '单品优惠', '折让','向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账'];
+                '单品优惠', '折扣','向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账'];
             var keys = ['ESC','ENTER','M','H','G','J',
                 'S','B','C','D','N',
                 'Y','U','↑','↓','F','W','A'];
@@ -269,9 +269,9 @@ define([
         },
 
         setMemberKeys: function () {
-            var effects = ['返回', '确定', '方向左', '方向右'];
-            var keys = ['ESC', 'ENTER', '←', '→'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Left, window.KEYS.Right];
+            var effects = ['返回', '确定', '方向左', '方向右','磁条卡'];
+            var keys = ['ESC', 'ENTER', '←', '→','X'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Left, window.KEYS.Right,window.KEYS.X];
             var memberKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -299,10 +299,10 @@ define([
         },
 
         setReturnForceKeys: function () {
-            var effects = ['返回', '确定', '结算', '取消退货', '删除商品','修改数量','单品优惠','方向上', '方向下'];
-            var keys = ['ESC', 'ENTER', 'B','C','D','N','Y','↑', '↓'];
+            var effects = ['返回', '确定', '结算', '取消退货', '删除商品','修改数量','单品优惠','折扣','方向上', '方向下'];
+            var keys = ['ESC', 'ENTER', 'B','C','D','N','Y','↑', '↓','U'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter,window.KEYS.B,window.KEYS.C,
-                window.KEYS.D,window.KEYS.N,window.KEYS.Y,window.KEYS.Up, window.KEYS.Down];
+                window.KEYS.D,window.KEYS.N,window.KEYS.Y,window.KEYS.U,window.KEYS.Up, window.KEYS.Down];
             var returnForceKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
