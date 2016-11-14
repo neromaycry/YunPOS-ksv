@@ -117,6 +117,11 @@ requirejs([
             window.clientScreen.on ('loaded', function(){
                 // the native onload event has just occurred
                 window.clientDom = window.clientScreen.window.document;
+                var clientH = $(window.clientDom).height();
+                var clientW = $(window.clientDom).width();
+                console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
+                $(window.clientDom).find('img').height(clientH - 150);
+                $(window.clientDom).find('img').width(clientW);
             });
         }
     }
