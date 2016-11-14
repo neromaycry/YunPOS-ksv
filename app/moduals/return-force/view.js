@@ -363,9 +363,19 @@ define([
                 toastr.warning('输入的数量不能为零，请重新输入');
             }else {
                 var item = _self.collection.at(_self.i);
-                item.set({
-                    num: parseFloat(number)
-                });
+                var num = item.get('num');
+                var discount = item.get('discount');
+                if(num == 1) {
+                    item.set({
+                        num: parseFloat(number),
+                        discount:number * discount
+                    });
+                }else {
+                    item.set({
+                        num:parseFloat(number),
+                        discount:discount / num * number
+                    });
+                }
                 console.log(_self.collection);
                 _self.totalamount = 0;
                 _self.itemamount = 0;
