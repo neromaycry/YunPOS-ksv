@@ -32,13 +32,15 @@ define([
 
         unpaidamount:0,
 
-        oddchange:0,
+        oddchange:0,//保存此订单的找零钱数
 
         receivedsum:0,
 
         i:0,
 
         percentage:0,
+
+        totalreceived:0,//实收金额
 
         totaldiscount:0,//整单优惠的总价格
 
@@ -196,35 +198,53 @@ define([
             //        this.collection.add(model);
             //    }
             //}else{
+            var unpaidamount = this.model.get('unpaidamount');
             var model = new BillModel();
-            model.set({
-                fact_money:0,
-                gather_id:gatherId,
-                gather_name:gatherName,
-                gather_money:parseFloat(receivedsum),
-                gather_no:gatherAccount,
-                gather_kind:gatherKind,
-                card_id:cardId,
-                orderNo:orderNo
-            });
+            var oddchange = 0;
+            if(parseFloat(receivedsum) > unpaidamount) {
+                //如果支付金额大于未支付金额，则支付列表中显示的支付金额为  receivedsum = unpaidamount
+                model.set({
+                    fact_money:0,
+                    gather_id:gatherId,
+                    gather_name:gatherName,
+                    gather_money:unpaidamount,
+                    gather_no:gatherAccount,
+                    gather_kind:gatherKind,
+                    card_id:cardId,
+                    orderNo:orderNo
+                });
+            }else {
+                model.set({
+                    fact_money:0,
+                    gather_id:gatherId,
+                    gather_name:gatherName,
+                    gather_money:parseFloat(receivedsum),
+                    gather_no:gatherAccount,
+                    gather_kind:gatherKind,
+                    card_id:cardId,
+                    orderNo:orderNo
+                });
+            }
+
             this.collection.add(model);
             //}
-            var totalreceived = 0;
-            var trList = this.collection.pluck('gather_money');
-            for(var i = 0;i<trList.length;i++){
-                totalreceived += trList[i];
-            }
-            if(totalreceived >= totalamount){
+            this.totalreceived = this.totalreceived + parseFloat(receivedsum);
+            //var trList = this.collection.pluck('gather_money');
+            //for(var i = 0;i<trList.length;i++){
+            //    totalreceived += trList[i];
+            //}
+            if(this.totalreceived >= totalamount){
                 this.unpaidamount = 0;
-                this.oddchange = totalreceived - parseFloat(totalamount);
+                oddchange = this.totalreceived - parseFloat(totalamount);
+                this.oddchange = oddchange;
             }else{
-                this.oddchange = 0;
-                this.unpaidamount = parseFloat(totalamount) - totalreceived;
+                oddchange = 0;
+                this.unpaidamount = parseFloat(totalamount) - this.totalreceived;
             }
             this.model.set({
-                receivedsum: totalreceived,
+                receivedsum: this.totalreceived,
                 unpaidamount: this.unpaidamount,
-                oddchange:this.oddchange
+                oddchange:oddchange
             });
             this.renderBillInfo();
             this.renderBillDetail();
@@ -332,7 +352,8 @@ define([
                 toastr.info('支付金额不能为零');
             }else if(receivedsum > (unpaidamount + 100)){
                 toastr.info('找零金额超限');
-            }else{
+            }else if(receivedsum){
+                //只有现金支付的时候才能找零,显示金额 = 收到的金额 - 未付金额
                 this.i = 0;
                 this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
             }
@@ -399,27 +420,31 @@ define([
 
         deleteItem:function(index){
             var item = this.collection.at(index);
-            this.collection.remove(item);
-            var totalreceived = 0;
-            var trlist = this.collection.pluck('gather_money');
-            for(var i = 0;i < trlist.length; i++) {
-                totalreceived += trlist[i];
+            var oddchange = 0;
+            var gatherMoney = item.get('gather_money');
+            this.totalreceived = this.totalreceived - gatherMoney;
+            console.log(this.totalreceived);
+            if(this.totalreceived == this.oddchange) {
+                this.totalreceived = 0;
             }
-            if(totalreceived >= this.totalamount) {
+            console.log(this.oddchange);
+            console.log(gatherMoney + this.oddchange);
+            this.collection.remove(item);
+            if(this.totalreceived >= this.totalamount) {
                 this.unpaidamount = 0;
-                this.oddchange = totalreceived - this.totalamount;
+                oddchange = this.totalreceived - this.totalamount;
             }else{
-                this.oddchange = 0;
-                this.unpaidamount = this.totalamount - totalreceived;
+                oddchange = 0;
+                this.unpaidamount = this.totalamount - this.totalreceived;
             }
             this.model.set({
-                receivedsum: totalreceived,
+                receivedsum: this.totalreceived,
                 unpaidamount: this.unpaidamount,
-                oddchange:this.oddchange
+                oddchange:oddchange
             });
             this.i = 0;
-            console.log(this.collection);
-            console.log('clean render');
+            console.log(this.oddchange);
+            console.log('---------delete oddchange------------')
             this.renderBillInfo();
             this.renderBillDetail();
         },
@@ -524,7 +549,7 @@ define([
                         }
                         data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
                         data['gather_detail'] = _self.collection.toJSON();
-                        //console.log(data);
+                        console.log(data['gather_detail']);
                         confirmBill.trade_confirm(data, function (resp) {
                             if (resp.status == '00') {
                                 storage.remove(system_config.SALE_PAGE_KEY);
@@ -914,7 +939,7 @@ define([
                     toastr.info('支付金额不能为零');
                 }else if(receivedsum == '.'){
                     toastr.info('无效的支付金额');
-                }else if(receivedsum > (unpaidamount + 100)){
+                }else if(receivedsum > (unpaidamount)){
                     toastr.info('不设找零');
                 }else{
                     var data = {};
