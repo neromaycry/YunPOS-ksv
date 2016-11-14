@@ -33,13 +33,7 @@ define([
         },
 
         onOKClicked: function () {
-            var attrData = {};
-            attrData['percentage'] = $('input[name = percentage]').val();
-            Backbone.trigger('onBillDiscount',attrData);
-            this.hideModal(window.PAGE_ID.BILLING);
-            $('input[name = billing]').focus();
-            $('button[name = totaldiscount]').css('display','none');
-            $('button[name = cancel-totaldiscount]').css('display','block');
+           this.discount();
         },
 
         onNumClicked: function (e) {
@@ -66,13 +60,7 @@ define([
                 $('input[name = billing]').focus();
             });
             this.bindModalKeyEvents(window.PAGE_ID.BILL_DISCOUNT, window.KEYS.Enter , function () {
-                var attrData = {};
-                attrData['percentage'] = $('input[name = percentage]').val();
-                Backbone.trigger('onBillDiscount',attrData);
-                _self.hideModal(window.PAGE_ID.BILLING);
-                $('input[name = billing]').focus();
-                $('button[name = totaldiscount]').css('display','none');
-                $('button[name = cancel-totaldiscount]').css('display','block');
+               _self.discount();
             });
         },
 
@@ -86,6 +74,22 @@ define([
             });
         },
 
+        discount: function () {
+            var percentage = $('input[name = percentage]').val();
+            if(percentage >= 100) {
+                toastr.warning('折扣比率不能大于100');
+            }else if(percentage == '.') {
+                toastr.warning('请输入有效的折扣比率');
+            }else {
+                var attrData = {};
+                attrData['percentage'] = percentage;
+                Backbone.trigger('onBillDiscount',attrData);
+                this.hideModal(window.PAGE_ID.BILLING);
+                $('input[name = billing]').focus();
+                $('button[name = totaldiscount]').css('display','none');
+                $('button[name = cancel-totaldiscount]').css('display','block');
+            }
+        }
 
 
 

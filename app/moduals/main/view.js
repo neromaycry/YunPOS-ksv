@@ -567,7 +567,7 @@ define([
             if(this.model.get('itemamount') == 0) {
                 toastr.warning('当前购物车内无商品');
             }else if(discountpercent == '') {
-                toastr.warning('输入的折扣不能为空');
+                toastr.warning('折扣比率不能为空');
             }else if(discountpercent >= 100) {
                 toastr.warning('折扣比率不能大于100');
             }else if(discountpercent == '.') {
@@ -607,7 +607,7 @@ define([
             var _self = this;
             var search = $('#input_main').val();
             if(search == ''){
-                toastr.info('您输入的商品编码为空，请重新输入');
+                toastr.warning('商品编码不能为空');
             }else{
                 var data = {};
                 data['skucode'] = search;
