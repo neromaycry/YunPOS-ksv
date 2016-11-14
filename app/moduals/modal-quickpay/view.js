@@ -5,14 +5,17 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-quickpay/model',
     '../../moduals/modal-quickpay/collection',
+    'text!../../moduals/modal-gatherui/numpadtpl.html',
     'text!../../moduals/modal-quickpay/tpl.html',
-], function (BaseModalView,QuickpayModel,QuickpayCollection, tpl) {
+], function (BaseModalView,QuickpayModel,QuickpayCollection,numpadtpl, tpl) {
 
     var quickView = BaseModalView.extend({
 
         id: "quickView",
 
         template: tpl,
+
+        template_numpad:numpadtpl,
 
         input:'input[name = quickpay-account]',
 
@@ -32,6 +35,7 @@ define([
                 unpaidamount:this.attrs['unpaidamount'],
             });
             this.render();
+            this.$el.find('.for-numpad').html(this.template_numpad);
         },
 
         bindModalKeys: function () {

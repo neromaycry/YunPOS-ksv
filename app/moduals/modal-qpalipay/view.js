@@ -5,14 +5,17 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-qpalipay/model',
     '../../moduals/modal-qpalipay/collection',
+    'text!../../moduals/modal-gatherui/numpadtpl.html',
     'text!../../moduals/modal-qpalipay/tpl.html',
-], function (BaseModalView,QPAlipayModel,QPAlipayCollection, tpl) {
+], function (BaseModalView,QPAlipayModel,QPAlipayCollection,numpadtpl, tpl) {
 
     var qpalipayView = BaseModalView.extend({
 
         id: "qpalipayView",
 
         template: tpl,
+
+        template_numpad:numpadtpl,
 
         input:'input[name = alipay-account]',
 
@@ -31,6 +34,7 @@ define([
                 receivedsum:this.attrs['receivedsum']
             });
             this.render();
+            this.$el.find('.for-numpad').html(this.template_numpad);
         },
 
         bindModalKeys: function () {

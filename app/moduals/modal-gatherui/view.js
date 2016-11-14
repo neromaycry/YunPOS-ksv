@@ -9,14 +9,17 @@ define([
     'text!../../moduals/modal-gatherui/alipaytpl.html',
     'text!../../moduals/modal-gatherui/wechatpaytpl.html',
     'text!../../moduals/modal-gatherui/quickpaytpl.html',
+    'text!../../moduals/modal-gatherui/numpadtpl.html',
     'text!../../moduals/modal-gatherui/tpl.html'
-], function (BaseModalView, GatherUIModel, contenttpl, commontpl, alipaytpl, wechatpaytpl,quickpaytpl, tpl) {
+], function (BaseModalView, GatherUIModel, contenttpl, commontpl, alipaytpl, wechatpaytpl,quickpaytpl,numpadtpl, tpl) {
 
     var gahterUIView = BaseModalView.extend({
 
         id: "gahterUIView",
 
         template: tpl,
+
+        template_numpad:numpadtpl,
 
         gatherUI:'',
 
@@ -45,6 +48,7 @@ define([
             }else {
                 this.renderThirdPay();
             }
+            this.$el.find('.for-numpad').html(this.template_numpad);
         },
 
         prepay: function (gatherUI) {
