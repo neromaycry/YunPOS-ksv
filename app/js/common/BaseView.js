@@ -132,7 +132,7 @@ define([
          * @param callback 对应将要绑定的回调函数
          */
         bindKeyEvents: function (id,keyCode,callback) {
-            $(window).keyup(function (e) {
+            $(document).keyup(function (e) {
                 e = e || window.event;
                 console.log(e.which);
                 if(e.which == keyCode && pageId == id) {

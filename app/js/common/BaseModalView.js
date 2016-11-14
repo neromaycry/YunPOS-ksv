@@ -54,7 +54,7 @@ define([
         },
 
         bindModalKeyEvents: function (id,keyCode,callback) {
-            $(window).keydown(function (e) {
+            $(document).keydown(function (e) {
                 e = e || window.event;
                 console.log(e.which);
                 if(e.which == keyCode && pageId == id) {
