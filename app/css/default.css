@@ -31,7 +31,7 @@ body .no-border-radius {
 }
 
 div .pos-textsize {
-    font-size: 15px;
+    font-size: 16px;
     white-space: nowrap;
 }
 
@@ -289,20 +289,6 @@ div .bg-darkblue {
     color: #FFF;
 }
 
-/*.navbar-nav > li > div {*/
-    /*padding-bottom: 15px;*/
-    /*padding-top: 15px;*/
-/*}*/
-/*.navbar-nav > li > div {*/
-    /*line-height: 20px;*/
-    /*padding-bottom: 10px;*/
-    /*padding-top: 10px;*/
-/*}*/
-/*.nav > li > div {*/
-    /*display: block;*/
-    /*padding: 10px 15px;*/
-    /*position: relative;*/
-/*}*/
 .navbar-nav > li > a:hover,.navbar-nav > li > a:focus{
     color:#74898a!important;
 }
