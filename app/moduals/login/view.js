@@ -300,7 +300,7 @@ define([
 
         setReturnForceKeys: function () {
             var effects = ['返回', '确定', '结算', '取消退货', '删除商品','修改数量','单品优惠','折扣','方向上', '方向下'];
-            var keys = ['ESC', 'ENTER', 'B','C','D','N','Y','↑', '↓','U'];
+            var keys = ['ESC', 'ENTER', 'B','C','D','N','Y', 'U','↑', '↓',];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter,window.KEYS.B,window.KEYS.C,
                 window.KEYS.D,window.KEYS.N,window.KEYS.Y,window.KEYS.U,window.KEYS.Up, window.KEYS.Down];
             var returnForceKeys = [];
