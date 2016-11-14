@@ -209,6 +209,12 @@ define([
             return this;
         },
 
+        renderClientCart: function () {
+            console.log($(clientDom).find('.for-client-cart'));
+            $(clientDom).find('.for-client-cart').html(this.template_cartlisttpl(this.collection.toJSON()));
+            return this;
+        },
+
         handleEvents: function () {
             // 注册backbone事件
             Backbone.off('SalesmanAdd');
@@ -759,13 +765,14 @@ define([
          * 删除按钮点击事件
          */
         onDeleteClicked: function () {
+            var _self = this;
             if(this.isDeleteKey){
                 this.deleteItem();
             }else{
                 var secondLoginView = new SecondLoginView({
                     pageid: window.PAGE_ID.MAIN,
                     callback: function () {
-                        this.deleteItem();
+                        _self.deleteItem();
                     }
                 });
                 this.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
@@ -893,6 +900,9 @@ define([
             if (isPacked) {
                 var len = collection.length;
                 var model = collection.at(len-1).toJSON();
+                var $clientDom = $(clientDom);
+                console.log($(clientDom).find('#itemName'));
+                this.renderClientCart();
                 clientDom.getElementById("itemName").innerHTML = model.goods_name;
                 clientDom.getElementById("itemSpec").innerHTML = model.spec;
                 clientDom.getElementById("itemNum").innerHTML = model.num;
