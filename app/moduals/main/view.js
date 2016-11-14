@@ -16,8 +16,10 @@ define([
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
+    'text!../../../../moduals/main/clientdisplaytpl.html',
+    'text!../../../../moduals/main/welcometpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -52,6 +54,10 @@ define([
         template_cartlisttpl:cartlisttpl,
 
         template_numpad:numpadtpl,
+
+        template_clientdisplay: clientdisplaytpl,
+
+        template_welcome: welcometpl,
 
         salesmanView:null,
 
@@ -117,6 +123,7 @@ define([
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
                 this.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
                 this.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
+                this.i = storage.get(system_config.SALE_PAGE_KEY, 'i');
             }
             if (storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
                 this.loginInfoModel.set({
@@ -162,6 +169,10 @@ define([
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
+            if (isFromLogin) {
+                this.renderClientWelcome(isPacked);
+                isFromLogin = false;
+            }
             this.buttonSelected();
             this.$el.find('.for-numpad').html(this.template_numpad);
         },
@@ -170,6 +181,8 @@ define([
             this.template_posinfo = _.template(this.template_posinfo);
             this.template_salesman = _.template(this.template_salesman);
             this.template_cartlisttpl = _.template(this.template_cartlisttpl);
+            this.template_clientdisplay = _.template(this.template_clientdisplay);
+            this.template_welcome = _.template(this.template_welcome);
             //this.template_cart = _.template(this.template_cart);
             //this.template_shopitem = _.template(this.template_shopitem);
         },
@@ -207,6 +220,23 @@ define([
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
             $('#li' + this.i).addClass('cus-selected');
             return this;
+        },
+
+        renderClientWelcome: function (isPacked) {
+            if (isPacked) {
+                $(clientDom).find('.client-display').html(this.template_welcome());
+                return this;
+            }
+        },
+
+        renderClientCart: function (collection, isPacked) {
+            if (isPacked) {
+                console.log(collection);
+                var len = collection.length;
+                var model = collection.at(len-1);
+                $(clientDom).find('.client-display').html(this.template_clientdisplay(model.toJSON()));
+                return this;
+            }
         },
 
         handleEvents: function () {
@@ -362,6 +392,8 @@ define([
             if(this.model.get('itemamount') == 0){
                 toastr.warning('购物车内无商品，请先选择一些商品吧');
             } else {
+                console.log(this.i);
+                storage.set(system_config.SALE_PAGE_KEY, 'i', this.i);
                 router.navigate('billing',{trigger:true});
             }
         },
@@ -473,7 +505,7 @@ define([
          */
         modifyItemNum: function () {
             var _self = this;
-            var number = $('#input_main').val();
+            var number = $(this.input).val();
             if(_self.model.get('itemamount') == 0){
                 toastr.warning('当前购物车内无商品');
             }else {
@@ -502,7 +534,7 @@ define([
                     _self.calculateModel();
                 }
             }
-            $('#input_main').val('');
+            $(this.input).val('');
             console.log(_self.i);
             $('#li' + _self.i).addClass('cus-selected');
         },
@@ -512,7 +544,7 @@ define([
          */
         modifyItemDiscount: function () {
             var _self = this;
-            var value = $('#input_main').val();
+            var value = $(this.input).val();
             if(_self.model.get('itemamount') == 0) {
                 toastr.warning('当前购物车内无商品');
                 //}else{
@@ -548,7 +580,7 @@ define([
                     toastr.warning('优惠金额不能大于单品金额');
                 }
             }
-            $('#input_main').val('');
+            $(this.input).val('');
         },
 
         //切换优惠模式
@@ -563,7 +595,7 @@ define([
             //    $('#input-percent').show();
             //}
             //var _self = this;
-            var discountpercent = $('input[name = main]').val();
+            var discountpercent = $(this.input).val();
             if(this.model.get('itemamount') == 0) {
                 toastr.warning('当前购物车内无商品');
             }else if(discountpercent == '') {
@@ -583,7 +615,7 @@ define([
                 this.calculateModel();
                 $('#li' + this.i).addClass('cus-selected');
             }
-            $('input[name = main]').val('');
+            $(this.input).val('');
         },
 
         /**
@@ -605,7 +637,7 @@ define([
          */
         addItem: function () {
             var _self = this;
-            var search = $('#input_main').val();
+            var search = $(this.input).val();
             if(search == ''){
                 toastr.warning('商品编码不能为空');
             }else{
@@ -625,7 +657,7 @@ define([
                     if(resp.status == '00') {
                         if (!_self.isInSale) {
                             _self.isInSale = true;
-                            _self.ctrlClientInfo('block', _self.ids, isPacked);
+                            //_self.ctrlClientInfo('block', _self.ids, isPacked);
                         }
                         _self.onAddItem(resp.goods_detail);
                     }else{
@@ -639,7 +671,8 @@ define([
 
         onAddItem: function (JSONData) {
             this.collection.set(JSONData, {merge: false});
-            this.updateClientCurItem(this.collection, isPacked);
+            //this.updateClientCurItem(this.collection, isPacked);
+            this.renderClientCart(this.collection, isPacked);
             this.insertSerial();
             this.calculateModel();
             this.buttonSelected();
@@ -656,7 +689,7 @@ define([
             this.renderPosInfo();
             this.renderCartList();
             storage.remove(system_config.SALE_PAGE_KEY);
-            this.ctrlClientInfo('none', this.ids, isPacked);
+            //this.ctrlClientInfo('none', this.ids, isPacked);
             this.isInSale = false;
             toastr.success('交易已取消');
         },
@@ -689,7 +722,7 @@ define([
                 this.itemamount += itemNum[i];
                 this.discountamount += discounts[i];
             }
-            this.updateClientSaleState(this.totalamount, this.itemamount, this.discountamount, isPacked);
+            //this.updateClientSaleState(this.totalamount, this.itemamount, this.discountamount, isPacked);
             this.renderCartList();
             this.updateShopInfo();
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', this.collection.toJSON());
@@ -759,13 +792,14 @@ define([
          * 删除按钮点击事件
          */
         onDeleteClicked: function () {
+            var _self = this;
             if(this.isDeleteKey){
                 this.deleteItem();
             }else{
                 var secondLoginView = new SecondLoginView({
                     pageid: window.PAGE_ID.MAIN,
                     callback: function () {
-                        this.deleteItem();
+                        _self.deleteItem();
                     }
                 });
                 this.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
@@ -893,6 +927,9 @@ define([
             if (isPacked) {
                 var len = collection.length;
                 var model = collection.at(len-1).toJSON();
+                var $clientDom = $(clientDom);
+                console.log($(clientDom).find('#itemName'));
+                this.renderClientCart();
                 clientDom.getElementById("itemName").innerHTML = model.goods_name;
                 clientDom.getElementById("itemSpec").innerHTML = model.spec;
                 clientDom.getElementById("itemNum").innerHTML = model.num;

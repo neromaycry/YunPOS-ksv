@@ -94,6 +94,8 @@ requirejs([
 
     window.isfromForce = false;
 
+    window.isFromLogin = false;
+
     window.isModal = false;  //当前页面是否是模态框
 
     window.psbar = pscrollbar;
@@ -108,15 +110,20 @@ requirejs([
             var gui = window.requireNode(['nw.gui']);
             window.clientScreen = gui.Window.open("client.html", {
                 title: '云POS',
-                height: 1920,
-                width: 1280,
+                height: 1000,
+                width: 800,
                 toolbar: false
             });
-            window.clientScreen.moveTo(1920, 0);
-            window.clientScreen.enterKioskMode();
+            window.clientScreen.moveTo(0, 0);
+            //window.clientScreen.enterKioskMode();
             window.clientScreen.on ('loaded', function(){
                 // the native onload event has just occurred
                 window.clientDom = window.clientScreen.window.document;
+                var clientH = $(window.clientDom).height();
+                var clientW = $(window.clientDom).width();
+                console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
+                $(window.clientDom).find('img').height(clientH - 150);
+                $(window.clientDom).find('img').width(clientW);
             });
         }
     }
@@ -180,7 +187,6 @@ requirejs([
     window.wsClient.onerror = function (e) {
         window.toastr.warning('与硬件连接出现问题，请检查硬件');
     };
-
 
     // 定义调试标志
     window.debug = true;

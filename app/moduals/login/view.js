@@ -6,8 +6,9 @@ define([
     '../../../../moduals/login/model',
     '../../../../moduals/login/collection',
     '../../../../moduals/modal-confirm/view',
+    'text!../../../../moduals/login/clientlogintpl.html',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, ConfirmView, tpl) {
+], function (BaseView, LoginModel, LoginCollection, ConfirmView, clientlogintpl, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -16,6 +17,8 @@ define([
         el: '.views',
 
         template: tpl,
+
+        template_clientlogin: clientlogintpl,
 
         clientScreen: null,
 
@@ -54,15 +57,24 @@ define([
             });
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
             storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
+            this.template_clientlogin = _.template(this.template_clientlogin);
         },
 
         initPlugins: function () {
             $('input[name = username]').focus();
             this.setKeys();
+            this.renderClientDisplay(isPacked);
             //$('.login-print').on('click', function () {
             //    console.log('print');
             //    window.wsClient.send('PRNT_ 打印sdfajsdklfjaldsjfadf');
             //});
+        },
+
+        renderClientDisplay: function (isPacked) {
+            if (isPacked) {
+                $(clientDom).find('.client-display').html(this.template_clientlogin());
+                return this;
+            }
         },
 
         //iniSettngs: function () {
@@ -153,6 +165,7 @@ define([
                             trigger: true,
                             replace: true
                         });
+                        isFromLogin = true;
                         toastr.success('登录成功');
                     } else {
                         toastr.error(response.msg);

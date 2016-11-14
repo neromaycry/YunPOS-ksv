@@ -18,8 +18,9 @@ define([
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
+    'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView,billinfotpl, billingdetailtpl, numpadtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView,billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -55,6 +56,8 @@ define([
         template_billingdetailtpl:billingdetailtpl,
 
         template_numpad:numpadtpl,
+
+        template_clientbillingtpl: clientbillingtpl,
 
         input:'input[name = billing]',
 
@@ -106,6 +109,7 @@ define([
         initPlugins: function () {
             var _self = this;
             this.renderBillInfo();
+            this.renderClientDisplay(this.model, isPacked);
             $('input[name = billing]').focus();
             $('button[name = cancel-totaldiscount]').css('display','none');
             $('.for-billdetail').perfectScrollbar();
@@ -252,6 +256,7 @@ define([
         initTemplates: function () {
             this.template_billinfo = _.template(this.template_billinfo);
             this.template_billingdetailtpl = _.template(this.template_billingdetailtpl);
+            this.template_clientbillingtpl = _.template(this.template_clientbillingtpl);
         },
         renderBillInfo: function () {
             this.$el.find('.for-billinfo').html(this.template_billinfo(this.model.toJSON()));
@@ -262,6 +267,13 @@ define([
             $('.li-billdetail').height(this.listheight / this.listnum - 21);
             $('#billdetail' + this.i).addClass('cus-selected');
             return this;
+        },
+        renderClientDisplay: function (model, isPacked) {
+            if (isPacked) {
+                console.log(model);
+                $(clientDom).find('.client-display').html(this.template_clientbillingtpl(model.toJSON()));
+                return this;
+            }
         },
         bindKeys: function () {
             var _self = this;
@@ -356,6 +368,7 @@ define([
                 //只有现金支付的时候才能找零,显示金额 = 收到的金额 - 未付金额
                 this.i = 0;
                 this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
+                this.renderClientDisplay(this.model, isPacked);
             }
             $('#input_billing').val("");
         },
@@ -391,7 +404,7 @@ define([
                             var gather_money = parseFloat(temp.gather_money);
                             gather_money = gather_money + item.get('gather_money');
                             gather_money = gather_money.toFixed(2);
-                            temp['gather_money'] = gather_money
+                            temp['gather_money'] = gather_money;
                             this.tempcollection.push(temp);
                         } else {
                             this.tempcollection.push(ecardcollection[i]);
@@ -564,6 +577,7 @@ define([
                                 console.log(resp.prnt);
                                 wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
                                 wsClient.send(DIRECTIVES.OpenCashDrawer);
+                                _self.renderClientDisplay(_self.model);
                                 //var send_data = {};
                                 //send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
                                 //send_data['content'] = resp.printf;

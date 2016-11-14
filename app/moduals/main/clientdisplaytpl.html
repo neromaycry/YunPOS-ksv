@@ -1,0 +1,41 @@
+<% function toDecimal3(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 3) {
+s += '0';
+}
+return s;
+}%>
+<div class="col-md-12">
+    <div class="row client-text-white">
+        <div class="col-md-12">
+            <h1><%= goods_name %></h1>
+        </div>
+    </div>
+    <div class="row client-text-white">
+        <div class="col-md-2">
+            <h2><%= toDecimal2(price) %></h2>
+        </div>
+        <div class="col-md-1">
+            <h2>×</h2>
+        </div>
+        <div class="col-md-3">
+            <h2><%= toDecimal3(num) %></h2>
+        </div>
+        <div class="col-md-3 text-center">
+            <h2>-<%= toDecimal2(discount) %></h2>
+        </div>
+        <div class="col-md-3 text-center">
+            <h1><%= toDecimal2(num * price - discount) %></h1>
+        </div>
+    </div>
+</div>
