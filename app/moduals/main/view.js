@@ -609,8 +609,9 @@ define([
                 console.log(rate);
                 var item = this.collection.at(this.i);
                 var price = item.get('price');
+                var num = item.get('num');
                 this.collection.at(this.i).set({
-                    discount:price * (1 - rate)
+                    discount:price * num * (1 - rate)
                 });
                 this.calculateModel();
                 $('#li' + this.i).addClass('cus-selected');
