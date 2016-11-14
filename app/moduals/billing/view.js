@@ -436,12 +436,9 @@ define([
             var oddchange = 0;
             var gatherMoney = item.get('gather_money');
             this.totalreceived = this.totalreceived - gatherMoney;
-            console.log(this.totalreceived);
             if(this.totalreceived == this.oddchange) {
                 this.totalreceived = 0;
             }
-            console.log(this.oddchange);
-            console.log(gatherMoney + this.oddchange);
             this.collection.remove(item);
             if(this.totalreceived >= this.totalamount) {
                 this.unpaidamount = 0;
@@ -456,8 +453,6 @@ define([
                 oddchange:oddchange
             });
             this.i = 0;
-            console.log(this.oddchange);
-            console.log('---------delete oddchange------------')
             this.renderBillInfo();
             this.renderBillDetail();
         },

@@ -570,9 +570,10 @@ define([
             }else {
                 var item = _self.collection.at(_self.i);
                 var price = item.get('price');
+                var num = item.get('num');
                 if (value <= parseFloat(price) ) {
                     _self.collection.at(_self.i).set({
-                        discount: value
+                        discount: value * num
                     });
                     _self.calculateModel();
                     $('#li' + _self.i).addClass('cus-selected');
@@ -609,8 +610,9 @@ define([
                 console.log(rate);
                 var item = this.collection.at(this.i);
                 var price = item.get('price');
+                var num = item.get('num');
                 this.collection.at(this.i).set({
-                    discount:price * (1 - rate)
+                    discount:price * num * (1 - rate)
                 });
                 this.calculateModel();
                 $('#li' + this.i).addClass('cus-selected');
