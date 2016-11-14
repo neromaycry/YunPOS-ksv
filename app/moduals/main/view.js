@@ -390,7 +390,7 @@ define([
         doBilling: function () {
             //console.log(_self.model.get('itemamount'));
             if(this.model.get('itemamount') == 0){
-                toastr.warning('购物车内无商品，请先选择一些商品吧');
+                toastr.warning('购物车内无商品');
             } else {
                 console.log(this.i);
                 storage.set(system_config.SALE_PAGE_KEY, 'i', this.i);
@@ -510,14 +510,24 @@ define([
                 toastr.warning('当前购物车内无商品');
             }else {
                 if(number == ''){
-                    toastr.warning('修改的数量不能为空，请重新输入');
+                    toastr.warning('修改的数量不能为空');
                 }else if(number == 0) {
-                    toastr.warning('修改的数量不能为零，请重新输入');
+                    toastr.warning('修改的数量不能为零');
                 }else {
                     var item = _self.collection.at(_self.i);
-                    item.set({
-                        num: parseFloat(number)
-                    });
+                    var num = item.get('num');
+                    var discount = item.get('discount');
+                    if(num == 1) {
+                        item.set({
+                            num: parseFloat(number),
+                            discount:number * discount
+                        });
+                    }else {
+                        item.set({
+                            num:parseFloat(number),
+                            discount:discount / num * number
+                        });
+                    }
                     console.log(_self.collection);
                     _self.totalamount = 0;
                     _self.itemamount = 0;

@@ -5,14 +5,17 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-rtqpalipay/model',
     '../../moduals/modal-rtqpalipay/collection',
+    'text!../../moduals/modal-gatherui/numpadtpl.html',
     'text!../../moduals/modal-rtqpalipay/tpl.html',
-], function (BaseModalView,RTQPAlipayModel,RTQPAlipayCollection, tpl) {
+], function (BaseModalView,RTQPAlipayModel,RTQPAlipayCollection,numpadtpl, tpl) {
 
     var rtqpalipayView = BaseModalView.extend({
 
         id: "rtqpalipayView",
 
         template: tpl,
+
+        template_numpad:numpadtpl,
 
         input:'input[name = rtalipay-account]',
 
@@ -30,6 +33,7 @@ define([
                 receivedsum:this.attrs['receivedsum']
             });
             this.render();
+            this.$el.find('.for-numpad').html(this.template_numpad);
         },
 
         bindModalKeys: function () {

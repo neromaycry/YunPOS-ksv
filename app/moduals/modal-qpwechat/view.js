@@ -5,14 +5,17 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-qpwechat/model',
     '../../moduals/modal-qpwechat/collection',
+    'text!../../moduals/modal-gatherui/numpadtpl.html',
     'text!../../moduals/modal-qpwechat/tpl.html',
-], function (BaseModalView,QPWechatModel,QPWechatCollection, tpl) {
+], function (BaseModalView,QPWechatModel,QPWechatCollection,numpadtpl, tpl) {
 
     var qpwechatView = BaseModalView.extend({
 
         id: "qpwechatView",
 
         template: tpl,
+
+        template_numpad:numpadtpl,
 
         input:'input[name = wechat-account]',
 
@@ -30,6 +33,7 @@ define([
                 receivedsum:this.attrs['receivedsum']
             });
             this.render();
+            this.$el.find('.for-numpad').html(this.template_numpad);
         },
 
         bindModalKeys: function () {
