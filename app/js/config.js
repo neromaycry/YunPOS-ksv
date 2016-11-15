@@ -100,7 +100,7 @@ requirejs([
 
     window.psbar = pscrollbar;
 
-    window.isPacked = false;  //程序是否已打包
+    window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true
 
     console.log(document.body.clientWidth);
 
@@ -111,11 +111,11 @@ requirejs([
             window.clientScreen = gui.Window.open("client.html", {
                 title: '云POS',
                 height: 1000,
-                width: 800,
+                width: 1920,
                 toolbar: false
             });
-            window.clientScreen.moveTo(0, 0);
-            //window.clientScreen.enterKioskMode();
+            window.clientScreen.moveTo(1920, 0);
+            window.clientScreen.enterKioskMode();
             window.clientScreen.on ('loaded', function(){
                 // the native onload event has just occurred
                 window.clientDom = window.clientScreen.window.document;
@@ -123,7 +123,7 @@ requirejs([
                 var clientW = $(window.clientDom).width();
                 console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
                 $(window.clientDom).find('img').height(clientH - 150);
-                $(window.clientDom).find('img').width(clientW);
+                $(window.clientDom).find('img').css('width', '100%');
             });
         }
     }

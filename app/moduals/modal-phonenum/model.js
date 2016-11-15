@@ -3,7 +3,7 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var mcardModel=BaseModel.extend({
+    var mPhoneModel = BaseModel.extend({
 
         defaults:{
         },
@@ -17,5 +17,5 @@ define(['../../js/common/BaseModel'],function(BaseModel){
         }
 
     });
-    return mcardModel;
+    return mPhoneModel;
 });

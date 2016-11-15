@@ -6,10 +6,11 @@ define([
     '../../../../moduals/member/model',
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-membercard/view',
+    '../../../../moduals/modal-phonenum/view',
     'text!../../../../moduals/member/memberinfotpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/member/tpl.html',
-], function (BaseView, MemberModel, KMemberView, MemberCard,memberinfotpl,numpadtpl, tpl) {
+], function (BaseView, MemberModel, KMemberView, MemberCardView, PhoneNumView, memberinfotpl,numpadtpl, tpl) {
 
     var memberView = BaseView.extend({
 
@@ -37,6 +38,7 @@ define([
             'click .member_help':'onHelpClicked',
             'click .member_return':'onReturnClicked',
             'click [data-index]':'onCardTypeClicked',
+            'click #member-login':'doMemberLogin'
         },
 
         pageInit: function () {
@@ -44,12 +46,20 @@ define([
             this.model = new MemberModel();
             this.requestModel = new MemberModel();
             this.initTemplates();
+            this.handleEvents();
         },
 
         initPlugins: function () {
             $('input[name = custid]').focus();
             this.$el.find('.for-numpad').html(this.template_numpad);
             this.renderMemberInfo();
+        },
+
+        handleEvents: function () {
+            Backbone.off('onMagcardResponse');
+            Backbone.off('onPhoneNumResponse');
+            Backbone.on('onMagcardResponse', this.onMagcardResponse, this);
+            Backbone.on('onPhoneNumResponse', this.onPhoneNumResponse, this);
         },
 
         initTemplates: function () {
@@ -71,18 +81,20 @@ define([
                 _self.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.Enter, function () {
-                var isUserFocused = $('input[name = custid]').is(':focus');
-                if (_self.isRequestSuccess) {
-                    storage.set(system_config.VIP_KEY,_self.model.toJSON());
-                    toastr.success('会员登录成功');
-                    router.navigate('main',{trigger:true});
-                } else {
-                    if (isUserFocused) {
-                        $('input[name = custpwd]').focus();
-                    } else {
-                        _self.requestMemberInfo();
-                    }
-                }
+                //var isUserFocused = $('input[name = custid]').is(':focus');
+                //if (_self.isRequestSuccess) {
+                //    storage.set(system_config.VIP_KEY,_self.model.toJSON());
+                //    toastr.success('会员登录成功');
+                //    router.navigate('main',{trigger:true});
+                //} else {
+                //    if (isUserFocused) {
+                //        $('input[name = custpwd]').focus();
+                //    } else {
+                //        _self.requestMemberInfo();
+                //    }
+                //}
+                _self.doMemberLogin();
+
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER,window.KEYS.Up, function () {
                 var isUserFocused = $('input[name = custid]').is(':focus');
@@ -105,14 +117,22 @@ define([
                 _self.onMCardLogin();
             });
 
+            this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.P, function () {
+                _self.onPhoneNumLogin();
+            });
         },
 
         /**
          *  磁条卡登陆
          */
         onMCardLogin: function () {
-            var memberCard = new MemberCard();
-            this.showModal(window.PAGE_ID.MODAL_MEMBER_CARD, memberCard);
+            var memberCardView = new MemberCardView();
+            this.showModal(window.PAGE_ID.MODAL_MEMBER_CARD, memberCardView);
+        },
+
+        onPhoneNumLogin: function () {
+            var phoneNumView = new PhoneNumView();
+            this.showModal(window.PAGE_ID.MODAL_PHONENUM, phoneNumView);
         },
 
         focusInputCustid: function () {
@@ -130,18 +150,28 @@ define([
             $(this.input).val(str);
         },
 
-        onOKClicked: function () {
-            var isUserFocused = $('input[name = custid]').is(':focus');
+        //onOKClicked: function () {
+        //    var isUserFocused = $('input[name = custid]').is(':focus');
+        //    if (this.isRequestSuccess) {
+        //        storage.set(system_config.VIP_KEY,this.model.toJSON());
+        //        toastr.success('会员登录成功');
+        //        router.navigate('main',{trigger:true});
+        //    } else {
+        //        if (isUserFocused) {
+        //            $('input[name = custpwd]').focus();
+        //        } else {
+        //            this.requestMemberInfo();
+        //        }
+        //    }
+        //},
+
+        doMemberLogin: function () {
             if (this.isRequestSuccess) {
                 storage.set(system_config.VIP_KEY,this.model.toJSON());
                 toastr.success('会员登录成功');
                 router.navigate('main',{trigger:true});
             } else {
-                if (isUserFocused) {
-                    $('input[name = custpwd]').focus();
-                } else {
-                    this.requestMemberInfo();
-                }
+                toastr.warning('请先查询会员信息');
             }
         },
 
@@ -191,8 +221,29 @@ define([
             router.navigate('main',{trigger:true});
         },
 
-        onCardTypeClicked: function () {
-            this.onMCardLogin();
+        onCardTypeClicked: function (e) {
+            var index = $(e.currentTarget).data('index');
+            console.log(index);
+            switch (index) {
+                case 0:
+                    this.onMCardLogin();
+                    break;
+                case 1:
+                    this.onPhoneNumLogin();
+                    break
+            }
+        },
+
+        onMagcardResponse: function (resp) {
+            this.model.set(resp);
+            this.isRequestSuccess = true;
+            this.renderMemberInfo();
+        },
+
+        onPhoneNumResponse: function (resp) {
+            this.model.set(resp);
+            this.isRequestSuccess = true;
+            this.renderMemberInfo();
         }
 
     });
