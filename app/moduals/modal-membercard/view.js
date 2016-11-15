@@ -55,8 +55,8 @@ define([
                     //如果时间差为0（也就是你停止输入0.5s之内都没有其它的keyup事件发生）则做你想要做的事
                     {
                         //做你要做的事情
-                        //var value = $('input[name = magcard]').val();
-                        var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
+                        var value = $('input[name = magcard]').val();
+                        //var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
                         console.log(value);
                         var index1 = value.indexOf(';');
                         var index2 = value.indexOf('?');
@@ -84,9 +84,12 @@ define([
                         data['track3'] = track3;
                         data['type'] = '01';
                         _self.requestModel.getMemberInfo(data, function (resp) {
-                            console.log(resp);
+                            //console.log(resp);
                             if (resp.status == '00') {
-
+                                _self.hideModal(window.PAGE_ID.MEMBER);
+                                Backbone.trigger('onMagcardResponse', resp);
+                            } else {
+                                toastr.error(resp.msg);
                             }
                         });
                     }

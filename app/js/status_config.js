@@ -188,6 +188,7 @@ window.PAGE_ID = {
     'RT_QP_WECHAT':37,
     'PRINT':38,
     'MODAL_MEMBER_CARD':40,
+    'MODAL_PHONENUM':41,
 
 };
 
