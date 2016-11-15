@@ -12,71 +12,41 @@ define([
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-login/view',
     '../../../../moduals/modal-restorder/view',
-    '../../../../moduals/modal-priceentry/view',
+    '../../../../moduals/modal-withdraw/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/main/clientdisplaytpl.html',
     'text!../../../../moduals/main/welcometpl.html',
-    'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView,PriceEntryView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl,oddchangetpl, tpl) {
-
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, tpl) {
     var mainView = BaseView.extend({
-
         id: "mainView",
-
         el: '.views',
-
         template: tpl,
-
         totalamount: 0,
-
         itemamount: 0,
-
         discountamount: 0,
-
         salesman:'',
-
         memeber:'',
-
         ids: ['curSaleState', 'curItem'],
-
         clientScreen: null,
-
         isInSale: false,
-
         i: 0,
-
         template_posinfo:posinfotpl,
-
         template_salesman:salesmantpl,
-
         template_cartlisttpl:cartlisttpl,
-
         template_numpad:numpadtpl,
-
         template_clientdisplay: clientdisplaytpl,
-
         template_welcome: welcometpl,
-
-        template_oddchange:oddchangetpl,
-
         salesmanView:null,
-
         secondloginView:null,
-
         restOrderDelivery: {},
-
         deleteKey:{},
-
         isDeleteKey:false,
-
         isDiscountPercent:false,
-
         //input:'input[name = main]',
-
         events: {
             'click .numpad-ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
@@ -100,10 +70,10 @@ define([
             'click .return-force':'onReturnForceClicked',
             'click .checking':'onCheckingClicked',
             'click .login-out':'onLoginOutClicked',
-            'click .print':'onPrintClicked'//打印页面
+            'click .print':'onPrintClicked',//打印页面,
+            'click .withdraw':'onWithDrawClicked'//打印页面
             //'click .btn-floatpad':'onFloatPadClicked'
         },
-
         pageInit: function () {
             var _self = this;
             pageId = window.PAGE_ID.MAIN;
@@ -112,7 +82,6 @@ define([
             var user = storage.get(system_config.LOGIN_USER_KEY);  // 从本地取出登录用户属性
             this.model = new HomeModel();  // 当前view的model
             this.loginInfoModel = new HomeModel();  // 存放登录用户及营业员信息的model
-            this.oddchangeModel = new HomeModel();
             this.collection = new HomeCollection();  //当前view的collection
             //this.logincollection = new HomeCollection();
             this.requestModel = new HomeModel();  //网络请求的model
@@ -151,10 +120,6 @@ define([
             if (storage.isSet(system_config.LOGIN_USER_KEY)){
                 this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
             }
-
-            this.oddchangeModel.set({
-                oddchange:storage.get(system_config.ODD_CHANGE,'oddchange')
-            });
             //if (storage.isSet(system_config.PRINTF)) {
             //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
             //    console.log(message);
@@ -165,7 +130,6 @@ define([
             this.initTemplates();
             this.handleEvents();
         },
-
         initPlugins: function () {
             //var _self = this;
             $(this.input).focus();
@@ -175,7 +139,6 @@ define([
             //    $(_self.input).focus();
             //});
             $('.for-cartlist').perfectScrollbar();  // 定制滚动条外观
-            this.renderOddchange();
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
@@ -184,22 +147,17 @@ define([
                 isFromLogin = false;
             }
             this.buttonSelected();
-
-
-
             this.$el.find('.for-numpad').html(this.template_numpad);
         },
-
         initTemplates: function () {
             this.template_posinfo = _.template(this.template_posinfo);
             this.template_salesman = _.template(this.template_salesman);
             this.template_cartlisttpl = _.template(this.template_cartlisttpl);
             this.template_clientdisplay = _.template(this.template_clientdisplay);
             this.template_welcome = _.template(this.template_welcome);
-            this.template_oddchange = _.template(this.template_oddchange);
+            //this.template_cart = _.template(this.template_cart);
             //this.template_shopitem = _.template(this.template_shopitem);
         },
-
         /**
          * 初始化layout中各个view的高度
          */
@@ -222,26 +180,22 @@ define([
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
             return this;
         },
-
         renderSalesman: function() {
             this.$el.find('.for-salesman').html(this.template_salesman(this.loginInfoModel.toJSON()));
             return this;
         },
-
         renderCartList: function() {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
             $('#li' + this.i).addClass('cus-selected');
             return this;
         },
-
         renderClientWelcome: function (isPacked) {
             if (isPacked) {
                 $(clientDom).find('.client-display').html(this.template_welcome());
                 return this;
             }
         },
-
         renderClientCart: function (collection, isPacked) {
             if (isPacked) {
                 console.log(collection);
@@ -251,11 +205,6 @@ define([
                 return this;
             }
         },
-
-        renderOddchange: function () {
-            this.$el.find('.oddchange').html(this.template_oddchange(this.oddchangeModel.toJSON()));
-        },
-
         handleEvents: function () {
             // 注册backbone事件
             Backbone.off('SalesmanAdd');
@@ -264,7 +213,6 @@ define([
             Backbone.on('SalesmanAdd',this.SalesmanAdd,this);
             Backbone.on('onReleaseOrder',this.onReleaseOrder,this);
         },
-
         SalesmanAdd: function (attrData) {
             storage.set(system_config.SALE_PAGE_KEY,'salesman',attrData['name']);
             this.loginInfoModel.set({
@@ -272,7 +220,6 @@ define([
             });
             this.renderSalesman();
         },
-
         onReleaseOrder: function (data) {
             this.collection = new HomeCollection();
             for (var i in data) {
@@ -282,7 +229,6 @@ define([
             }
             this.onAddItem(this.collection.toJSON());
         },
-
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Enter, function () {
@@ -302,7 +248,7 @@ define([
             });
             //营业员登陆
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
-               _self.doLoginSalesman();
+                _self.doLoginSalesman();
             });
             //退出登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
@@ -336,7 +282,6 @@ define([
                     });
                     _self.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
                 }
-
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
@@ -346,11 +291,9 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y,function () {
                 _self.modifyItemDiscount();
             });
-
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
                 _self.scrollDown();
             });
-
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
                 _self.scrollUp();
             });
@@ -373,11 +316,9 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
                 _self.onDiscountPercentClicked();
             });
-
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.H, function() {
                 router.navigate('print', {trigger:true});
             });
-
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
             //        pageid: window.PAGE_ID.MAIN,
@@ -389,7 +330,6 @@ define([
             //
             //});
         },
-
         /**
          * 账户登出
          */
@@ -400,7 +340,6 @@ define([
                 $('input[name = logout_username]').focus();
             });
         },
-
         /**
          * 结算
          */
@@ -414,7 +353,6 @@ define([
                 router.navigate('billing',{trigger:true});
             }
         },
-
         /**
          * 营业员登录
          */
@@ -425,7 +363,6 @@ define([
                 $('input[name = salesman_id]').focus();
             });
         },
-
         /**
          * 购物车光标向下
          */
@@ -440,7 +377,6 @@ define([
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
-
         /**
          * 购物车光标向上
          */
@@ -455,7 +391,6 @@ define([
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
-
         /**
          * 解挂
          */
@@ -472,7 +407,6 @@ define([
                 });
             }
         },
-
         /**
          * 挂单
          */
@@ -494,7 +428,6 @@ define([
                 }
                 console.log(orderNumFromStorage);
                 storage.set(system_config.RESTORDER_NUM, orderNumFromStorage);
-
                 if (storage.isSet(system_config.RESTORDER_KEY)) {
                     var pre = storage.get(system_config.RESTORDER_KEY);
                     pre[orderNum] = this.collection.toJSON();
@@ -516,7 +449,6 @@ define([
                 toastr.success('挂单号：' + orderNum);
             }
         },
-
         /**
          * 修改单品数量
          */
@@ -532,9 +464,19 @@ define([
                     toastr.warning('修改的数量不能为零');
                 }else {
                     var item = _self.collection.at(_self.i);
-                    item.set({
-                        num:parseFloat(number),
-                    });
+                    var num = item.get('num');
+                    var discount = item.get('discount');
+                    if(num == 1) {
+                        item.set({
+                            num: parseFloat(number),
+                            discount:number * discount
+                        });
+                    }else {
+                        item.set({
+                            num:parseFloat(number),
+                            discount:discount / num * number
+                        });
+                    }
                     console.log(_self.collection);
                     _self.totalamount = 0;
                     _self.itemamount = 0;
@@ -555,7 +497,6 @@ define([
             console.log(_self.i);
             $('#li' + _self.i).addClass('cus-selected');
         },
-
         /**
          * 单品优惠
          */
@@ -587,9 +528,10 @@ define([
             }else {
                 var item = _self.collection.at(_self.i);
                 var price = item.get('price');
+                var num = item.get('num');
                 if (value <= parseFloat(price) ) {
                     _self.collection.at(_self.i).set({
-                        discount: value
+                        discount: value * num
                     });
                     _self.calculateModel();
                     $('#li' + _self.i).addClass('cus-selected');
@@ -599,7 +541,6 @@ define([
             }
             $(this.input).val('');
         },
-
         //切换优惠模式
         onDiscountPercentClicked: function () {
             //if (this.isDiscountPercent) {
@@ -635,7 +576,6 @@ define([
             }
             $(this.input).val('');
         },
-
         /**
          * 单品删除
          */
@@ -649,7 +589,6 @@ define([
             }
             toastr.success('删除成功');
         },
-
         /**
          * 添加商品
          */
@@ -673,33 +612,11 @@ define([
                 data['goods_detail'] = JSON.stringify(this.collection);
                 this.requestModel.sku(data , function(resp) {
                     if(resp.status == '00') {
-                        var temp = resp.goods_detail[resp.goods_detail.length - 1];
-                        if(temp['price_auto'] == 1) {
-                            var priceentryview = new PriceEntryView({
-                                originalprice:temp['price'],
-                                pageid:window.PAGE_ID.MODAL_PRICE_ENTRY,
-                                currentid:window.PAGE_ID.MAIN,
-                                callback: function (attrs) {
-                                    var price = $('input[name = price]').val();
-                                    resp.goods_detail[resp.goods_detail.length - 1].money = price;
-                                    resp.goods_detail[resp.goods_detail.length - 1].price = price;
-                                    _self.onAddItem(resp.goods_detail);
-                                    _self.hideModal(window.PAGE_ID.MAIN);
-                                    $('input[name = main]').focus();
-                                }
-                            });
-                            _self.showModal(window.PAGE_ID.MODAL_PRICE_ENTRY, priceentryview);
-                            $('.modal').on('shown.bs.modal',function(e) {
-                                $('input[name = price]').focus();
-                            });
-                        }else {
-                            _self.onAddItem(resp.goods_detail);
-                        }
                         if (!_self.isInSale) {
                             _self.isInSale = true;
                             //_self.ctrlClientInfo('block', _self.ids, isPacked);
                         }
-
+                        _self.onAddItem(resp.goods_detail);
                     }else{
                         toastr.warning(resp.msg);
                     }
@@ -708,7 +625,6 @@ define([
                 this.i = 0;
             }
         },
-
         onAddItem: function (JSONData) {
             this.collection.set(JSONData, {merge: false});
             //this.updateClientCurItem(this.collection, isPacked);
@@ -717,7 +633,6 @@ define([
             this.calculateModel();
             this.buttonSelected();
         },
-
         clearCart: function () {
             this.collection.reset();
             this.model.set({
@@ -733,7 +648,6 @@ define([
             this.isInSale = false;
             toastr.success('交易已取消');
         },
-
         /**
          * 每次添加商品时，向新添加的商品插入serial属性值
          */
@@ -744,7 +658,6 @@ define([
                 });
             }
         },
-
         /**
          * 购物车中商品变更后执行的通用方法，主要是在更新后collection中重新计算总计、件数和优惠
          */
@@ -768,7 +681,6 @@ define([
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', this.collection.toJSON());
             storage.set(system_config.SALE_PAGE_KEY, 'shopinfo', this.model.toJSON());
         },
-
         /**
          * 更新当前销售详情
          */
@@ -795,33 +707,28 @@ define([
                 }
             }
         },
-
         openHelp: function () {
             var tipsView = new KeyTipsView('MAIN_PAGE');
             this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
         },
-
         /**
          * 结算按钮点击事件
          */
         onBillingClicked: function () {
             this.doBilling();
         },
-
         /**
          * 营业员登录按钮点击事件
          */
         onSalesmanClicked: function () {
             this.doLoginSalesman();
         },
-
         /**
          * 会员登录按钮点击事件
          */
         onMemberClicked:function () {
             router.navigate('member',{trigger:true});
         },
-
         /**
          * 单品优惠按钮点击事件
          */
@@ -845,14 +752,12 @@ define([
                 this.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
             }
         },
-
         /**
          * 修改数量点击事件
          */
         onModifyItemNum: function () {
             this.modifyItemNum();
         },
-
         /**
          *清空购物车按钮点击事件
          */
@@ -867,84 +772,71 @@ define([
             });
             _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
         },
-
         /**
          * 向上选择点击事件
          */
         onKeyUpClicked: function () {
             this.scrollUp();
         },
-
         /**
          * 向下选择点击事件
          */
         onKeyDownClicked: function () {
             this.scrollDown();
         },
-
         /**
          * 挂单按钮点击事件
          */
         onRestorderClicked: function () {
             this.restOrder();
         },
-
         /**
          * 解挂按钮点击事件
          */
         onUnRestOrderClicked: function() {
             this.releaseOrder();
         },
-
         /**
          * 整单退货按钮点击事件
          */
         onReturnWholeClicked: function () {
             router.navigate('returnwhole',{ trigger:true });
         },
-
         /**
          * 强制退货按钮点击事件
          */
         onReturnForceClicked: function () {
             router.navigate('returnforce',{ trigger:true });
         },
-
         /**
          * 收银对账按钮点击事件
          */
         onCheckingClicked: function () {
             router.navigate('checking',{trigger:true});
         },
-
         /**
          * 退出按钮点击事件
          */
         onLoginOutClicked: function () {
             this.doLogout();
         },
-
         onOKClicked: function () {
             this.addItem();
         },
-
         onNumClicked: function (e) {
             var value = $(e.currentTarget).data('num');
             var str = $(this.input).val();
             str += value;
             $(this.input).val(str);
         },
-
         onBackspaceClicked: function () {
             var str = $(this.input).val();
             str = str.substring(0, str.length-1);
             $(this.input).val(str);
         },
-
         onClearClicked: function () {
             $(this.input).val('');
         },
-
         /**
          * 更新客显区当前销售详情
          * @param totalamount
@@ -958,7 +850,6 @@ define([
                 clientDom.getElementById("totalDiscount").innerHTML = toDecimal2(discountamount);
             }
         },
-
         /**
          * 更新客显区当前商品信息
          * @param collection
@@ -977,7 +868,6 @@ define([
                 clientDom.getElementById("itemPrice").innerHTML = toDecimal2(model.price);
             }
         },
-
         //onFloatPadClicked: function () {
         //    var isDisplay = $('.float-numpad').css('display') == 'none';
         //    if (isDisplay) {
@@ -988,7 +878,6 @@ define([
         //        $('.btn-floatpad').text('开启小键盘')
         //    }
         //},
-
         /**
          * 挂单，解挂按钮选择
          */
@@ -1002,20 +891,19 @@ define([
                 $('#unrestorder').css('display','block');
             }
         },
-
         onHConnectClicked: function () {
             router.navigate('hconnection',{ trigger:true });
         },
-
         /**
          * 跳转打印页面
          */
         onPrintClicked: function () {
             router.navigate('print', {trigger:true});
+        },
+        onWithDrawClicked: function () {
+            var withDrawView = new WithDrawView();
+            this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
         }
-
     });
-
     return mainView;
-
 });
