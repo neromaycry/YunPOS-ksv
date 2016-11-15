@@ -535,11 +535,11 @@ define([
             if(_self.unpaidamount != 0){
                 toastr.info('还有未支付的金额，请支付完成后再进行结算');
             } else {
-                var changingView = new ChangingView({
-                    pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
-                    is_navigate:true,
-                    navigate_page: window.PAGE_ID.MAIN,
-                    callback: function () { //
+                //var changingView = new ChangingView({
+                //    pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
+                //    is_navigate:true,
+                //    navigate_page: window.PAGE_ID.MAIN,
+                //    callback: function () { //
                         _self.unpaidamount = _self.unpaidamount.toFixed(2);
                         if(_self.percentage != 0){
                             _self.totalDiscount(_self.percentage);
@@ -568,7 +568,11 @@ define([
                                 router.navigate("main", {trigger: true,replace:true});
 
                                 //f7app.alert("订单号：" + resp.bill_no,'提示');
-                                toastr.success("订单号：" + resp.bill_no);
+                               toastr.options = {
+                                    'timeOut': '3000',
+                                    'positionClass': 'toast-bottom-right',
+                                };
+                                toastr.success("找零：" + _self.model.get('oddchange').toFixed(2) + '元');
                                 console.log(resp.prnt);
                                 wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
                                 wsClient.send(DIRECTIVES.OpenCashDrawer);
@@ -583,10 +587,10 @@ define([
                                 toastr.error(resp.msg);
                             }
                         });
-                    },
-                    content: _self.model.get('oddchange')
-                });
-                _self.showModal(window.PAGE_ID.CONFIRM, changingView);
+                    //},
+                    //content: _self.model.get('oddchange')
+                //});
+                //_self.showModal(window.PAGE_ID.CONFIRM, changingView);
             }
         },
         /**
