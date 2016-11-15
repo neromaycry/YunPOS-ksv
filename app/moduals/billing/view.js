@@ -568,11 +568,8 @@ define([
                                 router.navigate("main", {trigger: true,replace:true});
 
                                 //f7app.alert("订单号：" + resp.bill_no,'提示');
-                               toastr.options = {
-                                    'timeOut': '3000',
-                                    'positionClass': 'toast-bottom-right',
-                                };
-                                toastr.success("找零：" + _self.model.get('oddchange').toFixed(2) + '元');
+                                toastr.success("订单号：" +  resp.bill_no);
+                                storage.set(system_config.ODD_CHANGE,'oddchange',_self.model.get('oddchange'));
                                 console.log(resp.prnt);
                                 wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
                                 wsClient.send(DIRECTIVES.OpenCashDrawer);
