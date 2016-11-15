@@ -176,6 +176,9 @@ define([
                 isFromLogin = false;
             }
             this.buttonSelected();
+
+
+
             this.$el.find('.for-numpad').html(this.template_numpad);
         },
 
