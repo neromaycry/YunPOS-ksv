@@ -189,7 +189,9 @@ window.PAGE_ID = {
     'RT_QP_WECHAT':37,
     'PRINT':38,
     'MODAL_MEMBER_CARD':40,
-    'MODAL_PRICE_ENTRY':41
+    'MODAL_PHONENUM':41,
+    'MODAL_WITHDRAW':42,
+    'MODAL_PRICE_ENTRY':43,
 };
 
 window.KEYS = {
