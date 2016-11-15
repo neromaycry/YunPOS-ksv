@@ -12,6 +12,7 @@ define([
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-login/view',
     '../../../../moduals/modal-restorder/view',
+    '../../../../moduals/modal-withdraw/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
@@ -19,7 +20,7 @@ define([
     'text!../../../../moduals/main/clientdisplaytpl.html',
     'text!../../../../moduals/main/welcometpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -96,7 +97,8 @@ define([
             'click .return-force':'onReturnForceClicked',
             'click .checking':'onCheckingClicked',
             'click .login-out':'onLoginOutClicked',
-            'click .print':'onPrintClicked'//打印页面
+            'click .print':'onPrintClicked',//打印页面,
+            'click .withdraw':'onWithDrawClicked'//打印页面
             //'click .btn-floatpad':'onFloatPadClicked'
         },
 
@@ -984,6 +986,11 @@ define([
          */
         onPrintClicked: function () {
             router.navigate('print', {trigger:true});
+        },
+
+        onWithDrawClicked: function () {
+            var withDrawView = new WithDrawView();
+            this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
         }
 
     });

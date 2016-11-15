@@ -189,6 +189,7 @@ window.PAGE_ID = {
     'PRINT':38,
     'MODAL_MEMBER_CARD':40,
     'MODAL_PHONENUM':41,
+    'MODAL_WITHDRAW':42,
 
 };
 
