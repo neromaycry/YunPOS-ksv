@@ -64,7 +64,8 @@ define([
             var printText = '\n\n\n\n';
             printText += '        收款机：' + pos + '\n\n';
             printText += '        收款员：' + userName + '\n\n';
-            printText += '        提取金额：' + toDecimal2(money) + ' 元\n\n\n\n\n\n\n\n';
+            printText += '        提取金额：' + toDecimal2(money) + ' 元\n\n\n\n';
+            printText += '    提款人签字：\n\n\n\n\n\n\n\n';
             wsClient.send(DIRECTIVES.PRINTTEXT + printText);
             this.hideModal(window.PAGE_ID.MAIN);
         },
