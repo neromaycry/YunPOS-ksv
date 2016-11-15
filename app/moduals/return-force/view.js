@@ -310,10 +310,9 @@ define([
             }else {
                 var item = this.collection.at(this.i);
                 var price = item.get('price');
-                var num = item.get('num');
                 if (value <= parseFloat(price) ) {
                     this.collection.at(this.i).set({
-                        discount: value * num
+                        discount: value
                     });
                     this.calculateModel();
                     $('#li' + this.i).addClass('cus-selected');
@@ -365,17 +364,9 @@ define([
                 var item = _self.collection.at(_self.i);
                 var num = item.get('num');
                 var discount = item.get('discount');
-                if(num == 1) {
-                    item.set({
-                        num: parseFloat(number),
-                        discount:number * discount
-                    });
-                }else {
-                    item.set({
-                        num:parseFloat(number),
-                        discount:discount / num * number
-                    });
-                }
+                item.set({
+                    num:parseFloat(number),
+                });
                 console.log(_self.collection);
                 _self.totalamount = 0;
                 _self.itemamount = 0;

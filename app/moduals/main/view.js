@@ -12,15 +12,16 @@ define([
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-login/view',
     '../../../../moduals/modal-restorder/view',
-    '../../../../moduals/modal-withdraw/view',
+    '../../../../moduals/modal-priceentry/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/main/clientdisplaytpl.html',
     'text!../../../../moduals/main/welcometpl.html',
+    'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView,PriceEntryView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl,oddchangetpl, tpl) {
 
     var mainView = BaseView.extend({
 
@@ -60,6 +61,8 @@ define([
 
         template_welcome: welcometpl,
 
+        template_oddchange:oddchangetpl,
+
         salesmanView:null,
 
         secondloginView:null,
@@ -97,8 +100,7 @@ define([
             'click .return-force':'onReturnForceClicked',
             'click .checking':'onCheckingClicked',
             'click .login-out':'onLoginOutClicked',
-            'click .print':'onPrintClicked',//打印页面,
-            'click .withdraw':'onWithDrawClicked'//打印页面
+            'click .print':'onPrintClicked'//打印页面
             //'click .btn-floatpad':'onFloatPadClicked'
         },
 
@@ -110,6 +112,7 @@ define([
             var user = storage.get(system_config.LOGIN_USER_KEY);  // 从本地取出登录用户属性
             this.model = new HomeModel();  // 当前view的model
             this.loginInfoModel = new HomeModel();  // 存放登录用户及营业员信息的model
+            this.oddchangeModel = new HomeModel();
             this.collection = new HomeCollection();  //当前view的collection
             //this.logincollection = new HomeCollection();
             this.requestModel = new HomeModel();  //网络请求的model
@@ -148,6 +151,10 @@ define([
             if (storage.isSet(system_config.LOGIN_USER_KEY)){
                 this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
             }
+
+            this.oddchangeModel.set({
+                oddchange:storage.get(system_config.ODD_CHANGE,'oddchange')
+            });
             //if (storage.isSet(system_config.PRINTF)) {
             //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
             //    console.log(message);
@@ -168,6 +175,7 @@ define([
             //    $(_self.input).focus();
             //});
             $('.for-cartlist').perfectScrollbar();  // 定制滚动条外观
+            this.renderOddchange();
             this.renderPosInfo();
             this.renderSalesman();
             this.renderCartList();
@@ -188,7 +196,7 @@ define([
             this.template_cartlisttpl = _.template(this.template_cartlisttpl);
             this.template_clientdisplay = _.template(this.template_clientdisplay);
             this.template_welcome = _.template(this.template_welcome);
-            //this.template_cart = _.template(this.template_cart);
+            this.template_oddchange = _.template(this.template_oddchange);
             //this.template_shopitem = _.template(this.template_shopitem);
         },
 
@@ -242,6 +250,10 @@ define([
                 $(clientDom).find('.client-display').html(this.template_clientdisplay(model.toJSON()));
                 return this;
             }
+        },
+
+        renderOddchange: function () {
+            this.$el.find('.oddchange').html(this.template_oddchange(this.oddchangeModel.toJSON()));
         },
 
         handleEvents: function () {
@@ -520,19 +532,9 @@ define([
                     toastr.warning('修改的数量不能为零');
                 }else {
                     var item = _self.collection.at(_self.i);
-                    var num = item.get('num');
-                    var discount = item.get('discount');
-                    if(num == 1) {
-                        item.set({
-                            num: parseFloat(number),
-                            discount:number * discount
-                        });
-                    }else {
-                        item.set({
-                            num:parseFloat(number),
-                            discount:discount / num * number
-                        });
-                    }
+                    item.set({
+                        num:parseFloat(number),
+                    });
                     console.log(_self.collection);
                     _self.totalamount = 0;
                     _self.itemamount = 0;
@@ -585,10 +587,9 @@ define([
             }else {
                 var item = _self.collection.at(_self.i);
                 var price = item.get('price');
-                var num = item.get('num');
                 if (value <= parseFloat(price) ) {
                     _self.collection.at(_self.i).set({
-                        discount: value * num
+                        discount: value
                     });
                     _self.calculateModel();
                     $('#li' + _self.i).addClass('cus-selected');
@@ -672,11 +673,33 @@ define([
                 data['goods_detail'] = JSON.stringify(this.collection);
                 this.requestModel.sku(data , function(resp) {
                     if(resp.status == '00') {
+                        var temp = resp.goods_detail[resp.goods_detail.length - 1];
+                        if(temp['price_auto'] == 1) {
+                            var priceentryview = new PriceEntryView({
+                                originalprice:temp['price'],
+                                pageid:window.PAGE_ID.MODAL_PRICE_ENTRY,
+                                currentid:window.PAGE_ID.MAIN,
+                                callback: function (attrs) {
+                                    var price = $('input[name = price]').val();
+                                    resp.goods_detail[resp.goods_detail.length - 1].money = price;
+                                    resp.goods_detail[resp.goods_detail.length - 1].price = price;
+                                    _self.onAddItem(resp.goods_detail);
+                                    _self.hideModal(window.PAGE_ID.MAIN);
+                                    $('input[name = main]').focus();
+                                }
+                            });
+                            _self.showModal(window.PAGE_ID.MODAL_PRICE_ENTRY, priceentryview);
+                            $('.modal').on('shown.bs.modal',function(e) {
+                                $('input[name = price]').focus();
+                            });
+                        }else {
+                            _self.onAddItem(resp.goods_detail);
+                        }
                         if (!_self.isInSale) {
                             _self.isInSale = true;
                             //_self.ctrlClientInfo('block', _self.ids, isPacked);
                         }
-                        _self.onAddItem(resp.goods_detail);
+
                     }else{
                         toastr.warning(resp.msg);
                     }
@@ -989,11 +1012,6 @@ define([
          */
         onPrintClicked: function () {
             router.navigate('print', {trigger:true});
-        },
-
-        onWithDrawClicked: function () {
-            var withDrawView = new WithDrawView();
-            this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
         }
 
     });
