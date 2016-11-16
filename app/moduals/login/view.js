@@ -274,6 +274,9 @@ define([
                 window.location.reload();
             });
 
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.P, function () {
+                _self.onPowerOffClicked();
+            });
         },
 
         setKeys: function () {

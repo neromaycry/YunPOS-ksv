@@ -524,13 +524,12 @@ define([
          * 光标向上
          */
         scrollUp: function () {
-            wsClient.send(DIRECTIVES.PRINTTEXT + 'dfasdfasfdjsadkfhlkjsafd');
             if (this.i > 0) {
                 this.i--;
             }
             if ((this.i+1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
-                $('.for-billdetail').scrollTop(this.listheight * this.n );
+                $('.for-billdetail').scrollTop(this.listheight * this.n);
             }
             $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
@@ -577,19 +576,12 @@ define([
                                     storage.remove(system_config.VIP_KEY);
                                 }
                                 router.navigate("main", {trigger: true,replace:true});
-
-                                //f7app.alert("订单号：" + resp.bill_no,'提示');
                                 toastr.success("订单号：" +  resp.bill_no);
                                 storage.set(system_config.ODD_CHANGE,'oddchange',_self.model.get('oddchange'));
                                 console.log(resp.prnt);
                                 wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
                                 wsClient.send(DIRECTIVES.OpenCashDrawer);
                                 _self.renderClientDisplay(_self.model);
-                                //var send_data = {};
-                                //send_data['directive'] = window.DIRECTIVES.PRINTTEXT;
-                                //send_data['content'] = resp.printf;
-                                //send_data = JSON.stringify(send_data) + '<EOF>';
-                                //_self.sendLargeData2Socket(send_data);
                                 router.navigate("main", {trigger: true,replace:true});
                             } else {
                                 toastr.error(resp.msg);

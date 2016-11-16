@@ -311,9 +311,11 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y,function () {
                 _self.modifyItemDiscount();
             });
+            //向上
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
                 _self.scrollDown();
             });
+            //向下
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
                 _self.scrollUp();
             });
@@ -325,6 +327,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.W, function () {
                 router.navigate('returnwhole',{ trigger:true });
             });
+            //打开帮助
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.T, function () {
                 _self.openHelp();
             });
@@ -336,6 +339,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
                 _self.onDiscountPercentClicked();
             });
+            //小票打印
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.H, function() {
                 router.navigate('print', {trigger:true});
             });
