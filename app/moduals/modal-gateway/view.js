@@ -39,6 +39,7 @@ define([
             var ip = 'http://' + $(this.input).val() + ':3000/v1';
             storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY, ip);
             this.hideModal(window.PAGE_ID.LOGIN);
+            Backbone.trigger('getGatherDetail');
         },
 
         onNumClicked: function (e) {
@@ -60,12 +61,14 @@ define([
 
         bindModalKeys: function () {
             var _self = this;
-            this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Esc, function () {
+            this.bindModalKeyEvents(window.PAGE_ID.MODAL_GATEWAY, window.KEYS.Esc, function () {
                 _self.hideModal(window.PAGE_ID.LOGIN);
+                $('input[name = username]').focus();
             });
 
-            this.bindModalKeyEvents(window.PAGE_ID.LOGOUT, window.KEYS.Enter, function() {
+            this.bindModalKeyEvents(window.PAGE_ID.MODAL_GATEWAY, window.KEYS.Enter, function() {
                 _self.onOKClicked();
+                $('input[name = username]').focus();
             });
         },
 

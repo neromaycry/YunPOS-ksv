@@ -86,7 +86,8 @@ window.API_URL = {
     "ONLINEBILL": "/onlinebill",
     "ACCOUNT_ICPWD": "/account/icpwd",
     "REPORT":"/report",
-    "PRINT":'/print'
+    "PRINT":"/print",
+    "RETAIL_NO":"/retailno"
 };
 
 // 系统参数设置

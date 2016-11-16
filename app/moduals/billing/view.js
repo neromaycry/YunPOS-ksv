@@ -61,6 +61,8 @@ define([
 
         input:'input[name = billing]',
 
+        billNumber: '',
+
         events: {
             'click .numpad-ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
@@ -102,12 +104,12 @@ define([
                 oddchange:this.oddchange,
                 discountamount:this.discountamount//单品优惠的总金额
             });
+            //this.getRetailNo();
             this.initTemplates();
             this.handleEvents();
-
         },
+
         initPlugins: function () {
-            var _self = this;
             this.renderBillInfo();
             this.renderClientDisplay(this.model, isPacked);
             $('input[name = billing]').focus();
@@ -116,6 +118,7 @@ define([
             this.$el.find('.for-numpad').html(this.template_numpad);
             this.initLayoutHeight();
         },
+
         /**
          * 初始化layout中各个view的高度
          */
@@ -975,9 +978,23 @@ define([
                 }
             }
             $('input[name = billing]').val('');
-        }
+        },
 
-
+        /**
+         * 从接口获取小票号
+         */
+        getRetailNo: function () {
+            var _self = this;
+            var data = {};
+            data['pos_id'] = '002';
+            this.model.requestRetaliNo(data, function (resp) {
+                if (resp.status == '00') {
+                    _self.billNumber = resp.bill_no;
+                } else {
+                    toastr.error(resp.msg);
+                }
+            });
+        },
 
     });
     return billingView;
