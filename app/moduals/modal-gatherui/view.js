@@ -117,6 +117,8 @@ define([
                     toastr.warning('账号不能为空');
                 }else if(gatherNo == '0') {
                     toastr.warning('账号不能为零');
+                }else if((gatherNo.split('.').length-1) > 0) {
+                        toastr.warning('请输入有效的账号');
                 }else {
                     _self.attrs.callback(_self.attrs);
                     _self.confirmHideModal(_self.attrs.pageid);
@@ -141,7 +143,9 @@ define([
                 toastr.warning('账号不能为空');
             }else if(gatherNo == '0') {
                 toastr.warning('账号不能为零');
-            }else {
+            }else if((gatherNo.split('.').length-1) > 0) {
+                toastr.warning('请输入有效的账号');
+            }else{
                 this.attrs.callback(this.attrs);
                 this.confirmHideModal(this.attrs.pageid);
             }

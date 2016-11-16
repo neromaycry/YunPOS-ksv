@@ -3,7 +3,8 @@
     <div class="panel-body">
         <div class="form-group no-margining">
             <label for="receive_account" class="sr-only">commonpay</label>
-            <input type="text" id="receive_account" name="receive_account" class="form-control" placeholder="请输入退款账号" onkeypress="return myNumberic(event)"/>
+            <input type="text" id="receive_account" name="receive_account" class="form-control" placeholder="请输入退款账号" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"
+                    />
         </div>
     </div>
 </div>

@@ -54,6 +54,8 @@ define([
             var gather_no = $(this.input).val();
             if(gather_no == ''){
                 toastr.warning('退款账号不能为空');
+            }else if((gather_no.split('.').length-1) > 0){
+                toastr.warning('请输入有效的退款账号');
             }else{
                 var data = {};
                 data['receivedsum'] = this.attrs['unpaidamount'];
@@ -64,6 +66,7 @@ define([
                 this.hideModal(window.PAGE_ID.BILLING_RETURN);
                 $('input[name = billingrt]').focus();
             }
+            $(this.input).val('');
         },
 
         onCancelClicked: function () {

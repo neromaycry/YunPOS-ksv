@@ -10,7 +10,7 @@
                 <div class="panel-body">
                     <div class="form-group no-margining">
                         <label for="price" class="sr-only">salesman login</label>
-                        <input type="text" class="form-control" id="price" name="price" placeholder="请输入单价"/>
+                        <input type="text" class="form-control" id="price" name="price" placeholder="请输入单价" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"/>
                     </div>
                 </div>
             </div>

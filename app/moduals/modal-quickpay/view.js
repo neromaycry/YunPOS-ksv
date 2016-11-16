@@ -51,8 +51,10 @@ define([
 
         confirm: function () {
             var gather_no = $('input[name = quickpay-account]').val();
-            if(gather_no == ''){
+            if(gather_no == '') {
                 toastr.warning('付款账号不能为空');
+            } else if((gather_no.split('.').length-1) > 0){
+                    toastr.warning('请输入有效的付款账号');
             }else{
                 var data = {};
                 data['receivedsum'] = this.attrs['unpaidamount'];
@@ -63,6 +65,7 @@ define([
                 this.hideModal(window.PAGE_ID.BILLING);
                 $('input[name = billing]').focus();
             }
+            $('input[name = quickpay-account]').val('');
         },
 
         onCancelClicked: function () {

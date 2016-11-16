@@ -31,7 +31,7 @@ return s;
                        <div class="col-xs-12 col-md-12">
                            <div class="form-group no-margining">
                                <label class="sr-only" for="rtwechat-account">wechat</label>
-                               <input type="text" class="form-control" id="rtwechat-account" name="rtwechat-account" placeholder="请输入微信退款账号" onkeypress="return myNumberic(event)"/>
+                               <input type="text" class="form-control" id="rtwechat-account" name="rtwechat-account" placeholder="请输入微信退款账号" onkeyup="return ValidateFloat($(this),value)" onkeypress="return myNumberic(event)"/>
                            </div>
                        </div>
                    </div>

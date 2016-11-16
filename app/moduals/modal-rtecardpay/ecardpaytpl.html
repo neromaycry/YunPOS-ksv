@@ -29,7 +29,7 @@ return s;
                     <div class="row">
                         <div class="col-xs-4 col-md-4">
                             <div class="form-group">
-                                <input type="text" id="ecard_receivedsum"  name="ecard_receivedsum" class="form-control" placeholder="请输入支付金额"/>
+                                <input type="text" id="ecard_receivedsum"  name="ecard_receivedsum" class="form-control" placeholder="请输入支付金额" onkeypress="return myNumberic(event)"  onkeyup="return ValidateFloat($(this),value)"/>
                             </div>
                             <div class="panel panel-primary" >
                                 <div class="row no-margining text-center">

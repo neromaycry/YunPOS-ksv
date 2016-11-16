@@ -31,7 +31,7 @@ return s;
                        <div class="col-xs-12 col-md-12">
                            <div class="form-group no-margining">
                                <label class="sr-only" for="rtalipay-account">alipay</label>
-                                <input type="text" class="form-control" id="rtalipay-account" name="rtalipay-account" placeholder="请输入支付宝退款账号"  onkeypress="return myNumberic(event)"/>
+                                <input type="text" class="form-control" id="rtalipay-account" name="rtalipay-account" placeholder="请输入支付宝退款账号"  onkeyup="return ValidateFloat($(this),value)" onkeypress="return myNumberic(event)"/>
                            </div>
                        </div>
                    </div>

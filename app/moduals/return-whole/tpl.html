@@ -54,7 +54,7 @@
         <!--</div>-->
         <div class="form-group">
             <label class="sr-only" for="whole_return_order">return whole</label>
-            <input type="text" id="whole_return_order" name="whole_return_order" class="form-control"  onkeypress="return myNumberic(event)" placeholder="请输入订单编号"/>
+            <input type="text" id="whole_return_order" name="whole_return_order" class="form-control"  onkeypress="return myNumberic(event)" placeholder="请输入订单编号" onkeyup="return ValidateFloat($(this),value)"/>
         </div>
         <div class="for-numpad"></div>
     </div>
