@@ -13,7 +13,7 @@ define([
 
         template: tpl,
 
-        input: 'input[name = logout_username]',
+        input: 'input[name = logout_passwd]',
 
         events:{
             'click .cancel':'onCancelClicked',

@@ -312,7 +312,9 @@ define([
                     toastr.warning('退货金额不能为零');
                 }else if(receivedsum == '.'){
                     toastr.warning('请输入有效退货金额');
-                } else if(receivedsum > unpaidamount){
+                } else if((receivedsum.split('.').length-1) > 1) {
+                    toastr.info('请输入有效金额');
+                }else if(receivedsum > unpaidamount){
                     toastr.warning('不设找零');
                 }else{
                     this.i = 0;

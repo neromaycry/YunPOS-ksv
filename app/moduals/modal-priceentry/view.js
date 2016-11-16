@@ -97,7 +97,9 @@ define([
                 toastr.warning('请输入有效的单价');
             }else if(price == 0) {
                 toastr.warning('单价不能为零');
-            }else {
+            }else if((price.split('.').length-1) > 1) {
+                toastr.warning('请输入有效金额');
+            } else {
                 this.attrs.callback(this.attrs);
                 this.confirmHideModal(this.attrs.pageid);
             }

@@ -78,7 +78,7 @@ define([
             var percentage = $('input[name = percentage]').val();
             if(percentage >= 100) {
                 toastr.warning('折扣比率不能大于100');
-            }else if(percentage == '.') {
+            }else if((percentage.split('.').length - 1) > 0) {
                 toastr.warning('请输入有效的折扣比率');
             }else {
                 var attrData = {};
@@ -89,10 +89,8 @@ define([
                 $('button[name = totaldiscount]').css('display','none');
                 $('button[name = cancel-totaldiscount]').css('display','block');
             }
+            $('input[name = percentage]').val('');
         }
-
-
-
     });
 
     return billdiscountView;
