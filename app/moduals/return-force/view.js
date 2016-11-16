@@ -57,7 +57,7 @@ define([
             'click .rt-keydown':'onKeyDownClicked',
             'click .rt-help':'onHelpClicked',
             'click .rt-return':'onReturnClicked',
-            'click .rt-discountpercent':'onDiscountpercentClicked'
+            'click .rt-discountpercent':'onDiscountPercentClicked'
         },
 
         pageInit: function () {
@@ -306,7 +306,9 @@ define([
         modifyItemDiscount: function () {
             var value = $('#sku_id').val();
             if(value == '') {
-                toastr.warning('您输入的优惠金额为零，请重新输入');
+                toastr.warning('优惠金额不能为空');
+            }else if(value == '.' || (value.split('.').length - 1) > 1){
+                toastr.warning('请输入有效的优惠金额');
             }else {
                 var item = this.collection.at(this.i);
                 var price = item.get('price');
@@ -318,7 +320,7 @@ define([
                     $('#li' + this.i).addClass('cus-selected');
 
                 }else {
-                    toastr.warning('优惠金额不能大于单品金额,请重新选择优惠金额');
+                    toastr.warning('优惠金额不能大于单品金额');
                 }
             }
             $('#sku_id').val('');
@@ -334,7 +336,7 @@ define([
                 toastr.warning('折扣比率不能为空');
             }else if(discountpercent >= 100) {
                 toastr.warning('折扣比率不能大于100');
-            }else if(discountpercent == '.') {
+            }else if((discountpercent.split('.').length - 1) > 0){
                 toastr.warning('请输入有效的折扣比率');
             }else {
                 var rate = discountpercent / 100;
@@ -360,7 +362,9 @@ define([
                 toastr.warning('您未输入任何数量，请重新输入');
             }else if (number == 0) {
                 toastr.warning('输入的数量不能为零，请重新输入');
-            }else {
+            }else if((number.split('.').length - 1) > 0) {
+                toastr.warning('请输入有效的数量');
+            } else {
                 var item = _self.collection.at(_self.i);
                 var num = item.get('num');
                 var discount = item.get('discount');

@@ -362,10 +362,11 @@ define([
                 toastr.info('请输入有效金额');
             } else if(receivedsum == 0){
                 toastr.info('支付金额不能为零');
-            }else if(receivedsum > (unpaidamount + 100)){
+            }else if(receivedsum > (unpaidamount + 100)) {
                 toastr.info('找零金额超限');
+            }else if((receivedsum.split('.').length-1) > 1) {
+                toastr.info('请输入有效金额');
             }else if(receivedsum){
-                //只有现金支付的时候才能找零,显示金额 = 收到的金额 - 未付金额
                 this.i = 0;
                 this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
                 this.renderClientDisplay(this.model, isPacked);
