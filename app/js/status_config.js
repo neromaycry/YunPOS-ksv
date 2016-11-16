@@ -125,7 +125,8 @@ window.system_config = {
 window.DIRECTIVES = {
     "INIT":"INIT_",
     "PRINTTEXT":"PRNT_",
-    "OpenCashDrawer":"OpenCashbox_"
+    "OpenCashDrawer":"OpenCashbox_",
+    'ShutDown':'shutdown_'
 
 };
 

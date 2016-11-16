@@ -53,7 +53,6 @@ define(['backbone'], function (Backbone) {
             options["data"] = JSON.stringify(common_params(_data));
             console.log(">>> 请求参数 " + JSON.stringify(common_params(_data)));
             console.log(_data);
-
             $.ajax(options);
         },
         reset_token: function () {

@@ -35,7 +35,8 @@ define([
             'click input[name = username]':'focusInputUser',
             'click input[name = password]':'focusInputPasswd',
             //'click .login-init':'onInitClicked',
-            'click .login-reconnecthw':'onReconnectHardwareClicked'
+            'click .login-reconnecthw':'onReconnectHardwareClicked',
+            'click .power-off':'onPowerOffClicked'
         },
 
         pageInit: function () {
@@ -122,6 +123,18 @@ define([
 
         onClearClicked: function () {
             $(this.input).val('');
+        },
+
+        onPowerOffClicked: function () {
+            var confirmView = new ConfirmView({
+                pageid: window.PAGE_ID.LOGIN, //当前打开confirm模态框的页面id
+                callback: function () { //点击确认键的回调
+                    wsClient.send(DIRECTIVES.ShutDown);
+                },
+                content:'确定关机？' //confirm模态框的提示内容
+            });
+            this.showModal(window.PAGE_ID.CONFIRM, confirmView);
+            console.log('power off');
         },
 
         focusInputUser: function () {
