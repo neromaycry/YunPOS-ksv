@@ -13,6 +13,10 @@ div .float-numpad {
     opacity: 0.9;
 }
 
+div .marquee {
+    overflow: hidden;
+}
+
 body .top-margin-15 {
     margin-top: 15px;
 }

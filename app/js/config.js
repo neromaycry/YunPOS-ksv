@@ -21,7 +21,8 @@ requirejs.config({
         'css': 'requirePlugin/css',
         'json': 'requirePlugin/json',
         '_fetchText': 'requirePlugin/_fetchText',
-        'xfb': 'jquery-resource'
+        'xfb': 'jquery-resource',
+        'marquee':'../marquee/jquery.marquee'
     },
     shim: {
         'backbone': {
@@ -41,6 +42,9 @@ requirejs.config({
         'xfb': {
             'deps': ['jquery'],
             'exports': 'xfb'
+        },
+        'marquee': {
+            'exports': 'marquee'
         },
         'bootstrap': {
             'deps': ['jquery', 'css!../bootstrap/css/bootstrap.css', 'css!../bootstrap/css/bootstrap-theme.css'],
@@ -83,8 +87,9 @@ requirejs([
     'toastr',
     'pscrollbar',
     'md5',
-    'xfb'
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb) {
+    'xfb',
+    'marquee'
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee) {
 
     window.isAndroid = false;  //是否为Android设备
 

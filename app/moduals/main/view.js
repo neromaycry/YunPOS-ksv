@@ -21,8 +21,9 @@ define([
     'text!../../../../moduals/main/clientdisplaytpl.html',
     'text!../../../../moduals/main/welcometpl.html',
     'text!../../../../moduals/main/oddchangetpl.html',
+    'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView,PriceEntryView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl,oddchangetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView,PriceEntryView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -42,7 +43,8 @@ define([
         template_numpad:numpadtpl,
         template_clientdisplay: clientdisplaytpl,
         template_welcome: welcometpl,
-        template_oddchange:oddchangetpl,
+        template_oddchange: oddchangetpl,
+        template_marquee: marqueetpl,
         salesmanView:null,
         secondloginView:null,
         restOrderDelivery: {},
@@ -86,6 +88,7 @@ define([
             this.model = new HomeModel();  // 当前view的model
             this.oddchangeModel = new HomeModel();
             this.loginInfoModel = new HomeModel();  // 存放登录用户及营业员信息的model
+            this.marqueeModel = new HomeModel();
             this.collection = new HomeCollection();  //当前view的collection
             //this.logincollection = new HomeCollection();
             this.requestModel = new HomeModel();  //网络请求的model
@@ -134,6 +137,9 @@ define([
                     oddchange:0
                 });
             }
+            this.marqueeModel.set({
+                notification_content: '这是一个通知'
+            });
             //if (storage.isSet(system_config.PRINTF)) {
             //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
             //    console.log(message);
@@ -157,12 +163,18 @@ define([
             this.renderSalesman();
             this.renderCartList();
             this.renderOddChange();
+            this.renderMarquee();
             if (isFromLogin) {
                 this.renderClientWelcome(isPacked);
                 isFromLogin = false;
             }
             this.buttonSelected();
             this.$el.find('.for-numpad').html(this.template_numpad);
+            $('.marquee').marquee({
+                duration: 15000,
+                duplicated: true,
+                gap: 200
+            });
         },
         initTemplates: function () {
             this.template_posinfo = _.template(this.template_posinfo);
@@ -171,6 +183,7 @@ define([
             this.template_clientdisplay = _.template(this.template_clientdisplay);
             this.template_welcome = _.template(this.template_welcome);
             this.template_oddchange = _.template(this.template_oddchange);
+            this.template_marquee = _.template(this.template_marquee);
             //this.template_shopitem = _.template(this.template_shopitem);
         },
         /**
@@ -180,13 +193,16 @@ define([
             var dh = $(window).height();
             var dw = $(window).width();
             var nav = $('.navbar').height();  // 导航栏高度
+            var marquee = $('.marquee-panel').height();
+            console.log('marquee:' + marquee);
             var panelheading = $('.panel-heading').height();  //面板heading高度
             var panelfooter = $('.panel-footer').height();  //面板footer高度
             var cart = dh - nav * 2 - panelheading * 2 - panelfooter;
             var leftWidth = $('.main-left').width();
             var cartWidth = dw - leftWidth - 45;
             $('.cart-panel').width(cartWidth);  // 设置购物车面板的宽度
-            $('.for-cartlist').height(cart);  //设置购物车的高度
+            $('.marquee-panel').width(cartWidth);
+            $('.for-cartlist').height(cart - marquee);  //设置购物车的高度
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
             this.listnum = 6;//设置商品列表中的条目数
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
@@ -223,6 +239,11 @@ define([
 
         renderOddChange: function () {
             this.$el.find('.oddchange').html(this.template_oddchange(this.oddchangeModel.toJSON()));
+            return this;
+        },
+
+        renderMarquee: function () {
+            this.$el.find('.for-notice').html(this.template_marquee(this.marqueeModel.toJSON()));
             return this;
         },
         handleEvents: function () {
