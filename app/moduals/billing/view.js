@@ -541,6 +541,9 @@ define([
                 //    is_navigate:true,
                 //    navigate_page: window.PAGE_ID.MAIN,
                 //    callback: function () { //
+                var confirmView = new ConfirmView({
+                    pageid: window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
+                    callback: function () { //点击确认键的回调
                         _self.unpaidamount = _self.unpaidamount.toFixed(2);
                         if(_self.percentage != 0){
                             _self.totalDiscount(_self.percentage);
@@ -585,6 +588,10 @@ define([
                                 toastr.error(resp.msg);
                             }
                         });
+                    },
+                    content:'确定结算此单？' //confirm模态框的提示内容
+                });
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
                     //},
                     //content: _self.model.get('oddchange')
                 //});
@@ -595,44 +602,51 @@ define([
          * 清空已支付方式列表
          */
         cleanPaylist: function () {
-            var data = {};
             var _self = this;
-            for(var j = this.collection.length - 1; j >= 0 ; j--) {
-                var model = this.collection.at(j);
-                var gatherId = model.get('gather_id');
-                if(gatherId == '12') {
-                    data['orderid'] = model.get('orderNo');
-                    data['merid'] = '000201504171126553';
-                    data['paymethod'] = 'wx';
-                    data['refundamount'] = '0.01';
-                    resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
-                        if(resp.data['flag'] == '00') {
+            var confirmView = new ConfirmView({
+                pageid: window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
+                callback: function () { //点击确认键的回调
+                    var data = {};
+                    for(var j = _self.collection.length - 1; j >= 0 ; j--) {
+                        var model = _self.collection.at(j);
+                        var gatherId = model.get('gather_id');
+                        if(gatherId == '12') {
+                            data['orderid'] = model.get('orderNo');
+                            data['merid'] = '000201504171126553';
+                            data['paymethod'] = 'wx';
+                            data['refundamount'] = '0.01';
+                            resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
+                                if(resp.data['flag'] == '00') {
+                                    _self.deleteItem(j);
+                                }else if(resp.data['flag'] == undefined){
+                                    toastr.error('微信退款失败,清空支付列表失败');
+                                }else{
+                                    toastr.error(resp.data['msg']);
+                                }
+                            });
+                        }else if(gatherId == '13') {
+                            data['orderid'] = model.get('orderNo');
+                            data['merid'] = '000201504171126553';
+                            data['paymethod'] = 'zfb';
+                            data['refundamount'] = '0.01';
+                            data['zfbtwo'] = 'zfbtwo';
+                            resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
+                                if(resp.data['flag'] == '00') {
+                                    _self.deleteItem(j);
+                                }else if(resp.data['flag'] == undefined){
+                                    toastr.error('支付宝退款失败,清空支付列表失败');
+                                }else{
+                                    toastr.error(resp.data['msg']);
+                                }
+                            });
+                        }else {
                             _self.deleteItem(j);
-                        }else if(resp.data['flag'] == undefined){
-                            toastr.error('微信退款失败,清空支付列表失败');
-                        }else{
-                            toastr.error(resp.data['msg']);
                         }
-                    });
-                }else if(gatherId == '13') {
-                    data['orderid'] = model.get('orderNo');
-                    data['merid'] = '000201504171126553';
-                    data['paymethod'] = 'zfb';
-                    data['refundamount'] = '0.01';
-                    data['zfbtwo'] = 'zfbtwo';
-                    resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
-                        if(resp.data['flag'] == '00') {
-                            _self.deleteItem(j);
-                        }else if(resp.data['flag'] == undefined){
-                            toastr.error('支付宝退款失败,清空支付列表失败');
-                        }else{
-                            toastr.error(resp.data['msg']);
-                        }
-                    });
-                }else {
-                    _self.deleteItem(j);
-                }
-            }
+                    }
+                },
+                content:'确认清空支付列表？' //confirm模态框的提示内容
+            });
+            _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             //this.receivedsum = 0;
             //this.oddchange = 0;
             //this.model.set({
