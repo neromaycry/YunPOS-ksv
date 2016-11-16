@@ -125,7 +125,8 @@ window.system_config = {
 window.DIRECTIVES = {
     "INIT":"INIT_",
     "PRINTTEXT":"PRNT_",
-    "OpenCashDrawer":"OpenCashbox_"
+    "OpenCashDrawer":"OpenCashbox_",
+    'ShutDown':'shutdown_'
 
 };
 
@@ -192,6 +193,7 @@ window.PAGE_ID = {
     'MODAL_PHONENUM':41,
     'MODAL_WITHDRAW':42,
     'MODAL_PRICE_ENTRY':43,
+    'MODAL_GATEWAY':44,
 };
 
 window.KEYS = {
