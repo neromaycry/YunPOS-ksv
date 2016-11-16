@@ -42,13 +42,15 @@ define([
             'click .keyup':'onKeyUpClicked',
             'click .keydown':'onKeyDownClicked',
             'click #report':'onReportClicked',
-            'click #daily-report':'onDailyReportClicked'
+            'click #daily-report':'onDailyReportClicked',
+            'click .print':'onPrintClicked'
         },
 
         pageInit: function () {
             pageId = window.PAGE_ID.CHECKING;
             this.model = new CheckingModel();
             this.collection = new CheckingCollection();
+            this.printText = '';
         },
 
         initPlugins: function () {
@@ -99,7 +101,11 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Enter, function () {
-                _self.checkingDate();
+                if (_self.printText == '') {
+                    _self.checkingDate();
+                } else {
+                    _self.onPrintClicked();
+                }
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Down, function () {
@@ -214,6 +220,7 @@ define([
                             sub_money: resp.sub_money//小计金额
                         });
                         _self.collection.set(resp.master_detail);
+                        _self.printText = resp.printf;
                         _self.renderCashierreport();
                         _self.renderCashierdetail();
                         _self.renderCashierdaily();
@@ -256,7 +263,7 @@ define([
         },
         onHelpClicked:function () {
             var tipsView = new KeyTipsView('CHECKING_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
         },
         onBackClicked:function () {
             router.navigate('main',{trigger:true});
@@ -269,7 +276,16 @@ define([
         onDailyReportClicked:function () {
             this.isCashierReport = false;
             this.i = 0;
+        },
+
+        onPrintClicked: function () {
+            if (this.printText == '') {
+                toastr.warning('请先查询收银报表数据')
+            } else {
+                wsClient.send(DIRECTIVES.PRINTTEXT + this.printText);
+            }
         }
+
     });
 
     return checkingView;
