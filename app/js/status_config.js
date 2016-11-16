@@ -193,6 +193,7 @@ window.PAGE_ID = {
     'MODAL_PHONENUM':41,
     'MODAL_WITHDRAW':42,
     'MODAL_PRICE_ENTRY':43,
+    'MODAL_GATEWAY':44,
 };
 
 window.KEYS = {

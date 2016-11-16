@@ -6,9 +6,10 @@ define([
     '../../../../moduals/login/model',
     '../../../../moduals/login/collection',
     '../../../../moduals/modal-confirm/view',
+    '../../../../moduals/modal-gateway/view',
     'text!../../../../moduals/login/clientlogintpl.html',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, ConfirmView, clientlogintpl, tpl) {
+], function (BaseView, LoginModel, LoginCollection, ConfirmView, GatewayView, clientlogintpl, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -40,29 +41,23 @@ define([
         },
 
         pageInit: function () {
+            var _self = this;
             pageId = window.PAGE_ID.LOGIN;
-            storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY,'http://111.198.72.128:3000/v1');
+            if (!storage.isSet(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY)) {
+                storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY,'http://111.198.72.128:3000/v1');
+            }
             //storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY,'http://192.168.31.249:3000/v1');
             storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.POS_KEY,'1');
             this.requestModel = new LoginModel();
             this.model = new LoginModel();
-            var data = {};
-            data['modify_date'] = '19700101000000';
-            this.requestModel.getGatherDetail(data, function (resp) {
-                if(resp.status == '00') {
-                    storage.set(system_config.GATHER_KEY,resp.gather_detail);
-                    toastr.success('支付方式列表更新成功');
-                } else {
-                    toastr.error(resp.msg);
-                }
-            });
+            this.getGatherDetail();
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
             storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
             this.template_clientlogin = _.template(this.template_clientlogin);
         },
 
         initPlugins: function () {
-            $('input[name = username]').focus();
+            $(this.input).focus();
             this.setKeys();
             this.renderClientDisplay(isPacked);
             //$('.login-print').on('click', function () {
@@ -134,7 +129,6 @@ define([
                 content:'确定关机？' //confirm模态框的提示内容
             });
             this.showModal(window.PAGE_ID.CONFIRM, confirmView);
-            console.log('power off');
         },
 
         focusInputUser: function () {
@@ -155,6 +149,7 @@ define([
         },
 
         doLogin: function () {
+            var _self = this;
             var username = $('input[name = username]').val();
             var password = $('input[name = password]').val();
             if (username == '') {
@@ -170,6 +165,7 @@ define([
             data['user_password'] = $.md5(password);
             data['accredit_type'] = '00';
             this.model.login(data,function (response) {
+                //成功回调
                 if (!$.isEmptyObject(response)) {
                     if (response.status == "00") {
                         storage.set(window.system_config.LOGIN_USER_KEY, response);
@@ -186,6 +182,12 @@ define([
                 } else {
                     toastr.error(response.msg);
                 }
+            }, function(jqXHR, textStatus, errorThrown) {
+                //失败回调
+                console.log(textStatus);
+                console.log(errorThrown);
+                var gatewayView = new GatewayView();
+                _self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
             });
             var loginDate = new Date();
             if (storage.isSet(system_config.LOGIN_DATE)) {
@@ -200,9 +202,28 @@ define([
             storage.set(system_config.LOGIN_DATE, loginDate.getDate());
         },
 
-        doInitialize: function () {
-            this.iniSettngs();
+        getGatherDetail: function () {
+            var data = {};
+            data['modify_date'] = '19700101000000';
+            this.requestModel.requestGatherDetail(data, function (resp) {
+                if(resp.status == '00') {
+                    storage.set(system_config.GATHER_KEY,resp.gather_detail);
+                    toastr.success('支付方式列表更新成功');
+                } else {
+                    toastr.error(resp.msg);
+                }
+            }, function(jqXHR, textStatus, errorThrown) {
+                //失败回调
+                console.log(textStatus);
+                console.log(errorThrown);
+                var gatewayView = new GatewayView();
+                _self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
+            });
         },
+
+        //doInitialize: function () {
+        //    this.iniSettngs();
+        //},
 
         //encodeUTF8: function (str) {
         //    var newStr = '';
@@ -238,9 +259,9 @@ define([
                     $('input[name = username]').focus();
                 }
             });
-            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
-                _self.iniSettngs();
-            });
+            //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
+            //    _self.iniSettngs();
+            //});
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
                 wsClient.close();
                 window.location.reload();

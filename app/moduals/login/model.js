@@ -39,19 +39,21 @@ define(['../../js/common/BaseModel'],function(BaseModel){
             })
         },
 
-        login: function (data,callback) {
+        login: function (data, callback1, callback2) {
             this.sendPOST({
                 url: window.API_URL.LOGIN,
                 data: data,
-                success: callback
+                success: callback1,
+                error: callback2
             });
         },
 
-        getGatherDetail: function (data,callback) {
+        requestGatherDetail: function (data,callback1, callback2) {
             this.sendPOST({
                 url: window.API_URL.GATHER,
                 data: data,
-                success: callback
+                success: callback1,
+                error: callback2
             });
         }
 
