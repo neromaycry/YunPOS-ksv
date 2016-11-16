@@ -78,10 +78,13 @@ define([
                     toastr.warning('退款账号不能为空');
                 }else if(gatherNo == '0') {
                     toastr.warning('退款账号不能为零');
+                } else if((gatherNo.split('.').length-1) > 0){
+                    toastr.warning('请输入有效的退款账号');
                 }else {
                     _self.attrs.callback(_self.attrs);
                     _self.confirmHideModal(_self.attrs.pageid);
                 }
+                $(_self.input).val('');
             });
         },
 
@@ -100,6 +103,8 @@ define([
             var gatherNo = $(this.input).val();
             if(gatherNo == '') {
                 toastr.warning('退款账号不能为空');
+            }else if((gatherNo.split('.').length-1) > 0){
+                toastr.warning('请输入有效的退款账号');
             }else if(gatherNo == '0') {
                 toastr.warning('退款账号不能为零');
             }else {

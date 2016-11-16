@@ -28,7 +28,8 @@ return s;
                 <div class="panel-body">
                     <div class="form-group no-margining">
                         <label class="sr-only" for="quickpay-account">Email address</label>
-                        <input type="text" class="form-control" id="quickpay-account" name="quickpay-account" onkeypress="return myNumberic(event)" placeholder="请输入付款账号">
+                        <input type="text" class="form-control" id="quickpay-account" name="quickpay-account"
+                               onkeyup="return ValidateFloat($(this),value)" onkeypress="return myNumberic(event)" placeholder="请输入付款账号">
                     </div>
                 </div>
             </div>

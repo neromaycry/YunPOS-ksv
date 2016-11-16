@@ -103,6 +103,7 @@ define([
                 this.attrs.callback(this.attrs);
                 this.confirmHideModal(this.attrs.pageid);
             }
+            $(this.input).val('');
         }
 
     });

@@ -54,6 +54,8 @@ define([
             var gatherNo = $('input[name = alipay-account]').val();
             if(gatherNo == ''){
                 toastr.warning('支付宝账号不能为空');
+            }else if((gatherNo.split('.').length-1) > 0){
+                toastr.warning('请输入有效的支付宝账号');
             }else{
                 var tempdata = {};
                 tempdata['gather_no'] = gatherNo;
@@ -63,6 +65,7 @@ define([
                 tempdata['orderNo'] = _self.attrs.orderNo;
                 _self.prepay(tempdata);
             }
+            $('input[name = alipay-account]').val('');
         },
 
         prepay: function (tempdata) {

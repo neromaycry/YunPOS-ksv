@@ -29,7 +29,7 @@ return s;
                 <div class="panel-body">
                    <div class="form-group no-margining">
                        <label class="sr-only" for="alipay-account">alipay account</label>
-                        <input type="text" class="form-control" id="alipay-account" name="alipay-account" placeholder="请输入支付宝账号" onkeypress="return myNumberic(event)"/>
+                        <input type="text" class="form-control" id="alipay-account" name="alipay-account" placeholder="请输入支付宝账号" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"/>
                    </div>
                 </div>
                 <div class="panel panel-primary left-margin" style="margin-right: 15px">

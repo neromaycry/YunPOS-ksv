@@ -53,6 +53,8 @@ define([
             var gatherNo = $(this.input).val();
             if(gatherNo == ''){
                 toastr.warning('支付宝账号不能为空');
+            } else if((gatherNo.split('.').length-1) > 0){
+                toastr.warning('请输入有效的支付宝账号');
             }else{
                 var data = {};
                 data['gather_no'] = gatherNo;
@@ -63,6 +65,7 @@ define([
                 _self.hideModal(window.PAGE_ID.BILLING_RETURN);
                 $('input[name = billingrt]').focus();
             }
+            $(this.input).val('');
         },
         onCancelClicked: function () {
             this.hideModal(window.PAGE_ID.BILLING_RETURN);

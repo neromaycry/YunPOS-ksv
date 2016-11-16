@@ -51,9 +51,11 @@ define([
         confirm: function () {
             var _self = this;
             var gatherNo = $('input[name = wechat-account]').val();
-            if(gatherNo == ''){
+            if(gatherNo == '') {
                 toastr.warning('微信账号不能为空');
-            }else{
+            } else if((gatherNo.split('.').length-1) > 0){
+                    toastr.warning('请输入有效的微信账号');
+            }else {
                 var tempdata = {};
                 tempdata['gather_no'] = gatherNo;
                 tempdata['gather_id'] = _self.attrs['gather_id'];
@@ -62,6 +64,7 @@ define([
                 tempdata['orderNo'] = _self.attrs.orderNo;
                 _self.prepay(tempdata);
             }
+            $('input[name = wechat-account]').val('');
         },
 
         prepay: function (tempdata) {

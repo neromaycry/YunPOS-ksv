@@ -66,6 +66,8 @@ define([
                         _self.collection.set(resp.gather_detial);
                         console.log(_self.collection);
                         storage.set(system_config.ONE_CARD_KEY,card_id,'detail',_self.collection.toJSON());
+                    }else {
+                        toastr.error(resp.msg);
                     }
                     _self.renderEcardDetail();
                 });
@@ -121,6 +123,8 @@ define([
                     toastr.warning('输入金额不能为空');
                 }else if(receivedsum == 0){
                     toastr.warning('输入金额不能为零');
+                }else if((receivedsum.split('.').length-1)){
+                    toastr.warning('请输入有效的金额');
                 }else if(receivedsum > _self.unpaidamount){
                     toastr.warning('输入金额不能大于待退款金额');
                 }else if(_self.model.get('receivedsum') != receivedsum){
