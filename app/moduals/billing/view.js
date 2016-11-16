@@ -218,7 +218,9 @@ define([
                     gather_no:gatherAccount,
                     gather_kind:gatherKind,
                     card_id:cardId,
-                    orderNo:orderNo
+                    payment_bill:orderNo,//第三方支付方式订单号
+                    havepay_money:parseFloat(receivedsum),//实收金额
+                    change_money:parseFloat(receivedsum) - unpaidamount
                 });
             }else {
                 model.set({
@@ -229,7 +231,9 @@ define([
                     gather_no:gatherAccount,
                     gather_kind:gatherKind,
                     card_id:cardId,
-                    orderNo:orderNo
+                    payment_bill:orderNo,
+                    havepay_money:parseFloat(receivedsum),
+                    change_money:0
                 });
             }
 
@@ -371,7 +375,7 @@ define([
                 toastr.info('请输入有效金额');
             }else if(receivedsum){
                 this.i = 0;
-                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
+                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id,"");
                 this.renderClientDisplay(this.model, isPacked);
             }
             $('#input_billing').val("");
