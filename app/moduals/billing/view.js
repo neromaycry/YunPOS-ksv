@@ -183,8 +183,6 @@ define([
         addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, cardId,paymentBill) {
             var temp = this.collection.findWhere({gather_id:gatherId,gather_no:gatherNo});
             var unpaidamount = this.model.get('unpaidamount');
-            console.log(temp);
-            console.log('是否含有相同的支付方式');
             if(temp != undefined){
                 for(var i = 0;i < this.collection.length;i++){
                     var model = this.collection.at(i);
