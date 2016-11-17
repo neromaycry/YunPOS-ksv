@@ -17,6 +17,12 @@ div .marquee {
     overflow: hidden;
 }
 
+div .img-logo {
+    width: 105px;
+    height: 28px;
+    margin-top: 14px;
+}
+
 body .top-margin-15 {
     margin-top: 15px;
 }
