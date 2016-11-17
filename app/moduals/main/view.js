@@ -137,9 +137,11 @@ define([
                     oddchange:0
                 });
             }
-            this.marqueeModel.set({
-                notification_content: '这是一个通知'
-            });
+            if (!this.marqueeModel.get('notification_content')) {
+                this.marqueeModel.set({
+                    notification_content: '当前无通知'
+                });
+            }
             //if (storage.isSet(system_config.PRINTF)) {
             //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
             //    console.log(message);
@@ -173,7 +175,8 @@ define([
             $('.marquee').marquee({
                 duration: 15000,
                 duplicated: true,
-                gap: 200
+                gap: 500,
+                pauseOnHover: true
             });
         },
         initTemplates: function () {
