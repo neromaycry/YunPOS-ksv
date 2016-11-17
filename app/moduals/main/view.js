@@ -497,48 +497,7 @@ define([
                 toastr.success('挂单号：' + orderNum);
             }
         },
-        /**
-         * 修改单品数量
-         */
-        modifyItemNum: function () {
-            var _self = this;
-            var number = $(this.input).val();
-            if(_self.model.get('itemamount') == 0){
-                toastr.warning('当前购物车内无商品');
-            }else {
-                if(number == ''){
-                    toastr.warning('修改的数量不能为空');
-                }else if(number == 0) {
-                    toastr.warning('修改的数量不能为零');
-                }else if((number.split('.').length - 1) > 0) {
-                    toastr.warning('请输入有效的数量');
-                }else{
-                    var item = _self.collection.at(_self.i);
-                    var num = item.get('num');
-                    var discount = item.get('discount');
-                    item.set({
-                        num:parseFloat(number),
-                    });
-                    console.log(_self.collection);
-                    _self.totalamount = 0;
-                    _self.itemamount = 0;
-                    _self.discountamount = 0;
-                    var priceList = _self.collection.pluck('price');
-                    var discounts = _self.collection.pluck('discount');
-                    var itemNum = _self.collection.pluck('num');
-                    for (var i = 0; i < priceList.length; i++) {
-                        discounts[i] = parseFloat(discounts[i]);
-                        _self.totalamount += priceList[i] * itemNum[i];
-                        _self.itemamount += itemNum[i];
-                        _self.discountamount += discounts[i] * itemNum[i];
-                    }
-                    _self.calculateModel();
-                }
-            }
-            $(this.input).val('');
-            console.log(_self.i);
-            $('#li' + _self.i).addClass('cus-selected');
-        },
+
         /**
          * 单品优惠
          */
@@ -572,14 +531,17 @@ define([
             }else {
                 var item = _self.collection.at(_self.i);
                 var price = item.get('price');
-                if (value <= parseFloat(price) ) {
+                var num = item.get('num');
+                var discount = item.get('discount');
+                if (value <= parseFloat(price * num - discount) ) {
                     _self.collection.at(_self.i).set({
-                        discount: value
+                        discount: value,
+                        money:price * num - value
                     });
                     _self.calculateModel();
                     $('#li' + _self.i).addClass('cus-selected');
                 }else {
-                    toastr.warning('优惠金额不能大于单品金额');
+                    toastr.warning('优惠金额不能大于商品金额');
                 }
             }
             $(this.input).val('');
@@ -612,12 +574,56 @@ define([
                 var price = item.get('price');
                 var num = item.get('num');
                 this.collection.at(this.i).set({
-                    discount:price * num * (1 - rate)
+                    discount:price * num * (1 - rate),
+                    money:price * num * rate
                 });
                 this.calculateModel();
                 $('#li' + this.i).addClass('cus-selected');
             }
             $(this.input).val('');
+        },
+        /**
+         * 修改单品数量
+         */
+        modifyItemNum: function () {
+            var _self = this;
+            var number = $(this.input).val();
+            if(_self.model.get('itemamount') == 0){
+                toastr.warning('当前购物车内无商品');
+            }else {
+                if(number == ''){
+                    toastr.warning('修改的数量不能为空');
+                }else if(number == 0) {
+                    toastr.warning('修改的数量不能为零');
+                }else if((number.split('.').length - 1) > 0) {
+                    toastr.warning('请输入有效的数量');
+                }else{
+                    var item = _self.collection.at(_self.i);
+                    var discount = item.get('discount');
+                    var price = item.get('price');
+                    item.set({
+                        num:parseFloat(number),
+                        money:price * number - discount
+                    });
+                    console.log(_self.collection);
+                    _self.totalamount = 0;
+                    _self.itemamount = 0;
+                    _self.discountamount = 0;
+                    var priceList = _self.collection.pluck('price');
+                    var discounts = _self.collection.pluck('discount');
+                    var itemNum = _self.collection.pluck('num');
+                    for (var i = 0; i < priceList.length; i++) {
+                        discounts[i] = parseFloat(discounts[i]);
+                        _self.totalamount += priceList[i] * itemNum[i];
+                        _self.itemamount += itemNum[i];
+                        _self.discountamount += discounts[i] * itemNum[i];
+                    }
+                    _self.calculateModel();
+                }
+            }
+            $(this.input).val('');
+            console.log(_self.i);
+            $('#li' + _self.i).addClass('cus-selected');
         },
         /**
          * 单品删除
@@ -667,7 +673,6 @@ define([
                                 currentid:window.PAGE_ID.MAIN,
                                 callback: function (attrs) {
                                     var price = $('input[name = price]').val();
-                                    resp.goods_detail[resp.goods_detail.length - 1].money = price;
                                     resp.goods_detail[resp.goods_detail.length - 1].price = price;
                                     _self.onAddItem(resp.goods_detail);
                                     _self.hideModal(window.PAGE_ID.MAIN);

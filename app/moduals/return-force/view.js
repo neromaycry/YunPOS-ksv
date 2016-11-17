@@ -312,15 +312,18 @@ define([
             }else {
                 var item = this.collection.at(this.i);
                 var price = item.get('price');
-                if (value <= parseFloat(price) ) {
+                var num = item.get('num');
+                var discount = item.get('discount');
+                if (value <= parseFloat(price * num - discount) ) {
                     this.collection.at(this.i).set({
-                        discount: value
+                        discount: value,
+                        money:price * num - value
                     });
                     this.calculateModel();
                     $('#li' + this.i).addClass('cus-selected');
 
                 }else {
-                    toastr.warning('优惠金额不能大于单品金额');
+                    toastr.warning('优惠金额不能大于商品金额');
                 }
             }
             $('#sku_id').val('');
@@ -345,7 +348,8 @@ define([
                 var price = item.get('price');
                 var num = item.get('num');
                 this.collection.at(this.i).set({
-                    discount:price * num * (1 - rate)
+                    discount:price * num * (1 - rate),
+                    money:price * num * rate
                 });
                 this.calculateModel();
                 $('#li' + this.i).addClass('cus-selected');
@@ -368,8 +372,10 @@ define([
                 var item = _self.collection.at(_self.i);
                 var num = item.get('num');
                 var discount = item.get('discount');
+                var price = item.get('price');
                 item.set({
                     num:parseFloat(number),
+                    money:price * number - discount
                 });
                 console.log(_self.collection);
                 _self.totalamount = 0;
