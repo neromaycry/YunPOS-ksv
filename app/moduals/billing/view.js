@@ -184,8 +184,6 @@ define([
          * @param orderNo 订单编号
          */
         addToPaymentList: function (totalamount, gatherName, receivedsum, gatherAccount, gatherId, gatherKind, cardId,orderNo) {
-            console.log(this.totalamount);
-            console.log('this totalamount');
             var temp = this.collection.findWhere({gather_id: gatherId , gather_no:gatherAccount});
             console.log(temp);
             if(temp != undefined){

@@ -204,7 +204,7 @@ define([
             $('.marquee-panel').width(cartWidth);
             $('.for-cartlist').height(cart - marquee);  //设置购物车的高度
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
-            this.listnum = 6;//设置商品列表中的条目数
+            this.listnum = 5;//设置商品列表中的条目数
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
         },
         renderPosInfo: function () {
