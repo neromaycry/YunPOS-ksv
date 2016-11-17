@@ -459,13 +459,13 @@ define([
             var _self = this;
             var unpaidamount = this.model.get('unpaidamount');
             var confirmBill = new RTBillModel();
+            this.unpaidamount = parseFloat(this.unpaidamount.toFixed(2));
             if(unpaidamount != 0){
                 toastr.warning('还有未退款的金额');
             }else{
                 var confirmView = new ConfirmView({
                     pageid:window.PAGE_ID.BILLING_RETURN, //当前打开confirm模态框的页面id
                     callback: function () { //
-                        _self.unpaidamount = _self.unpaidamount.toFixed(2);
                         if(isfromForce) {
                             var data = {};
                             data['mode'] = '02';

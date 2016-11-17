@@ -184,8 +184,6 @@ define([
          * @param orderNo 订单编号
          */
         addToPaymentList: function (totalamount, gatherName, receivedsum, gatherAccount, gatherId, gatherKind, cardId,orderNo) {
-            console.log(this.totalamount);
-            console.log('this totalamount');
             var temp = this.collection.findWhere({gather_id: gatherId , gather_no:gatherAccount});
             console.log(temp);
             if(temp != undefined){
@@ -545,7 +543,8 @@ define([
         billing: function () {
             var _self = this;
             var confirmBill = new BillModel();
-            if(_self.unpaidamount != 0){
+            this.unpaidamount = parseFloat(this.unpaidamount.toFixed(2));
+            if(this.unpaidamount != 0){
                 toastr.info('还有未支付的金额，请支付完成后再进行结算');
             } else {
                 //var changingView = new ChangingView({
@@ -556,7 +555,7 @@ define([
                 var confirmView = new ConfirmView({
                     pageid: window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
                     callback: function () { //点击确认键的回调
-                        _self.unpaidamount = _self.unpaidamount.toFixed(2);
+                        //console.log(typeof (_self.unpaidamount));
                         if(_self.percentage != 0){
                             _self.totalDiscount(_self.percentage);
                         }
