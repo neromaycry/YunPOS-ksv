@@ -62,6 +62,7 @@ define([
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.MODAL_RESTORDER, window.KEYS.Enter, function () {
                 _self.releaseOrder();
+                $('input[name = main]').focus();
             });
             this.bindModalKeyEvents(window.PAGE_ID.MODAL_RESTORDER, window.KEYS.Esc, function () {
                 _self.hideModal(window.PAGE_ID.MAIN);
