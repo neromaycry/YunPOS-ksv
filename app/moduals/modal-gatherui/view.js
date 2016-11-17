@@ -29,8 +29,6 @@ define([
             'click .ok':'onOKClicked',
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked',
-            //'click .alipay-cancel':'onAliCancelClicked',
-            //'click .alipay-ok':'onAliOkClicked'
         },
 
         modalInitPage: function () {
@@ -54,7 +52,7 @@ define([
         prepay: function (gatherUI) {
             var data = {};
             if (gatherUI == '04') {
-                data['orderid'] = this.attrs.orderNo;
+                data['orderid'] = this.attrs.order_id;
                 data['merid'] = '000201504171126553';
                 data['totalfee'] = '0.01';
                 data['body'] = 'test';
@@ -63,7 +61,7 @@ define([
                 data['payway'] = 'scancode';
                 data['zfbtwo'] = 'zfbtwo';
             } else if (gatherUI == '05') {
-                data['orderid'] = this.attrs.orderNo;
+                data['orderid'] = this.attrs.order_id;
                 data['merid'] = '000201504171126553';
                 data['totalfee'] = '0.01';
                 data['body'] = 'test';
@@ -92,7 +90,7 @@ define([
             switch (gatherUI) {
                 case '01':
                     this.template_content = commontpl;
-                    this.input = 'input[name = receive_account]';
+                    this.input = 'input[name = receive-account]';
                     break;
                 case '04':
                     this.template_content = alipaytpl;
@@ -112,18 +110,24 @@ define([
                 $('input[name = billing]').focus();
             });
             this.bindModalKeyEvents(this.attrs.currentid, window.KEYS.Enter, function () {
-                var gatherNo = $(_self.input).val();
-                if(gatherNo == '') {
-                    toastr.warning('账号不能为空');
-                }else if(gatherNo == '0') {
-                    toastr.warning('账号不能为零');
-                }else if((gatherNo.split('.').length-1) > 0) {
-                        toastr.warning('请输入有效的账号');
-                }else {
-                    _self.attrs.callback(_self.attrs);
-                    _self.confirmHideModal(_self.attrs.pageid);
-                }
+                _self.confirm();
             });
+        },
+
+
+        confirm: function () {
+            var gatherNo = $(this.input).val();
+            if(gatherNo == '') {
+                toastr.warning('账号不能为空');
+            }else if(gatherNo == '0') {
+                toastr.warning('账号不能为零');
+            }else if((gatherNo.split('.').length-1) > 0) {
+                toastr.warning('无效的支付账号');
+            }else {
+                this.attrs.callback(this.attrs);
+                this.confirmHideModal(this.attrs.pageid);
+            }
+            $(this.input).val('');
         },
 
         onNumClicked: function (e) {
@@ -138,17 +142,7 @@ define([
         },
 
         onOKClicked: function () {
-            var gatherNo = $(this.input).val();
-            if(gatherNo == '') {
-                toastr.warning('账号不能为空');
-            }else if(gatherNo == '0') {
-                toastr.warning('账号不能为零');
-            }else if((gatherNo.split('.').length-1) > 0) {
-                toastr.warning('请输入有效的账号');
-            }else{
-                this.attrs.callback(this.attrs);
-                this.confirmHideModal(this.attrs.pageid);
-            }
+           this.confirm();
         },
 
         onBackspaceClicked: function (e) {
@@ -161,14 +155,14 @@ define([
             $(this.input).val('');
         },
 
-        onAliCancelClicked: function () {
-            this.confirmHideModal(this.attrs.pageid);
-        },
-
-        onAliOkClicked: function () {
-            this.attrs.callback(this.attrs);
-            this.confirmHideModal(this.attrs.pageid);
-        }
+        //onAliCancelClicked: function () {
+        //    this.confirmHideModal(this.attrs.pageid);
+        //},
+        //
+        //onAliOkClicked: function () {
+        //    this.attrs.callback(this.attrs);
+        //    this.confirmHideModal(this.attrs.pageid);
+        //}
 
 
 

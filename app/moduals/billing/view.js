@@ -84,7 +84,6 @@ define([
             'click .pos':'onPosClicked',//银行pos
             'click .ecard':'onEcardClicked',
             'click .third-pay':'onThirdPayClicked'
-            //'click .btn-floatpad':'onFloatPadClicked',
         },
 
         pageInit: function () {
@@ -95,9 +94,8 @@ define([
             this.totalamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','totalamount');
             this.discountamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','discountamount');
             this.itemamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','itemamount');
-            //this.orderNo = storage.get(system_config.ORDER_NO_KEY);  //获取后台生成的订单号
             this.totalamount -= this.discountamount;//优惠金额
-            this.unpaidamount = this.totalamount;//应收金额
+            this.unpaidamount = this.totalamount;//未付金额
             this.model.set({
                 totalamount:this.totalamount,
                 receivedsum:this.receivedsum,//实付金额
@@ -140,8 +138,6 @@ define([
             this.listheight = $('.for-billdetail').height();
             this.listnum = 10; //设置商品列表中的条目数
             $('.li-billdetail').height(this.listheight / this.listnum - 21);
-            //this.itemheight = $('li').height() + 20;
-            //this.listnum = parseInt(this.listheight / this.itemheight);//商品列表中的条目数
         },
         handleEvents: function () {
             Backbone.off('onReceivedsum');
@@ -186,7 +182,6 @@ define([
          */
         addToPaymentList: function (totalamount, gatherName, receivedsum, gatherAccount, gatherId, gatherKind, cardId,orderNo) {
             var temp = this.collection.findWhere({gather_id: gatherId , gather_no:gatherAccount});
-            console.log(temp);
             if(temp != undefined){
                 for(var i = 0;i < this.collection.length;i++){
                     var model = this.collection.at(i);
@@ -371,15 +366,14 @@ define([
             }else if(receivedsum == '') {
                 toastr.info('支付金额不能为空');
             }else if(receivedsum == '.'){
-                toastr.info('请输入有效金额');
+                toastr.info('无效的支付金额');
             } else if(receivedsum == 0){
                 toastr.info('支付金额不能为零');
             }else if(receivedsum > (unpaidamount + 100)) {
                 toastr.info('找零金额超限');
             }else if((receivedsum.split('.').length-1) > 1) {
-                toastr.info('请输入有效金额');
-            }else if(receivedsum){
-                this.i = 0;
+                toastr.info('无效的支付金额');
+            }else{
                 this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id,"");
                 this.renderClientDisplay(this.model, isPacked);
             }
@@ -976,25 +970,25 @@ define([
         payment:function (gatherkind , billNumber){
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
-                toastr.info('待支付金额为零，请进行结算');
+            if(unpaidamount == 0) {
+                toastr.info('待支付金额为零,请进行结算');
+            }else if(receivedsum == '') {
+                toastr.info('支付金额不能为空');
+            }else if(receivedsum == 0){
+                toastr.info('支付金额不能为零');
+            }else if(receivedsum == '.'){
+                toastr.info('无效的支付金额');
+            }else if((receivedsum.split('.').length-1) > 1){
+                toastr.info('无效的支付金额');
+            } else if(receivedsum > unpaidamount){
+                toastr.info('不设找零');
             }else{
-                if(receivedsum == ''){
-                    toastr.info('支付金额不能为空');
-                }else if(receivedsum == 0){
-                    toastr.info('支付金额不能为零');
-                }else if(receivedsum == '.'){
-                    toastr.info('无效的支付金额');
-                }else if(receivedsum > (unpaidamount)){
-                    toastr.info('不设找零');
-                }else{
-                    var data = {};
-                    data['gather_kind'] = gatherkind;
-                    data['receivedsum'] = receivedsum;
-                    data['bill_no'] = billNumber;
-                    this.billtypeview = new BilltypeView(data);
-                    this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
-                }
+                var data = {};
+                data['gather_kind'] = gatherkind;//支付方式类别：包括现金类,礼券类等
+                data['receivedsum'] = receivedsum;
+                data['bill_no'] = billNumber;
+                this.billtypeview = new BilltypeView(data);
+                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
             }
             $('input[name = billing]').val('');
         },
