@@ -104,7 +104,7 @@ define([
                 oddchange:this.oddchange,
                 discountamount:this.discountamount//单品优惠的总金额
             });
-            //this.getRetailNo();
+            this.getRetailNo();
             this.initTemplates();
             this.handleEvents();
         },
@@ -570,6 +570,7 @@ define([
                             data['medium_type'] = "*";
                             data['cust_id'] = "*";
                         }
+                        data['bill_no'] = _self.billNumber;
                         data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
                         data['gather_detail'] = _self.collection.toJSON();
                         console.log(data['gather_detail']);
@@ -991,6 +992,7 @@ define([
             this.model.requestRetaliNo(data, function (resp) {
                 if (resp.status == '00') {
                     _self.billNumber = resp.bill_no;
+                    console.log(_self.billNumber);
                 } else {
                     toastr.error(resp.msg);
                 }
