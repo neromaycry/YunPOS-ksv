@@ -32,7 +32,7 @@ define([
             this.model = new BilltypeModel();
             this.requestmodel = new BilltypeModel();
             this.model.set({
-                receivedsum:this.attrs['receivedsum']
+                receivedsum:this.attrs['gather_money']
             });
             var gatherKind = this.attrs['gather_kind'];
             if(storage.isSet(system_config.GATHER_KEY)) {
@@ -83,7 +83,7 @@ define([
             var _self = this;
             var gatherId = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');
-            var receivedSum = this.attrs.receivedsum;
+            var gatherMoney  = this.attrs.gather_money;
             var gatherKind = this.attrs.gather_kind;
             var gatherModel = _.where(this.visibleTypes,{gather_id:gatherId});
             var gatherUI = gatherModel[0].gather_ui;
@@ -97,17 +97,16 @@ define([
                     gather_name:gatherName,
                     gather_ui:gatherUI,
                     gather_kind:gatherKind,
-                    receivedsum:receivedSum,
-                    order_id:'',
+                    gather_money:gatherMoney ,
                     callback: function (attrs) {
                         var gatherNo = $('input[name = receive-account]').val();
                         var attrData = {};
                         attrData['gather_id'] = attrs.gather_id;
-                        attrData['receivedsum'] = attrs.receivedsum;
+                        attrData['gather_money'] = attrs.gather_money;
                         attrData['gather_name'] = attrs.gather_name;
                         attrData['gather_no'] = gatherNo;
                         attrData['gather_kind'] = attrs.gather_kind;
-                        attrData['order_id'] = '';
+                        attrData['payment_bill'] = '';
                         Backbone.trigger('onReceivedsum',attrData);
                         _self.hideModal(window.PAGE_ID.BILLING);
                         $('input[name = billing]').focus();
@@ -130,18 +129,18 @@ define([
                             gather_name:gatherName,
                             gather_ui:gatherUI,
                             gather_kind:gatherKind,
-                            receivedsum:receivedSum,
-                            order_id:resp.xfb_bill,
+                            gather_money:gatherMoney,
+                            payment_bill:resp.xfb_bill,
                             callback:function (attrs) {
                                 var gatherNo = $('input[name = alipay-account]').val();
                                 var attrData = {};
                                 attrData['gather_id'] = attrs.gather_id;
-                                attrData['receivedsum'] = attrs.receivedsum;
+                                attrData['gather_money'] = attrs.gather_money;
                                 attrData['gather_name'] = attrs.gather_name;
                                 attrData['gather_no'] = gatherNo;
                                 attrData['gather_kind'] = attrs.gather_kind;
-                                attrData['order_id'] = attrs.order_id;
-                                _self.micropay(gatherUI, gatherNo,attrData,attrs.order_id);
+                                attrData['payment_bill'] = attrs.payment_bill;
+                                _self.micropay(gatherUI, gatherNo,attrData,attrs.payment_bill);
                             }
                         });
                         _self.showModal(window.PAGE_ID.ALIPAY,gaterUIView);
@@ -166,18 +165,18 @@ define([
                             gather_name:gatherName,
                             gather_ui:gatherUI,
                             gather_kind:gatherKind,
-                            receivedsum:receivedSum,
-                            order_id:resp.xfb_bill,
+                            gather_money:gatherMoney,
+                            payment_bill:resp.xfb_bill,
                             callback:function (attrs) {
                                 var gatherNo = $('input[name = wechat-account]').val();
                                 var attrData = {};
                                 attrData['gather_id'] = attrs.gather_id;
-                                attrData['receivedsum'] = attrs.receivedsum;
+                                attrData['gather_money'] = attrs.gather_money;
                                 attrData['gather_name'] = attrs.gather_name;
                                 attrData['gather_no'] = gatherNo;
                                 attrData['gather_kind'] = attrs.gather_kind;
-                                attrData['order_id'] = attrs.order_id;
-                                _self.micropay(gatherUI, gatherNo,attrData, attrs.order_id);
+                                attrData['payment_bill'] = attrs.payment_bill;
+                                _self.micropay(gatherUI, gatherNo,attrData, attrs.payment_bill);
                             }
                         });
                         _self.showModal(window.PAGE_ID.WECHAT,gaterUIView);

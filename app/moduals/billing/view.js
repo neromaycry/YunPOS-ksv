@@ -146,7 +146,9 @@ define([
             Backbone.on('onReceivedsum', this.onReceivedsum,this);
         },
         onReceivedsum: function (data) {
-            var receivedsum = data['receivedsum'];
+            console.log(data);
+            console.log('*********');
+            var receivedsum = data['gather_money'];
             var gatherNo = data['gather_no'];//付款账号
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
@@ -314,15 +316,15 @@ define([
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
-               _self.payment('01', _self.billNumber);
+               _self.payment('01');
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
-                _self.payment('02', _self.billNumber);
+                _self.payment('02');
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
-                _self.payment('03', _self.billNumber);
+                _self.payment('03');
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
@@ -867,22 +869,22 @@ define([
                     toastr.info('付款方式编码不能为空');
                 }else{
                     if(storage.isSet(system_config.GATHER_KEY)){
-                        //从gather_key里面把visible_flag = ‘0’ 的付款方式的id都取出来
+                        //从gather_key里面把visible_flag = 1 的付款方式的id都取出来
                         var tlist = storage.get(system_config.GATHER_KEY);
                         var visibleTypes = _.where(tlist,{visible_flag:'1'});
-                        var gatheridlist = _.pluck(visibleTypes, 'gather_id');
+                        var gatheridlist = _.pluck(visibleTypes, 'gather_id');//返回gather_id数组
                         var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
                         if(result == - 1){
-                            toastr.info('付款方式编码无效');
+                            toastr.info('无效的付款编码');
                         }else{
                             var data = {};
-                            var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
-                            var gatherUI = gathermodel[0].gather_ui;
-                            var gatherName = gathermodel[0].gather_name;
+                            var item = _.findWhere(visibleTypes,{gather_id:gatherId});
+                            var gatherUI = item.gather_ui;
                             if(gatherUI == '01'){
-                                data['unpaidamount'] = this.model.get('unpaidamount');
+                                data['gather_money'] = unpaidamount;
                                 data['gather_id'] = gatherId;
-                                data['gather_name'] = gathermodel[0].gather_name;
+                                data['gather_name'] = item.gather_name;
+                                data['payment_bill'] = '';
                                 this.quickpayview = new QuickPayView(data);
                                 this.showModal(window.PAGE_ID.QUICK_PAY,this.quickpayview);
                                 $('.modal').on('shown.bs.modal',function(e){
@@ -894,10 +896,10 @@ define([
                                 xfbdata['bill_no'] = this.billNumber;
                                 this.requestmodel.xfbbillno(xfbdata, function(resp) {
                                     if(resp.status == '00') {
-                                        data['receivedsum'] = _self.model.get('unpaidamount');
+                                        data['gather_money'] = unpaidamount;
                                         data['gather_id'] = gatherId;
-                                        data['gather_name'] = gathermodel[0].gather_name;
-                                        data['orderNo'] = resp.xfb_bill;
+                                        data['gather_name'] = item.gather_name;
+                                        data['payment_bill'] = resp.xfb_bill;
                                         _self.alipayview = new QPAliPayView(data);
                                         _self.showModal(window.PAGE_ID.QP_ALIPAY,_self.alipayview);
                                         $('.modal').on('shown.bs.modal',function(e){
@@ -914,10 +916,10 @@ define([
                                 xfbdata['bill_no'] = this.billNumber;
                                 this.requestmodel.xfbbillno(xfbdata, function(resp) {
                                     if(resp.status == '00') {
-                                        data['orderNo'] = resp.xfb_bill;
-                                        data['receivedsum'] = _self.model.get('unpaidamount');
+                                        data['gather_money'] = unpaidamount;
                                         data['gather_id'] = gatherId;
-                                        data['gather_name'] = gathermodel[0].gather_name;
+                                        data['gather_name'] = item.gather_name;
+                                        data['payment_bill'] = resp.xfb_bill;
                                         _self.wechatview = new QPWeChatView(data);
                                         _self.showModal(window.PAGE_ID.QP_WECHAT,_self.wechatview);
                                         $('.modal').on('shown.bs.modal',function(e) {
@@ -939,18 +941,18 @@ define([
          *支票类付款
          */
         onCheckClicked:function () {
-            this.payment('01', this.billNumber);
+            this.payment('01');
             $('button[name = check]').blur();
         },
         /**
          * 礼券
          */
         onGiftClicked: function () {
-            this.payment('02', this.billNumber);
+            this.payment('02');
             $('button[name = gift-certificate]').blur();
         },
         onPosClicked:function () {
-            this.payment('03',this.billNumber);
+            this.payment('03');
             $('button[name = pos]').blur();
         },
         /**
@@ -976,16 +978,14 @@ define([
                 toastr.info('支付金额不能为空');
             }else if(receivedsum == 0){
                 toastr.info('支付金额不能为零');
-            }else if(receivedsum == '.'){
-                toastr.info('无效的支付金额');
-            }else if((receivedsum.split('.').length-1) > 1){
+            }else if((receivedsum.split('.').length-1) > 1 || receivedsum =='.'){
                 toastr.info('无效的支付金额');
             } else if(receivedsum > unpaidamount){
                 toastr.info('不设找零');
             }else{
                 var data = {};
                 data['gather_kind'] = gatherkind;//支付方式类别：包括现金类,礼券类等
-                data['receivedsum'] = receivedsum;
+                data['gather_money'] = receivedsum;
                 data['bill_no'] = billNumber;
                 this.billtypeview = new BilltypeView(data);
                 this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);

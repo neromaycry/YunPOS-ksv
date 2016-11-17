@@ -52,7 +52,7 @@ define([
         prepay: function (gatherUI) {
             var data = {};
             if (gatherUI == '04') {
-                data['orderid'] = this.attrs.order_id;
+                data['orderid'] = this.attrs.payment_bill;
                 data['merid'] = '000201504171126553';
                 data['totalfee'] = '0.01';
                 data['body'] = 'test';
@@ -61,7 +61,7 @@ define([
                 data['payway'] = 'scancode';
                 data['zfbtwo'] = 'zfbtwo';
             } else if (gatherUI == '05') {
-                data['orderid'] = this.attrs.order_id;
+                data['orderid'] = this.attrs.payment_bill;
                 data['merid'] = '000201504171126553';
                 data['totalfee'] = '0.01';
                 data['body'] = 'test';
