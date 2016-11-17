@@ -184,6 +184,8 @@ define([
          * @param orderNo 订单编号
          */
         addToPaymentList: function (totalamount, gatherName, receivedsum, gatherAccount, gatherId, gatherKind, cardId,orderNo) {
+            console.log(this.totalamount);
+            console.log('this totalamount');
             var temp = this.collection.findWhere({gather_id: gatherId , gather_no:gatherAccount});
             console.log(temp);
             if(temp != undefined){
@@ -254,7 +256,7 @@ define([
                 this.oddchange = oddchange;
             }else{
                 oddchange = 0;
-                this.unpaidamount = parseFloat(totalamount) - this.totalreceived;
+                this.unpaidamount = parseFloat((parseFloat(totalamount) - this.totalreceived).toFixed(2));
             }
             this.model.set({
                 receivedsum: this.totalreceived,
