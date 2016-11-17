@@ -113,6 +113,7 @@ define([
                         attrData['gather_name'] = attrs.gather_name;
                         attrData['gather_no'] = receivedaccount;
                         attrData['gather_kind'] = attrs.gatherKind;
+                        attrData['orderNo'] = '';
                         Backbone.trigger('onReceivedsum',attrData);
                         _self.hideModal(window.PAGE_ID.BILLING);
                         $('input[name = billing]').focus();

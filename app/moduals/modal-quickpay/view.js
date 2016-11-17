@@ -61,6 +61,7 @@ define([
                 data['gather_id'] = this.attrs['gather_id'];
                 data['gather_name'] = this.attrs['gather_name'];
                 data['gather_no'] = gather_no;
+                data['orderNo'] = '';
                 Backbone.trigger('onReceivedsum',data);
                 this.hideModal(window.PAGE_ID.BILLING);
                 $('input[name = billing]').focus();
