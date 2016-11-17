@@ -87,7 +87,8 @@ window.API_URL = {
     "ACCOUNT_ICPWD": "/account/icpwd",
     "REPORT":"/report",
     "PRINT":"/print",
-    "RETAIL_NO":"/retailno"
+    "RETAIL_NO":"/retailno",
+    "XFB_BILL_NO":"/xfbbillno",
 };
 
 // 系统参数设置

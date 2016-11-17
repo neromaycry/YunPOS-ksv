@@ -90,6 +90,7 @@ define([
         pageInit: function () {
             pageId = window.PAGE_ID.BILLING;
             this.model = new BillModel();
+            this.requestmodel = new BillModel();
             this.collection = new BillCollection();
             this.totalamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','totalamount');
             this.discountamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','discountamount');
@@ -318,19 +319,19 @@ define([
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
-               _self.payment('01');
+               _self.payment('01', _self.billNumber);
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
-                _self.payment('02');
+                _self.payment('02', _self.billNumber);
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
-                _self.payment('03');
+                _self.payment('03', _self.billNumber);
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
-               _self.payment('05');
+               _self.payment('05', _self.billNumber);
             });
             //整单优惠
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Y, function () {
@@ -427,7 +428,7 @@ define([
                     this.deleteItem(this.i);
                     toastr.success('删除成功');
                 }else if(gatherId == '12' || gatherId == '13'){
-                    this.refund(gatherId , item.get('orderNo'));
+                    this.refund(gatherId , item.get('payment_bill'));
                     //this.deleteItem();
                 }else {
                     this.deleteItem(this.i);
@@ -862,6 +863,7 @@ define([
          * 快捷支付
          */
         QuickPay: function () {
+            var _self = this;
             var gatherId = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
@@ -893,31 +895,45 @@ define([
                                     $('input[name = quickpay-account]').focus();
                                 });
                             }else if(gatherUI == '04'){
-                                var time = new Date();
-                                var orderNo = time.getTime();
-                                var data = {};
-                                data['receivedsum'] = this.model.get('unpaidamount');
-                                data['gather_id'] = gatherId;
-                                data['gather_name'] = gathermodel[0].gather_name;
-                                data['orderNo'] = orderNo;
-                                this.alipayview = new QPAliPayView(data);
-                                this.showModal(window.PAGE_ID.QP_ALIPAY,this.alipayview);
-                                $('.modal').on('shown.bs.modal',function(e){
-                                    $('input[name = alipay-account]').focus();
+                                var xfbdata = {};
+                                xfbdata['pos_id'] = '002';
+                                xfbdata['bill_no'] = this.billNumber;
+                                this.requestmodel.xfbbillno(xfbdata, function(resp) {
+                                    if(resp.status == '00') {
+                                        data['receivedsum'] = _self.model.get('unpaidamount');
+                                        data['gather_id'] = gatherId;
+                                        data['gather_name'] = gathermodel[0].gather_name;
+                                        data['orderNo'] = resp.xfb_bill;
+                                        _self.alipayview = new QPAliPayView(data);
+                                        _self.showModal(window.PAGE_ID.QP_ALIPAY,_self.alipayview);
+                                        $('.modal').on('shown.bs.modal',function(e){
+                                            $('input[name = alipay-account]').focus();
+                                        });
+                                    }else {
+                                        toastr.error(resp.msg);
+                                    }
                                 });
+
                             }else if(gatherUI == '05') {
-                                var time = new Date();
-                                var orderNo = time.getTime();
-                                var data = {};
-                                data['orderNo'] = orderNo;
-                                data['receivedsum'] = this.model.get('unpaidamount');
-                                data['gather_id'] = gatherId;
-                                data['gather_name'] = gathermodel[0].gather_name;
-                                this.wechatview = new QPWeChatView(data);
-                                this.showModal(window.PAGE_ID.QP_WECHAT,this.wechatview);
-                                $('.modal').on('shown.bs.modal',function(e) {
-                                    $('input[name = wechat-account]').focus();
+                                var xfbdata = {};
+                                xfbdata['pos_id'] = '002';
+                                xfbdata['bill_no'] = this.billNumber;
+                                this.requestmodel.xfbbillno(xfbdata, function(resp) {
+                                    if(resp.status == '00') {
+                                        data['orderNo'] = resp.xfb_bill;
+                                        data['receivedsum'] = _self.model.get('unpaidamount');
+                                        data['gather_id'] = gatherId;
+                                        data['gather_name'] = gathermodel[0].gather_name;
+                                        _self.wechatview = new QPWeChatView(data);
+                                        _self.showModal(window.PAGE_ID.QP_WECHAT,_self.wechatview);
+                                        $('.modal').on('shown.bs.modal',function(e) {
+                                            $('input[name = wechat-account]').focus();
+                                        });
+                                    }else {
+                                        toastr.error(resp.msg);
+                                    }
                                 });
+
                             }
                         }
                     }
@@ -929,18 +945,18 @@ define([
          *支票类付款
          */
         onCheckClicked:function () {
-            this.payment('01');
+            this.payment('01', this.billNumber);
             $('button[name = check]').blur();
         },
         /**
          * 礼券
          */
         onGiftClicked: function () {
-            this.payment('02');
+            this.payment('02', this.billNumber);
             $('button[name = gift-certificate]').blur();
         },
         onPosClicked:function () {
-            this.payment('03');
+            this.payment('03',this.billNumber);
             $('button[name = pos]').blur();
         },
         /**
@@ -951,13 +967,13 @@ define([
         },
 
         onThirdPayClicked: function () {
-            this.payment('05');
+            this.payment('05', this.billNumber);
             $('button[name = third-pay]').blur();
         },
         /**
          *点击支付大类按钮的点击事件
          */
-        payment:function (gatherkind){
+        payment:function (gatherkind , billNumber){
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
@@ -975,6 +991,7 @@ define([
                     var data = {};
                     data['gather_kind'] = gatherkind;
                     data['receivedsum'] = receivedsum;
+                    data['bill_no'] = billNumber;
                     this.billtypeview = new BilltypeView(data);
                     this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
                 }

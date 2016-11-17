@@ -23,6 +23,14 @@ define(['../../js/common/BaseModel'],function(BaseModel){
                 data: data,
                 success: callback
             });
+        },
+
+        xfbbillno:function(data,callback) {
+            this.sendPOST({
+                url: window.API_URL.XFB_BILL_NO,
+                data: data,
+                success: callback
+            });
         }
 
     });
