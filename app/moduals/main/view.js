@@ -99,7 +99,8 @@ define([
             });
             this.loginInfoModel.set({
                 name:user.user_name,
-                pos: storage.get(system_config.POS_INFO_KEY, 'posid')
+                pos: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                lastbill_no: ''
             });
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
                 this.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));

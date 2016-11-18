@@ -29,7 +29,8 @@ define([
         initPlugins: function () {
             var _self = this;
             var data = {};
-            var poskey = storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, 'poskey');
+            var poskey = storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_KEY);
+
             data['poskey'] = poskey;
             this.request.init(data,function(resp) {
                 if (resp.status == '00') {
@@ -45,14 +46,14 @@ define([
                 }
             });
 
-            this.setMainKeys();
-            this.setMemberKeys();
-            this.setRestOrderKeys();
-            this.setBillingKeys();
-            this.setBillingReturnKeys();
-            this.setReturnForceKeys();
-            this.setReturnWholeKeys();
-            this.setCheckingKeys();
+            //this.setMainKeys();
+            //this.setMemberKeys();
+            //this.setRestOrderKeys();
+            //this.setBillingKeys();
+            //this.setBillingReturnKeys();
+            //this.setReturnForceKeys();
+            //this.setReturnWholeKeys();
+            //this.setCheckingKeys();
         },
 
         renderModel: function () {

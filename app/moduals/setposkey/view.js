@@ -60,7 +60,8 @@ define([
                 this.request.init(data, function(resp){
                     if(resp.status == '00'){
                         router.navigate('initinfo',{ trigger: true });
-                        storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY, 'poskey', value);
+                        //storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY, 'poskey', value);
+                        storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.POS_KEY, value);
                     } else {
                         toastr.error(resp.msg);
                     }
