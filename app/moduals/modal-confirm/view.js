@@ -29,6 +29,8 @@ define([
                 content:this.attrs.content
             });
             this.renderContent();
+            Backbone.off('onNavigateStateChanged');
+            Backbone.on('onNavigateStateChanged', this.onNavigateStateChanged, this);
         },
 
         renderContent: function () {
@@ -43,6 +45,7 @@ define([
             });
             this.bindModalKeyEvents(window.PAGE_ID.CONFIRM, window.KEYS.Enter, function () {
                 _self.attrs.callback();
+                //console.log('isnavigate:' + _self.attrs.is_navigate);
                 if (_self.attrs.is_navigate) {
                     _self.confirmHideModal(_self.attrs.navigate_page);
                 } else {
@@ -84,6 +87,10 @@ define([
                     this.hideModal(window.PAGE_ID.CHECKING);
                     break;
             }
+        },
+
+        onNavigateStateChanged: function (isNavigate) {
+            this.attrs.is_navigate = isNavigate;
         },
 
         onCancelClicked: function () {

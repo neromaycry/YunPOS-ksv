@@ -13,7 +13,8 @@ define(['../../js/common/BaseModel'],function(BaseModel){
             this.sendPOST({
                 url:window.API_URL.TRADE_CONFIRM,
                 data:data,
-                success:callback
+                success:callback,
+                async: false
             });
         },
 
