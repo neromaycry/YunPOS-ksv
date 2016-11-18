@@ -635,7 +635,7 @@ define([
                     is_navigate: true,
                     navigate_page: window.PAGE_ID.MAIN,
                     callback: function () {
-                        if(_self.totaldiscount != 0){
+                        if(_self.totaldiscount != 0) {
                             _self.calculateDiscount();
                         }
                         var data = {};
@@ -671,6 +671,7 @@ define([
                                 router.navigate("main", {trigger: true, replace: true});
                             } else {
                                 toastr.error(resp.msg);
+                                Backbone.trigger('onNavigateStateChanged', false);
                             }
                         });
                     },
