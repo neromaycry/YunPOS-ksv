@@ -8,11 +8,12 @@ define([
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-login/view',
+    '../../../../moduals/modal-priceentry/view',
     'text!../../../../moduals/return-force/posinfotpl.html',
     'text!../../../../moduals/return-force/cartlisttpl.html',
     'text!../../../../moduals/return-force/numpadtpl.html',
     'text!../../../../moduals/return-force/tpl.html',
-], function (BaseView, ReturnForceModel, ReturnForceCollection,KeyTipsView,ConfirmView,SecondLoginView, posinfotpl,cartlisttpl,numpadtpl, tpl) {
+], function (BaseView, ReturnForceModel, ReturnForceCollection,KeyTipsView,ConfirmView,SecondLoginView,PriceEntryView, posinfotpl,cartlisttpl,numpadtpl, tpl) {
 
     var returnForceView = BaseView.extend({
 
@@ -279,7 +280,29 @@ define([
                 data['goods_detail'] = JSON.stringify(_self.collection);
                 _self.requestModel.sku(data , function(resp) {
                     if(resp.status == '00') {
-                        _self.onAddItem(resp.goods_detail);
+                        var temp = resp.goods_detail[resp.goods_detail.length - 1];
+                        if(temp['price_auto'] == 1) {
+                            var priceentryview = new PriceEntryView({
+
+                                originalprice: temp['price'],
+
+                                pageid: window.PAGE_ID.RETURN_FORCE,
+
+                                callback: function () {
+                                    var price = $('input[name = price]').val();
+                                    resp.goods_detail[resp.goods_detail.length - 1].price = price;
+                                    resp.goods_detail[resp.goods_detail.length - 1].money = price;
+                                    _self.onAddItem(resp.goods_detail);
+                                    $('input[name = sku_id]').focus();
+                                }
+                            });
+                            _self.showModal(window.PAGE_ID.MODAL_PRICE_ENTRY, priceentryview);
+                            $('.modal').on('shown.bs.modal', function (e) {
+                                $('input[name = price]').focus();
+                            });
+                        }else {
+                            _self.onAddItem(resp.goods_detail);
+                        }
                     }else{
                         toastr.warning(resp.msg);
                     }
