@@ -45,7 +45,13 @@ define([
             return this;
         },
         onCancelClicked: function () {
-            this.hideModal(window.PAGE_ID.MAIN);
+            if(this.attrs.pageid == window.PAGE_ID.MAIN) {
+                this.hideModal(window.PAGE_ID.MAIN);
+                $('input[name = main]').focus();
+            }else {
+                this.hideModal(window.PAGE_ID.RETURN_FORCE);
+                $('input[name = sku_id]').focus();
+            }
         },
 
         onNumClicked: function (e) {
@@ -75,8 +81,13 @@ define([
                _self.confirm();
             });
             this.bindModalKeyEvents(window.PAGE_ID.MODAL_PRICE_ENTRY, window.KEYS.Esc, function () {
-                _self.hideModal(window.PAGE_ID.MAIN);
-                $('input[name = main]').focus();
+                if(_self.attrs.pageid == window.PAGE_ID.MAIN) {
+                    _self.hideModal(window.PAGE_ID.MAIN);
+                    $('input[name = main]').focus();
+                }else {
+                    _self.hideModal(window.PAGE_ID.RETURN_FORCE);
+                    $('input[name = sku_id]').focus();
+                }
             });
         },
 
