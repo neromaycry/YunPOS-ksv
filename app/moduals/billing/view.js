@@ -155,19 +155,19 @@ define([
             var paymentBill = data['payment_bill'];
             this.addToPaymentList(this.totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, this.card_id,paymentBill);
         },
-        onBillDiscount: function (data) {
-            this.percentage = data['percentage'] / 100;
-            this.totaldiscount = (this.totalamount * ( 1- this.percentage)).toFixed(2);//优惠金额
-            this.totalamount = (this.totalamount - this.totaldiscount).toFixed(2);//折扣后的支付金额
-            this.unpaidamount = this.totalamount;
-            this.model.set({
-                totaldiscount:this.totaldiscount,//整单优惠的金额
-                totalamount:this.totalamount,
-                unpaidamount:this.unpaidamount,
-                percentage:percentage
-            });
-            this.renderBillInfo();
-        },
+        //onBillDiscount: function (data) {
+        //    this.percentage = data['percentage'] / 100;
+        //    this.totaldiscount = (this.totalamount * ( 1- this.percentage)).toFixed(2);//优惠金额
+        //    this.totalamount = (this.totalamount - this.totaldiscount).toFixed(2);//折扣后的支付金额
+        //    this.unpaidamount = this.totalamount;
+        //    this.model.set({
+        //        totaldiscount:this.totaldiscount,//整单优惠的金额
+        //        totalamount:this.totalamount,
+        //        unpaidamount:this.unpaidamount,
+        //        percentage:percentage
+        //    });
+        //    this.renderBillInfo();
+        //},
 
         /**
          *向已付款列表中插入新的行
@@ -337,14 +337,15 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
                _self.payment('05', _self.billNumber);
             });
-            //整单优惠
+            //整单优惠输入实际优惠金额
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Y, function () {
                 _self.billTotalDiscount();
             });
-            //取消整单优惠
-            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.E, function () {
+            //整单优惠输入折扣
+            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.U, function () {
                _self.cancelTotalDiscount();
             });
+
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
                _self.openHelp();
@@ -499,21 +500,103 @@ define([
         },
 
         /**
-         * 整单优惠
+         * 整单优惠-输入实际优惠
          */
         billTotalDiscount:function (){
+            var discount = $(this.input).val();
             var receivedsum = this.model.get('receivedsum');
-            if(this.totaldiscount != 0) {//先判断整单优惠金额
-                toastr.info('不能重复整单优惠');
-            }else if(receivedsum != 0) {//判断是否已经付款
-                toastr.info('您已选择支付方式，不能再进行整单优惠');
-            } else {
-                var billdiscountview = new BilldiscountView();
-                this.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
-                $('.modal').on('shown.bs.modal', function (){
-                    $('input[name = percentage]').focus();
+            if(receivedsum != 0) {
+                toastr.warning('您已选择支付方式，不能再进行整单优惠');
+            }else if(discount == 0) {
+                toastr.warning('整单优惠金额不能为零');
+            }else if(discount == '.' || (discount.split('.').length-1) > 0) {
+                toastr.warning('整单优惠金额无效');
+            }else if(discount == '') {
+                toastr.warning('整单优惠金额不能为空');
+            }else if(discount > this.totalamount) {
+                toastr.warning('整单优惠金额不能大于应付金额');
+            }else if(this.totaldiscount == 0){
+                this.totaldiscount = parseFloat(discount) ;//优惠金额
+                this.totalamount = this.totalamount - this.totaldiscount;//折扣后的支付金额
+                this.unpaidamount = this.totalamount;
+                this.model.set({
+                    totaldiscount:this.totaldiscount,//整单优惠的金额
+                    totalamount:this.totalamount,
+                    unpaidamount:this.unpaidamount,
                 });
+                $('button[name = totaldiscount]').css('display','none');
+                $('button[name = cancel-totaldiscount]').css('display','block');
+                toastr.success('整单优惠成功');
+                //var billdiscountview = new BilldiscountView();
+                //this.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
+                //$('.modal').on('shown.bs.modal', function (){
+                //    $('input[name = percentage]').focus();
+                //});
+            }else if(this.totaldiscount != 0) {
+                this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
+                this.unpaidamount = this.totalamount;
+                this.totaldiscount = 0;
+                this.model.set({
+                    totalamount:this.totalamount,
+                    unpaidamount:this.unpaidamount,
+                    totaldiscount:this.totaldiscount
+                });
+                this.renderBillInfo();
+                $('button[name = totaldiscount]').css('display','block');
+                $('button[name = cancel-totaldiscount]').css('display','none');
+                toastr.success('取消整单优惠成功');
             }
+            $(this.input).val();
+            this.renderBillInfo();
+        },
+
+        billPercentDiscount: function () {
+            var discount = $(this.input).val();
+            var receivedsum = this.model.get('receivedsum');
+            if(receivedsum != 0) {
+                toastr.warning('您已选择支付方式，不能再进行整单优惠');
+            }else if(discount == 0) {
+                toastr.warning('整单优惠金额不能为零');
+            }else if(discount == '.' || (discount.split('.').length-1) > 0) {
+                toastr.warning('整单优惠金额无效');
+            }else if(discount == '') {
+                toastr.warning('整单优惠金额不能为空');
+            }else if(discount > this.totalamount) {
+                toastr.warning('整单优惠金额不能大于应付金额');
+            }else if(this.totaldiscount == 0){
+                this.totaldiscount = parseFloat(discount) ;//优惠金额
+                this.totalamount = this.totalamount - this.totaldiscount;//折扣后的支付金额
+                this.unpaidamount = this.totalamount;
+                this.model.set({
+                    totaldiscount:this.totaldiscount,//整单优惠的金额
+                    totalamount:this.totalamount,
+                    unpaidamount:this.unpaidamount,
+                    unpaidamount:this.unpaidamount,
+                });
+                $('button[name = totaldiscount]').css('display','none');
+                $('button[name = cancel-totaldiscount]').css('display','block');
+                toastr.success('整单优惠成功');
+                //var billdiscountview = new BilldiscountView();
+                //this.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
+                //$('.modal').on('shown.bs.modal', function (){
+                //    $('input[name = percentage]').focus();
+                //});
+            }else if(this.totaldiscount != 0) {
+                this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
+                this.unpaidamount = this.totalamount;
+                this.totaldiscount = 0;
+                this.model.set({
+                    totalamount:this.totalamount,
+                    unpaidamount:this.unpaidamount,
+                    totaldiscount:this.totaldiscount
+                });
+                this.renderBillInfo();
+                $('button[name = totaldiscount]').css('display','block');
+                $('button[name = cancel-totaldiscount]').css('display','none');
+                toastr.success('取消整单优惠成功');
+            }
+            $(this.input).val();
+            this.renderBillInfo();
         },
         /**
          * 取消整单优惠
@@ -645,7 +728,7 @@ define([
                         var model = _self.collection.at(j);
                         var gatherId = model.get('gather_id');
                         if(gatherId == '12') {
-                            data['orderid'] = model.get('orderNo');
+                            data['orderid'] = model.get('payment_bill');
                             data['merid'] = '000201504171126553';
                             data['paymethod'] = 'wx';
                             data['refundamount'] = '0.01';
@@ -659,7 +742,7 @@ define([
                                 }
                             });
                         }else if(gatherId == '13') {
-                            data['orderid'] = model.get('orderNo');
+                            data['orderid'] = model.get('payment_bill');
                             data['merid'] = '000201504171126553';
                             data['paymethod'] = 'zfb';
                             data['refundamount'] = '0.01';
@@ -698,16 +781,16 @@ define([
         /**
          * 删除时调用第三方支付退款接口
          */
-        refund: function (gatherId, orderNo) {
+        refund: function (gatherId, paymentBill) {
             var _self = this;
             var data = {};
             if(gatherId == '12') {
-                data['orderid'] = orderNo;
+                data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['paymethod'] = 'wx';
                 data['refundamount'] = '0.01';
             }else if(gatherId == '13'){
-                data['orderid'] = orderNo;
+                data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['paymethod'] = 'zfb';
                 data['refundamount'] = '0.01';
