@@ -454,7 +454,6 @@ define([
             var gatherMoney = item.get('gather_money');
             var changeMoney = item.get('change_money');//利用删除那条数据时候含有找零来判断
             var oddchange = this.model.get('oddchange');
-            console.log(item);
             this.collection.remove(item);
             if(changeMoney == 0 && gatherMoney > oddchange) {
                 this.totalreceived = this.totalreceived - gatherMoney;
@@ -477,7 +476,7 @@ define([
                     var gathermoney = temp.get('gather_money');//现金支付金额
                     if(temp.get('change_money') != 0) {
                         temp.set({
-                            gather_money:parseFloat(gathermoney) + parseFloat(gatherMoney)
+                            gather_money:gathermoney + gatherMoney
                         });
                         oddchange = oddchange - gatherMoney;
                         this.collection.push(temp);
@@ -485,10 +484,7 @@ define([
                     }
                 }
             }else if(changeMoney != 0) {
-                console.log(this.totalreceived);
-                console.log(item.get('havepay_money'));
-                console.log('****************');
-                this.totalreceived = this.totalreceived - parseFloat(item.get('havepay_money'));
+                this.totalreceived = this.totalreceived - item.get('havepay_money');
                 oddchange = 0;
             }
             if(this.totalreceived > this.totalamount) {
