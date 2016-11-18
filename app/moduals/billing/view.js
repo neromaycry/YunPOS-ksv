@@ -146,7 +146,7 @@ define([
             Backbone.on('onReceivedsum', this.onReceivedsum,this);
         },
         onReceivedsum: function (data) {
-            var gatherMoney = data['gather_money'];
+            var gatherMoney = parseFloat(data['gather_money']);//number类型
             var gatherNo = data['gather_no'];//付款账号
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
@@ -187,9 +187,9 @@ define([
                 for(var i = 0;i < this.collection.length;i++){
                     var model = this.collection.at(i);
                     if(model.get('gather_id') == gatherId && model.get('gather_no') == gatherNo){
-                        var havePayMoney = parseFloat(model.get('gather_money')) + parseFloat(gatherMoney);
-                        if(parseFloat(gatherMoney) > unpaidamount) {
-                            var gather_money = parseFloat(model.get('gather_money')) + parseFloat(unpaidamount);
+                        var havePayMoney = model.get('gather_money') + gatherMoney;
+                        if(gatherMoney > unpaidamount) {
+                            var gather_money = model.get('gather_money') + unpaidamount;
                             model.set({
                                 fact_money:0,
                                 gather_id:gatherId,
@@ -200,10 +200,10 @@ define([
                                 card_id:cardId,
                                 payment_bill: paymentBill,//第三方支付方式订单号
                                 havepay_money:havePayMoney ,//实收金额
-                                change_money: parseFloat(gatherMoney) - unpaidamount
+                                change_money: gatherMoney - unpaidamount
                             });
                         }else {
-                            var gather_money = parseFloat(model.get('gather_money')) + parseFloat(gatherMoney);
+                            var gather_money = model.get('gather_money') + gatherMoney;
                             model.set({
                                 fact_money: 0,
                                 gather_id: gatherId,
@@ -222,7 +222,7 @@ define([
             }else {
                 var model = new BillModel();
                 var oddchange = 0;
-                if (parseFloat(gatherMoney) > unpaidamount) {
+                if (gatherMoney > unpaidamount) {
                     //如果支付金额大于未支付金额，则支付列表中显示的支付金额为  receivedsum = unpaidamount
                     model.set({
                         fact_money: 0,
@@ -234,7 +234,7 @@ define([
                         card_id: cardId,
                         payment_bill: paymentBill,//第三方支付方式订单号
                         havepay_money:gatherMoney,//实收金额
-                        change_money: parseFloat(gatherMoney) - unpaidamount
+                        change_money: gatherMoney - unpaidamount
                     });
                 } else {
                     model.set({
@@ -252,14 +252,14 @@ define([
                 }
             }
             this.collection.add(model);
-            this.totalreceived = this.totalreceived + parseFloat(gatherMoney);
+            this.totalreceived = this.totalreceived + gatherMoney;
             if(this.totalreceived >= totalamount){
                 this.unpaidamount = 0;
-                oddchange = this.totalreceived - parseFloat(totalamount);
+                oddchange = this.totalreceived - totalamount;
                 this.oddchange = oddchange;
             }else{
                 oddchange = 0;
-                this.unpaidamount = parseFloat((parseFloat(totalamount) - this.totalreceived).toFixed(2));
+                this.unpaidamount = parseFloat((totalamount - this.totalreceived).toFixed(2));
             }
             this.model.set({
                 receivedsum: this.totalreceived,
@@ -372,6 +372,8 @@ define([
         confirm:function() {
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
+            console.log(typeof (unpaidamount));
+            console.log(unpaidamount);
             if(unpaidamount == 0) {
                 toastr.info('待支付金额为零，请进行结算');
             }else if(receivedsum == '') {
@@ -383,7 +385,7 @@ define([
             }else if((receivedsum.split('.').length-1) > 1 || receivedsum == '.') {
                 toastr.info('无效的支付金额');
             }else{
-                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id,"");
+                this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id,"");
                 this.renderClientDisplay(this.model, isPacked);
             }
             $('#input_billing').val("");
@@ -527,29 +529,28 @@ define([
                     totalamount: this.totalamount,
                     unpaidamount: this.unpaidamount,
                 });
-                $('button[name = totaldiscount]').css('display', 'none');
-                $('button[name = cancel-totaldiscount]').css('display', 'block');
+                //$('button[name = totaldiscount]').css('display', 'none');
+                //$('button[name = cancel-totaldiscount]').css('display', 'block');
                 toastr.success('整单优惠成功');
-            }
                 //var billdiscountview = new BilldiscountView();
                 //this.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
                 //$('.modal').on('shown.bs.modal', function (){
                 //    $('input[name = percentage]').focus();
                 //});
-            //}else if(this.totaldiscount != 0) {
-            //    this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
-            //    this.unpaidamount = this.totalamount;
-            //    this.totaldiscount = 0;
-            //    this.model.set({
-            //        totalamount:this.totalamount,
-            //        unpaidamount:this.unpaidamount,
-            //        totaldiscount:this.totaldiscount
-            //    });
-            //    this.renderBillInfo();
-            //    $('button[name = totaldiscount]').css('display','block');
-            //    $('button[name = cancel-totaldiscount]').css('display','none');
-            //    toastr.success('取消整单优惠成功');
-            //}
+            }else if(this.totaldiscount != 0) {
+                this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
+                this.unpaidamount = this.totalamount;
+                this.totaldiscount = 0;
+                this.model.set({
+                    totalamount:this.totalamount,
+                    unpaidamount:this.unpaidamount,
+                    totaldiscount:this.totaldiscount
+                });
+                this.renderBillInfo();
+                $('button[name = totaldiscount]').css('display','block');
+                $('button[name = cancel-totaldiscount]').css('display','none');
+                toastr.success('取消整单优惠成功');
+            }
             $(this.input).val();
             this.renderBillInfo();
         },
