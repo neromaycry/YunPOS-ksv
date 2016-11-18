@@ -187,6 +187,7 @@ define([
                 for(var i = 0;i < this.collection.length;i++){
                     var model = this.collection.at(i);
                     if(model.get('gather_id') == gatherId && model.get('gather_no') == gatherNo){
+                        var havePayMoney = parseFloat(model.get('gather_money')) + parseFloat(gatherMoney);
                         if(parseFloat(gatherMoney) > unpaidamount) {
                             var gather_money = parseFloat(model.get('gather_money')) + parseFloat(unpaidamount);
                             model.set({
@@ -198,7 +199,7 @@ define([
                                 gather_kind:gatherKind,
                                 card_id:cardId,
                                 payment_bill: paymentBill,//第三方支付方式订单号
-                                havepay_money: gatherMoney,//实收金额
+                                havepay_money:havePayMoney ,//实收金额
                                 change_money: parseFloat(gatherMoney) - unpaidamount
                             });
                         }else {
@@ -212,7 +213,7 @@ define([
                                 gather_kind: gatherKind,
                                 card_id: cardId,
                                 payment_bill: paymentBill,
-                                havepay_money:gatherMoney,
+                                havepay_money:havePayMoney,
                                 change_money: 0
                             });
                         }
@@ -451,6 +452,7 @@ define([
             var gatherMoney = item.get('gather_money');
             var changeMoney = item.get('change_money');//利用删除那条数据时候含有找零来判断
             var oddchange = this.model.get('oddchange');
+            console.log(item);
             this.collection.remove(item);
             if(changeMoney == 0 && gatherMoney > oddchange) {
                 this.totalreceived = this.totalreceived - gatherMoney;
@@ -481,6 +483,9 @@ define([
                     }
                 }
             }else if(changeMoney != 0) {
+                console.log(this.totalreceived);
+                console.log(item.get('havepay_money'));
+                console.log('****************');
                 this.totalreceived = this.totalreceived - parseFloat(item.get('havepay_money'));
                 oddchange = 0;
             }
@@ -507,45 +512,44 @@ define([
             var receivedsum = this.model.get('receivedsum');
             if(receivedsum != 0) {
                 toastr.warning('您已选择支付方式，不能再进行整单优惠');
-            }else if(discount == 0) {
-                toastr.warning('整单优惠金额不能为零');
             }else if(discount == '.' || (discount.split('.').length-1) > 0) {
                 toastr.warning('整单优惠金额无效');
             }else if(discount == '') {
                 toastr.warning('整单优惠金额不能为空');
             }else if(discount > this.totalamount) {
                 toastr.warning('整单优惠金额不能大于应付金额');
-            }else if(this.totaldiscount == 0){
-                this.totaldiscount = parseFloat(discount) ;//优惠金额
+            }else if(this.totaldiscount == 0) {
+                this.totaldiscount = parseFloat(discount);//优惠金额
                 this.totalamount = this.totalamount - this.totaldiscount;//折扣后的支付金额
                 this.unpaidamount = this.totalamount;
                 this.model.set({
-                    totaldiscount:this.totaldiscount,//整单优惠的金额
-                    totalamount:this.totalamount,
-                    unpaidamount:this.unpaidamount,
+                    totaldiscount: this.totaldiscount,//整单优惠的金额
+                    totalamount: this.totalamount,
+                    unpaidamount: this.unpaidamount,
                 });
-                $('button[name = totaldiscount]').css('display','none');
-                $('button[name = cancel-totaldiscount]').css('display','block');
+                $('button[name = totaldiscount]').css('display', 'none');
+                $('button[name = cancel-totaldiscount]').css('display', 'block');
                 toastr.success('整单优惠成功');
+            }
                 //var billdiscountview = new BilldiscountView();
                 //this.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
                 //$('.modal').on('shown.bs.modal', function (){
                 //    $('input[name = percentage]').focus();
                 //});
-            }else if(this.totaldiscount != 0) {
-                this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
-                this.unpaidamount = this.totalamount;
-                this.totaldiscount = 0;
-                this.model.set({
-                    totalamount:this.totalamount,
-                    unpaidamount:this.unpaidamount,
-                    totaldiscount:this.totaldiscount
-                });
-                this.renderBillInfo();
-                $('button[name = totaldiscount]').css('display','block');
-                $('button[name = cancel-totaldiscount]').css('display','none');
-                toastr.success('取消整单优惠成功');
-            }
+            //}else if(this.totaldiscount != 0) {
+            //    this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
+            //    this.unpaidamount = this.totalamount;
+            //    this.totaldiscount = 0;
+            //    this.model.set({
+            //        totalamount:this.totalamount,
+            //        unpaidamount:this.unpaidamount,
+            //        totaldiscount:this.totaldiscount
+            //    });
+            //    this.renderBillInfo();
+            //    $('button[name = totaldiscount]').css('display','block');
+            //    $('button[name = cancel-totaldiscount]').css('display','none');
+            //    toastr.success('取消整单优惠成功');
+            //}
             $(this.input).val();
             this.renderBillInfo();
         },
