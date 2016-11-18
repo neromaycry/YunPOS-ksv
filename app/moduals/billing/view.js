@@ -549,7 +549,6 @@ define([
          */
 
         billPercentDiscount: function () {
-
             console.log('折扣前的总金额为：' + this.totalamount + typeof (this.totalamount));
             var percentage = $(this.input).val();
             var rate = percentage / 100;
@@ -576,7 +575,7 @@ define([
             this.percentage = percentage;
             this.totaldiscount = this.totalamount * (1 - rate)
             this.totalamount = this.totalamount * rate;
-            this.unpaidamount = this.totalamount;
+            this.unpaidamount = parseFloat(this.totalamount.toFixed(2));
             this.model.set({
                 totalamount:this.totalamount,
                 unpaidamount:this.unpaidamount,

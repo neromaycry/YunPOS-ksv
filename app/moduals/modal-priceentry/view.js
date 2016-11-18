@@ -93,12 +93,10 @@ define([
             var price = $(this.input).val();
             if(price == '') {
                 toastr.warning('单价不能为空');
-            }else if(price == '.') {
-                toastr.warning('请输入有效的单价');
             }else if(price == 0) {
                 toastr.warning('单价不能为零');
-            }else if((price.split('.').length-1) > 1) {
-                toastr.warning('请输入有效金额');
+            }else if((price.split('.').length-1) > 1 || price == '.') {
+                toastr.warning('无效的单价');
             } else {
                 this.attrs.callback(this.attrs);
                 this.confirmHideModal(this.attrs.pageid);
