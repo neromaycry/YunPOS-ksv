@@ -697,8 +697,8 @@ define([
                                 toastr.success("订单号：" +  resp.bill_no);
                                 storage.set(system_config.ODD_CHANGE,'oddchange',_self.model.get('oddchange'));
                                 console.log(resp.prnt);
-                                wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
                                 wsClient.send(DIRECTIVES.OpenCashDrawer);
+                                wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
                                 _self.renderClientDisplay(_self.model);
                                 router.navigate("main", {trigger: true,replace:true});
                             } else {

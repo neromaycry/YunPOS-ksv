@@ -62,7 +62,7 @@ define([
             var _self = this;
             this.bindModalKeyEvents(window.PAGE_ID.MODAL_RESTORDER, window.KEYS.Enter, function () {
                 _self.releaseOrder();
-                $('input[name = main]').focus();
+
             });
             this.bindModalKeyEvents(window.PAGE_ID.MODAL_RESTORDER, window.KEYS.Esc, function () {
                 _self.hideModal(window.PAGE_ID.MAIN);
@@ -74,11 +74,13 @@ define([
             var value = $(this.input).val();
             if (value == '') {
                 toastr.warning('请输入挂单号');
+                $(this.input).focus();
             } else {
                 var orderSelected = _.pick(this.obj, value);
                 if (_.isEmpty(orderSelected)) {
                     toastr.warning('没有这个挂单号');
                     $(this.input).val('');
+                    $(this.input).focus();
                 } else {
                     var orderSelectedDetail = orderSelected[value];
                     console.log(orderSelectedDetail);
@@ -86,6 +88,7 @@ define([
                     storage.remove(system_config.RESTORDER_KEY,value);
                     this.hideModal(window.PAGE_ID.MAIN);
                     toastr.success('解挂成功');
+                    $('input[name = main]').focus();
                 }
             }
         }
