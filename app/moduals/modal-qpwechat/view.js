@@ -30,7 +30,7 @@ define([
         modalInitPage: function () {
             this.model = new QPWechatModel();
             this.model.set({
-                receivedsum:this.attrs['receivedsum']
+                receivedsum:this.attrs['gather_money']
             });
             this.render();
             this.$el.find('.for-numpad').html(this.template_numpad);
@@ -50,30 +50,30 @@ define([
 
         confirm: function () {
             var _self = this;
-            var gatherNo = $('input[name = wechat-account]').val();
+            var gatherNo = $(this.input).val();
             if(gatherNo == '') {
                 toastr.warning('微信账号不能为空');
-            } else if((gatherNo.split('.').length-1) > 0){
-                    toastr.warning('请输入有效的微信账号');
+            } else if((gatherNo.split('.').length-1) > 0 || gatherNo == '0'){
+                    toastr.warning('无效的微信账号');
             }else {
                 var tempdata = {};
                 tempdata['gather_no'] = gatherNo;
                 tempdata['gather_id'] = _self.attrs['gather_id'];
                 tempdata['gather_name'] = _self.attrs['gather_name'];
-                tempdata['receivedsum'] = _self.attrs['receivedsum'];
-                tempdata['orderNo'] = _self.attrs.orderNo;
-                _self.prepay(tempdata);
+                tempdata['gather_money'] = _self.attrs['gather_money'];
+                tempdata['payment_bill'] = _self.attrs.payment_bill;
+                _self.micropay(tempdata);
             }
-            $('input[name = wechat-account]').val('');
+            $(this.input).val('');
         },
 
-        prepay: function (tempdata) {
+        micropay: function (tempdata) {
             var _self = this;
-            var receivedaccount = $('input[name = wechat-account]').val();
+            var gatherNo = $(this.input).val();
             var data = {};
-            data['orderid'] = this.attrs.orderNo;
+            data['orderid'] = this.attrs.payment_bill;
             data['merid'] = '000201504171126553';
-            data['authno'] = receivedaccount;
+            data['authno'] = gatherNo;
             data['totalfee'] = '0.01';
             data['body'] = 'test';
             data['subject'] = 'test';

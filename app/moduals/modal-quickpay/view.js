@@ -32,7 +32,7 @@ define([
             this.model = new QuickpayModel();
             this.model.set({
                 gather_name:this.attrs['gather_name'],
-                unpaidamount:this.attrs['unpaidamount'],
+                unpaidamount:this.attrs['gather_money'],
             });
             this.render();
             this.$el.find('.for-numpad').html(this.template_numpad);
@@ -50,23 +50,23 @@ define([
         },
 
         confirm: function () {
-            var gather_no = $('input[name = quickpay-account]').val();
-            if(gather_no == '') {
-                toastr.warning('付款账号不能为空');
-            } else if((gather_no.split('.').length-1) > 0){
-                    toastr.warning('请输入有效的付款账号');
+            var gatherNo = $(this.input).val();
+            if(gatherNo == '') {
+                toastr.warning('支付账号不能为空');
+            } else if((gatherNo.split('.').length-1) > 0){
+                    toastr.warning('无效的支付账号');
             }else{
                 var data = {};
-                data['receivedsum'] = this.attrs['unpaidamount'];
+                data['gather_money'] = this.attrs['gather_money'];
                 data['gather_id'] = this.attrs['gather_id'];
                 data['gather_name'] = this.attrs['gather_name'];
-                data['gather_no'] = gather_no;
-                data['orderNo'] = '';
+                data['gather_no'] = gatherNo;
+                data['payment_bill'] = this.attrs['payment_bill'];
                 Backbone.trigger('onReceivedsum',data);
                 this.hideModal(window.PAGE_ID.BILLING);
                 $('input[name = billing]').focus();
             }
-            $('input[name = quickpay-account]').val('');
+            $(this.input).val('');
         },
 
         onCancelClicked: function () {
