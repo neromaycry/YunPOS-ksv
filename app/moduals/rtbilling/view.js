@@ -301,27 +301,23 @@ define([
          * 确认事件
          */
         confirm:function(){
-            if(isfromForce) {
-                var receivedsum = $(this.input).val();
-                var unpaidamount = this.model.get('unpaidamount');
-                if(unpaidamount == 0) {
-                    toastr.warning('退货金额为零，请进行结算');
-                }else if(receivedsum == '') {
-                    toastr.warning('退货金额不能为空');
-                }else if(receivedsum == 0){
-                    toastr.warning('退货金额不能为零');
-                }else if(receivedsum == '.'){
-                    toastr.warning('请输入有效退货金额');
-                } else if((receivedsum.split('.').length-1) > 1) {
-                    toastr.info('请输入有效金额');
-                }else if(receivedsum > unpaidamount){
-                    toastr.warning('不设找零');
-                }else{
-                    this.i = 0;
-                    this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
-                }
-            }else {
-                toastr.warning('原单退货不能更改退款方式');
+            var receivedsum = $(this.input).val();
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0) {
+                toastr.warning('退货金额为零，请进行结算');
+            }else if(receivedsum == '') {
+                toastr.warning('退货金额不能为空');
+            }else if(receivedsum == 0){
+                toastr.warning('退货金额不能为零');
+            }else if(receivedsum == '.'){
+                toastr.warning('请输入有效退货金额');
+            } else if((receivedsum.split('.').length-1) > 1) {
+                toastr.info('请输入有效金额');
+            }else if(receivedsum > unpaidamount){
+                toastr.warning('不设找零');
+            }else{
+                this.i = 0;
+                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
             }
 
             $(this.input).val("");
@@ -435,22 +431,18 @@ define([
          * 清空已支付列表
          */
         cleanPaylist: function () {
-            if(isfromForce) {
-                this.receivedsum = 0;
-                this.oddchange = 0;
-                this.collection.reset();
-                this.model.set({
-                    receivedsum:this.receivedsum,
-                    oddchange:this.oddchange,
-                    unpaidamount:this.totalamount
-                });
-                storage.remove(system_config.ONE_CARD_KEY);
-                this.renderBillDetail();
-                this.renderBillInfo();
-                toastr.success('清空退款方式列表成功');
-            }else {
-                toastr.warning('原单退货不能更改退款方式');
-            }
+            this.receivedsum = 0;
+            this.oddchange = 0;
+            this.collection.reset();
+            this.model.set({
+                receivedsum:this.receivedsum,
+                oddchange:this.oddchange,
+                unpaidamount:this.totalamount
+            });
+            storage.remove(system_config.ONE_CARD_KEY);
+            this.renderBillDetail();
+            this.renderBillInfo();
+            toastr.success('清空退款方式列表成功');
         },
         /**
          * 结算
@@ -544,64 +536,60 @@ define([
          * 快捷支付
          */
         QuickPay: function () {
-            if(isfromForce) {
-                var gatherId = $(this.input).val();
-                var unpaidamount = this.model.get('unpaidamount');
-                if(unpaidamount == 0){
-                    toastr.info('待退款金额为零');
+            var gatherId = $(this.input).val();
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.info('待退款金额为零');
+            }else{
+                if(gatherId == ''){
+                    toastr.info('退款方式编码不能为空');
                 }else{
-                    if(gatherId == ''){
-                        toastr.info('退款方式编码不能为空');
-                    }else{
-                        if(storage.isSet(system_config.GATHER_KEY)){
-                            //从gather_key里面把visible_flag = ‘0’ 的付款方式的id都取出来
-                            var tlist = storage.get(system_config.GATHER_KEY);
-                            var visibleTypes = _.where(tlist,{visible_flag:'1'});
-                            var gatheridlist = _.pluck(visibleTypes, 'gather_id');
-                            var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
-                            if(result == - 1){
-                                toastr.info('退款方式编码无效');
-                            }else{
-                                var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
-                                var gatherUI = gathermodel[0].gather_ui;
-                                var gatherName = gathermodel[0].gather_name;
-                                if(gatherUI == '01'){
-                                    var data = {};
-                                    data['unpaidamount'] = this.model.get('unpaidamount');
-                                    data['gather_id'] = gatherId;
-                                    data['gather_name'] = gatherName;
-                                    this.rtquickpayview = new RTQuickPayView(data);
-                                    this.showModal(window.PAGE_ID.RT_QUICK_PAY,this.rtquickpayview);
-                                    $('.modal').on('shown.bs.modal',function(e){
-                                        $('input[name = rtquickpay-account]').focus();
-                                    });
-                                }else if(gatherUI == '04'){
-                                    var data = {};
-                                    data['receivedsum'] = this.model.get('unpaidamount');
-                                    data['gather_id'] = gatherId;
-                                    data['gather_name'] = gathermodel[0].gather_name;
-                                    this.rtalipayview = new RTQPAliPayView(data);
-                                    this.showModal(window.PAGE_ID.RT_QP_ALIPAY,this.rtalipayview);
-                                    $('.modal').on('shown.bs.modal',function(e){
-                                        $('input[name = rtalipay-account]').focus();
-                                    });
-                                }else if(gatherUI == '05') {
-                                    var data = {};
-                                    data['receivedsum'] = this.model.get('unpaidamount');
-                                    data['gather_id'] = gatherId;
-                                    data['gather_name'] = gathermodel[0].gather_name;
-                                    this.rtwechatview = new RTQPWeChatView(data);
-                                    this.showModal(window.PAGE_ID.RT_QP_WECHAT,this.rtwechatview);
-                                    $('.modal').on('shown.bs.modal',function(e) {
-                                        $('input[name = rtwechat-account]').focus();
-                                    });
-                                }
+                    if(storage.isSet(system_config.GATHER_KEY)){
+                        //从gather_key里面把visible_flag = ‘0’ 的付款方式的id都取出来
+                        var tlist = storage.get(system_config.GATHER_KEY);
+                        var visibleTypes = _.where(tlist,{visible_flag:'1'});
+                        var gatheridlist = _.pluck(visibleTypes, 'gather_id');
+                        var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
+                        if(result == - 1){
+                            toastr.info('退款方式编码无效');
+                        }else{
+                            var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
+                            var gatherUI = gathermodel[0].gather_ui;
+                            var gatherName = gathermodel[0].gather_name;
+                            if(gatherUI == '01'){
+                                var data = {};
+                                data['unpaidamount'] = this.model.get('unpaidamount');
+                                data['gather_id'] = gatherId;
+                                data['gather_name'] = gatherName;
+                                this.rtquickpayview = new RTQuickPayView(data);
+                                this.showModal(window.PAGE_ID.RT_QUICK_PAY,this.rtquickpayview);
+                                $('.modal').on('shown.bs.modal',function(e){
+                                    $('input[name = rtquickpay-account]').focus();
+                                });
+                            }else if(gatherUI == '04'){
+                                var data = {};
+                                data['receivedsum'] = this.model.get('unpaidamount');
+                                data['gather_id'] = gatherId;
+                                data['gather_name'] = gathermodel[0].gather_name;
+                                this.rtalipayview = new RTQPAliPayView(data);
+                                this.showModal(window.PAGE_ID.RT_QP_ALIPAY,this.rtalipayview);
+                                $('.modal').on('shown.bs.modal',function(e){
+                                    $('input[name = rtalipay-account]').focus();
+                                });
+                            }else if(gatherUI == '05') {
+                                var data = {};
+                                data['receivedsum'] = this.model.get('unpaidamount');
+                                data['gather_id'] = gatherId;
+                                data['gather_name'] = gathermodel[0].gather_name;
+                                this.rtwechatview = new RTQPWeChatView(data);
+                                this.showModal(window.PAGE_ID.RT_QP_WECHAT,this.rtwechatview);
+                                $('.modal').on('shown.bs.modal',function(e) {
+                                    $('input[name = rtwechat-account]').focus();
+                                });
                             }
                         }
                     }
                 }
-            }else {
-                toastr.warning('原单退货不能更改退款方式');
             }
             $(this.input).val('');
         },
@@ -610,30 +598,26 @@ define([
          *点击支付大类按钮的点击事件
          */
         payment:function (gatherkind){
-            if(isfromForce) {
-                var receivedsum = $(this.input).val();
-                var unpaidamount = this.model.get('unpaidamount');
-                if(unpaidamount == 0){
-                    toastr.info('待退款金额为零');
+            var receivedsum = $(this.input).val();
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0){
+                toastr.info('待退款金额为零');
+            }else{
+                if(receivedsum == ''){
+                    toastr.info('退款金额不能为空');
+                }else if(receivedsum == 0){
+                    toastr.info('退款金额不能为零');
+                }else if(receivedsum == '.'){
+                    toastr.info('无效的退款金额');
+                }else if(receivedsum > unpaidamount){
+                    toastr.info('不设找零');
                 }else{
-                    if(receivedsum == ''){
-                        toastr.info('退款金额不能为空');
-                    }else if(receivedsum == 0){
-                        toastr.info('退款金额不能为零');
-                    }else if(receivedsum == '.'){
-                        toastr.info('无效的退款金额');
-                    }else if(receivedsum > unpaidamount){
-                        toastr.info('不设找零');
-                    }else{
-                        var data = {};
-                        data['gather_kind'] = gatherkind;
-                        data['receivedsum'] = receivedsum;
-                        this.billtypeview = new BilltypeView(data);
-                        this.showModal(window.PAGE_ID.RT_BILLING_TYPE,this.billtypeview);
-                    }
+                    var data = {};
+                    data['gather_kind'] = gatherkind;
+                    data['receivedsum'] = receivedsum;
+                    this.billtypeview = new BilltypeView(data);
+                    this.showModal(window.PAGE_ID.RT_BILLING_TYPE,this.billtypeview);
                 }
-            }else {
-                toastr.warning('原单退货不能更改退款方式');
             }
             $(this.input).val('');
         },
@@ -642,34 +626,30 @@ define([
          * 一卡通支付
          */
         payByECard: function () {
-            if(isfromForce) {
-                var unpaidamount = this.model.get('unpaidamount');
-                var receivedSum = $(this.input).val();
-                if(unpaidamount == 0){
-                    toastr.info('待退款金额为零，请进行结算');
-                }else if(receivedSum == ''){
-                    toastr.info('退款金额不能为空');
-                }else if(receivedSum == 0){
-                    toastr.info('退款金额不能为零');
-                }else if(receivedSum == '.'){
-                    toastr.info('无效的退款金额');
-                }else if(receivedSum > unpaidamount){
-                    toastr.info('不设找零');
-                }else{
-                    var data = {};
-                    data['unpaidamount'] = unpaidamount;
-                    data['receivedsum'] = receivedSum;
-                    data['isfromForce'] = isfromForce;
-                    this.onecard = new OneCardView(data);
-                    this.showModal(window.PAGE_ID.RT_ONECARD_LOGIN,this.onecard);
-                    $('.modal').on('shown.bs.modal',function(e) {
-                        $('input[name = medium_id]').focus();
-                    });
-                }
-            }else {
-                toastr.warning('原单退货不能更改退款方式');
+            var unpaidamount = this.model.get('unpaidamount');
+            var receivedSum = $(this.input).val();
+            if(unpaidamount == 0){
+                toastr.info('待退款金额为零，请进行结算');
+            }else if(receivedSum == ''){
+                toastr.info('退款金额不能为空');
+            }else if(receivedSum == 0){
+                toastr.info('退款金额不能为零');
+            }else if(receivedSum == '.'){
+                toastr.info('无效的退款金额');
+            }else if(receivedSum > unpaidamount){
+                toastr.info('不设找零');
+            }else{
+                var data = {};
+                data['unpaidamount'] = unpaidamount;
+                data['receivedsum'] = receivedSum;
+                data['isfromForce'] = isfromForce;
+                this.onecard = new OneCardView(data);
+                this.showModal(window.PAGE_ID.RT_ONECARD_LOGIN,this.onecard);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = medium_id]').focus();
+                });
             }
-            $(this.input).val('');
+        $(this.input).val('');
         },
 
         /**
