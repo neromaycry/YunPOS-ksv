@@ -54,26 +54,26 @@ define(['backbone'], function (Backbone) {
         },
 
         login: function () {
-            var _url = './moduals/login/view.js';
-            require([_url], function (View) {
-                var view = new View();
-                view.render();
-            });
-            //var isFirstSet = storage.isSet(window.system_config.IS_FIRST_KEY);
-            //console.log('isFirstSet:'+isFirstSet);
-            //if (isFirstSet) {
-            //    var _url = './moduals/login/view.js';
-            //    require([_url], function (View) {
-            //        var view = new View();
-            //        view.render();
-            //    });
-            //} else {
-            //    var _url = './moduals/setdns/view.js';
-            //    require([_url], function (View) {
-            //        var view = new View();
-            //        view.render();
-            //    });
-            //}
+            //var _url = './moduals/login/view.js';
+            //require([_url], function (View) {
+            //    var view = new View();
+            //    view.render();
+            //});
+            var isFirstSet = storage.isSet(window.system_config.IS_FIRST_KEY);
+            console.log('isFirstSet:'+isFirstSet);
+            if (isFirstSet) {
+                var _url = './moduals/login/view.js';
+                require([_url], function (View) {
+                    var view = new View();
+                    view.render();
+                });
+            } else {
+                var _url = './moduals/setposkey/view.js';
+                require([_url], function (View) {
+                    var view = new View();
+                    view.render();
+                });
+            }
         },
 
         main: function () {

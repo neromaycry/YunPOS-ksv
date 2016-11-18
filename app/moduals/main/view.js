@@ -296,6 +296,7 @@ define([
             });
             //退出登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
+                $(_self.input).val('');
                 _self.doLogout();
             });
             //结算

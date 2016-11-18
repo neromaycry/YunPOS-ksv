@@ -1,7 +1,10 @@
 <nav class="navbar" style="background:#337AB7;border-radius: 0px">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" style="color: #ffffff">初始化</a>
+            <img src="./assets/logo-gsi-notext.png" class="img-logo-notext">
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand" style="color: #FFF;margin-left: 3px">初始化</a>
         </div>
     </div>
 </nav>
@@ -28,16 +31,73 @@
     </div>
 </div>
 <div class="row no-margining">
-    <div class="col-xs-4 col-md-4  col-xs-offset-4 col-md-offset-4 text-right">
-       <div class="row">
-           <div class="col-xs-6 col-md-6 text-left">
-               <!--<h5>Esc上一步</h5>-->
-               <button class="btn btn-primary poskey-pre">上一步</button>
-           </div>
-           <div class="col-xs-6 col-md-6">
-               <!--<h5>Enter下一步</h5>-->
-               <button class="btn btn-primary poskey-next">下一步</button>
-           </div>
-       </div>
+    <div class="col-md-4 col-xs-4 col-xs-offset-4 col-md-offset-4">
+        <div class="panel panel-primary numpad">
+            <div class="row no-margining text-center">
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="7">7</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="8">8</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="9">9</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-backspace panel-group border-bottom">←</div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="4">4</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="5">5</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="6">6</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-clear panel-group border-bottom">C</div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="1">1</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="2">2</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="cbtn btn-num panel-group border-right-bottom" data-num="3">3</div>
+                </div>
+                <div class="col-xs-3 col-md-3 no-padding">
+                    <div class="panel-group border-bottom cancel"></div>
+                </div>
+            </div>
+            <div class="row no-margining text-center">
+                <div class="col-xs-6 col-md-6 no-padding">
+                    <div class="cbtn btn-num panel-group border-right" data-num="0">0</div>
+                </div>
+                <div class="col-xs-6 col-md-6 no-padding">
+                    <div class="cbtn numpad-ok bg-red poskey-next">下一步</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!--<div class="row no-margining">-->
+    <!--<div class="col-xs-4 col-md-4  col-xs-offset-4 col-md-offset-4 text-right">-->
+       <!--<div class="row">-->
+           <!--<div class="col-xs-6 col-md-6 text-left">-->
+               <!--&lt;!&ndash;<h5>Esc上一步</h5>&ndash;&gt;-->
+               <!--&lt;!&ndash;<button class="btn btn-primary poskey-pre">上一步</button>&ndash;&gt;-->
+           <!--</div>-->
+           <!--<div class="col-xs-6 col-md-6">-->
+               <!--&lt;!&ndash;<h5>Enter下一步</h5>&ndash;&gt;-->
+               <!--<button class="btn btn-primary poskey-next">下一步</button>-->
+           <!--</div>-->
+       <!--</div>-->
+    <!--</div>-->
+<!--</div>-->

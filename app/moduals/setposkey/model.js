@@ -5,14 +5,12 @@ define(['../../js/common/BaseModel'],function(BaseModel){
 
     var setposkeyModel=BaseModel.extend({
 
-        init: function (data, callback) {
+        init: function (data, callback1, callback2) {
             this.sendPOST({
                 url: window.API_URL.INIT,
                 data: data,
-                success: callback,
-                error:function(){
-                    toastr.error('网络请求失败或网关错误');
-                }
+                success: callback1,
+                error: callback2
             });
         }
 

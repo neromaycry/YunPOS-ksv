@@ -95,6 +95,7 @@ window.API_URL = {
 window.system_config = {
     'IS_FIRST_KEY': 'IS_FIRST',
     "LOGIN_USER_KEY": "LOGIN_USER",
+    "POS_INFO_KEY": "POS_INFO",
     "LOCAL_RECEIPT_KEY": "LOCAL_RECEIPT",
     "SETTING_DATA_KEY": "SETTING_DATA",
     "INIT_DATA_KEY": "INIT_DATA",
