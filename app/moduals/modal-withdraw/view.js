@@ -70,8 +70,7 @@ define([
             printText += '        收款员：' + userName + '\n\n';
             printText += '        提取金额：' + toDecimal2(money) + ' 元\n\n\n\n';
             printText += '    提款人签字：\n\n\n\n\n\n\n\n';
-            wsClient.send(DIRECTIVES.PRINTTEXT + printText);
-            wsClient.send(DIRECTIVES.OpenCashDrawer);
+            this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT, DIRECTIVES.OpenCashDrawer], [printText, ''], wsClient);
             this.hideModal(window.PAGE_ID.MAIN);
         },
 

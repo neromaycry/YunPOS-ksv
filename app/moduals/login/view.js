@@ -307,13 +307,14 @@ define([
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '会员页面','打印页面', '挂单', '解挂',
                 '营业员登录', '结算', '清空购物车', '删除商品', '修改数量',
-                '单品优惠', '折扣','向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账'];
+                '单品优惠', '折扣','向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账', '提大额'];
             var keys = ['ESC','ENTER','M','H','G','J',
-                'S','B','C','D','N',
-                'Y','U','↑','↓','F','W','A'];
+                'S','Space','C','D','N',
+                'Y','U','↑','↓','F','W','A', 'Q'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.M,window.KEYS.H, window.KEYS.G, window.KEYS.J,
-                window.KEYS.S, window.KEYS.B, window.KEYS.C, window.KEYS.D, window.KEYS.N,
-                window.KEYS.Y, window.KEYS.U, window.KEYS.Up, window.KEYS.Down, window.KEYS.F, window.KEYS.W, window.KEYS.A];
+                window.KEYS.S, window.KEYS.Space, window.KEYS.C, window.KEYS.D, window.KEYS.N,
+                window.KEYS.Y, window.KEYS.U, window.KEYS.Up, window.KEYS.Down, window.KEYS.F, window.KEYS.W, window.KEYS.A,
+                window.KEYS.Q];
             var mainKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -326,9 +327,9 @@ define([
         },
 
         setMemberKeys: function () {
-            var effects = ['返回', '确定', '方向左', '方向右','磁条卡'];
-            var keys = ['ESC', 'ENTER', '←', '→','X'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Left, window.KEYS.Right,window.KEYS.X];
+            var effects = ['返回', '确定', '方向左', '方向右', '磁条卡', '手机号'];
+            var keys = ['ESC', 'ENTER', '←', '→', 'X', 'P'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Left, window.KEYS.Right, window.KEYS.X, window.KEYS.P];
             var memberKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -343,7 +344,7 @@ define([
         setRestOrderKeys: function () {
             var effects = ['返回', '确定', '方向上', '方向下','切换到挂单编号','切换到挂单商品信息'];
             var keys = ['ESC', 'ENTER', '↑', '↓','←','→'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down,window.KEYS.Left,window.KEYS.Right];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down, window.KEYS.Left, window.KEYS.Right];
             var restOrderKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -358,8 +359,8 @@ define([
         setReturnForceKeys: function () {
             var effects = ['返回', '确定', '结算', '取消退货', '删除商品','修改数量','单品优惠','折扣','方向上', '方向下'];
             var keys = ['ESC', 'ENTER', 'B','C','D','N','Y', 'U','↑', '↓',];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter,window.KEYS.B,window.KEYS.C,
-                window.KEYS.D,window.KEYS.N,window.KEYS.Y,window.KEYS.U,window.KEYS.Up, window.KEYS.Down];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.B, window.KEYS.C,
+                window.KEYS.D, window.KEYS.N, window.KEYS.Y, window.KEYS.U, window.KEYS.Up, window.KEYS.Down];
             var returnForceKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -390,12 +391,12 @@ define([
             var effects = ['返回', '确定', '删除已支付的方式','结算', '向上选择', '向下选择',
                 '支票类支付', '礼券类支付', '银行POS支付', '第三方支付', '整单优惠','整单折扣',
                 '一卡通支付','清空支付方式列表','快捷支付'];
-            var keys = ['ESC','ENTER','D','B','↑','↓',
-                'S','A','P','Q','Y','U'
-                ,'O','C','F'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.D,window.KEYS.B, window.KEYS.Up, window.KEYS.Down,
-                window.KEYS.S, window.KEYS.A, window.KEYS.P, window.KEYS.Q, window.KEYS.Y,window.KEYS.U,
-                window.KEYS.O, window.KEYS.C,window.KEYS.F];
+            var keys = ['ESC', 'ENTER', 'D', 'Space', '↑', '↓',
+                'S', 'A', 'P', 'Q', 'Y', 'U'
+                ,'O', 'C', 'F'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.D, window.KEYS.Space, window.KEYS.Up, window.KEYS.Down,
+                window.KEYS.S, window.KEYS.A, window.KEYS.P, window.KEYS.Q, window.KEYS.Y, window.KEYS.U,
+                window.KEYS.O, window.KEYS.C, window.KEYS.F];
             var billingKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -403,7 +404,7 @@ define([
                 var keyCode = keyCodes[i];
                 var billingKey = { effect:effect, key:key, keyCode:keyCode };
                 billingKeys.push(billingKey);
-                storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'BILLING_PAGE',billingKeys);
+                storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY,'BILLING_PAGE', billingKeys);
             }
         },
 
@@ -411,9 +412,9 @@ define([
             var effects = ['返回', '确定', '删除已支付的方式', '结算', '向上选择', '向下选择',
                 '支票类支付', '礼券类支付', '银行POS支付', '第三方支付', '一卡通支付','清空支付方式列表','快捷支付'];
             var keys = ['ESC', 'ENTER', 'D', 'B', '↑', '↓',
-                'S', 'A', 'P', 'Q', 'O','C','F'];
+                'S', 'A', 'P', 'Q', 'O', 'C', 'F'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.D, window.KEYS.B, window.KEYS.Up, window.KEYS.Down,
-                window.KEYS.S, window.KEYS.A, window.KEYS.P, window.KEYS.Q, window.KEYS.O,window.KEYS.C,window.KEYS.F];
+                window.KEYS.S, window.KEYS.A, window.KEYS.P, window.KEYS.Q, window.KEYS.O, window.KEYS.C, window.KEYS.F];
             var billingreturnKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
@@ -428,7 +429,7 @@ define([
         setCheckingKeys: function () {
             var effects = ['返回', '确定', '向上选择', '向下选择',
                 '切换收银员报表', '切换收银员日结报表'];
-            var keys = ['ESC', 'ENTER','↑', '↓',
+            var keys = ['ESC', 'ENTER', '↑', '↓',
                 '←', '→'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down,
                 window.KEYS.Left, window.KEYS.Right];
@@ -445,8 +446,8 @@ define([
 
         setPrintKeys: function () {
             var effects = ['返回', '确定', '向上选择', '向下选择','打印'];
-            var keys = ['ESC', 'ENTER','↑', '↓','H'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down,window.KEYS.H];
+            var keys = ['ESC', 'ENTER', '↑', '↓', 'H'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down, window.KEYS.H];
             var printKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];

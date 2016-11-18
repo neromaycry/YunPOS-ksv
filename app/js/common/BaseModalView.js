@@ -115,6 +115,22 @@ define([
             }
         },
 
+        /**
+         * 与websocket通信的通用方法
+         * @param directives 包含指令的数组
+         * @param content 发送的指令对应的内容的数组
+         * @param websocket websocket实例
+         */
+        sendWebSocketDirective: function (directives, content, websocket) {
+            if (websocket.readyState == 1) {
+                for (var i = 0;i < directives.length; i++) {
+                    websocket.send(directive[i] + content[i]);
+                }
+            } else {
+                toastr.warning('没有连接到硬件，请检查硬件连接');
+            }
+        },
+
         render: function () {
             console.log('modal render');
             var _self = this;

@@ -282,7 +282,7 @@ define([
             if (this.printText == '') {
                 toastr.warning('请先查询收银报表数据')
             } else {
-                wsClient.send(DIRECTIVES.PRINTTEXT + this.printText);
+                this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [this.printText], wsClient);
             }
         }
 

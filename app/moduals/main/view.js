@@ -299,7 +299,7 @@ define([
                 _self.doLogout();
             });
             //结算
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.B,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Space,function () {
                 _self.doBilling();
             });
             //清空购物车

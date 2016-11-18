@@ -42,13 +42,13 @@ define([
         },
 
         /**
-         * Ë¢¿¨ÊäÈë
+         * åˆ·å¡è¾“å…¥
          */
         swipeCard: function () {
             var _self = this;
             var value = $('input[name = magcard]').val();
             if (value == '') {
-                toastr.warning('ÇëË¢¿¨');
+                toastr.warning('è¯·åˆ·å¡');
                 return;
             }
             $('input[name = magcard]').val('');

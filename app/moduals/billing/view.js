@@ -301,7 +301,7 @@ define([
                 _self.judgeEcardExistance(_self.i);
             });
             //结算
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Space, function() {
                 _self.billing();
             });
             //方向下
@@ -632,7 +632,7 @@ define([
                 //    navigate_page: window.PAGE_ID.MAIN,
                 //    callback: function () { //
                 var confirmView = new ConfirmView({
-                    pageid: window.PAGE_ID.BILLING,
+                    pageid: window.PAGE_ID.MAIN,
                     callback: function () {
                         if(_self.totaldiscount != 0){
                             _self.calculateDiscount();
@@ -662,9 +662,7 @@ define([
                                 router.navigate("main", {trigger: true,replace:true});
                                 toastr.success("订单号：" +  resp.bill_no);
                                 storage.set(system_config.ODD_CHANGE,'oddchange',_self.model.get('oddchange'));
-                                console.log(resp.prnt);
-                                wsClient.send(DIRECTIVES.OpenCashDrawer);
-                                wsClient.send(DIRECTIVES.PRINTTEXT + resp.printf);
+                                _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                                 _self.renderClientDisplay(_self.model);
                                 router.navigate("main", {trigger: true,replace:true});
                             } else {

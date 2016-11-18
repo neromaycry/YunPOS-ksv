@@ -154,6 +154,21 @@ define([
         bindKeys: function () {
 
         },
+        /**
+         * 与websocket通信的通用方法
+         * @param directives 包含指令的数组
+         * @param content 发送的指令对应的内容的数组
+         * @param websocket websocket实例
+         */
+        sendWebSocketDirective: function (directives, content, websocket) {
+              if (websocket.readyState == 1) {
+                  for (var i = 0;i < directives.length; i++) {
+                      websocket.send(directive[i] + content[i]);
+                  }
+              } else {
+                  toastr.warning('没有连接到硬件，请检查硬件连接');
+              }
+        },
 
         /**
          * 控制客显屏中购物信息的显示与隐藏
@@ -169,28 +184,28 @@ define([
             }
         },
 
-        sendLargeData2Socket: function (str) {
-            var SOCKET_ADDR = 'ws://127.0.0.1:2001/';
-            wsClient.close();
-            wsClient = new WebSocket(SOCKET_ADDR);
-            var slicelength = 42;
-            var n = str.length/slicelength+1;
-            var i = 0;
-            setInterval(function () {
-                if (i<str.length/slicelength+1){
-                    if (i == (n-1)) {
-                        var laststr = str.slice(slicelength*i,str.length);
-                        console.log(laststr);
-                        wsClient.send(laststr);
-                    } else {
-                        var substr = str.slice(slicelength*i,slicelength*(i+1));
-                        console.log('substr:' + substr);
-                        wsClient.send(substr);
-                    }
-                }
-                i++
-            },10);
-        },
+        //sendLargeData2Socket: function (str) {
+        //    var SOCKET_ADDR = 'ws://127.0.0.1:2001/';
+        //    wsClient.close();
+        //    wsClient = new WebSocket(SOCKET_ADDR);
+        //    var slicelength = 42;
+        //    var n = str.length/slicelength+1;
+        //    var i = 0;
+        //    setInterval(function () {
+        //        if (i<str.length/slicelength+1){
+        //            if (i == (n-1)) {
+        //                var laststr = str.slice(slicelength*i,str.length);
+        //                console.log(laststr);
+        //                wsClient.send(laststr);
+        //            } else {
+        //                var substr = str.slice(slicelength*i,slicelength*(i+1));
+        //                console.log('substr:' + substr);
+        //                wsClient.send(substr);
+        //            }
+        //        }
+        //        i++
+        //    },10);
+        //},
 
         render: function () {
             var _self = this;

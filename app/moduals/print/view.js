@@ -143,14 +143,8 @@ define([
             if(this.print_content == '') {
                 toastr.warning('请先查询要打印的小票');
             }else {
-                //data = {};
                 var str = this.print_content;
-                console.log(this.print_content);
-                //data['directive'] = window.DIRECTIVES.PRINTTEXT;
-                //data['content'] = str;
-                //wsClient.send(JSON.stringify(data));
-                //console.log('bill print');
-                wsClient.send(DIRECTIVES.PRINTTEXT + str);
+                this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [str], wsClient);
             }
         },
         /**
