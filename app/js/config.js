@@ -22,7 +22,8 @@ requirejs.config({
         'json': 'requirePlugin/json',
         '_fetchText': 'requirePlugin/_fetchText',
         'xfb': 'jquery-resource',
-        'marquee':'../marquee/jquery.marquee'
+        'marquee':'../marquee/jquery.marquee',
+        'Recwebsocket':'../reconnecting-websocket/reconnecting-websocket'
     },
     shim: {
         'backbone': {
@@ -42,6 +43,9 @@ requirejs.config({
         'xfb': {
             'deps': ['jquery'],
             'exports': 'xfb'
+        },
+        'Recwebsocket':{
+            'exports':'Recwebsocket'
         },
         'marquee': {
             'exports': 'marquee'
@@ -88,8 +92,9 @@ requirejs([
     'pscrollbar',
     'md5',
     'xfb',
-    'marquee'
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee) {
+    'marquee',
+    'Recwebsocket'
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket) {
 
     window.isAndroid = false;  //是否为Android设备
 
@@ -139,53 +144,20 @@ requirejs([
     //toastr的初始化设置
     window.toastr = toastr;
     window.toastr.options = {
-        'timeOut': '800',
+        'timeOut': '2000',
         'positionClass': 'toast-bottom-center'
     };
 
     var SOCKET_ADDR = 'ws://localhost:7110/';
     //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';
 
-    window.wsClient = new WebSocket(SOCKET_ADDR);
+    window.wsClient = new Recwebsocket(SOCKET_ADDR);
     window.wsClient.onopen = function (e) {
         window.toastr.success('已与硬件建立连接');
     };
     window.wsClient.onmessage = function (e) {
         console.log(e);
     };
-
-    //window.wsClient.onmessage = function(e) {
-    //    console.log(e);
-    //    //switch (jsonData.directive) {
-    //    //    case '01':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //    case '02':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //    case '03':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //    case '04':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //    case '05':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //    case '06':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //    case '07':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //    case '08':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //    case '09':
-    //    //        window.toastr.info(jsonData.content);
-    //    //        break;
-    //    //}
-    //};
     window.wsClient.onclose = function (e) {
         window.toastr.warning('与硬件连接断开');
     };
