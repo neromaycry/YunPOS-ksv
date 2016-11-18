@@ -156,7 +156,7 @@ define([
             var gatherId = data['gather_id'];
             var gatherKind = data['gather_kind'];
             this.card_id = data['card_id'];
-            this.addToPaymentList(this.totalamount,gatherName,receivedsum,gatherNo,gatherId,gatherKind,this.card_id);
+            this.addToPaymentList(this.totalamount,gatherName,parseFloat(receivedsum),gatherNo,gatherId,gatherKind,this.card_id);
         },
 
         bindKeys: function () {
@@ -178,7 +178,7 @@ define([
                 _self.judgeEcardExistance();
             });
             //结算
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.B, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Space, function() {
                 _self.doBilling();
             });
             //方向下
@@ -203,7 +203,9 @@ define([
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Q, function () {
-                _self.payment('05');
+                $('input[name = billingrt]').val('');
+                toastr.info('该功能正在调试中...');
+                //_self.payment('05');
             });
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.T, function () {
@@ -261,7 +263,7 @@ define([
                 fact_money:0,
                 gather_id:gatherId,
                 gather_name:gatherName,
-                gather_money:parseFloat(receivedsum),
+                gather_money:receivedsum,
                 gather_no:gatherAccount,
                 gather_kind:gatherKind,
                 card_id:cardId
@@ -567,25 +569,27 @@ define([
                                     $('input[name = rtquickpay-account]').focus();
                                 });
                             }else if(gatherUI == '04'){
-                                var data = {};
-                                data['receivedsum'] = this.model.get('unpaidamount');
-                                data['gather_id'] = gatherId;
-                                data['gather_name'] = gathermodel[0].gather_name;
-                                this.rtalipayview = new RTQPAliPayView(data);
-                                this.showModal(window.PAGE_ID.RT_QP_ALIPAY,this.rtalipayview);
-                                $('.modal').on('shown.bs.modal',function(e){
-                                    $('input[name = rtalipay-account]').focus();
-                                });
+                                toastr.info('该功能正在调试中...');
+                                //var data = {};
+                                //data['receivedsum'] = this.model.get('unpaidamount');
+                                //data['gather_id'] = gatherId;
+                                //data['gather_name'] = gathermodel[0].gather_name;
+                                //this.rtalipayview = new RTQPAliPayView(data);
+                                //this.showModal(window.PAGE_ID.RT_QP_ALIPAY,this.rtalipayview);
+                                //$('.modal').on('shown.bs.modal',function(e){
+                                //    $('input[name = rtalipay-account]').focus();
+                                //});
                             }else if(gatherUI == '05') {
-                                var data = {};
-                                data['receivedsum'] = this.model.get('unpaidamount');
-                                data['gather_id'] = gatherId;
-                                data['gather_name'] = gathermodel[0].gather_name;
-                                this.rtwechatview = new RTQPWeChatView(data);
-                                this.showModal(window.PAGE_ID.RT_QP_WECHAT,this.rtwechatview);
-                                $('.modal').on('shown.bs.modal',function(e) {
-                                    $('input[name = rtwechat-account]').focus();
-                                });
+                                toastr.info('该功能正在调试中...');
+                                //var data = {};
+                                //data['receivedsum'] = this.model.get('unpaidamount');
+                                //data['gather_id'] = gatherId;
+                                //data['gather_name'] = gathermodel[0].gather_name;
+                                //this.rtwechatview = new RTQPWeChatView(data);
+                                //this.showModal(window.PAGE_ID.RT_QP_WECHAT,this.rtwechatview);
+                                //$('.modal').on('shown.bs.modal',function(e) {
+                                //    $('input[name = rtwechat-account]').focus();
+                                //});
                             }
                         }
                     }
@@ -756,8 +760,10 @@ define([
         },
 
         onThirdPayClicked: function () {
-            this.payment('05');
-            $('button[name = third-pay]').blur();
+            toastr.info('该功能正在调试中...');
+            $('input[name = billingrt]').val('');
+            //this.payment('05');
+            //$('button[name = third-pay]').blur();
         },
 
 

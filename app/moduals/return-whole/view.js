@@ -174,7 +174,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Esc,function () {
                 router.navigate('main',{trigger:true});
             });
-            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.B,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Space,function () {
                 var itemamount = _self.model.get('itemamount');
                 if (itemamount == 0) {
                     toastr.info('请输入订单号');
