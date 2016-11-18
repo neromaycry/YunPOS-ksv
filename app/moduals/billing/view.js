@@ -795,12 +795,15 @@ define([
                 item.set(this.localObj[i]);
                 var money = item.get('money');
                 var discount = parseFloat(item.get('discount'));
+                var price = item.get('price');
+                var num = item.get('num');
                 var tdiscount = (1- percentage) * money;//第i单商品的优惠
                 discount = discount + tdiscount;//第i单商品的单品优惠和整单优惠之和
                 finaldiscount = finaldiscount + tdiscount;//前n-1项总的折扣
                 console.log('第' + i + '的整单折扣' + tdiscount);
                 item.set({
-                    discount:discount
+                    discount:discount,
+                    money:price * num - discount
                 });
                 _self.discountcollection.push(item);
             }
@@ -809,8 +812,11 @@ define([
             console.log('最后一单的折扣为：' + finaldiscount);
             var tmp = new BillModel();
             tmp.set(this.localObj[this.localObj.length - 1]);
+            var num = tmp.get('num');
+            var price = tmp.get('price');
             tmp.set({
-                discount:finaldiscount
+                discount:finaldiscount,
+                money:num * price - finaldiscount
             });
             _self.discountcollection.push(tmp);
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', _self.discountcollection);
