@@ -632,7 +632,9 @@ define([
                 //    navigate_page: window.PAGE_ID.MAIN,
                 //    callback: function () { //
                 var confirmView = new ConfirmView({
-                    pageid: window.PAGE_ID.MAIN,
+                    pageid: window.PAGE_ID.BILLING,
+                    is_navigate: true,
+                    navigate_page: window.PAGE_ID.MAIN,
                     callback: function () {
                         if(_self.totaldiscount != 0){
                             _self.calculateDiscount();
@@ -659,12 +661,12 @@ define([
                                 if (storage.isSet(system_config.VIP_KEY)) {
                                     storage.remove(system_config.VIP_KEY);
                                 }
-                                router.navigate("main", {trigger: true,replace:true});
+                                router.navigate("main", {trigger: true, replace:true});
                                 toastr.success("订单号：" +  resp.bill_no);
                                 storage.set(system_config.ODD_CHANGE,'oddchange',_self.model.get('oddchange'));
                                 _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                                 _self.renderClientDisplay(_self.model);
-                                router.navigate("main", {trigger: true,replace:true});
+                                router.navigate("main", {trigger: true, replace: true});
                             } else {
                                 toastr.error(resp.msg);
                             }

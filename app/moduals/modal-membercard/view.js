@@ -14,11 +14,11 @@ define([
 
         template: tpl,
 
-        template_content:contenttpl,
+        template_content: contenttpl,
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked'
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOKClicked'
         },
 
         modalInitPage: function () {
@@ -57,26 +57,25 @@ define([
             var index1 = value.indexOf(';');
             var index2 = value.indexOf('?');
             var index3 = value.lastIndexOf(';');
-            console.log('index1:' + index1 + ',index2:' + index2 + ',index3:' + index3);
             var track1 = value.substring(0, index1);
             var track2 = value.substring(index1 + 1, index2);
             var track3 = value.substring(index2 + 1, index3);
-            console.log(track1);
-            console.log(track2);
-            console.log(track3);
+            console.log('track1:' + track1 + ',track2:' + track2 + ',track3:' + track3);
             if (track1 == '') {
                 track1 = '*';
             }
             if (track2 == '') {
                 track2 = '*';
             }
-            if (track2 == '') {
-                track2 = '*';
+            if (track3 == '') {
+                track3 = '*';
             }
             var data = {};
-            data['track1'] = track1;
-            data['track2'] = track2;
-            data['track3'] = track3;
+            var tracks = ['track1', 'track2', 'track3'];
+            var trackValues = [track1, track2, track3];
+            for (var i = 0;i < tracks.length;i++) {
+                data[tracks[i]] = trackValues[i];
+            }
             data['type'] = '01';
             this.requestModel.getMemberInfo(data, function (resp) {
                 //console.log(resp);

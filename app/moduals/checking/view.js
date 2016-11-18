@@ -55,6 +55,10 @@ define([
 
         initPlugins: function () {
             $('input[name = checking_date]').focus();
+            var date = new Date().getTime();
+            date = fecha.format(date, 'YYYYMMDD');
+            $('input[name = checking_date]').val(date);
+            console.log(date);
             this.initTemplates();
             this.renderCashierreport();
             this.renderCashierdetail();

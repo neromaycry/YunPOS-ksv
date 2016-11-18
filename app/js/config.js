@@ -23,7 +23,8 @@ requirejs.config({
         '_fetchText': 'requirePlugin/_fetchText',
         'xfb': 'jquery-resource',
         'marquee':'../marquee/jquery.marquee',
-        'Recwebsocket':'../reconnecting-websocket/reconnecting-websocket'
+        'Recwebsocket':'../reconnecting-websocket/reconnecting-websocket',
+        'fecha':'../fecha/fecha'
     },
     shim: {
         'backbone': {
@@ -46,6 +47,9 @@ requirejs.config({
         },
         'Recwebsocket':{
             'exports':'Recwebsocket'
+        },
+        'fecha': {
+            'exports': 'fecha'
         },
         'marquee': {
             'exports': 'marquee'
@@ -93,8 +97,9 @@ requirejs([
     'md5',
     'xfb',
     'marquee',
-    'Recwebsocket'
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket) {
+    'Recwebsocket',
+    'fecha'
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha) {
 
     window.isAndroid = false;  //是否为Android设备
 
@@ -110,6 +115,8 @@ requirejs([
 
     window.psbar = pscrollbar;
 
+    window.fecha = fecha;
+
     window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true
 
     console.log(document.body.clientWidth);
@@ -124,7 +131,7 @@ requirejs([
                 width: 1920,
                 toolbar: false
             });
-            window.clientScreen.moveTo(1920, 0);
+            window.clientScreen.moveTo(1366, 0);
             window.clientScreen.enterKioskMode();
             window.clientScreen.on ('loaded', function(){
                 // the native onload event has just occurred
