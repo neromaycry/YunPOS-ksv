@@ -678,6 +678,7 @@ define([
                                 callback: function (attrs) {
                                     var price = $('input[name = price]').val();
                                     resp.goods_detail[resp.goods_detail.length - 1].price = price;
+                                    resp.goods_detail[resp.goods_detail.length - 1].money = price;
                                     _self.onAddItem(resp.goods_detail);
                                     _self.hideModal(window.PAGE_ID.MAIN);
                                     $('input[name = main]').focus();

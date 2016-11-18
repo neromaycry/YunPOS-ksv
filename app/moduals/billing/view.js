@@ -45,6 +45,8 @@ define([
 
         totaldiscount:0,//整单优惠的总价格
 
+        isTotalDiscount:true,//判断是整单优惠还是整单折扣
+
         visibleTypes:{},
 
         card_id:'',//一卡通界面传过来的card_id
@@ -547,42 +549,42 @@ define([
          */
 
         billPercentDiscount: function () {
-            var percent = $(this.input).val();
-            var rate = percent / 100;
+
+            console.log('折扣前的总金额为：' + this.totalamount + typeof (this.totalamount));
+            var percentage = $(this.input).val();
+            var rate = percentage / 100;
             var receivedsum = this.model.get('receivedsum');
             if(receivedsum != 0) {
                 toastr.warning('您已选择支付方式，不能再进行整单优惠');
-            }else if(percent == 0) {
+                return false;
+            }else if(percentage == 0) {
                 toastr.warning('整单优惠折扣不能为零');
-            }else if(percent == '.' || (percent.split('.').length-1) > 0) {
+                return false;
+            }else if(percentage == '.' || (percentage.split('.').length-1) > 0) {
                 toastr.warning('整单优惠折扣无效');
-            }else if(percent == '') {
+                return false;
+            }else if(percentage == '') {
                 toastr.warning('整单优惠折扣不能为空');
-            }else if(percent > 100) {
+                return false;
+            }else if(percentage > 100) {
                 toastr.warning('整单优惠折扣不能大于100');
-            }else if(this.totaldiscount == 0){
-                this.totaldiscount = this.totalamount * (1 - rate) ;//优惠金额
-                this.totalamount = this.totalamount - this.totaldiscount;//折扣后的支付金额
-                this.unpaidamount = this.totalamount;
-                this.model.set({
-                    totaldiscount:this.totaldiscount,//整单优惠的金额
-                    totalamount:this.totalamount,
-                    unpaidamount:this.unpaidamount,
-                });
-                toastr.success('整单优惠成功,折扣比率为：' + percent + '折');
+                return false;
             }else if(this.totaldiscount != 0) {
                 this.totalamount = this.totalamount + this.totaldiscount;
-                //将本次优惠金额赋值给this.totaldiscount
-                this.totaldiscount = this.totalamount * (1 - rate)
-                this.totalamount = this.totalamount - this.totaldiscount;
-                this.unpaidamount = this.totalamount;
-                this.model.set({
-                    totalamount:this.totalamount,
-                    unpaidamount:this.unpaidamount,
-                    totaldiscount:this.totaldiscount
-                });
-                toastr.success('整单优惠成功,折扣比率为：' + percent + '折');
             }
+            this.isTotalDiscount = false;
+            this.percentage = percentage;
+            this.totaldiscount = this.totalamount * (1 - rate)
+            this.totalamount = this.totalamount * rate;
+            this.unpaidamount = this.totalamount;
+            this.model.set({
+                totalamount:this.totalamount,
+                unpaidamount:this.unpaidamount,
+                totaldiscount:this.totaldiscount
+            });
+            toastr.success('整单优惠成功,折扣比率为：' + percentage + '折');
+            console.log('折扣后金额' + this.totalamount + typeof (this.totalamount));
+            console.log('折扣金额' + this.totaldiscount + typeof (this.discountamount));
             $(this.input).val('');
             this.renderBillInfo();
         },
@@ -618,10 +620,10 @@ define([
          * 结算
          */
         billing: function () {
-            var _self = this;
             var confirmBill = new BillModel();
-            this.unpaidamount = parseFloat(this.unpaidamount.toFixed(2));
-            if(this.unpaidamount != 0){
+            var unpaidamount = this.model.get('unpaidamount');
+            var _self = this;
+            if(unpaidamount != 0){
                 toastr.info('还有未支付的金额，请支付完成后再进行结算');
             } else {
                 //var changingView = new ChangingView({
@@ -630,11 +632,10 @@ define([
                 //    navigate_page: window.PAGE_ID.MAIN,
                 //    callback: function () { //
                 var confirmView = new ConfirmView({
-                    pageid: window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
-                    callback: function () { //点击确认键的回调
-                        //console.log(typeof (_self.unpaidamount));
-                        if(_self.percentage != 0){
-                            _self.totalDiscount(_self.percentage);
+                    pageid: window.PAGE_ID.BILLING,
+                    callback: function () {
+                        if(_self.totaldiscount != 0){
+                            _self.calculateDiscount();
                         }
                         var data = {};
                         data['mode'] = '00';
@@ -778,50 +779,44 @@ define([
         /**
          * 整单优惠平均到每个商品
          */
-        totalDiscount:function(percentage){
+        calculateDiscount:function(){
             var _self = this;
             var finaldiscount = 0;//最后一项的优惠
-            _self.discountcollection = new BillCollection();
+            var percentage = 0;
+            this.discountcollection = new BillCollection();
             this.localObj = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
-            storage.set(system_config.SALE_PAGE_KEY,'totaldiscountamount', _self.totaldiscount);
-            //在SALE_PAGE_KEY里面新加入一个属性，值为总的整单优惠的价格
-            console.log('整单优惠的总价格:' + _self.totaldiscount);
+            if(this.isTotalDiscount) {
+                percentage = 1 - this.totaldiscount / (this.totalamount + this.totaldiscount);
+            }else {
+                percentage = this.percentage / 100;
+            }
+
+            console.log(percentage + '折扣比率');
             for(var i = 0;i < this.localObj.length - 1;i++){
                 var item = new BillModel();
                 item.set(this.localObj[i]);
-                var num = item.get('num');
                 var money = item.get('money');
                 var discount = parseFloat(item.get('discount'));
-                var tdiscount = (1 - percentage) * (money * num - discount);//前n-1项每个单品的单品折扣
-                discount = discount + tdiscount;//前n-1项每个单品的单品优惠和整单优惠平平均之后的总和
-                finaldiscount = finaldiscount + discount;//前n-1项总的折扣
-                discount = discount.toFixed(2);
-                console.log('第' + i + '的整单折扣' + discount);
+                var tdiscount = (1- percentage) * money;//第i单商品的优惠
+                discount = discount + tdiscount;//第i单商品的单品优惠和整单优惠之和
+                finaldiscount = finaldiscount + tdiscount;//前n-1项总的折扣
+                console.log('第' + i + '的整单折扣' + tdiscount);
                 item.set({
                     discount:discount
                 });
-                console.log(item);
                 _self.discountcollection.push(item);
             }
-            //console.log(_self.discountcollection);
-            //console.log('>>>>>>>>>>>>>>>>>>>>');
-            //console.log(_self.totaldiscount + '整单折扣');
-            //console.log(_self.discountamount + '单品优惠之和');
-            //console.log(typeof (_self.totaldiscount));
-            //console.log(typeof (_self.discountamount));
             //最后一项的折扣为
-            finaldiscount = parseFloat(_self.totaldiscount) + _self.discountamount - finaldiscount;
-            finaldiscount = finaldiscount.toFixed(2);
-            //console.log(finaldiscount + '最后一项的优惠');
+            finaldiscount = parseFloat(this.totaldiscount) - finaldiscount;
+            console.log('最后一单的折扣为：' + finaldiscount);
             var tmp = new BillModel();
             tmp.set(this.localObj[this.localObj.length - 1]);
-            tmp.set('discount',finaldiscount);
+            tmp.set({
+                discount:finaldiscount
+            });
             _self.discountcollection.push(tmp);
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', _self.discountcollection);
-            //console.log(_self.discountcollection);
-            //console.log('final');
         },
-
 
         /**
          * 一卡通支付
