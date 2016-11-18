@@ -269,12 +269,25 @@ define([
             //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
             //    _self.iniSettngs();
             //});
-            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
-                wsClient.close();
-                window.location.reload();
-            });
+            //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
+            //    var SOCKET_ADDR = 'ws://localhost:7110/';
+            //    wsClient.close();
+            //    wsClient = new WebSocket(SOCKET_ADDR);
+            //    wsClient.onopen = function (e) {
+            //        window.toastr.success('已与硬件建立连接');
+            //    };
+            //    wsClient.onmessage = function (e) {
+            //        console.log(e);
+            //    };
+            //    wsClient.onclose = function (e) {
+            //        window.toastr.warning('与硬件连接断开');
+            //    };
+            //    wsClient.onerror = function (e) {
+            //        window.toastr.warning('与硬件连接出现问题，请检查硬件');
+            //    };
+            //});
 
-            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.P, function () {
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Esc, function () {
                 _self.onPowerOffClicked();
             });
         },

@@ -367,6 +367,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.H, function() {
                 router.navigate('print', {trigger:true});
             });
+            //
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Q, function() {
+                _self.onWithDrawClicked();
+            });
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
             //        pageid: window.PAGE_ID.MAIN,
