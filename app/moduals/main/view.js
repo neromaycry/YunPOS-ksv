@@ -99,7 +99,7 @@ define([
             });
             this.loginInfoModel.set({
                 name:user.user_name,
-                pos: '收款机(2341)'
+                pos: storage.get(system_config.POS_INFO_KEY, 'posid')
             });
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
                 this.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
@@ -125,16 +125,22 @@ define([
                 });
             }
             if (storage.isSet(system_config.LOGIN_USER_KEY)){
-                this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
+                this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY, 'worker_position'), 'key');
             }
 
             if(storage.isSet(system_config.ODD_CHANGE)) {
                 this.oddchangeModel.set({
                     oddchange:storage.get(system_config.ODD_CHANGE,'oddchange')
                 });
-            }else {
+                this.loginInfoModel.set({
+                    lastbill_no: storage.get(system_config.ODD_CHANGE, 'lastbill_no')
+                });
+            } else {
                 this.oddchangeModel.set({
                     oddchange:0
+                });
+                this.oddchangeModel.set({
+                    lastbill_no: '无订单'
                 });
             }
             if (!this.marqueeModel.get('notification_content')) {
@@ -673,15 +679,16 @@ define([
                         var temp = resp.goods_detail[resp.goods_detail.length - 1];
                         if(temp['price_auto'] == 1) {
                             var priceentryview = new PriceEntryView({
+
                                 originalprice:temp['price'],
-                                pageid:window.PAGE_ID.MODAL_PRICE_ENTRY,
-                                currentid:window.PAGE_ID.MAIN,
-                                callback: function (attrs) {
+
+                                pageid: window.PAGE_ID.MAIN,
+
+                                callback: function () {
                                     var price = $('input[name = price]').val();
                                     resp.goods_detail[resp.goods_detail.length - 1].price = price;
                                     resp.goods_detail[resp.goods_detail.length - 1].money = price;
                                     _self.onAddItem(resp.goods_detail);
-                                    _self.hideModal(window.PAGE_ID.MAIN);
                                     $('input[name = main]').focus();
                                 }
                             });
@@ -696,7 +703,7 @@ define([
                         toastr.warning(resp.msg);
                     }
                 });
-                $('#input_main').val('');
+                $(this.input).val('');
                 this.i = 0;
             }
         },

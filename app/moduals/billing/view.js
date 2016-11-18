@@ -661,8 +661,11 @@ define([
                                     storage.remove(system_config.VIP_KEY);
                                 }
                                 router.navigate("main", {trigger: true, replace:true});
-                                toastr.success("订单号：" +  resp.bill_no);
-                                storage.set(system_config.ODD_CHANGE,'oddchange',_self.model.get('oddchange'));
+                                //toastr.success("订单号：" +  resp.bill_no);
+                                var lastbill_no = resp.bill_no;
+                                lastbill_no = lastbill_no.substr(8);
+                                storage.set(system_config.ODD_CHANGE, 'oddchange', _self.model.get('oddchange'));
+                                storage.set(system_config.ODD_CHANGE, 'lastbill_no', lastbill_no);
                                 _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                                 _self.renderClientDisplay(_self.model);
                                 router.navigate("main", {trigger: true, replace: true});

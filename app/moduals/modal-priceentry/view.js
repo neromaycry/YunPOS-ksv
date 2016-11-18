@@ -98,7 +98,7 @@ define([
             }else if((price.split('.').length-1) > 1 || price == '.') {
                 toastr.warning('无效的单价');
             } else {
-                this.attrs.callback(this.attrs);
+                this.attrs.callback();
                 this.confirmHideModal(this.attrs.pageid);
             }
             $(this.input).val('');
