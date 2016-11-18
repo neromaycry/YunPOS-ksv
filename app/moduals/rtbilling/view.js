@@ -238,38 +238,38 @@ define([
          */
         addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId,gatherKind,cardId) {
             //console.log(this.collection);
-            var temp = this.collection.findWhere({gather_id: gatherId});
-            //if(temp != undefined){
-            //    for(var i = 0;i < this.collection.length;i++){
-            //        var model = this.collection.at(i);
-            //        if(model.get('gather_id') == gatherId){
-            //            var gather_money = model.get('gather_money');
-            //            gather_money = parseFloat(gather_money) + parseFloat(receivedsum);
-            //            model.set({
-            //                fact_money:0,
-            //                gather_id:gatherId,
-            //                gather_name:gatherName,
-            //                gather_money:parseFloat(gather_money),
-            //                gather_no:gatherAccount,
-            //                gather_kind:gatherKind,
-            //                card_id:cardId
-            //            });
-            //        }
-            //        this.collection.add(model);
-            //    }
-            //}else{
-            var model = new RTBillModel();
-            model.set({
-                fact_money:0,
-                gather_id:gatherId,
-                gather_name:gatherName,
-                gather_money:receivedsum,
-                gather_no:gatherAccount,
-                gather_kind:gatherKind,
-                card_id:cardId
-            });
-            this.collection.add(model);
-            //}
+            var temp = this.collection.findWhere({gather_id: gatherId, gather_no:gatherAccount});
+            if(temp != undefined){
+                for(var i = 0;i < this.collection.length;i++){
+                    var model = this.collection.at(i);
+                    if(model.get('gather_id') == gatherId){
+                        var gather_money = model.get('gather_money');
+                        gather_money = parseFloat(gather_money) + receivedsum;
+                        model.set({
+                            fact_money:0,
+                            gather_id:gatherId,
+                            gather_name:gatherName,
+                            gather_money:parseFloat(gather_money),
+                            gather_no:gatherAccount,
+                            gather_kind:gatherKind,
+                            card_id:cardId
+                        });
+                    }
+                    this.collection.add(model);
+                }
+            }else{
+                var model = new RTBillModel();
+                model.set({
+                    fact_money:0,
+                    gather_id:gatherId,
+                    gather_name:gatherName,
+                    gather_money:receivedsum,
+                    gather_no:gatherAccount,
+                    gather_kind:gatherKind,
+                    card_id:cardId
+                });
+                this.collection.add(model);
+            }
             var totalreceived = 0;
             var trList = this.collection.pluck('gather_money');
             console.log(trList);
@@ -319,7 +319,7 @@ define([
                 toastr.warning('不设找零');
             }else{
                 this.i = 0;
-                this.addToPaymentList(this.totalamount,"现金",receivedsum,"*","00","00",this.card_id);
+                this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id);
             }
 
             $(this.input).val("");
