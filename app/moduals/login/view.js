@@ -38,7 +38,8 @@ define([
             //'click .login-init':'onInitClicked',
             'click .login-reconnecthw':'onReconnectHardwareClicked',
             'click .power-off':'onPowerOffClicked',
-            'click .lock': 'lockScreen'
+            'click .lock': 'lockScreen',
+            'click .bankcheckin': 'checkIn'
         },
 
         pageInit: function () {
@@ -227,6 +228,11 @@ define([
                 var gatewayView = new GatewayView();
                 _self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
             });
+        },
+
+        checkIn: function () {
+            toastr.info('签到');
+            this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
         },
 
         //doInitialize: function () {

@@ -70,7 +70,7 @@ requirejs.config({
             "deps": [
                 'css!../loading/showLoading.css',
                 'jquery'
-            ],
+            ]
         },
         'md5': {
             'deps': ['jquery']

@@ -235,6 +235,12 @@ define([
             $('.cbtn').mouseup(function () {
                 $(this).removeClass('clicked');
             });
+            $('.cbtn').on('touchstart', function (e) {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').on('touchend', function (e) {
+                $(this).removeClass('clicked');
+            });
             $(document).mouseup(function () {
                 if (!isModal) {
                     $(_self.input).focus();
