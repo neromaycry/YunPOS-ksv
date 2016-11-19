@@ -25,7 +25,8 @@ requirejs.config({
         'marquee':'../marquee/jquery.marquee',
         'Recwebsocket':'../reconnecting-websocket/reconnecting-websocket',
         'fecha':'../fecha/fecha',
-        'noty': '../noty/jquery.noty.packaged'
+        'noty': '../noty/jquery.noty.packaged',
+        'koala': '../koala/jquery.koala'
     },
     shim: {
         'backbone': {
@@ -50,6 +51,10 @@ requirejs.config({
             'deps': ['jquery'],
             'exports': 'noty'
         },
+        'koala': {
+            'deps': ['jquery'],
+            'exports': 'koala'
+        },
         'Recwebsocket':{
             'exports':'Recwebsocket'
         },
@@ -57,6 +62,7 @@ requirejs.config({
             'exports': 'fecha'
         },
         'marquee': {
+            'deps': ['jquery'],
             'exports': 'marquee'
         },
         'bootstrap': {
@@ -105,7 +111,8 @@ requirejs([
     'Recwebsocket',
     'fecha',
     'noty',
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty) {
+    'koala',
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala) {
 
     window.isAndroid = false;  //是否为Android设备
 

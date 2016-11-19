@@ -22,11 +22,34 @@ define([
         },
 
         modalInitPage: function () {
+            var _self = this;
             this.requestModel = new McardModel();
             $('.modal').on('shown.bs.modal', function () {
                 $('input[name = magcard]').focus();
             });
             //this.swipeCard();
+            $('input[name = magcard]').koala({
+                delay: 2000,
+                keyup: function (event) {
+                    _self.swipeCard();
+                }
+            });
+
+
+            //var last;
+            //var _self = this;
+            //$('input[name = magcard]').keyup(function(event) {//.input为你的输入框
+            //    last = event.timeStamp;
+            //    //利用event的timeStamp来标记时间，这样每次的keyup事件都会修改last的值，注意last必需为全局变量
+            //    setTimeout(function () {    //设时延迟0.5s执行
+            //        if (last - event.timeStamp == 0)
+            //        //如果时间差为0（也就是你停止输入0.5s之内都没有其它的keyup事件发生）则做你想要做的事
+            //        {
+            //            //做你要做的事情
+            //            _self.swipeCard();
+            //        }
+            //    }, 10000);
+            //});
         },
 
         bindModalKeys: function () {
@@ -51,25 +74,41 @@ define([
                 toastr.warning('请刷卡');
                 return;
             }
+            console.log('value:' + value);
             //var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
-            //var value = ',768000001 383837934874352;768000001?383837934874352;';
-            console.log(value);
-            var index1 = value.indexOf(';');
-            var index2 = value.indexOf('?');
-            var index3 = value.lastIndexOf(';');
-            var track1 = value.substring(1, index1);
-            var track2 = value.substring(index1 + 1, index2);
-            var track3 = value.substring(index2 + 1, index3);
-            console.log('track1:' + track1 + ',track2:' + track2 + ',track3:' + track3);
-            if (track1 == ';') {
+            var index1, index2, track1, track2, track3;
+            //var value = '%768000001 383837934874352?;768000001?;383837934874352?';
+            var str = value.charAt(0);
+            console.log(str);
+            if (str == '%') {
+                index1 = value.indexOf('?');
+                track1 = value.substring(1, index1);
+                value = value.substring(index1 + 1);
+                str = value.charAt(0);
+                console.log('track1 str:' + str);
+            } else {
                 track1 = '*';
             }
-            if (track2 == '') {
+            //var re = new RegExp(';', 'g');
+            //var arr = value.match(re);
+            //var len = arr.length;
+            //console.log(len);
+            if (str == ';') {
+                index2 = value.indexOf('?');
+                track2 = value.substring(1, index2);
+                value = value.substring(index2 + 1);
+                str = value.charAt(0);
+                console.log('track2 str:' + str);
+            } else {
                 track2 = '*';
             }
-            if (track3 == '') {
-                track3 = '*';
+            if (str == ';') {
+                track3 = value.substring(1, value.length - 1);
+            } else {
+                track3 = '*'
             }
+
+            console.log('track1:' + track1 + ',track2:' + track2 + ',track3:' + track3);
             var data = {};
             var tracks = ['track1', 'track2', 'track3'];
             var trackValues = [track1, track2, track3];

@@ -15,7 +15,7 @@ define([
 
         initialize: function (attrs) {
             console.log('modal:' + this.id);
-            //$(document).unbind('keyup');
+            $(document).unbind('keyup');
             $(document).unbind('keydown');
             isModal = true;
             this.$el.empty().off();

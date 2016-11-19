@@ -31,6 +31,7 @@ define([
             console.log(">>> " + this.id);
             this.undelegateEvents();
             $(document).unbind('keyup');
+            $(document).unbind('keydown');
             this.$el.empty().off();
             if (attrs) {
                 this.attrs = attrs;
@@ -163,7 +164,7 @@ define([
         sendWebSocketDirective: function (directives, content, websocket) {
               if (websocket.readyState == 1) {
                   for (var i = 0;i < directives.length; i++) {
-                      websocket.send(directive[i] + content[i]);
+                      websocket.send(directives[i] + content[i]);
                   }
               } else {
                   toastr.warning('没有连接到硬件，请检查硬件连接');
