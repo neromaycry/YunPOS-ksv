@@ -821,9 +821,12 @@ define([
             tmp.set(this.localObj[this.localObj.length - 1]);
             var num = tmp.get('num');
             var price = tmp.get('price');
+            var discount = parseFloat(tmp.get('discount'));
+            discount = finaldiscount + discount;
+            console.log('最后一件商品的折扣为' + discount);
             tmp.set({
-                discount:finaldiscount,
-                money:num * price - finaldiscount
+                discount:discount,
+                money:num * price - discount
             });
             _self.discountcollection.push(tmp);
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', _self.discountcollection);
