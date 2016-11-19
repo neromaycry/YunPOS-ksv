@@ -416,7 +416,7 @@ define([
         doBilling: function () {
             //console.log(_self.model.get('itemamount'));
             if(this.model.get('itemamount') == 0){
-                toastr.warning('购物车内无商品');
+                toastr.warning('购物车内无商品',{positionClass: 'toast-top-center'});
             } else {
                 console.log(this.i);
                 storage.set(system_config.SALE_PAGE_KEY, 'i', this.i);

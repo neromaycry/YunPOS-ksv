@@ -127,11 +127,18 @@ window.system_config = {
 };
 
 window.DIRECTIVES = {
-    "INIT":"INIT_",
-    "PRINTTEXT":"PRNT_",
-    "OpenCashDrawer":"OpenCashbox_",
-    'ShutDown':'shutdown_'
-
+    "INIT":"INIT_",  //初始化
+    "PRINTTEXT":"PRNT_",  //打印
+    "OpenCashDrawer":"OpenCashbox_",  //开钱箱
+    'ShutDown':'shutdown_',  //关机
+    'Bank_sale':'bank_sale_',  //银行卡 消费
+    'Bank_backout': 'bank_backout_',  //银行卡 当日撤销
+    'Bank_refund': 'bank_refund_',  //银行卡 隔日退货
+    'Bank_balance': 'bank_balance_', //银行卡 余额查询
+    'Bank_reprint': 'bank_reprint_', //银行卡 重印最后一笔
+    'Bank_signin': 'bank_signin_',  // 银行卡 签到
+    'Bank_daily': 'bank_daily_',  //银行卡 日结
+    'Bank_query': 'bank_query_'  // 银行卡 查询流水
 };
 
 /**

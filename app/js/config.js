@@ -24,7 +24,8 @@ requirejs.config({
         'xfb': 'jquery-resource',
         'marquee':'../marquee/jquery.marquee',
         'Recwebsocket':'../reconnecting-websocket/reconnecting-websocket',
-        'fecha':'../fecha/fecha'
+        'fecha':'../fecha/fecha',
+        'noty': '../noty/jquery.noty.packaged'
     },
     shim: {
         'backbone': {
@@ -44,6 +45,10 @@ requirejs.config({
         'xfb': {
             'deps': ['jquery'],
             'exports': 'xfb'
+        },
+        'noty': {
+            'deps': ['jquery'],
+            'exports': 'noty'
         },
         'Recwebsocket':{
             'exports':'Recwebsocket'
@@ -98,8 +103,9 @@ requirejs([
     'xfb',
     'marquee',
     'Recwebsocket',
-    'fecha'
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha) {
+    'fecha',
+    'noty',
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty) {
 
     window.isAndroid = false;  //是否为Android设备
 
@@ -154,6 +160,29 @@ requirejs([
         'timeOut': '4000',
         'positionClass': 'toast-bottom-center'
     };
+
+    var notyOptions = {
+        layout: 'center',
+        theme: 'defaultTheme',
+        type: 'warning',
+        text:'asdfsadfasf',
+        timeout: 5000,
+        maxVisible: 3,
+        animation: {
+            open: {height: 'toggle'}, // or Animate.css class names like: 'animated bounceInLeft'
+            close: {height: 'toggle'}, // or Animate.css class names like: 'animated bounceOutLeft'
+            easing: 'swing',
+            speed: 500 // opening & closing animation speed
+        },
+    };
+
+    window.noty = noty(notyOptions);
+
+    //window.toastMiddle = toastr;
+    //window.toastMiddle.options = {
+    //    'timeOut': '4000',
+    //    'positionClass': 'center'
+    //};
 
     var SOCKET_ADDR = 'ws://localhost:7110/';
     //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';
