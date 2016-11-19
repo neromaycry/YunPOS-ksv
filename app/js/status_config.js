@@ -197,6 +197,8 @@ window.PAGE_ID = {
     'MODAL_WITHDRAW':42,
     'MODAL_PRICE_ENTRY':43,
     'MODAL_GATEWAY':44,
+    'MODAL_POS':45,//银行卡确认
+    'MODAL_BANK_CARD':46
 };
 
 window.KEYS = {

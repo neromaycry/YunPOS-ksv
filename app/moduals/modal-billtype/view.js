@@ -89,7 +89,7 @@ define([
             var gatherUI = gatherModel[0].gather_ui;
             $('.modal-backdrop').remove();
             this.hideModal(window.PAGE_ID.BILLING);
-            if(gatherUI == '01'){
+            if(gatherUI == '01' && gatherId != '05'){
                 var gaterUIView = new GatherUIView({
                     pageid:window.PAGE_ID.BILLING,
                     currentid:window.PAGE_ID.BILLING_ACCOUNT,
@@ -151,7 +151,6 @@ define([
                         toastr.error(resp.msg);
                     }
                 });
-
             }else if(gatherUI == '05'){
                 var xfbdata = {};
                 xfbdata['pos_id'] = '002';
@@ -187,7 +186,17 @@ define([
                         toastr.error(resp.msg);
                     }
                 });
-
+            }else if(gatherId == '05') {
+                var data = {};
+                data['gather_id'] = gatherId;
+                data['gather_name'] = gatherName;
+                data['gather_ui'] = gatherUI;
+                data['gather_kind'] = gatherKind;
+                data['gather_money'] = gatherMoney;
+                data['currentid'] = window.PAGE_ID.MODAL_POS;
+                data['pageid'] = window.PAGE_ID.BILLING
+                var gatherUIView = new GatherUIView(data);
+                this.showModal(window.PAGE_ID.MODAL_POS, gaterUIView);
             }
         },
 
@@ -196,13 +205,13 @@ define([
          * @param gatherUI 判断是哪种付款方式
          * @param gatherNo 付款账号
          * @param attrData 准备传到结算页面的数据
-         * @param orderId 祥付宝交易单号
+         * @param paymentBill 祥付宝交易单号
          */
-        micropay: function (gatherUI, gatherNo, attrData, orderId) {
+        micropay: function (gatherUI, gatherNo, attrData, paymentBill) {
             var _self = this;
             var data = {};
             if(gatherUI == '04') {
-                data['orderid'] = orderId;
+                data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
                 data['totalfee'] = '0.01';
@@ -212,7 +221,7 @@ define([
                 data['payway'] = 'barcode';
                 data['zfbtwo'] = 'zfbtwo';
             }else if(gatherUI == '05') {
-                data['orderid'] = orderId;
+                data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
                 data['totalfee'] = '0.01';

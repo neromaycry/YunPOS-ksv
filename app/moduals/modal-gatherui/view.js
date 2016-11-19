@@ -4,14 +4,16 @@
 define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-gatherui/model',
+    '../../moduals/modal-bankcard/view',
     'text!../../moduals/modal-gatherui/contenttpl.html',
     'text!../../moduals/modal-gatherui/commontpl.html',
     'text!../../moduals/modal-gatherui/alipaytpl.html',
     'text!../../moduals/modal-gatherui/wechatpaytpl.html',
     'text!../../moduals/modal-gatherui/quickpaytpl.html',
     'text!../../moduals/modal-gatherui/numpadtpl.html',
+    'text!../../moduals/modal-gatherui/bankcardtpl.html',
     'text!../../moduals/modal-gatherui/tpl.html'
-], function (BaseModalView, GatherUIModel, contenttpl, commontpl, alipaytpl, wechatpaytpl,quickpaytpl,numpadtpl, tpl) {
+], function (BaseModalView, GatherUIModel,BankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl,quickpaytpl,numpadtpl,bankcardtpl, tpl) {
 
     var gahterUIView = BaseModalView.extend({
 
@@ -20,6 +22,8 @@ define([
         template: tpl,
 
         template_numpad:numpadtpl,
+
+        template_bankcard:bankcardtpl,
 
         gatherUI:'',
 
@@ -33,17 +37,26 @@ define([
 
         modalInitPage: function () {
             this.gatherUI = this.attrs.gather_ui;
-            this.switchTemplate(this.gatherUI);
-            this.template_content = _.template(this.template_content);
+            this.gatherId = this.attrs.gather_id;
+            console.log(this.gatherId);
             this.model = new GatherUIModel();
+            this.switchTemplate(this.gatherUI);
+            if(this.gatherId == '05') {
+                this.template_content = bankcardtpl;
+                this.model.set({
+                    gather_money:this.attrs.gather_money
+                });
+            }
+            this.template_content = _.template(this.template_content);
+
             this.model.set({
                 gather_name:this.attrs.gather_name
             });
             this.prepay(this.gatherUI);
             this.render();
-            if(this.gatherUI == '01') {
+            if(this.gatherUI == '01') {//如果是第三方支付的话  就用大的模态框
                 this.renderContent();
-            }else {
+            }else{
                 this.renderThirdPay();
             }
             this.$el.find('.for-numpad').html(this.template_numpad);
@@ -114,20 +127,31 @@ define([
             });
         },
 
-
+        //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
         confirm: function () {
-            var gatherNo = $(this.input).val();
-            if(gatherNo == '') {
-                toastr.warning('账号不能为空');
-            }else if(gatherNo == '0') {
-                toastr.warning('账号不能为零');
-            }else if((gatherNo.split('.').length-1) > 0) {
-                toastr.warning('无效的支付账号');
-            }else {
-                this.attrs.callback(this.attrs);
-                this.confirmHideModal(this.attrs.pageid);
+            if(this.gatherId != '05') {
+                var gatherNo = $(this.input).val();
+                if(gatherNo == '') {
+                    toastr.warning('账号不能为空');
+                }else if(gatherNo == '0') {
+                    toastr.warning('账号不能为零');
+                }else if((gatherNo.split('.').length-1) > 0) {
+                    toastr.warning('无效的支付账号');
+                }else {
+                    this.attrs.callback(this.attrs);
+                    this.confirmHideModal(this.attrs.pageid);
+                }
+                $(this.input).val('');
+            }else{
+                console.log('银行pos');
+                $('.modal-backdrop').remove();
+                this.hideModal(window.PAGE_ID.BILLING);
+                var bankcardview = new BankCardView(this.attrs);
+                this.showModal(window.PAGE_ID.MODAL_BANK_CARD, bankcardview);
+                $('.modal').on('shown.bs.modal',function(e) {
+                    $('input[name = bk-account]').focus();
+                });
             }
-            $(this.input).val('');
         },
 
         onNumClicked: function (e) {
