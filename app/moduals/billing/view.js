@@ -326,7 +326,9 @@ define([
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
-               _self.payment('05', _self.billNumber);
+                $('input[name = billing]').val('');
+                toastr.info('该功能正在调试中...');
+               //_self.payment('05', _self.billNumber);
             });
             //整单优惠输入实际优惠金额
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F1, function () {
@@ -819,9 +821,12 @@ define([
             tmp.set(this.localObj[this.localObj.length - 1]);
             var num = tmp.get('num');
             var price = tmp.get('price');
+            var discount = parseFloat(tmp.get('discount'));
+            discount = finaldiscount + discount;
+            console.log('最后一件商品的折扣为' + discount);
             tmp.set({
-                discount:finaldiscount,
-                money:num * price - finaldiscount
+                discount:discount,
+                money:num * price - discount
             });
             _self.discountcollection.push(tmp);
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', _self.discountcollection);
@@ -976,44 +981,47 @@ define([
                                     $('input[name = quickpay-account]').focus();
                                 });
                             }else if(gatherUI == '04'){
-                                var xfbdata = {};
-                                xfbdata['pos_id'] = '002';
-                                xfbdata['bill_no'] = this.billNumber;
-                                this.requestmodel.xfbbillno(xfbdata, function(resp) {
-                                    if(resp.status == '00') {
-                                        data['gather_money'] = unpaidamount;
-                                        data['gather_id'] = gatherId;
-                                        data['gather_name'] = item.gather_name;
-                                        data['payment_bill'] = resp.xfb_bill;
-                                        _self.alipayview = new QPAliPayView(data);
-                                        _self.showModal(window.PAGE_ID.QP_ALIPAY,_self.alipayview);
-                                        $('.modal').on('shown.bs.modal',function(e){
-                                            $('input[name = alipay-account]').focus();
-                                        });
-                                    }else {
-                                        toastr.error(resp.msg);
-                                    }
-                                });
+
+                                toastr.info('该功能正在调试中...');
+                                //var xfbdata = {};
+                                //xfbdata['pos_id'] = '002';
+                                //xfbdata['bill_no'] = this.billNumber;
+                                //this.requestmodel.xfbbillno(xfbdata, function(resp) {
+                                //    if(resp.status == '00') {
+                                //        data['gather_money'] = unpaidamount;
+                                //        data['gather_id'] = gatherId;
+                                //        data['gather_name'] = item.gather_name;
+                                //        data['payment_bill'] = resp.xfb_bill;
+                                //        _self.alipayview = new QPAliPayView(data);
+                                //        _self.showModal(window.PAGE_ID.QP_ALIPAY,_self.alipayview);
+                                //        $('.modal').on('shown.bs.modal',function(e){
+                                //            $('input[name = alipay-account]').focus();
+                                //        });
+                                //    }else {
+                                //        toastr.error(resp.msg);
+                                //    }
+                                //});
 
                             }else if(gatherUI == '05') {
-                                var xfbdata = {};
-                                xfbdata['pos_id'] = '002';
-                                xfbdata['bill_no'] = this.billNumber;
-                                this.requestmodel.xfbbillno(xfbdata, function(resp) {
-                                    if(resp.status == '00') {
-                                        data['gather_money'] = unpaidamount;
-                                        data['gather_id'] = gatherId;
-                                        data['gather_name'] = item.gather_name;
-                                        data['payment_bill'] = resp.xfb_bill;
-                                        _self.wechatview = new QPWeChatView(data);
-                                        _self.showModal(window.PAGE_ID.QP_WECHAT,_self.wechatview);
-                                        $('.modal').on('shown.bs.modal',function(e) {
-                                            $('input[name = wechat-account]').focus();
-                                        });
-                                    }else {
-                                        toastr.error(resp.msg);
-                                    }
-                                });
+                                toastr.info('该功能正在调试中...');
+                                //var xfbdata = {};
+                                //xfbdata['pos_id'] = '002';
+                                //xfbdata['bill_no'] = this.billNumber;
+                                //this.requestmodel.xfbbillno(xfbdata, function(resp) {
+                                //    if(resp.status == '00') {
+                                //        data['gather_money'] = unpaidamount;
+                                //        data['gather_id'] = gatherId;
+                                //        data['gather_name'] = item.gather_name;
+                                //        data['payment_bill'] = resp.xfb_bill;
+                                //        _self.wechatview = new QPWeChatView(data);
+                                //        _self.showModal(window.PAGE_ID.QP_WECHAT,_self.wechatview);
+                                //        $('.modal').on('shown.bs.modal',function(e) {
+                                //            $('input[name = wechat-account]').focus();
+                                //        });
+                                //    }else {
+                                //        toastr.error(resp.msg);
+                                //    }
+                                //});
 
                             }
                         }
@@ -1048,8 +1056,10 @@ define([
         },
 
         onThirdPayClicked: function () {
-            this.payment('05', this.billNumber);
-            $('button[name = third-pay]').blur();
+            toastr.info('该功能正在调试中...');
+            $('input[name = billing]').val('');
+            //this.payment('05', this.billNumber);
+            //$('button[name = third-pay]').blur();
         },
         /**
          *点击支付大类按钮的点击事件

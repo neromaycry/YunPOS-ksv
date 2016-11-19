@@ -138,7 +138,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Esc,function () {
                 router.navigate('main',{trigger:true});
             });
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.B,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Space,function () {
                 _self.doBilling();
             });
             //取消退货

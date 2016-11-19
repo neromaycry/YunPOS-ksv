@@ -3,12 +3,12 @@ define([
     '../../../../moduals/checking/model',
     '../../../../moduals/checking/collection',
     '../../../../moduals/keytips-member/view',
-    'text!../../../../moduals/checking/cashierreporttpl.html',
-    'text!../../../../moduals/checking/reportdetailtpl.html',
-    'text!../../../../moduals/checking/cashierdailytpl.html',
-    'text!../../../../moduals/checking/dailydetailtpl.html',
+    'text!../../../../moduals/checking/cashierinfotpl.html',
+    'text!../../../../moduals/checking/posdetailtpl.html',
+    'text!../../../../moduals/checking/posinfotpl.html',
+    'text!../../../../moduals/checking/cashierdetailtpl.html',
     'text!../../../../moduals/checking/tpl.html',
-], function (BaseView, CheckingModel,CheckingCollection, KeyTipsView, cashierreporttpl, cashierdetailtpl,cashierdailytpl,dailydetailtpl, tpl) {
+], function (BaseView, CheckingModel,CheckingCollection, KeyTipsView, cashierinfotpl, posdetailtpl,posinfotpl,casherdetailtpl, tpl) {
 
     var checkingView = BaseView.extend({
 
@@ -18,17 +18,19 @@ define([
 
         template: tpl,
 
-        template_cashierreport:cashierreporttpl,
+        template_cashierinfo:cashierinfotpl,
 
-        template_cashierdetail:cashierdetailtpl,
+        template_cashierdetail:casherdetailtpl,
 
-        template_cashierdailytpl:cashierdailytpl,
+        template_posinfo:posinfotpl,
 
-        template_dailydetailtpl:dailydetailtpl,
+        template_posdetail:posdetailtpl,
 
         i:0,
 
-        isCashierReport:true,
+        isCashier:true,
+
+        date:'',
 
         input: 'input[name = checking_date]',
 
@@ -60,26 +62,26 @@ define([
             $('input[name = checking_date]').val(date);
             console.log(date);
             this.initTemplates();
-            this.renderCashierreport();
+            this.renderCashierInfo();
             this.renderCashierdetail();
-            this.renderCashierdaily();
-            this.renderCashierdailyDetail();
+            this.renderPosInfo();
+            this.renderPosDetail();
         },
 
         initTemplates: function () {
-            this.template_cashierreport = _.template(this.template_cashierreport);
+            this.template_cashierinfo = _.template(this.template_cashierinfo);
+            this.template_posinfo = _.template(this.template_posinfo);
             this.template_cashierdetail = _.template(this.template_cashierdetail);
-            this.template_cashierdailytpl = _.template(this.template_cashierdailytpl);
-            this.template_dailydetailtpl = _.template(this.template_dailydetailtpl);
+            this.template_posdetail = _.template(this.template_posdetail);
         },
 
         initLayoutHeight:function(){
             var dh = $(window).height();
             var nav = $('.navbar').height();
             var td = $('td').height();
-            var cashierdetail = dh - 3 * nav - td * 8 - 110;
+            var cashierdetail = dh - 3 * nav - td * 8 - 100;
             $('.for-cashier-detail').height(cashierdetail);
-            $('.for-daily-detail').height(cashierdetail);
+            $('.for-pos-detail').height(cashierdetail);
             this.listheight = cashierdetail;
             this.listnum = 6;
         },
@@ -91,17 +93,17 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Right, function () {
-                _self.isCashierReport = false;
+                _self.isCashier = false;
                 _self.i = 0;
                 _self.n = 0;
-                $('#myTabs a[href="#cashier_daily_report"]').tab('show')
+                $('#myTabs a[href="#for-pos"]').tab('show')
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Left, function () {
-                _self.isCashierReport = true;
+                _self.isCashier = true;
                 _self.i = 0;
                 _self.n = 0;
-                $('#myTabs a[href="#cashier_report"]').tab('show');
+                $('#myTabs a[href="#for-cashier"]').tab('show');
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Enter, function () {
@@ -126,33 +128,33 @@ define([
             });
         },
 
-        renderCashierreport: function () {
-            this.$el.find('.for-cashier-report').html(this.template_cashierreport(this.model.toJSON()));
+        renderCashierInfo: function () {
+            this.$el.find('.for-cashier-info').html(this.template_cashierinfo(this.model.toJSON()));
             return this;
         },
 
         renderCashierdetail: function () {
             this.$el.find('.for-cashier-detail').html(this.template_cashierdetail(this.collection.toJSON()));
             $('.li-detail').height(this.listheight / this.listnum - 21);
-            $('#li' + this.i).addClass('cus-selected');
-            return this;
-        },
-
-        renderCashierdaily: function () {
-            this.$el.find('.for-cashier-daily').html(this.template_cashierdailytpl(this.model.toJSON()));
-            return this;
-        },
-
-        renderCashierdailyDetail: function () {
-            this.$el.find('.for-daily-detail').html(this.template_dailydetailtpl(this.collection.toJSON()));
             $('#detail' + this.i).addClass('cus-selected');
+            return this;
+        },
+
+        renderPosInfo: function () {
+            this.$el.find('.for-pos-info').html(this.template_posinfo(this.model.toJSON()));
+            return this;
+        },
+
+        renderPosDetail: function () {
+            this.$el.find('.for-pos-detail').html(this.template_posdetail(this.collection.toJSON()));
+            $('#li' + this.i).addClass('cus-selected');
             $('.li-detail').height(this.listheight / this.listnum - 21);
             return this;
         },
 
         scrollDown:function (){
             var _self = this;
-            if(_self.isCashierReport){
+            if(_self.isCashier){
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
@@ -160,22 +162,22 @@ define([
                     _self.n++;
                     $('.for-cashier-detail').scrollTop(_self.listheight * _self.n);
                 }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             }else{
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
                 if (_self.i % _self.listnum == 0) {
                     _self.n++;
-                    $('.for-daily-detail').scrollTop(_self.listheight * _self.n);
+                    $('.for-pos-detail').scrollTop(_self.listheight * _self.n);
                 }
-                $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             }
         },
 
         scrollUp:function() {
             var _self = this;
-            if(_self.isCashierReport) {
+            if(_self.isCashier) {
                 if (_self.i > 0) {
                     _self.i--;
                 }
@@ -184,33 +186,54 @@ define([
 
                     $('.for-cashier-detail').scrollTop(_self.listheight * _self.n );
                 }
-                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+
             }else {
                 if (_self.i > 0) {
                     _self.i--;
                 }
                 if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
                     _self.n--;
-
-                    $('.for-daily-detail').scrollTop(_self.listheight * _self.n );
+                    $('.for-pos-detail').scrollTop(_self.listheight * _self.n );
                 }
-                $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             }
         },
 
         checkingDate:function() {
+            date = $('input[name = checking_date]').val();
             var _self = this;
-            var date = $('input[name = checking_date]').val();
             //console.log(date);
             if(date == ''){
                 toastr.warning('输入的收银对账日期不能为空');
             }else {
-                var data = {};
-                data['date'] = date;
-                data['type'] = '02';
-                this.request = new CheckingModel();
-                this.request.report(data,function(resp) {
-                    if(resp.status == '00'){
+                var cashierdata = {};
+                cashierdata['date'] = date;
+                cashierdata['type'] = '01';
+                this.cashierrequest = new CheckingModel();
+                this.cashierrequest.report(cashierdata, function (resp) {
+                    if (resp.status == '00') {
+                        _self.model.set({
+                            pos: resp.pos,
+                            name: resp.cashier,
+                            date: resp.date,
+                            money: resp.sum_money,
+                        });
+                        _self.collection.set(resp.master_detail);
+                        _self.printText = resp.printf;
+                        _self.renderCashierInfo();
+                        _self.renderCashierdetail();
+                    } else {
+                        toastr.error(resp.msg);
+                    }
+                });
+
+                var posdata = {};
+                posdata['date'] = date;
+                posdata['type'] = '02';
+                this.posrequest = new CheckingModel();
+                this.posrequest.report(posdata, function (resp) {
+                    if(resp.status == '00') {
                         _self.model.set({
                             pos: resp.pos,
                             name: resp.cashier,
@@ -225,10 +248,8 @@ define([
                         });
                         _self.collection.set(resp.master_detail);
                         _self.printText = resp.printf;
-                        _self.renderCashierreport();
-                        _self.renderCashierdetail();
-                        _self.renderCashierdaily();
-                        _self.renderCashierdailyDetail();
+                        _self.renderPosInfo();
+                        _self.renderPosDetail();
                     }else {
                         toastr.error(resp.msg);
                     }
@@ -273,12 +294,12 @@ define([
             router.navigate('main',{trigger:true});
         },
         onReportClicked:function () {
-            this.isCashierReport = true;
+            this.isCashier = true;
             this.i = 0;
         },
 
         onDailyReportClicked:function () {
-            this.isCashierReport = false;
+            this.isCashier = false;
             this.i = 0;
         },
 

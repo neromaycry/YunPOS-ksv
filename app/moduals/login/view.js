@@ -362,8 +362,8 @@ define([
 
         setReturnForceKeys: function () {
             var effects = ['返回', '确定', '结算', '取消退货', '删除商品','修改数量','单品优惠','折扣','方向上', '方向下'];
-            var keys = ['ESC', 'ENTER', 'B','C','D','N','Y', 'U','↑', '↓',];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.B, window.KEYS.C,
+            var keys = ['ESC', 'ENTER', 'Space','C','D','N','Y', 'U','↑', '↓',];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.C,
                 window.KEYS.D, window.KEYS.N, window.KEYS.Y, window.KEYS.U, window.KEYS.Up, window.KEYS.Down];
             var returnForceKeys = [];
             for (var i = 0;i<effects.length;i++) {
@@ -378,8 +378,8 @@ define([
 
         setReturnWholeKeys: function () {
             var effects = ['返回', '确定', '结算', '取消退货'];
-            var keys = ['ESC', 'ENTER', 'B', 'C'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.B, window.KEYS.C];
+            var keys = ['ESC', 'ENTER', 'Space', 'C'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Space, window.KEYS.B, window.KEYS.C];
             var returnWholeKeys = [];
             for (var i = 0;i<effects.length;i++) {
                 var effect = effects[i];
@@ -415,9 +415,9 @@ define([
         setBillingReturnKeys: function () {
             var effects = ['返回', '确定', '删除已支付的方式', '结算', '向上选择', '向下选择',
                 '支票类支付', '礼券类支付', '银行POS支付', '第三方支付', '一卡通支付','清空支付方式列表','快捷支付'];
-            var keys = ['ESC', 'ENTER', 'D', 'B', '↑', '↓',
+            var keys = ['ESC', 'ENTER', 'D', 'Space', '↑', '↓',
                 'S', 'A', 'P', 'Q', 'O', 'C', 'F'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.D, window.KEYS.B, window.KEYS.Up, window.KEYS.Down,
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.D, window.KEYS.Space, window.KEYS.Up, window.KEYS.Down,
                 window.KEYS.S, window.KEYS.A, window.KEYS.P, window.KEYS.Q, window.KEYS.O, window.KEYS.C, window.KEYS.F];
             var billingreturnKeys = [];
             for (var i = 0; i < effects.length; i++) {
