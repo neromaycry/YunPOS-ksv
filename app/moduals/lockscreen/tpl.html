@@ -1,62 +1,37 @@
-<img class="img-login-bg" src="./assets/login-backgroud.jpg"/>
+<img class="img-login-bg" src="./assets/login-backgroud2.jpg"/>
 <nav class="navbar" style="background:#337AB7;border-radius: 0px">
     <div class="container-fluid">
         <div class="navbar-header">
             <img src="./assets/logo-gsiworld-white.png" class="img-logo">
         </div>
-        <div class="collapse navbar-collapse pos-textsize">
-            <ul class="nav navbar-nav navbar-right">
-                <!--<li><a class="btn-numpad" style="color: #FFF;;margin-right:15px;">打开小键盘</a></li>-->
-                <!--<li class="btn-doinit"><a style="color: #ffffff">初始化</a></li>-->
-                <!--<li class="login-reconnecthw"><a style="color: #FFF;margin-right: 15px">重连硬件</a></li>-->
-                <li class="lock"><a style="color: #FFF;;margin-right:15px;"><i class="fa fa-lock"></i></a></li>
-                <li class="power-off"><a style="color: #FFF"><i class="fa fa-power-off fa-fw"></i></a></li>
-            </ul>
-        </div>
     </div>
 </nav>
+
 <div class="row page-login no-margining">
-    <div class="col-xs-12 col-md-12" style="margin-top: 60px">
-        <h1 class="text-center client-text-white">POS</h1>
+    <div class="col-xs-12 col-md-12" style="margin-top: 100px">
+        <h1 class="text-center client-text-white">输入密码解锁</h1>
     </div>
 </div>
 <div class="row no-margining">
     <div class="col-xs-12 col-md-12">
         <form class="form-horizontal" role="form" style="margin-top: 40px">
             <div class="form-group">
-                <label for="username" class="col-sm-2 col-xs-2 col-md-2 control-label sr-only">用户名</label>
+                <label for="passwd" class="col-sm-2 control-label sr-only">密码</label>
                 <div class="col-xs-4 col-md-4 col-xs-offset-2 col-md-offset-2">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名">
+                    <input type="password" class="form-control" id="passwd" name="passwd" placeholder="请输入密码">
                 </div>
             </div>
-            <div class="form-group">
-                <label for="password" class="col-sm-2 col-xs-2 col-md-2 control-label sr-only">密码</label>
+            <div class="form-group" style="display: none">
                 <div class="col-xs-4 col-md-4 col-xs-offset-2 col-md-offset-2">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+                    <input type="text" class="form-control">
                 </div>
             </div>
         </form>
-        <!--<div class="row">-->
-            <!--<div class="col-md-6 col-md-offset-6">-->
-                <!--<div id="btn_login" class="btn btn-block btn-primary btn-lg">登录</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        <div class="row text-center">
-            <!--<div class="col-md-3 col-md-offset-3">-->
-                <!--<button class="btn btn-primary login-print">打印</button>-->
-            <!--</div>-->
-            <!--<div class="col-md-3 col-md-offset-3">-->
-                <!--<button class="btn btn-primary login-init">初始化(I)</button>-->
-            <!--</div>-->
-            <!--<div class="col-md-4 col-md-offset-4">-->
-                <!--<button class="btn btn-primary login-reconnecthw">重连硬件(L)</button>-->
-            <!--</div>-->
-        </div>
     </div>
 </div>
 <div class="row no-margining">
     <div class="col-md-4 col-xs-4 col-xs-offset-4 col-md-offset-4">
-        <div class="panel panel-primary numpad" style="display: block">
+        <div class="panel panel-primary numpad">
             <div class="row no-margining text-center">
                 <div class="col-xs-3 col-md-3 no-padding">
                     <div class="cbtn btn-num panel-group border-right-bottom" data-num="7">7</div>
@@ -104,9 +79,24 @@
                     <div class="cbtn btn-num panel-group border-right" data-num="0">0</div>
                 </div>
                 <div class="col-xs-6 col-md-6 no-padding">
-                    <div class="cbtn numpad-ok bg-red ok">登录</div>
+                    <div class="cbtn numpad-ok bg-red unlock"><i class="fa fa-unlock"></i></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!--<div class="row no-margining">-->
+    <!--<div class="col-xs-4 col-md-4  col-xs-offset-4 col-md-offset-4 text-right">-->
+       <!--<div class="row">-->
+           <!--<div class="col-xs-6 col-md-6 text-left">-->
+               <!--&lt;!&ndash;<h5>Esc上一步</h5>&ndash;&gt;-->
+               <!--&lt;!&ndash;<button class="btn btn-primary poskey-pre">上一步</button>&ndash;&gt;-->
+           <!--</div>-->
+           <!--<div class="col-xs-6 col-md-6">-->
+               <!--&lt;!&ndash;<h5>Enter下一步</h5>&ndash;&gt;-->
+               <!--<button class="btn btn-primary poskey-next">下一步</button>-->
+           <!--</div>-->
+       <!--</div>-->
+    <!--</div>-->
+<!--</div>-->

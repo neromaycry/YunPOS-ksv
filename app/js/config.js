@@ -151,7 +151,7 @@ requirejs([
     //toastr的初始化设置
     window.toastr = toastr;
     window.toastr.options = {
-        'timeOut': '2000',
+        'timeOut': '4000',
         'positionClass': 'toast-bottom-center'
     };
 
@@ -274,6 +274,24 @@ requirejs([
     document.onkeydown = forbidBackSpace;
 
     $(document).ready(function () {
+        $('*').keydown(function (e) {
+            e = window.event || e || e.which;
+            if (e.keyCode == 112 || e.keyCode == 113
+                || e.keyCode == 114 || e.keyCode == 115
+                || e.keyCode == 116 || e.keyCode == 117
+                || e.keyCode == 118 || e.keyCode == 119
+                || e.keyCode == 120 || e.keyCode == 121
+                || e.keyCode == 122 || e.keyCode == 123) {
+                e.keyCode = 0;
+                return false;
+            }
+        });
+        window.onhelp = function () {
+            //ie下面不能屏蔽f1键的补充方法
+            return false;
+        };
+
+
         window.loading = {
             show: function (obj) {
                 var target = obj || $("body");

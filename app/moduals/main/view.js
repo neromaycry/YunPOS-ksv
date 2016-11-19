@@ -76,7 +76,9 @@ define([
             'click .checking':'onCheckingClicked',
             'click .login-out':'onLoginOutClicked',
             'click .print':'onPrintClicked',//打印页面,
-            'click .withdraw':'onWithDrawClicked'//打印页面
+            'click .withdraw':'onWithDrawClicked',//打印页面
+            'click .cashdrawer': 'openCashDrawer',
+            'click .lock': 'lockScreen'
             //'click .btn-floatpad':'onFloatPadClicked'
         },
         pageInit: function () {
@@ -286,19 +288,19 @@ define([
                 _self.addItem();
             });
             //会员登录
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.M, function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F8, function () {
                 router.navigate('member',{trigger:true});
             });
             //挂单
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.G, function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F6, function () {
                 _self.restOrder();
             });
             //解挂
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.J, function() {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F7, function() {
                 _self.releaseOrder();
             });
             //营业员登陆
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.S, function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F11, function () {
                 _self.doLoginSalesman();
             });
             //退出登录
@@ -336,11 +338,11 @@ define([
                 }
             });
             //修改数量
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.N,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F12,function () {
                 _self.modifyItemNum();
             });
             //单品优惠
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F1,function () {
                 _self.modifyItemDiscount();
             });
             //向上
@@ -351,12 +353,12 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
                 _self.scrollUp();
             });
-            //强制退货
+            //强制退货/单品退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F, function () {
                 router.navigate('returnforce',{ trigger:true });
             });
             //整单退货
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.W, function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F3, function () {
                 router.navigate('returnwhole',{ trigger:true });
             });
             //打开帮助
@@ -364,20 +366,28 @@ define([
                 _self.openHelp();
             });
             //收银对账
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F10, function () {
                 router.navigate('checking',{trigger:true});
             });
             //折让
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F2, function () {
                 _self.onDiscountPercentClicked();
             });
             //小票打印
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.H, function() {
                 router.navigate('print', {trigger:true});
             });
-            //
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Q, function() {
+            //提大额
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F9, function() {
                 _self.onWithDrawClicked();
+            });
+            //开钱箱
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F5, function() {
+                _self.openCashDrawer();
+            });
+            //锁屏
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F4, function() {
+                _self.lockScreen();
             });
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
@@ -983,10 +993,22 @@ define([
         onPrintClicked: function () {
             router.navigate('print', {trigger:true});
         },
+        /**
+         * 提大额
+         */
         onWithDrawClicked: function () {
             var withDrawView = new WithDrawView();
             this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
-        }
+        },
+        /**
+         * 开钱箱
+         */
+        openCashDrawer: function () {
+            this.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
+        },
+
+
+
     });
     return mainView;
 });

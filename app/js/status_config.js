@@ -122,7 +122,8 @@ window.system_config = {
     "ORDER_NO_KEY":"ORDER_NO_KEY",
     "PRINTF":"PRINTF",
     "IS_CLIENT_SCREEN_SHOW":"IS_CLIENT_SCREEN_SHOW",
-    "ODD_CHANGE":'ODD_CHANGE_KEY'
+    "ODD_CHANGE":'ODD_CHANGE_KEY',
+    "LAST_PAGE":"LAST_PAGE"
 };
 
 window.DIRECTIVES = {
@@ -197,6 +198,7 @@ window.PAGE_ID = {
     'MODAL_WITHDRAW':42,
     'MODAL_PRICE_ENTRY':43,
     'MODAL_GATEWAY':44,
+    'LOCKSCREEN': 45,
 };
 
 window.KEYS = {

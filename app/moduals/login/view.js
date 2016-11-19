@@ -37,7 +37,8 @@ define([
             'click input[name = password]':'focusInputPasswd',
             //'click .login-init':'onInitClicked',
             'click .login-reconnecthw':'onReconnectHardwareClicked',
-            'click .power-off':'onPowerOffClicked'
+            'click .power-off':'onPowerOffClicked',
+            'click .lock': 'lockScreen'
         },
 
         pageInit: function () {
@@ -181,7 +182,7 @@ define([
                             replace: true
                         });
                         isFromLogin = true;
-                        toastr.success('登录成功');
+                        //toastr.success('登录成功');
                     } else {
                         toastr.error(response.msg);
                     }
@@ -289,6 +290,9 @@ define([
 
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Esc, function () {
                 _self.onPowerOffClicked();
+            });
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.F4, function () {
+                _self.lockScreen();
             });
         },
 

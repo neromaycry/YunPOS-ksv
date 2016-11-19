@@ -317,7 +317,7 @@ define([
                _self.payment('01');
             });
             //礼券类
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.A, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
                 _self.payment('02');
             });
             //银行POS
@@ -329,11 +329,11 @@ define([
                _self.payment('05', _self.billNumber);
             });
             //整单优惠输入实际优惠金额
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Y, function () {
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F1, function () {
                 _self.billTotalDiscount();
             });
             //整单优惠输入折扣
-            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.U, function () {
+            this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.F2, function () {
                _self.billPercentDiscount();
             });
 

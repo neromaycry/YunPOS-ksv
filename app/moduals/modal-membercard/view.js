@@ -26,7 +26,7 @@ define([
             $('.modal').on('shown.bs.modal', function () {
                 $('input[name = magcard]').focus();
             });
-            this.swipeCard();
+            //this.swipeCard();
         },
 
         bindModalKeys: function () {
@@ -51,17 +51,17 @@ define([
                 toastr.warning('请刷卡');
                 return;
             }
-            $('input[name = magcard]').val('');
             //var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
+            //var value = ',768000001 383837934874352;768000001?383837934874352;';
             console.log(value);
             var index1 = value.indexOf(';');
             var index2 = value.indexOf('?');
             var index3 = value.lastIndexOf(';');
-            var track1 = value.substring(0, index1);
+            var track1 = value.substring(1, index1);
             var track2 = value.substring(index1 + 1, index2);
             var track3 = value.substring(index2 + 1, index3);
             console.log('track1:' + track1 + ',track2:' + track2 + ',track3:' + track3);
-            if (track1 == '') {
+            if (track1 == ';') {
                 track1 = '*';
             }
             if (track2 == '') {

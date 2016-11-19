@@ -21,7 +21,8 @@ define(['backbone'], function (Backbone) {
             'returnwhole':'returnwhole',
             'checking':'checking',
             'hconnection':'hconnection',
-            'print':'print'
+            'print':'print',
+            'lockscreen': 'lockscreen'
         },
 
         //路由初始化可以做一些事
@@ -74,6 +75,14 @@ define(['backbone'], function (Backbone) {
                     view.render();
                 });
             }
+        },
+
+        lockscreen: function () {
+            var _url = './moduals/lockscreen/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
         },
 
         main: function () {

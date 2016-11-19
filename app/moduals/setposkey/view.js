@@ -16,7 +16,13 @@ define([
 
         template: tpl,
 
+        input: 'input[name = poskey]',
+
         events: {
+            'click .btn-numpad':'onNumpadClicked',
+            'click .btn-num':'onNumClicked',
+            'click .btn-backspace':'onBackspaceClicked',
+            'click .btn-clear':'onClearClicked',
             //'click .poskey-pre':'onPreClicked',
             'click .poskey-next':'onNextClicked'
         },
@@ -29,7 +35,7 @@ define([
         },
 
         initPlugins: function () {
-            $('input[name = poskey]').focus();
+            $(this.input).focus();
         },
 
         bindKeys: function () {
@@ -40,6 +46,34 @@ define([
             //this.bindKeyEvents(window.PAGE_ID.SETPOSKEY, window.KEYS.Esc, function () {
             //    router.navigate('setdns', {trigger:true});
             //});
+        },
+
+        onNumpadClicked: function () {
+            var isDisplay = $('.numpad').css('display') == 'none';
+            if (isDisplay) {
+                $('.numpad').css('display','block');
+                $('.btn-numpad').text('关闭小键盘');
+            } else {
+                $('.numpad').css('display','none');
+                $('.btn-numpad').text('打开小键盘');
+            }
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function () {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length-1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
         },
 
         //onPreClicked: function () {

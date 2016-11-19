@@ -117,7 +117,7 @@ define([
                 _self.onMCardLogin();
             });
 
-            this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.P, function () {
+            this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.M, function () {
                 _self.onPhoneNumLogin();
             });
         },

@@ -184,6 +184,14 @@ define([
             }
         },
 
+        /**
+         * 锁屏通用方法
+         */
+        lockScreen: function () {
+            storage.set(system_config.LAST_PAGE, pageId);
+            router.navigate('lockscreen', { trigger: true, replace: true });
+        },
+
         //sendLargeData2Socket: function (str) {
         //    var SOCKET_ADDR = 'ws://127.0.0.1:2001/';
         //    wsClient.close();

@@ -160,15 +160,15 @@ define([
                 //}
             });
             //修改数量
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.N,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F12,function () {
                 _self.modifyItemNum();
             });
             //单品优惠
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Y,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F1,function () {
                _self.modifyItemDiscount();
             });
             //单品折扣
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.U, function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F2, function () {
                 _self.onDiscountPercentClicked();
             });
 
