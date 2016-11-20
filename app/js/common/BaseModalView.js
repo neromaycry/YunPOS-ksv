@@ -116,10 +116,10 @@ define([
         },
 
         /**
-         * ÓëwebsocketÍ¨ĞÅµÄÍ¨ÓÃ·½·¨
-         * @param directives °üº¬Ö¸ÁîµÄÊı×é
-         * @param content ·¢ËÍµÄÖ¸Áî¶ÔÓ¦µÄÄÚÈİµÄÊı×é
-         * @param websocket websocketÊµÀı
+         * ä¸websocketé€šä¿¡çš„é€šç”¨æ–¹æ³•
+         * @param directives åŒ…å«æŒ‡ä»¤çš„æ•°ç»„
+         * @param content å‘é€çš„æŒ‡ä»¤å¯¹åº”çš„å†…å®¹çš„æ•°ç»„
+         * @param websocket websocketå®ä¾‹
          */
         sendWebSocketDirective: function (directives, content, websocket) {
             if (websocket.readyState == 1) {
@@ -127,7 +127,7 @@ define([
                     websocket.send(directive[i] + content[i]);
                 }
             } else {
-                toastr.warning('Ã»ÓĞÁ¬½Óµ½Ó²¼ş£¬Çë¼ì²éÓ²¼şÁ¬½Ó');
+                toastr.warning('æ²¡æœ‰è¿æ¥åˆ°ç¡¬ä»¶ï¼Œè¯·æ£€æŸ¥ç¡¬ä»¶è¿æ¥');
             }
         },
 
