@@ -16,6 +16,7 @@ define([
     '../../../../moduals/modal-priceentry/view',
     '../../../../moduals/layer-member/view',
     '../../../../moduals/layer-logout/view',
+    '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
@@ -25,7 +26,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView,PriceEntryView, LayerMemberView, LayerLogoutView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, PriceEntryView,BinstructionView, LayerMemberView, LayerLogoutView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -80,7 +81,8 @@ define([
             'click .print':'onPrintClicked',//打印页面,
             'click .withdraw':'onWithDrawClicked',//打印页面
             'click .cashdrawer': 'openCashDrawer',
-            'click .lock': 'lockScreen'
+            'click .lock': 'lockScreen',
+            'click .bank-business':'onBusinessClicked'
             //'click .btn-floatpad':'onFloatPadClicked'
         },
         pageInit: function () {
@@ -264,7 +266,7 @@ define([
             // 注册backbone事件
             Backbone.off('SalesmanAdd');
             Backbone.off('onReleaseOrder');
-            //Backbone.off('reBindEvent');
+            Backbone.off('reBindEvent');
             Backbone.on('SalesmanAdd',this.SalesmanAdd,this);
             Backbone.on('onReleaseOrder',this.onReleaseOrder,this);
         },
@@ -291,7 +293,7 @@ define([
             });
             //会员登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F8, function () {
-                _self.onMemberClicked();
+                router.navigate('member',{trigger:true});
             });
             //挂单
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F6, function () {
@@ -307,6 +309,7 @@ define([
             });
             //退出登录
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
+                $(_self.input).val('');
                 _self.doLogout();
             });
             //结算
@@ -390,6 +393,13 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F4, function() {
                 _self.lockScreen();
             });
+
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.V, function () {
+                var binstructionview = new BinstructionView({
+                    pageid: window.PAGE_ID.MAIN
+                });
+                _self.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
+            });
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
             //        pageid: window.PAGE_ID.MAIN,
@@ -405,10 +415,11 @@ define([
          * 账户登出
          */
         doLogout: function () {
-            $(this.input).val('');
-            //var logoutView = new LogoutView();
-            //this.showModal(window.PAGE_ID.LOGOUT, logoutView);
-            this.openLayer(PAGE_ID.LAYER_LOGOUT, PAGE_ID.MAIN, '登出需要验证', LayerLogoutView, {area:'300px'});
+            var logoutView = new LogoutView();
+            this.showModal(window.PAGE_ID.LOGOUT, logoutView);
+            $('.modal').on('shown.bs.modal', function () {
+                $('input[name = logout_username]').focus();
+            });
         },
         /**
          * 结算
@@ -457,7 +468,7 @@ define([
             if ((this.i+1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
                 //alert(_self.n);
-                $('.for-cartlist').scrollTop(this.listheight * this.n);
+                $('.for-cartlist').scrollTop(this.listheight * this.n );
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
@@ -820,8 +831,7 @@ define([
          * 会员登录按钮点击事件
          */
         onMemberClicked:function () {
-            //router.navigate('member',{trigger:true});
-            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, {area: '300px'});
+            router.navigate('member',{trigger:true});
         },
         /**
          * 单品优惠按钮点击事件
@@ -1006,6 +1016,15 @@ define([
          */
         openCashDrawer: function () {
             this.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
+        },
+        /**
+         * 银行业务
+         */
+        onBusinessClicked: function () {
+            var binstructionview = new BinstructionView({
+                pageid: window.PAGE_ID.BILLING
+            });
+            this.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
         },
 
 
