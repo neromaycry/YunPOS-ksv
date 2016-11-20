@@ -19,7 +19,7 @@ define([
 
         template_magcard: magcardtpl,
 
-        type: '01',
+        type: '03',
 
         events: {
             'click .cancel':'onCancelClicked',
@@ -50,11 +50,11 @@ define([
         renderByType: function (type) {
             console.log(type);
               switch (type) {
-                  case '00':
+                  case '01':
                       this.$el.find('.for-member-login').html(this.template_magcard(this.model.toJSON()));
                       return this;
                       break;
-                  case '01':
+                  case '03':
                       this.$el.find('.for-member-login').html(this.template_phone(this.model.toJSON()));
                       return this;
                       break;
@@ -71,10 +71,10 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_MEMBER, KEYS.X, function () {
-                _self.changeTemplate(0);
+                _self.changeTemplate(1);
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_MEMBER, KEYS.P, function () {
-                _self.changeTemplate(1);
+                _self.changeTemplate(3);
             });
         },
 
@@ -101,15 +101,104 @@ define([
 
         onOKClicked: function (type) {
             switch (type) {
-                case '00':
-                    console.log('会员卡登录');
-                    this.closeLayer(layerindex);
-                    break;
                 case '01':
+                    console.log('会员卡登录');
+                    toastr.warning('请刷卡');
+                    break;
+                case '03':
                     console.log('手机号登陆');
-                    this.closeLayer(layerindex);
+                    this.inputPhoneNum();
                     break;
             }
+        },
+
+        inputPhoneNum: function () {
+            var _self = this;
+            var phoneNum = $('input[name = phone]').val();
+            if (phoneNum == '') {
+                toastr.error('手机号不能为空');
+                return;
+            }
+            if (!(/^1[34578]\d{9}$/.test(phoneNum))) {
+                toastr.error('手机号输入错误，请重填');
+                $('input[name = phonenum]').val('');
+                return;
+            }
+            var data = {};
+            data['mobile'] = phoneNum;
+            data['password'] = '*';
+            data['type'] = this.type;
+            this.model.getMemberInfo(data, function (resp) {
+                if (resp.status == '00') {
+                    _self.closeLayer(layerindex);
+                    //Backbone.trigger('onPhoneNumResponse', resp);
+                } else {
+                    toastr.error(resp.msg);
+                }
+            });
+        },
+
+        /**
+         * 刷卡输入
+         */
+        swipeCard: function () {
+            var _self = this;
+            var value = $('input[name = magcard]').val();
+            if (value == '') {
+                toastr.warning('请刷卡');
+                return;
+            }
+            console.log('value:' + value);
+            //var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
+            var index1, index2, track1, track2, track3;
+            //var value = '%768000001 383837934874352?;768000001?;383837934874352?';
+            var str = value.charAt(0);
+            console.log(str);
+            if (str == '%') {
+                index1 = value.indexOf('?');
+                track1 = value.substring(1, index1);
+                value = value.substring(index1 + 1);
+                str = value.charAt(0);
+                console.log('track1 str:' + str);
+            } else {
+                track1 = '*';
+            }
+            //var re = new RegExp(';', 'g');
+            //var arr = value.match(re);
+            //var len = arr.length;
+            //console.log(len);
+            if (str == ';') {
+                index2 = value.indexOf('?');
+                track2 = value.substring(1, index2);
+                value = value.substring(index2 + 1);
+                str = value.charAt(0);
+                console.log('track2 str:' + str);
+            } else {
+                track2 = '*';
+            }
+            if (str == ';') {
+                track3 = value.substring(1, value.length - 1);
+            } else {
+                track3 = '*'
+            }
+
+            console.log('track1:' + track1 + ',track2:' + track2 + ',track3:' + track3);
+            var data = {};
+            var tracks = ['track1', 'track2', 'track3'];
+            var trackValues = [track1, track2, track3];
+            for (var i = 0;i < tracks.length;i++) {
+                data[tracks[i]] = trackValues[i];
+            }
+            data['type'] = this.type;
+            this.requestModel.getMemberInfo(data, function (resp) {
+                //console.log(resp);
+                if (resp.status == '00') {
+                    _self.closeLayer(layerindex);
+                    //Backbone.trigger('onMagcardResponse', resp);
+                } else {
+                    toastr.error(resp.msg);
+                }
+            });
         },
 
         onLoginListClicked: function (e) {
@@ -119,21 +208,27 @@ define([
         },
 
         changeTemplate: function (index) {
+            var _self = this;
             switch (index) {
-                case 0:
-                    this.type = '00';
-                    this.input = 'input[name = magcard]';
-                    break;
                 case 1:
                     this.type = '01';
+                    this.input = 'input[name = magcard]';
+                    this.renderByType(this.type);
+                    $('input[name = magcard]').koala({
+                        delay: 2000,
+                        keyup: function (event) {
+                            _self.swipeCard();
+                        }
+                    });
+                    break;
+                case 3:
+                    this.type = '03';
                     this.input = 'input[name = phone]';
+                    this.renderByType(this.type);
                     break;
             }
-            this.renderByType(this.type);
             $(this.input).focus();
         }
-
-
     });
 
     return layerMemberView;

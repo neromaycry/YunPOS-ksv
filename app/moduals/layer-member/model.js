@@ -8,6 +8,14 @@ define(['../../js/common/BaseModel'],function(BaseModel){
         defaults:{
         },
 
+        getMemberInfo: function (data,callback) {
+            this.sendPOST({
+                url:window.API_URL.VIPINFO,
+                data:data,
+                success:callback
+            });
+        }
+
 
     });
     return layerMemberModel;
