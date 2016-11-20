@@ -70,21 +70,32 @@ define([
             //});
         },
 
-        //openLayer: function (layerId, mainId, view) {
-        //    pageId = id;
-        //    layer.open({
-        //        content: '<div class="for-layer">' + '内容' + '</div>',
-        //        success: function (layero, index) {
-        //            console.log(view);
-        //            console.log(layero);
-        //            view.render();
-        //        },
-        //        end: function () {
-        //            pageId = mainId
-        //        }
-        //    });
-        //
-        //},
+        openLayer: function (LayerId, mainId, title, View, attrs, options) {
+            var _self = this;
+            options = _.extend({
+                title: title,
+                closeBtn: 0,
+                type: 1,
+                offset: '150px',
+                content: '<div class="for-layer">' + '</div>',
+                success: function (layero, index) {
+                    pageId = LayerId;
+                    layerindex = index;
+                    console.log('layerindex = ' + layerindex);
+                },
+                end: function () {
+                    pageId = mainId;
+                    $(document).unbind('keyup');
+                    console.log('end:' + pageId);
+                }
+            }, options);
+            layer.open(options);
+            layer.ready(function () {
+                var view = new View(attrs);
+                view.render();
+            });
+        },
+
 
         closeLayer: function (index) {
             console.log('close layer');
