@@ -26,7 +26,8 @@ requirejs.config({
         'Recwebsocket':'../reconnecting-websocket/reconnecting-websocket',
         'fecha':'../fecha/fecha',
         'noty': '../noty/jquery.noty.packaged',
-        'koala': '../koala/jquery.koala'
+        'koala': '../koala/jquery.koala',
+        'layer': '../layer/layer'
     },
     shim: {
         'backbone': {
@@ -54,6 +55,10 @@ requirejs.config({
         'koala': {
             'deps': ['jquery'],
             'exports': 'koala'
+        },
+        'layer': {
+            'deps': ['jquery', 'css!../layer/skin/default/layer.css'],
+            'exports': 'layer'
         },
         'Recwebsocket':{
             'exports':'Recwebsocket'
@@ -112,7 +117,8 @@ requirejs([
     'fecha',
     'noty',
     'koala',
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala) {
+    'layer'
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala, layer) {
 
     window.isAndroid = false;  //是否为Android设备
 
@@ -131,6 +137,17 @@ requirejs([
     window.fecha = fecha;
 
     window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true
+
+    window.layer = layer;
+
+    window.layerindex = undefined;
+
+    //layer.open({
+    //    content: '测试回调',
+    //    success: function(layero, index){
+    //        console.log(layero, index);
+    //    }
+    //});
 
     console.log(document.body.clientWidth);
 

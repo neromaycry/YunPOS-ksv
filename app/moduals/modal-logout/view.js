@@ -26,8 +26,10 @@ define([
         },
 
         modalInitPage: function () {
+
             this.model = new LogoutModel();
             $('.modal').on('shown.bs.modal', function () {
+                console.log('pageid:' + pageId);
                 $('input[name = logout_passwd]').focus();
             });
         },

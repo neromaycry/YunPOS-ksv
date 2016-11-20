@@ -2,6 +2,10 @@ div {
     font-family: Microsoft YaHei;
 }
 
+div .billing-color {
+    background-color: #26a69a;
+}
+
 div .float-numpad {
     width: 330px;
     z-index: 1000;

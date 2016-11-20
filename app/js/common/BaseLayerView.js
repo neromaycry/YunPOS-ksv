@@ -1,5 +1,5 @@
 /**
- * Created by gjwlg on 2016/9/11.
+ * Created by gjwlg on 2016/11/20.
  */
 define([
     'jquery',
@@ -7,15 +7,20 @@ define([
     'backbone'
 ], function ($, _, Backbone) {
 
-    var BaseModalView = Backbone.View.extend({
+    var BaseLayerView = Backbone.View.extend({
 
-        el: '.modal',
+        el: '.for-layer',
 
         attrs:null,
 
+        layerindex: undefined,
+
+        input: null,
+
         initialize: function (attrs) {
+            //var _self = this;
             console.log('modal:' + this.id);
-            $(document).unbind('keyup');
+            //$(document).unbind('keyup');
             //$(document).unbind('keydown');
             isModal = true;
             this.$el.empty().off();
@@ -29,57 +34,65 @@ define([
                 this.$el.html(this.template);
                 this.template = _.template(this.template);
             }
-            this.modalInitPage();
-            this.bindModalKeys();
-            $('.modal').on('shown.bs.modal', function () {
-                $('.cbtn').mousedown(function () {
-                    $(this).addClass('clicked');
-                });
-                $('.cbtn').mouseup(function () {
-                    $(this).removeClass('clicked');
-                });
-            });
+            this.LayerInitPage();
+            this.bindLayerKeys();
+            //setTimeout(function () {
+
+            //}, 500)
         },
 
-        modalInitPage: function () {
+        LayerInitPage: function () {
 
         },
 
-        onModalShown: function () {
-            
-        },
-
-        bindModalKeys: function () {
+        onLayerShown: function () {
 
         },
 
-        bindModalKeyEvents: function (id,keyCode,callback) {
-            $(document).keydown(function (e) {
+        bindLayerKeys: function () {
+
+        },
+
+        bindLayerKeyEvents: function (id, keyCode, callback) {
+            $(document).keyup(function (e) {
                 e = e || window.event;
                 console.log(e.which);
                 if(e.which == keyCode && pageId == id) {
                     callback();
                 }
             });
+            //$(document).keyup(function (e) {
+            //    e = e || window.event;
+            //    var i = _.indexOf(keyCodes, e.which);
+            //    if (i != -1) {
+            //        callbacks[i]();
+            //    }
+            //});
         },
 
-        showModal: function (id, view) {
-            pageId = id;
-            $('.modal').modal('show',{keyboard:false});
-            $('.modal').on('show.bs.modal', function (e) {
-                view.render();
-            });
-        },
+        //openLayer: function (layerId, mainId, view) {
+        //    pageId = id;
+        //    layer.open({
+        //        content: '<div class="for-layer">' + '内容' + '</div>',
+        //        success: function (layero, index) {
+        //            console.log(view);
+        //            console.log(layero);
+        //            view.render();
+        //        },
+        //        end: function () {
+        //            pageId = mainId
+        //        }
+        //    });
+        //
+        //},
 
-        hideModal: function (id) {
+        closeLayer: function (index) {
+            console.log('close layer');
             isModal = false;
-            $('.modal').modal('hide');
-            $('.modal').on('hidden.bs.modal', function () {
-                pageId = id;
-            });
+            layer.close(index);
         },
 
-        confirmHideModal:function(pageid) {
+        confirmHideLayer:function(pageid) {
             isModal = false;
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
@@ -132,10 +145,13 @@ define([
         },
 
         render: function () {
-            console.log('modal render');
+            console.log('layer render');
             var _self = this;
             this.$el.html(this.template(this.model.toJSON()));
-            this.onModalShown();
+            this.onLayerShown();
+            setTimeout(function () {
+                $(_self.input).focus();
+            }, 300)
             //$('.cbtn').mouseup(function () {
             //    $(_self.input).focus();
             //});
@@ -144,5 +160,5 @@ define([
 
     });
 
-    return BaseModalView;
+    return BaseLayerView;
 });

@@ -208,6 +208,8 @@ window.PAGE_ID = {
     'MODAL_POS':45,//银行卡确认
     'MODAL_BANK_CARD':46,
     'LOCKSCREEN': 47,
+    "LAYER_MEMBER": 48,
+    "LAYER_LOGOUT": 49,
 };
 
 window.KEYS = {

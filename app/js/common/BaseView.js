@@ -31,7 +31,7 @@ define([
             console.log(">>> " + this.id);
             this.undelegateEvents();
             $(document).unbind('keyup');
-            $(document).unbind('keydown');
+            //$(document).unbind('keydown');
             this.$el.empty().off();
             if (attrs) {
                 this.attrs = attrs;
@@ -107,10 +107,10 @@ define([
          * @param view 弹出的模态框中的view
          */
         showModal: function (id, view) {
-            pageId = id;
             $('.modal').modal('show',{keyboard:false});
             $('.modal').on('show.bs.modal', function (e) {
-               view.render();
+                pageId = id;
+                view.render();
             });
         },
 
@@ -119,11 +119,37 @@ define([
          * @param id 返回的页面的view的pageid 例如:window.PAGE_ID.MAIN
          */
         hideModal: function (id) {
+            isModal = false;
             $('.modal').modal('hide');
-            //$('.modal').on('hide.bs.modal', function () {
-            //    pageId = id;
-            //});
-            pageId = id;
+            $('.modal').on('hidden.bs.modal', function () {
+                pageId = id;
+            });
+        },
+
+        openLayer: function (LayerId, mainId, title, View, options) {
+            var _self = this;
+            options = _.extend({
+                title: title,
+                closeBtn: 0,
+                type: 1,
+                offset: '150px',
+                content: '<div class="for-layer">' + '</div>',
+                success: function (layero, index) {
+                    pageId = LayerId;
+                    layerindex = index;
+                    console.log('layerindex = ' + layerindex);
+                },
+                end: function () {
+                    pageId = mainId;
+                    $(document).unbind('keyup');
+                    console.log('end:' + pageId);
+                }
+            }, options);
+            layer.open(options);
+            layer.ready(function () {
+                var view = new View();
+                view.render();
+            });
         },
 
         /**
@@ -132,17 +158,7 @@ define([
          * @param keyCode 将要绑定的键值
          * @param callback 对应将要绑定的回调函数
          */
-        bindKeyEvents: function (id,keyCode,callback) {
-            $(document).keyup(function (e) {
-                e = e || window.event;
-                console.log(e.which);
-                if(e.which == keyCode && pageId == id) {
-                    callback();
-                }
-            });
-        },
-
-        bindModalKeyEvents: function (id, keyCode, callback) {
+        bindKeyEvents: function (id, keyCode, callback) {
             $(document).keydown(function (e) {
                 e = e || window.event;
                 console.log(e.which);
@@ -151,6 +167,16 @@ define([
                 }
             });
         },
+
+        //bindModalKeyEvents: function (id, keyCode, callback) {
+        //    $(document).keyup(function (e) {
+        //        e = e || window.event;
+        //        console.log(e.which);
+        //        if(e.which == keyCode && pageId == id) {
+        //            callback();
+        //        }
+        //    });
+        //},
 
         bindKeys: function () {
 
