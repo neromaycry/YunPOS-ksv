@@ -6,7 +6,6 @@ define([
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
     '../../../../moduals/modal-salesman/view',
-    '../../../../moduals/modal-logout/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
@@ -16,6 +15,7 @@ define([
     '../../../../moduals/modal-priceentry/view',
     '../../../../moduals/layer-member/view',
     '../../../../moduals/layer-logout/view',
+    '../../../../moduals/layer-salesman/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
@@ -26,7 +26,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, PriceEntryView, LayerMemberView, LayerLogoutView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -270,10 +270,10 @@ define([
             Backbone.on('SalesmanAdd',this.SalesmanAdd,this);
             Backbone.on('onReleaseOrder',this.onReleaseOrder,this);
         },
-        SalesmanAdd: function (attrData) {
-            storage.set(system_config.SALE_PAGE_KEY,'salesman',attrData['name']);
+        SalesmanAdd: function (result) {
+            storage.set(system_config.SALE_PAGE_KEY,'salesman', result);
             this.loginInfoModel.set({
-                salesman:attrData['name']
+                salesman: result
             });
             this.renderSalesman();
         },
@@ -415,8 +415,6 @@ define([
          */
         doLogout: function () {
             $(this.input).val('');
-            //var logoutView = new LogoutView();
-            //this.showModal(window.PAGE_ID.LOGOUT, logoutView);
             this.openLayer(PAGE_ID.LAYER_LOGOUT, pageId, '登出需要验证', LayerLogoutView, {area: '300px'});
         },
         /**
@@ -436,11 +434,12 @@ define([
          * 营业员登录
          */
         doLoginSalesman: function () {
-            var salesmanView = new SalesmanView();
-            this.showModal(window.PAGE_ID.SALESMAN, salesmanView);
-            $('.modal').on('shown.bs.modal',function(e) {
-                $('input[name = salesman_id]').focus();
-            });
+            //var salesmanView = new SalesmanView();
+            //this.showModal(window.PAGE_ID.SALESMAN, salesmanView);
+            //$('.modal').on('shown.bs.modal',function(e) {
+            //    $('input[name = salesman_id]').focus();
+            //});
+            this.openLayer(PAGE_ID.LAYER_SALESMAN, pageId, '营业员登录', LayerSalesmanView, {area: '300px'});
         },
         /**
          * 购物车光标向下

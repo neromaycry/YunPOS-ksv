@@ -49,11 +49,11 @@ define([
             var username = storage.get(system_config.LOGIN_USER_KEY, 'user_id');
             var password = $(this.input).val();
             //if (username == '') {
-            //    toastr.warning('ÇëÊäÈëÓÃ»§Ãû');
+            //    toastr.warning('è¯·è¾“å…¥ç”¨æˆ·å');
             //    return;
             //}
             if (password == '') {
-                toastr.warning('ÇëÊäÈëÃÜÂë');
+                toastr.warning('è¯·è¾“å…¥å¯†ç ');
                 return;
             }
             var data = {
