@@ -16,7 +16,6 @@ define([
         input: 'input[name = logout_passwd]',
 
         LayerInitPage: function () {
-            var _self = this;
             this.model = new LayerLogoutModel();
         },
 
@@ -41,7 +40,7 @@ define([
 
         esc: function () {
             console.log('esc cliked');
-            this.closeLayer()
+            this.closeLayer(layerindex)
         },
 
         doLogout: function () {
