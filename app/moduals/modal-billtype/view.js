@@ -193,6 +193,7 @@ define([
                 data['gather_ui'] = gatherUI;
                 data['gather_kind'] = gatherKind;
                 data['gather_money'] = gatherMoney;
+                data['bill_no'] = _self.attrs.bill_no;
                 data['currentid'] = window.PAGE_ID.MODAL_POS;
                 data['pageid'] = window.PAGE_ID.BILLING
                 var gatherUIView = new GatherUIView(data);

@@ -14,6 +14,7 @@ define([
     '../../../../moduals/modal-restorder/view',
     '../../../../moduals/modal-withdraw/view',
     '../../../../moduals/modal-priceentry/view',
+    '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
@@ -23,7 +24,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView,PriceEntryView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SalesmanView, LogoutView,BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView,PriceEntryView,BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -78,7 +79,8 @@ define([
             'click .print':'onPrintClicked',//打印页面,
             'click .withdraw':'onWithDrawClicked',//打印页面
             'click .cashdrawer': 'openCashDrawer',
-            'click .lock': 'lockScreen'
+            'click .lock': 'lockScreen',
+            'click .bank-business':'onBusinessClicked'
             //'click .btn-floatpad':'onFloatPadClicked'
         },
         pageInit: function () {
@@ -388,6 +390,13 @@ define([
             //锁屏
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F4, function() {
                 _self.lockScreen();
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.V, function () {
+                var binstructionview = new BinstructionView({
+                    pageid: window.PAGE_ID.MAIN
+                });
+                _self.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
             });
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
@@ -1005,6 +1014,15 @@ define([
          */
         openCashDrawer: function () {
             this.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
+        },
+        /**
+         * 银行业务
+         */
+        onBusinessClicked: function () {
+            var binstructionview = new BinstructionView({
+                pageid: window.PAGE_ID.BILLING
+            });
+            this.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
         },
 
 

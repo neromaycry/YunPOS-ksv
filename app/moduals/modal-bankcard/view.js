@@ -24,7 +24,12 @@ define([
         },
 
         modalInitPage: function () {
-            console.log(this.attrs);
+            var data = {};
+            data['transaction_amount'] = '20.22';
+            data['cashier_no'] = '2222';
+            data['pos_no'] = '002';
+            data['bill_no'] = this.attrs.bill_no;
+            this.sendWebSocketDirective([DIRECTIVES.Bank_sale],[data] , wsClient);
         },
 
         bindModalKeys: function () {
@@ -39,23 +44,16 @@ define([
         },
 
         confirm: function () {
-            var bankCardAccount = $(this.input).val();
-            if(bankCardAccount == '') {
-                toastr.warning('银行卡号不能为空');
-            }else if((bankCardAccount.split('.').length-1) > 0) {
-                toastr.warning('银行卡号无效');
-            }else {
-                var data = {};
-                data['gather_id'] = this.attrs.gather_id;
-                data['gather_money'] = this.attrs.gather_money;
-                data['gather_name'] = this.attrs.gather_name;
-                data['gather_no'] = bankCardAccount;
-                data['gather_kind'] = this.attrs.gather_kind;
-                data['payment_bill'] = '';
-                Backbone.trigger('onReceivedsum',data);
-                this.hideModal(window.PAGE_ID.BILLING);
-                $('input[name = billing]').focus();
-            }
+            var data = {};
+            data['gather_id'] = this.attrs.gather_id;
+            data['gather_money'] = this.attrs.gather_money;
+            data['gather_name'] = this.attrs.gather_name;
+            //data['gather_no'] = bankCardAccount;
+            data['gather_kind'] = this.attrs.gather_kind;
+            data['payment_bill'] = '';
+            Backbone.trigger('onReceivedsum',data);
+            this.hideModal(window.PAGE_ID.BILLING);
+            $('input[name = billing]').focus();
         },
 
         onOKClicked: function () {

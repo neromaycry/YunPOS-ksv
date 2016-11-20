@@ -15,12 +15,13 @@ define([
     '../../../../moduals/modal-qpalipay/view',
     '../../../../moduals/modal-qpwechat/view',
     '../../../../moduals/modal-gatherui/view',
+    '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView,billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -85,7 +86,8 @@ define([
             'click .gift-certificate':'onGiftClicked',//礼券类
             'click .pos':'onPosClicked',//银行pos
             'click .ecard':'onEcardClicked',
-            'click .third-pay':'onThirdPayClicked'
+            'click .third-pay':'onThirdPayClicked',
+            'click .bank-business':'onBusinessClicked'
         },
 
         pageInit: function () {
@@ -298,7 +300,15 @@ define([
             });
             //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
-                _self.judgeEcardExistance(_self.i);
+                var confirmView = new ConfirmView({
+                    pageid: window.PAGE_ID.BILLING,
+                    callback: function () {
+                        _self.judgeEcardExistance(_self.i);
+
+                    },
+                    content:'确定删除此条支付记录？' //confirm模态框的提示内容
+                });
+                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
             //结算
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Space, function() {
@@ -314,15 +324,15 @@ define([
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
-               _self.payment('01');
+               _self.payment('01', '');
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
-                _self.payment('02');
+                _self.payment('02', '');
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
-                _self.payment('03');
+                _self.payment('03', _self.billNumber);
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
@@ -354,6 +364,12 @@ define([
             //快捷支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F, function () {
                 _self.QuickPay();
+            });
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.V, function () {
+                var binstructionview = new BinstructionView({
+                    pageid: window.PAGE_ID.BILLING
+                });
+                _self.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
             });
 
         },
@@ -880,7 +896,16 @@ define([
          * 删除按钮点击事件
          */
         onBillDelete: function () {
-            this.judgeEcardExistance(this.i);
+            var _self = this;
+            var confirmView = new ConfirmView({
+                pageid: window.PAGE_ID.BILLING,
+                callback: function () {
+                    _self.judgeEcardExistance(_self.i);
+                },
+                content:'确定删除此条支付记录？' //confirm模态框的提示内容
+            });
+            this.showModal(window.PAGE_ID.CONFIRM, confirmView);
+
         },
         /**
          * 整单优惠点击事件
@@ -1034,18 +1059,18 @@ define([
          *支票类付款
          */
         onCheckClicked:function () {
-            this.payment('01');
+            this.payment('01', '');
             $('button[name = check]').blur();
         },
         /**
          * 礼券
          */
         onGiftClicked: function () {
-            this.payment('02');
+            this.payment('02', '');
             $('button[name = gift-certificate]').blur();
         },
         onPosClicked:function () {
-            this.payment('03');
+            this.payment('03', this.billNumber);
             $('button[name = pos]').blur();
         },
         /**
@@ -1087,6 +1112,13 @@ define([
             }
             $('input[name = billing]').val('');
         },
+        onBusinessClicked: function () {
+            var binstructionview = new BinstructionView({
+                pageid: window.PAGE_ID.BILLING
+            });
+            this.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
+        },
+
 
         /**
          * 从接口获取小票号

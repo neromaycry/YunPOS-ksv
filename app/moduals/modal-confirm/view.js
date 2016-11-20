@@ -64,6 +64,7 @@ define([
                     break;
                 case window.PAGE_ID.MAIN:
                     this.hideModal(window.PAGE_ID.MAIN);
+                    $('input[name = main]').focus();
                     break;
                 case window.PAGE_ID.MEMBER:
                     this.hideModal(window.PAGE_ID.MEMBER);
@@ -76,6 +77,7 @@ define([
                     break;
                 case window.PAGE_ID.BILLING:
                     this.hideModal(window.PAGE_ID.BILLING);
+                    $('input[name = billing]').focus();
                     break;
                 case window.PAGE_ID.BILLING_RETURN:
                     this.hideModal(window.PAGE_ID.BILLING_RETURN);
