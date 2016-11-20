@@ -5,7 +5,6 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
-    '../../../../moduals/modal-salesman/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
@@ -16,6 +15,7 @@ define([
     '../../../../moduals/layer-member/view',
     '../../../../moduals/layer-logout/view',
     '../../../../moduals/layer-salesman/view',
+    '../../../../moduals/layer-confirm/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
@@ -26,7 +26,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SalesmanView, BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -267,11 +267,11 @@ define([
             Backbone.off('SalesmanAdd');
             Backbone.off('onReleaseOrder');
             //Backbone.off('reBindEvent');
-            Backbone.on('SalesmanAdd',this.SalesmanAdd,this);
-            Backbone.on('onReleaseOrder',this.onReleaseOrder,this);
+            Backbone.on('SalesmanAdd', this.SalesmanAdd, this);
+            Backbone.on('onReleaseOrder', this.onReleaseOrder ,this);
         },
         SalesmanAdd: function (result) {
-            storage.set(system_config.SALE_PAGE_KEY,'salesman', result);
+            storage.set(system_config.SALE_PAGE_KEY, 'salesman', result);
             this.loginInfoModel.set({
                 salesman: result
             });
@@ -317,17 +317,10 @@ define([
             });
             //清空购物车
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {
-                var confirmView = new ConfirmView({
-                    pageid: window.PAGE_ID.MAIN, //当前打开confirm模态框的页面id
-                    callback: function () { //点击确认键的回调
-                        _self.clearCart();
-                    },
-                    content:'确定取消交易？' //confirm模态框的提示内容
-                });
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                _self.onCleanClicked();
             });
             //删除商品
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D, function () {
                 if(_self.isDeleteKey){
                     _self.deleteItem();
                 }else{
@@ -341,7 +334,7 @@ define([
                 }
             });
             //修改数量
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F12,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F12, function () {
                 _self.modifyItemNum();
             });
             //单品优惠
@@ -865,14 +858,15 @@ define([
          */
         onCleanClicked: function () {
             var _self = this;
-            var confirmView = new ConfirmView({
-                pageid: window.PAGE_ID.MAIN, //当前打开confirm模态框的页面id
-                callback: function () { //点击确认键的回调
+            var attrs = {
+                pageid: pageId,
+                content: '确定取消交易？',
+                is_navigate: false,
+                callback: function () {
                     _self.clearCart();
-                },
-                content:'确定取消交易？' //confirm模态框的提示内容
-            });
-            _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                }
+            };
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
         },
         /**
          * 向上选择点击事件

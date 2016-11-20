@@ -48,7 +48,7 @@ define([
         },
 
         onCancelClicked: function () {
-            this.closeLayer()
+            this.closeLayer(layerindex);
         },
 
         onNumClicked: function (e) {

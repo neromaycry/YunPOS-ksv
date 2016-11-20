@@ -152,6 +152,34 @@ define([
             });
         },
 
+        openConfirmLayer: function (LayerId, mainId, View, attrs, options) {
+            options = _.extend({
+                title: '请确认',
+                closeBtn: 0,
+                type: 1,
+                offset: '150px',
+                content: '<div class="for-layer">' + '</div>',
+                success: function (layero, index) {
+                    pageId = LayerId;
+                    layerindex = index;
+                    console.log('layerindex = ' + layerindex);
+                },
+                end: function () {
+                    pageId = mainId;
+                    $(document).unbind('keyup');
+                    console.log('end:' + pageId);
+                }
+            }, options);
+            layer.open(options);
+            layer.ready(function () {
+                var view = new View(attrs);
+                view.render();
+            })
+        },
+
+
+
+
         /**
          * 键盘绑定公用方法
          * @param id 当前view的pageid

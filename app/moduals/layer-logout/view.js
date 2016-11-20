@@ -40,7 +40,7 @@ define([
 
         esc: function () {
             console.log('esc cliked');
-            this.closeLayer(layerindex)
+            this.closeLayer(layerindex);
         },
 
         doLogout: function () {

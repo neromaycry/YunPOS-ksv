@@ -165,7 +165,7 @@ window.PAGE_ID = {
     'LOGIN':1,
     'MAIN':2,
     'MEMBER':3,
-    'SALESMAN':4,
+    'LAYER_SALESMAN': 4,
     'TIP_MEMBER':5,
     'BILLING':6,
     'SECONDLOGIN':7,
@@ -180,7 +180,7 @@ window.PAGE_ID = {
     'SETDNS':16,
     'SETPOSKEY':17,
     'INITINFO':18,
-    'LOGOUT':19,
+    "LAYER_LOGOUT": 19,
     'BILL_DISCOUNT':20,
     'CHECKING':21,
     'CONFIRM':22,
@@ -209,9 +209,8 @@ window.PAGE_ID = {
     'MODAL_BANK_CARD':46,
     'LOCKSCREEN': 47,
     "LAYER_MEMBER": 48,
-    "LAYER_LOGOUT": 49,
-    'MODAL_BANK_INSTRUCTION':50,
-    'LAYER_SALESMAN': 51,
+    'MODAL_BANK_INSTRUCTION':49,
+    'LAYER_CONFIRM': 51,
 };
 
 window.KEYS = {

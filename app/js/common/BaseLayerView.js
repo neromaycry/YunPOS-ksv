@@ -152,9 +152,18 @@ define([
             setTimeout(function () {
                 $(_self.input).focus();
             }, 300)
-            //$('.cbtn').mouseup(function () {
-            //    $(_self.input).focus();
-            //});
+            $('.cbtn').mousedown(function () {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').mouseup(function () {
+                $(this).removeClass('clicked');
+            });
+            $('.cbtn').on('touchstart', function (e) {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').on('touchend', function (e) {
+                $(this).removeClass('clicked');
+            });
             return this;
         }
 

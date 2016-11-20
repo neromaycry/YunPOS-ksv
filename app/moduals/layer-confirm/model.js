@@ -3,12 +3,12 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var salesmanModel=BaseModel.extend({
+    var layerSalesmanModel=BaseModel.extend({
 
         defaults:{
             name:''
         },
 
     });
-    return salesmanModel;
+    return layerSalesmanModel;
 });
