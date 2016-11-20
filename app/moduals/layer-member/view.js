@@ -13,6 +13,8 @@ define([
 
         template: tpl,
 
+        input: 'input[name = salesman_id]',
+
         LayerInitPage: function () {
             this.model = new LayerMemberModel();
         },
@@ -30,11 +32,12 @@ define([
 
         enter: function () {
             console.log('enter clicked');
-            this.closeLayer()
+            this.closeLayer(layerindex);
         },
 
         esc: function () {
             console.log('esc cliked');
+            this.closeLayer(layerindex);
         }
 
 

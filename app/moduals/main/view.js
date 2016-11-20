@@ -16,6 +16,7 @@ define([
     '../../../../moduals/layer-logout/view',
     '../../../../moduals/layer-salesman/view',
     '../../../../moduals/layer-confirm/view',
+    '../../../../moduals/layer-help/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
@@ -26,7 +27,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -408,7 +409,7 @@ define([
          */
         doLogout: function () {
             $(this.input).val('');
-            this.openLayer(PAGE_ID.LAYER_LOGOUT, pageId, '登出需要验证', LayerLogoutView, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_LOGOUT, pageId, '登出需要验证', LayerLogoutView, null, {area: '300px'});
         },
         /**
          * 结算
@@ -432,7 +433,7 @@ define([
             //$('.modal').on('shown.bs.modal',function(e) {
             //    $('input[name = salesman_id]').focus();
             //});
-            this.openLayer(PAGE_ID.LAYER_SALESMAN, pageId, '营业员登录', LayerSalesmanView, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_SALESMAN, pageId, '营业员登录', LayerSalesmanView, null, {area: '300px'});
         },
         /**
          * 购物车光标向下
@@ -802,8 +803,12 @@ define([
             }
         },
         openHelp: function () {
-            var tipsView = new KeyTipsView('MAIN_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+            //var tipsView = new KeyTipsView('MAIN_PAGE');
+            //this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+            var attrs = {
+                page: 'MAIN_PAGE'
+            };
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
         /**
          * 结算按钮点击事件
@@ -822,7 +827,7 @@ define([
          */
         onMemberClicked:function () {
             //router.navigate('member',{trigger:true});
-            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, null, {area: '300px'});
         },
         /**
          * 单品优惠按钮点击事件

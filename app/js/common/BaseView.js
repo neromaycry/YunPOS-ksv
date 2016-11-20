@@ -126,7 +126,7 @@ define([
             });
         },
 
-        openLayer: function (LayerId, mainId, title, View, options) {
+        openLayer: function (LayerId, mainId, title, View, attrs, options) {
             var _self = this;
             options = _.extend({
                 title: title,
@@ -147,7 +147,7 @@ define([
             }, options);
             layer.open(options);
             layer.ready(function () {
-                var view = new View();
+                var view = new View(attrs);
                 view.render();
             });
         },

@@ -210,7 +210,8 @@ window.PAGE_ID = {
     'LOCKSCREEN': 47,
     "LAYER_MEMBER": 48,
     'MODAL_BANK_INSTRUCTION':49,
-    'LAYER_CONFIRM': 51,
+    'LAYER_CONFIRM': 50,
+    'LAYER_HELP': 51,
 };
 
 window.KEYS = {
