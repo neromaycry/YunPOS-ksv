@@ -31,9 +31,6 @@ define([
             if(storage.isSet(system_config.RESTORDER_KEY)) {
                 this.obj = storage.get(window.system_config.RESTORDER_KEY);
             }
-            setTimeout(function () {
-                $(_self.input).focus();
-            }, 100);
         },
 
         bindLayerKeys: function () {
@@ -49,6 +46,7 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
+            $('input[name = main]').focus();
         },
 
         onNumClicked: function (e) {
@@ -75,12 +73,14 @@ define([
         releaseOrder: function () {
             var value = $(this.input).val();
             if (value == '') {
-                toastr.warning('请输入挂单号');
+                //toastr.warning('请输入挂单号');
+                layer.msg('请输入挂单号', optLayerWarning);
                 $(this.input).focus();
             } else {
                 var orderSelected = _.pick(this.obj, value);
                 if (_.isEmpty(orderSelected)) {
-                    toastr.warning('没有这个挂单号');
+                    //toastr.warning('没有这个挂单号');
+                    layer.msg('没有这个挂单号', optLayerWarning);
                     $(this.input).val('');
                     $(this.input).focus();
                 } else {
@@ -89,7 +89,8 @@ define([
                     Backbone.trigger('onReleaseOrder',orderSelectedDetail);
                     storage.remove(system_config.RESTORDER_KEY,value);
                     this.closeLayer(layerindex);
-                    toastr.success('解挂成功');
+                    //toastr.success('解挂成功');
+                    layer.msg('解挂成功', optLayerSuccess);
                     $('input[name = main]').focus();
                 }
             }

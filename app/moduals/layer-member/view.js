@@ -80,6 +80,7 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
+            $('input[name = main]').focus();
         },
 
         onNumClicked: function (e) {
@@ -131,6 +132,7 @@ define([
             this.model.getMemberInfo(data, function (resp) {
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
+                    $('input[name = main]').focus();
                     //Backbone.trigger('onPhoneNumResponse', resp);
                 } else {
                     toastr.error(resp.msg);

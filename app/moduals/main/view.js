@@ -414,11 +414,12 @@ define([
         doBilling: function () {
             //console.log(_self.model.get('itemamount'));
             if(this.model.get('itemamount') == 0){
-                toastr.warning('购物车内无商品',{positionClass: 'toast-top-center'});
+                //toastr.warning('购物车内无商品',{positionClass: 'toast-top-center'});
+                layer.msg('购物车内无商品', optLayerWarning);
             } else {
                 console.log(this.i);
                 storage.set(system_config.SALE_PAGE_KEY, 'i', this.i);
-                router.navigate('billing',{trigger:true});
+                router.navigate('billing', {trigger:true});
             }
         },
         /**
@@ -466,7 +467,8 @@ define([
         releaseOrder: function () {
             var itemamount = this.model.get('itemamount');
             if(itemamount != 0){
-                toastr.warning('购物车内有商品，不能执行解挂操作');
+                //toastr.warning('购物车内有商品，不能执行解挂操作');
+                layer.msg('购物车内有商品，不能执行解挂操作', optLayerWarning);
             }else {
                 //router.navigate('restorder',{trigger:true});
                 //var restOrderView = new RestOrderView();
@@ -483,7 +485,8 @@ define([
         restOrder: function () {
             var itemamount = this.model.get('itemamount');
             if (itemamount == 0) {
-                toastr.warning('当前购物车内无商品，无法执行挂单操作');
+                //toastr.warning('当前购物车内无商品，无法执行挂单操作');
+                layer.msg('当前购物车内无商品，无法执行挂单操作', optLayerWarning);
             }else {
                 //var orderNum = new Date().getTime();
                 var orderNumFromStorage = storage.get(system_config.RESTORDER_NUM);
@@ -517,6 +520,7 @@ define([
                 this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
                 toastr.success('挂单号：' + orderNum);
+                layer.msg('挂单号：' + orderNum, optLayerSuccess);
             }
         },
 
@@ -527,7 +531,8 @@ define([
             var _self = this;
             var value = $(this.input).val();
             if(_self.model.get('itemamount') == 0) {
-                toastr.warning('当前购物车内无商品');
+                //toastr.warning('当前购物车内无商品');
+                layer.msg('当前购物车内无商品', optLayerWarning);
                 //}else{
                 //    if(this.isDiscountPercent) {
                 //        if (value == '') {
@@ -547,9 +552,11 @@ define([
                 //    }
                 // else {
             }else if(value == '') {
-                toastr.warning('优惠金额不能为空');
+                //toastr.warning('优惠金额不能为空');
+                layer.msg('优惠金额不能为空', optLayerWarning);
             }else if(value == '.' || (value.split('.').length - 1) > 1){
-                toastr.warning('请输入有效的优惠金额');
+                //toastr.warning('请输入有效的优惠金额');
+                layer.msg('请输入有效的优惠金额', optLayerWarning);
             }else {
                 var item = _self.collection.at(_self.i);
                 var price = item.get('price');
@@ -563,7 +570,8 @@ define([
                     _self.calculateModel();
                     $('#li' + _self.i).addClass('cus-selected');
                 }else {
-                    toastr.warning('优惠金额不能大于商品金额');
+                    //toastr.warning('优惠金额不能大于商品金额');
+                    layer.msg('优惠金额不能大于商品金额', optLayerWarning);
                 }
             }
             $(this.input).val('');
@@ -582,13 +590,17 @@ define([
             //var _self = this;
             var discountpercent = $(this.input).val();
             if(this.model.get('itemamount') == 0) {
-                toastr.warning('当前购物车内无商品');
+                //toastr.warning('当前购物车内无商品');
+                layer.msg('当前购物车内无商品', optLayerWarning);
             }else if(discountpercent == '') {
-                toastr.warning('折扣比率不能为空');
+                //toastr.warning('折扣比率不能为空');
+                layer.msg('折扣比率不能为空', optLayerWarning);
             }else if(discountpercent >= 100) {
-                toastr.warning('折扣比率不能大于100');
+                //toastr.warning('折扣比率不能大于100');
+                layer.msg('折扣比率不能大于100', optLayerWarning);
             }else if((discountpercent.split('.').length - 1) > 0){
-                toastr.warning('请输入有效的折扣比率');
+                //toastr.warning('请输入有效的折扣比率');
+                layer.msg('请输入有效的折扣比率', optLayerWarning);
             }else {
                 var rate = discountpercent / 100;
                 console.log(rate);

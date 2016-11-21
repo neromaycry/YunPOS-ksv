@@ -162,7 +162,7 @@ define([
             this.onLayerShown();
             setTimeout(function () {
                 $(_self.input).focus();
-            }, 300)
+            }, 300);
             $('.cbtn').mousedown(function () {
                 $(this).addClass('clicked');
             });

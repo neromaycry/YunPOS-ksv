@@ -34,13 +34,12 @@ define([
         },
 
         enter: function () {
-            console.log('enter clicked');
             this.doLogout();
         },
 
         esc: function () {
-            console.log('esc cliked');
             this.closeLayer(layerindex);
+            $('input[name = main]').focus();
         },
 
         doLogout: function () {

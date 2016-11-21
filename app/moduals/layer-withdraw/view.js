@@ -26,9 +26,6 @@ define([
         LayerInitPage: function () {
             var _self = this;
             this.model = new LayerWithdrawModel();
-            setTimeout(function () {
-                $(_self.input).focus();
-            });
         },
 
         bindLayerKeys: function () {
@@ -44,6 +41,7 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
+            $('input[name = main]').focus();
         },
 
         onNumClicked: function (e) {
@@ -66,7 +64,8 @@ define([
         onOKClicked: function () {
             var money = $(this.input).val();
             if (money == '') {
-                toastr.warning('请输入提款金额');
+                //toastr.warning('请输入提款金额');
+                layer.msg('请输入提款金额', optLayerWarning);
                 return;
             }
             var pos = '收款机(2341)';
@@ -82,6 +81,7 @@ define([
             printText += '    提款人签字：\n\n\n\n\n\n\n\n';
             this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT, DIRECTIVES.OpenCashDrawer], [printText, ''], wsClient);
             this.closeLayer(layerindex);
+            $('input[name = main]').focus();
         },
 
         getCurrentFormatDate: function () {

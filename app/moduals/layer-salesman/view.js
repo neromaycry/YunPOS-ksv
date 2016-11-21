@@ -49,6 +49,7 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
+            $('input[name = main]').focus();
         },
 
         onNumClicked: function (e) {
@@ -89,6 +90,7 @@ define([
             if (result) {
                 Backbone.trigger('SalesmanAdd',result['name']);
                 this.closeLayer(layerindex);
+                $('input[name = main]').focus();
             } else {
                 toastr.warning('您输入的营业员不存在,请重新输入');
             }
@@ -112,10 +114,6 @@ define([
             //}
             $(this.input).val('');
         }
-
-
-
-
     });
 
     return layerSalesmanView;

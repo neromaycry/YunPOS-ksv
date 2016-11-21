@@ -142,6 +142,26 @@ requirejs([
 
     window.layerindex = undefined;
 
+    window.optLayerWarning = {
+        icon: 0,
+        time: 3000
+    };
+
+    window.optLayerSuccess = {
+        icon: 1,
+        time: 3000
+    };
+
+    window.optLayerError = {
+        icon: 2,
+        time: 3000
+    };
+
+    window.optLayerHelp = {
+        icon: 3,
+        time: 3000
+    };
+
     //layer.open({
     //    content: '测试回调',
     //    success: function(layero, index){

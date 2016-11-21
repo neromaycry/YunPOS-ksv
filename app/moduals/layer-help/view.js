@@ -47,6 +47,7 @@ define([
 
         onCloseClicked: function () {
             this.closeLayer(layerindex);
+            $('input[name = main]').focus();
         },
 
     });

@@ -189,7 +189,7 @@ window.PAGE_ID = {
     'RT_ONECARD_LOGIN':25,
     'RT_ONECARD_PAY':26,
     'QUICK_PAY':27,
-    "MODAL_RESTORDER":28,
+    'LAYER_RESTORDER':28,
     'ALIPAY':29,
     'WECHAT':30,
     'QP_ALIPAY':31,
@@ -202,7 +202,7 @@ window.PAGE_ID = {
     'PRINT':38,
     'MODAL_MEMBER_CARD':40,
     'MODAL_PHONENUM':41,
-    'MODAL_WITHDRAW':42,
+    'LAYER_WITHDRAW': 42,
     'MODAL_PRICE_ENTRY':43,
     'MODAL_GATEWAY':44,
     'MODAL_POS':45,//银行卡确认
@@ -212,8 +212,6 @@ window.PAGE_ID = {
     'MODAL_BANK_INSTRUCTION':49,
     'LAYER_CONFIRM': 50,
     'LAYER_HELP': 51,
-    'LAYER_RESTORDER':52,
-    'LAYER_WITHDRAW': 53,
 };
 
 window.KEYS = {
