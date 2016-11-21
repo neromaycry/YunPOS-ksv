@@ -26,13 +26,20 @@ define([
         LayerInitPage: function () {
             var _self = this;
             this.model = new LayerAuthCardModel();
-
+            setTimeout(function () {
+                $('input[name = authcard]').koala({
+                    delay: 1000,
+                    keyup: function () {
+                        _self.swipeCard();
+                    }
+                });
+            }, 200);
         },
 
         bindLayerKeys: function () {
             var _self = this;
             this.bindLayerKeyEvents(PAGE_ID.LAYER_AUTHCARD, KEYS.Enter, function () {
-                _self.onOKClicked();
+                _self.onCancelClicked();
             });
 
             this.bindLayerKeyEvents(PAGE_ID.LAYER_AUTHCARD, KEYS.Esc, function () {
@@ -48,29 +55,9 @@ define([
             }
         },
 
-        onNumClicked: function (e) {
-            var value = $(e.currentTarget).data('num');
-            var str = $(this.input).val();
-            str += value;
-            $(this.input).val(str);
-        },
-
-        onBackspaceClicked: function (e) {
-            var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
-            $(this.input).val(str);
-        },
-
-        onClearClicked: function () {
-            $(this.input).val('');
-        },
-
-        onOKClicked: function () {
-            var value = $(this.input).val();
-            if (value == '') {
-                layer.msg('请刷管理卡', optLayerWarning);
-                return;
-            }
+        swipeCard: function () {
+            //var _self = this;
+            //var value = $(this.input).val();
             this.attrs.callback();
             if (this.attrs.is_navigate) {
                 this.confirmCloseLayer(this.attrs.navigate_page);
@@ -78,6 +65,7 @@ define([
                 this.confirmCloseLayer(this.attrs.pageid);
             }
         },
+
 
         closeLayer: function (id) {
             pageId = id;

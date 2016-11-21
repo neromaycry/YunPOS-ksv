@@ -150,11 +150,11 @@ define([
         swipeCard: function () {
             var _self = this;
             var value = $('input[name = magcard]').val();
-            if (value == '') {
-                //toastr.info('请刷卡');
-                layer.msg(resp.msg, optLayerWarning);
-                return;
-            }
+            //if (value == '') {
+            //    //toastr.info('请刷卡');
+            //    layer.msg('请刷卡', optLayerWarning);
+            //    return;
+            //}
             console.log('value:' + value);
             //var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
             var index1, index2, track1, track2, track3;
@@ -197,7 +197,7 @@ define([
                 data[tracks[i]] = trackValues[i];
             }
             data['type'] = this.type;
-            this.requestModel.getMemberInfo(data, function (resp) {
+            this.model.getMemberInfo(data, function (resp) {
                 //console.log(resp);
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
