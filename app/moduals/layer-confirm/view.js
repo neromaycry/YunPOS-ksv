@@ -65,7 +65,7 @@ define([
         onOKClicked: function () {
             this.attrs.callback();
             if (this.attrs.is_navigate) {
-                this.confirmCloseLayer(this.attrs.navigateId);
+                this.confirmCloseLayer(this.attrs.navigate_page);
             } else {
                 this.confirmCloseLayer(this.attrs.pageid);
             }

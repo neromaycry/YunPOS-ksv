@@ -7,8 +7,8 @@ define([
     '../../../../moduals/billing/collection',
     '../../../../moduals/modal-billtype/view',
     '../../../../moduals/modal-billingdiscount/view',
-    '../../../../moduals/keytips-member/view',
-    '../../../../moduals/modal-confirm/view',
+    '../../../../moduals/layer-help/view',
+    '../../../../moduals/layer-confirm/view',
     '../../../../moduals/modal-ecardlogin/view',
     '../../../../moduals/modal-changing/view',
     '../../../../moduals/modal-quickpay/view',
@@ -21,7 +21,7 @@ define([
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BilldiscountView, KeyTipsView,ConfirmView, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,BilltypeView, BilldiscountView, LayerHelpView, LayerConfirm, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -73,13 +73,13 @@ define([
             'click .btn-clear':'onClearClicked',
             'click .billing-help':'onBillHelpClicked',
             'click .billing-return':'onReturnMainClicked',
-            'click .billing-delete':'onBillDelete',
+            'click .billing-delete':'onDeleteClicked',
             'click .totaldiscount':'onTotalDiscountClicked',
             'click .discountpercent':'onDiscountPercentClicked',
             'click .billing-keyup':'onKeyUp',
             'click .billing-keydown':'onKeyDown',
             'click .billing':'onBillingClicked',
-            'click .billing-clean':'onBillingCleanClicked',
+            'click .billing-clean':'onCleanClicked',
             'click [data-index]': 'onPayClick',
             'click .quick-pay':'onQuickPayClicked',//快捷支付
             'click .check':'onCheckClicked',//支票类付款
@@ -140,7 +140,7 @@ define([
             //$('.recvbl-panel').width(cartWidth);  // 设置左侧应收金额单独显示区域的宽度
             $('.for-billdetail').height(billdetail);
             this.listheight = $('.for-billdetail').height();
-            this.listnum = 10; //设置商品列表中的条目数
+            this.listnum = 9; //设置商品列表中的条目数
             $('.li-billdetail').height(this.listheight / this.listnum - 21);
         },
         handleEvents: function () {
@@ -288,7 +288,8 @@ define([
             var _self = this;
             //返回上一层
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Esc, function () {
-                if(_self.collection.length != 0) {
+                var receivedSum = _self.model.get('receivedsum');
+                if(receivedSum != 0) {
                     toastr.warning('请先清空支付列表');
                 }else {
                     router.navigate('main',{trigger:true});
@@ -300,15 +301,16 @@ define([
             });
             //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
-                var confirmView = new ConfirmView({
-                    pageid: window.PAGE_ID.BILLING,
-                    callback: function () {
-                        _self.judgeEcardExistance(_self.i);
-
-                    },
-                    content:'确定删除此条支付记录？' //confirm模态框的提示内容
-                });
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                _self.judgeEcardExistance(_self.i);
+                //var confirmView = new ConfirmView({
+                //    pageid: window.PAGE_ID.BILLING,
+                //    callback: function () {
+                //        _self.judgeEcardExistance(_self.i);
+                //
+                //    },
+                //    content:'确定删除此条支付记录？' //confirm模态框的提示内容
+                //});
+                //_self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
             //结算
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Space, function() {
@@ -403,58 +405,71 @@ define([
          * 帮助
          */
         openHelp:function () {
-            var tipsView = new KeyTipsView('BILLING_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+            //var tipsView = new KeyTipsView('BILLING_PAGE');
+            //this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+            var attrs = {
+                page: 'BILLING_PAGE'
+            };
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
+
         /**
          * 判断删除的已支付方式里面是否含有一卡通支付。判断删除的支付方式里面是否含有微信支付宝支付
          */
         judgeEcardExistance: function (index) {
             var receivedSum = this.model.get('receivedsum');
-            if(receivedSum == 0){
-                toastr.info('您尚未付款');
-            }else{
-                var item = this.collection.at(index);
-                var gatherKind = item.get('gather_kind');
-                var gatherId = item.get('gather_id');
-                if(gatherKind == '06'){
-                    var gatherid = item.get('gather_id');
-                    var cardId = item.get('card_id');
-                    //取出对应的ONE_CARD_KEY的值
-                    var ecardcollection = storage.get(system_config.ONE_CARD_KEY, cardId, 'detail');
-                    console.log(ecardcollection);
-                    this.tempcollection = new BillCollection();
-                    for(var i in ecardcollection) {
-                        if(ecardcollection[i].gather_id == gatherid){
-                            var temp = ecardcollection[i];
-                            var gather_money = parseFloat(temp.gather_money);
-                            gather_money = gather_money + item.get('gather_money');
-                            gather_money = gather_money.toFixed(2);
-                            temp['gather_money'] = gather_money;
-                            this.tempcollection.push(temp);
-                        } else {
-                            this.tempcollection.push(ecardcollection[i]);
+            var _self = this;
+            if(receivedSum == 0) {
+                toastr.info('尚未付款');
+            }else {
+                var attrs = {
+                    pageid: pageId,
+                    content: '确定删除此条支付记录？',
+                    //is_navigate: false,
+                    callback: function () {
+                        var item = _self.collection.at(index);
+                        console.log(item);
+                        var gatherKind = item.get('gather_kind');
+                        var gatherId = item.get('gather_id');
+                        if(gatherKind == '06'){
+                            var gatherid = item.get('gather_id');
+                            var cardId = item.get('card_id');
+                            var ecardcollection = storage.get(system_config.ONE_CARD_KEY, cardId, 'detail');
+                            console.log(ecardcollection);
+                            this.tempcollection = new BillCollection();
+                            for(var i in ecardcollection) {
+                                if(ecardcollection[i].gather_id == gatherid){
+                                    var temp = ecardcollection[i];
+                                    var gather_money = parseFloat(temp.gather_money);
+                                    gather_money = gather_money + item.get('gather_money');
+                                    gather_money = gather_money.toFixed(2);
+                                    temp['gather_money'] = gather_money;
+                                    this.tempcollection.push(temp);
+                                } else {
+                                    this.tempcollection.push(ecardcollection[i]);
+                                }
+                            }
+                            storage.remove(system_config.ONE_CARD_KEY);
+                            storage.set(system_config.ONE_CARD_KEY, cardId, 'detail', this.tempcollection);
+                            this.deleteItem(this.i);
+                            toastr.success('删除成功');
+                        }else if(gatherId == '12' || gatherId == '13'){
+                            _self.refund(gatherId , item.get('payment_bill'));
+                            //this.deleteItem();
+                        }else {
+                            _self.deleteItem(index);
+                            toastr.success('删除成功');
+                        }
+                        var isExist = _self.collection.findWhere({gather_kind: "06"});
+                        if(isExist == undefined){
+                            if(storage.isSet(system_config.ONE_CARD_KEY)){
+                                storage.remove(system_config.ONE_CARD_KEY);
+                            }
                         }
                     }
-                    storage.remove(system_config.ONE_CARD_KEY);
-                    storage.set(system_config.ONE_CARD_KEY, cardId, 'detail', this.tempcollection);
-                    this.deleteItem(this.i);
-                    toastr.success('删除成功');
-                }else if(gatherId == '12' || gatherId == '13'){
-                    this.refund(gatherId , item.get('payment_bill'));
-                    //this.deleteItem();
-                }else {
-                    this.deleteItem(this.i);
-                    toastr.success('删除成功');
-                }
-                var isExist = this.collection.findWhere({gather_kind: "06"});
-                if(isExist == undefined){
-                    if(storage.isSet(system_config.ONE_CARD_KEY)){
-                        storage.remove(system_config.ONE_CARD_KEY);
-                    }
-                }
+                };
+                _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
             }
-
         },
 
         deleteItem:function(index){
@@ -637,21 +652,17 @@ define([
          * 结算
          */
         billing: function () {
+            var _self = this;
             var confirmBill = new BillModel();
             var unpaidamount = this.model.get('unpaidamount');
-            var _self = this;
             if(unpaidamount != 0){
                 toastr.info('还有未支付的金额，请支付完成后再进行结算');
             } else {
-                //var changingView = new ChangingView({
-                //    pageid:window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
-                //    is_navigate:true,
-                //    navigate_page: window.PAGE_ID.MAIN,
-                //    callback: function () { //
-                var confirmView = new ConfirmView({
-                    pageid: window.PAGE_ID.BILLING,
-                    is_navigate: true,
-                    navigate_page: window.PAGE_ID.MAIN,
+                var attrs = {
+                    pageid:pageId,
+                    content:'确认结算此单？',
+                    is_navigate:true,
+                    navigate_page:window.PAGE_ID.MAIN,
                     callback: function () {
                         if(_self.totaldiscount != 0) {
                             _self.calculateDiscount();
@@ -678,7 +689,7 @@ define([
                                 if (storage.isSet(system_config.VIP_KEY)) {
                                     storage.remove(system_config.VIP_KEY);
                                 }
-                                router.navigate("main", {trigger: true, replace:true});
+                                //router.navigate("main", {trigger: true, replace:true});
                                 //toastr.success("订单号：" +  resp.bill_no);
                                 var lastbill_no = resp.bill_no;
                                 lastbill_no = lastbill_no.substr(8);
@@ -693,13 +704,8 @@ define([
                             }
                         });
                     },
-                    content:'确定结算此单？' //confirm模态框的提示内容
-                });
-                _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
-                    //},
-                    //content: _self.model.get('oddchange')
-                //});
-                //_self.showModal(window.PAGE_ID.CONFIRM, changingView);
+                };
+                _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area:'300px'});
             }
         },
         /**
@@ -707,50 +713,60 @@ define([
          */
         cleanPaylist: function () {
             var _self = this;
-            var confirmView = new ConfirmView({
-                pageid: window.PAGE_ID.BILLING, //当前打开confirm模态框的页面id
-                callback: function () { //点击确认键的回调
-                    var data = {};
-                    for(var j = _self.collection.length - 1; j >= 0 ; j--) {
-                        var model = _self.collection.at(j);
-                        var gatherId = model.get('gather_id');
-                        if(gatherId == '12') {
-                            data['orderid'] = model.get('payment_bill');
-                            data['merid'] = '000201504171126553';
-                            data['paymethod'] = 'wx';
-                            data['refundamount'] = '0.01';
-                            resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
-                                if(resp.data['flag'] == '00') {
+            var data = {};
+            var receivedSum = this.model.get('receivedsum');
+            if(receivedSum == 0) {
+                toastr.info('尚未付款');
+            }else {
+                var attrs = {
+                    pageid:pageId,
+                    content:'确定清空支付列表？',
+                    callback: function () {
+                        for(var j = _self.collection.length - 1; j >= 0 ; j--) {
+                            var model = _self.collection.at(j);
+                            var gatherId = model.get('gather_id');
+                            switch (gatherId) {
+                                case '12':
+                                    data['orderid'] = model.get('payment_bill');
+                                    data['merid'] = '000201504171126553';
+                                    data['paymethod'] = 'wx';
+                                    data['refundamount'] = '0.01';
+                                    resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
+                                        if(resp.data['flag'] == '00') {
+                                            _self.deleteItem(j);
+                                        }else if(resp.data['flag'] == undefined){
+                                            toastr.error('微信退款失败,清空支付列表失败');
+                                        }else{
+                                            toastr.error(resp.data['msg']);
+                                        }
+                                    });
+                                    break;
+                                case '13':
+                                    data['orderid'] = model.get('payment_bill');
+                                    data['merid'] = '000201504171126553';
+                                    data['paymethod'] = 'zfb';
+                                    data['refundamount'] = '0.01';
+                                    data['zfbtwo'] = 'zfbtwo';
+                                    resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
+                                        if(resp.data['flag'] == '00') {
+                                            _self.deleteItem(j);
+                                        }else if(resp.data['flag'] == undefined){
+                                            toastr.error('支付宝退款失败,清空支付列表失败');
+                                        }else{
+                                            toastr.error(resp.data['msg']);
+                                        }
+                                    });
+                                    break;
+                                default :
                                     _self.deleteItem(j);
-                                }else if(resp.data['flag'] == undefined){
-                                    toastr.error('微信退款失败,清空支付列表失败');
-                                }else{
-                                    toastr.error(resp.data['msg']);
-                                }
-                            });
-                        }else if(gatherId == '13') {
-                            data['orderid'] = model.get('payment_bill');
-                            data['merid'] = '000201504171126553';
-                            data['paymethod'] = 'zfb';
-                            data['refundamount'] = '0.01';
-                            data['zfbtwo'] = 'zfbtwo';
-                            resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
-                                if(resp.data['flag'] == '00') {
-                                    _self.deleteItem(j);
-                                }else if(resp.data['flag'] == undefined){
-                                    toastr.error('支付宝退款失败,清空支付列表失败');
-                                }else{
-                                    toastr.error(resp.data['msg']);
-                                }
-                            });
-                        }else {
-                            _self.deleteItem(j);
+                            }
                         }
                     }
-                },
-                content:'确认清空支付列表？' //confirm模态框的提示内容
-            });
-            _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                };
+
+                _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area:'300px'});
+            }
+
             //this.receivedsum = 0;
             //this.oddchange = 0;
             //this.model.set({
@@ -803,7 +819,10 @@ define([
         calculateDiscount:function(){
             var _self = this;
             var finaldiscount = 0;//最后一项的优惠
-            var percentage = 0;
+            var percentage = 0;//折扣百分比
+            var discount = 0;//每件商品整单优惠之后平摊到的折扣金额(不包含单品优惠)
+            var price = 0;//价格
+            var num = 0;//数量
             this.discountcollection = new BillCollection();
             this.localObj = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
             if(this.isTotalDiscount) {
@@ -811,15 +830,14 @@ define([
             }else {
                 percentage = this.percentage / 100;
             }
-
             console.log(percentage + '折扣比率');
             for(var i = 0;i < this.localObj.length - 1;i++){
                 var item = new BillModel();
                 item.set(this.localObj[i]);
                 var money = item.get('money');
-                var discount = parseFloat(item.get('discount'));
-                var price = item.get('price');
-                var num = item.get('num');
+                discount = parseFloat(item.get('discount'));
+                price = item.get('price');
+                num = item.get('num');
                 var tdiscount = (1- percentage) * money;//第i单商品的优惠
                 discount = discount + tdiscount;//第i单商品的单品优惠和整单优惠之和
                 finaldiscount = finaldiscount + tdiscount;//前n-1项总的折扣
@@ -835,9 +853,9 @@ define([
             console.log('最后一单的折扣为：' + finaldiscount);
             var tmp = new BillModel();
             tmp.set(this.localObj[this.localObj.length - 1]);
-            var num = tmp.get('num');
-            var price = tmp.get('price');
-            var discount = parseFloat(tmp.get('discount'));
+            num = tmp.get('num');
+            price = tmp.get('price');
+            discount = parseFloat(tmp.get('discount'));
             discount = finaldiscount + discount;
             console.log('最后一件商品的折扣为' + discount);
             tmp.set({
@@ -895,17 +913,16 @@ define([
         /**
          * 删除按钮点击事件
          */
-        onBillDelete: function () {
-            var _self = this;
-            var confirmView = new ConfirmView({
-                pageid: window.PAGE_ID.BILLING,
-                callback: function () {
-                    _self.judgeEcardExistance(_self.i);
-                },
-                content:'确定删除此条支付记录？' //confirm模态框的提示内容
-            });
-            this.showModal(window.PAGE_ID.CONFIRM, confirmView);
-
+        onDeleteClicked: function () {
+           this.judgeEcardExistance(this.i);
+            //var confirmView = new ConfirmView({
+            //    pageid: window.PAGE_ID.BILLING,
+            //    callback: function () {
+            //        _self.judgeEcardExistance(_self.i);
+            //    },
+            //    content:'确定删除此条支付记录？' //confirm模态框的提示内容
+            //});
+            //this.showModal(window.PAGE_ID.CONFIRM, confirmView);
         },
         /**
          * 整单优惠点击事件
@@ -940,8 +957,8 @@ define([
         /**
          * 清空支付方式列表
          */
-        onBillingCleanClicked: function () {
-            this.cleanPaylist();
+        onCleanClicked: function () {
+           this.cleanPaylist();
         },
 
         onOKClicked: function () {
