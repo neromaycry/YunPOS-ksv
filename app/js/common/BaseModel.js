@@ -15,7 +15,8 @@ define(['backbone'], function (Backbone) {
                 contentType: "application/json",
                 dataType: "json",
                 error: function (model, textStatus, errorThrown) {
-                    window.toastr.error('网络请求失败！');
+                    //window.toastr.error('网络请求失败！');
+                    layer.msg('网络请求失败,请检查网络连接', optLayerError);
                     console.log(textStatus);
                     console.error("网络请求失败！");
                 }
@@ -32,7 +33,8 @@ define(['backbone'], function (Backbone) {
                     window.loading.show();
                 },
                 error: function (model, textStatus, errorThrown) {
-                    window.toastr.error('网络请求失败！');
+                    //window.toastr.error('网络请求失败！');
+                    layer.msg('网络请求失败，请检查网络连接', optLayerError);
                     console.log(errorThrown);
                 },
                 complete: function () {

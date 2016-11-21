@@ -117,11 +117,13 @@ define([
             var _self = this;
             var phoneNum = $('input[name = phone]').val();
             if (phoneNum == '') {
-                toastr.error('手机号不能为空');
+                //toastr.error('手机号不能为空');
+                layer.msg('手机号不能为空', optLayerError);
                 return;
             }
             if (!(/^1[34578]\d{9}$/.test(phoneNum))) {
-                toastr.error('手机号输入错误，请重填');
+                //toastr.error('手机号输入错误，请重填');
+                layer.msg('手机号输入错误，请重填', optLayerError);
                 $('input[name = phonenum]').val('');
                 return;
             }
@@ -135,7 +137,8 @@ define([
                     $('input[name = main]').focus();
                     //Backbone.trigger('onPhoneNumResponse', resp);
                 } else {
-                    toastr.error(resp.msg);
+                    //toastr.error(resp.msg);
+                    layer.msg(resp.msg, optLayerError);
                 }
             });
         },
@@ -147,7 +150,8 @@ define([
             var _self = this;
             var value = $('input[name = magcard]').val();
             if (value == '') {
-                toastr.warning('请刷卡');
+                //toastr.info('请刷卡');
+                layer.msg(resp.msg, optLayerWarning);
                 return;
             }
             console.log('value:' + value);
@@ -196,9 +200,11 @@ define([
                 //console.log(resp);
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
+                    $('input[name = main]').focus();
                     //Backbone.trigger('onMagcardResponse', resp);
                 } else {
-                    toastr.error(resp.msg);
+                    //toastr.error(resp.msg);
+                    layer.msg(resp.msg, optLayerError);
                 }
             });
         },

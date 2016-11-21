@@ -519,7 +519,7 @@ define([
                 this.renderCartList();
                 this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
-                toastr.success('挂单号：' + orderNum);
+                //toastr.success('挂单号：' + orderNum);
                 layer.msg('挂单号：' + orderNum, optLayerSuccess);
             }
         },
@@ -623,14 +623,18 @@ define([
             var _self = this;
             var number = $(this.input).val();
             if(_self.model.get('itemamount') == 0){
-                toastr.warning('当前购物车内无商品');
+                //toastr.warning('当前购物车内无商品');
+                layer.msg('购物车内无商品', optLayerWarning);
             }else {
                 if(number == ''){
-                    toastr.warning('修改的数量不能为空');
+                    //toastr.warning('修改的数量不能为空');
+                    layer.msg('修改的数量不能为空', optLayerWarning);
                 }else if(number == 0) {
-                    toastr.warning('修改的数量不能为零');
+                    //toastr.warning('修改的数量不能为零');
+                    layer.msg('修改的数量不能为零', optLayerWarning);
                 }else if((number.split('.').length - 1) > 0) {
-                    toastr.warning('请输入有效的数量');
+                    //toastr.warning('请输入有效的数量');
+                    layer.msg('请输入有效的数量', optLayerWarning);
                 }else{
                     var item = _self.collection.at(_self.i);
                     var discount = item.get('discount');
@@ -670,7 +674,8 @@ define([
                 this.renderCartList();
                 this.calculateModel();
             }
-            toastr.success('删除成功');
+            //toastr.success('删除成功');
+            layer.msg('删除成功', optLayerSuccess);
         },
         /**
          * 添加商品
@@ -679,7 +684,8 @@ define([
             var _self = this;
             var search = $(this.input).val();
             if(search == ''){
-                toastr.warning('商品编码不能为空');
+                //toastr.warning('商品编码不能为空');
+                layer.msg('商品编码不能为空', optLayerWarning);
             }else{
                 var data = {};
                 data['skucode'] = search;
@@ -723,7 +729,8 @@ define([
                             _self.onAddItem(resp.goods_detail);
                         }
                     }else{
-                        toastr.warning(resp.msg);
+                        //toastr.warning(resp.msg);
+                        layer.msg(resp.msg, optLayerWarning);
                     }
                 });
                 $(this.input).val('');
@@ -751,7 +758,8 @@ define([
             storage.remove(system_config.SALE_PAGE_KEY);
             //this.ctrlClientInfo('none', this.ids, isPacked);
             this.isInSale = false;
-            toastr.success('交易已取消');
+            //toastr.success('交易已取消');
+            layer.msg('交易已取消', optLayerSuccess);
         },
         /**
          * 每次添加商品时，向新添加的商品插入serial属性值
