@@ -432,11 +432,6 @@ define([
          * 营业员登录
          */
         doLoginSalesman: function () {
-            //var salesmanView = new SalesmanView();
-            //this.showModal(window.PAGE_ID.SALESMAN, salesmanView);
-            //$('.modal').on('shown.bs.modal',function(e) {
-            //    $('input[name = salesman_id]').focus();
-            //});
             this.openLayer(PAGE_ID.LAYER_SALESMAN, pageId, '营业员登录', LayerSalesmanView, undefined, {area: '300px'});
         },
         /**
@@ -476,12 +471,6 @@ define([
                 //toastr.warning('购物车内有商品，不能执行解挂操作');
                 layer.msg('购物车内有商品，不能执行解挂操作', optLayerWarning);
             }else {
-                //router.navigate('restorder',{trigger:true});
-                //var restOrderView = new RestOrderView();
-                //this.showModal(window.PAGE_ID.MODAL_RESTORDER, restOrderView);
-                //$('.modal').on('shown.bs.modal',function(e) {
-                //    $('input[name = restorder]').focus();
-                //});
                 this.openLayer(PAGE_ID.LAYER_RESTORDER, pageId, '订单解挂', LayerRestOrderView, undefined, {area: '300px'});
             }
         },
@@ -924,7 +913,6 @@ define([
                 content: '确定取消交易？',
                 is_navigate: false,
                 callback: function () {
-                    console.log('confirm:'+layerindex);
                     _self.isClearCartGranted();
                 }
             };
@@ -949,7 +937,6 @@ define([
                     pageid: pageId,
                     is_navigate: false,
                     callback: function () {
-                        console.log('command:' + layerindex);
                         _self.clearCart();
                     }
                 };
@@ -1091,15 +1078,33 @@ define([
          * 提大额
          */
         onWithDrawClicked: function () {
-            //var withDrawView = new WithDrawView();
-            //this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
             this.openLayer(PAGE_ID.LAYER_WITHDRAW, pageId, '提大额', LayerWithdrawView, undefined, {area: '300px'});
         },
         /**
          * 开钱箱
          */
         openCashDrawer: function () {
-            this.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
+            var _self = this;
+            if (auth_cashdrawer == AUTH_CODE.GRANTED) {
+                this.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
+            } else if (auth_cashdrawer == AUTH_CODE.COMMAND) {
+                var attrs = {
+                    pageid: pageId,
+                    callback: function () {
+                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
+
+            } else if (auth_cashdrawer == AUTH_CODE.CARD) {
+                var attrs = {
+                    pageid: pageId,
+                    callback: function () {
+                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
+            }
         },
         /**
          * 银行业务
