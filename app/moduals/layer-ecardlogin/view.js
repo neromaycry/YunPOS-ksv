@@ -69,7 +69,7 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function(){
-                _self.onOkClicked();
+                _self.onOKClicked();
             });
 
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.X, function () {
@@ -165,8 +165,8 @@ define([
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
                     layer.msg('会员登录成功', optLayerSuccess);
-                    $('input[name = main]').focus();
-                    Backbone.trigger('onMemberSigned', resp);
+                    //$('input[name = main]').focus();
+                    //Backbone.trigger('onMemberSigned', resp);
                 } else {
                     //toastr.error(resp.msg);
                     layer.msg(resp.msg, optLayerError);
@@ -231,9 +231,9 @@ define([
                 //console.log(resp);
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
-                    layer.msg('会员登录成功', optLayerSuccess);
-                    $('input[name = main]').focus();
-                    Backbone.trigger('onMemberSigned', resp);
+                    //layer.msg('会员登录成功', optLayerSuccess);
+                    //$('input[name = main]').focus();
+                    //Backbone.trigger('onMemberSigned', resp);
                 } else {
                     //toastr.error(resp.msg);
                     layer.msg(resp.msg, optLayerError);
