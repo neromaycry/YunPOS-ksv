@@ -61,7 +61,11 @@ window.statusCode = {
     "68": "商品不存在"
 };
 
-
+window.AUTH_CODE = {
+    'GRANTED': 0,
+    'COMMAND': 1,
+    'CARD': 2
+};
 
 window.API_URL = {
     "LOGIN": "/login",
@@ -213,7 +217,9 @@ window.PAGE_ID = {
     'MODAL_BANK_INSTRUCTION':49,
     'LAYER_CONFIRM': 50,
     'LAYER_HELP': 51,
-    'LAYER_GATEWAY': 52
+    'LAYER_GATEWAY': 52,
+    'LAYER_AUTHCOMMAND': 53,
+    'LAYER_AUTHCARD': 54
 };
 
 window.KEYS = {

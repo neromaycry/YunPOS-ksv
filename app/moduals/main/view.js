@@ -14,6 +14,8 @@ define([
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-restorder/view',
     '../../../../moduals/layer-withdraw/view',
+    '../../../../moduals/layer-authcard/view',
+    '../../../../moduals/layer-authcommand/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
@@ -25,7 +27,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SecondLoginView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, BinstructionView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SecondLoginView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerAuthCardView, LayerAuthCommandView, BinstructionView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -671,25 +673,17 @@ define([
          * 单品删除
          */
         deleteItem: function () {
-            console.log(this.i);
-            var len = this.collection.length;
-            console.log(len);
-            if (len == 0) {
-                layer.msg('没有可删除的商品', optLayerWarning);
-            } else {
-                try {
-                    if($('li').hasClass('cus-selected')){
-                        var item = this.collection.at(this.i);
-                        this.collection.remove(item);
-                        this.i = 0;
-                        this.renderCartList();
-                        this.calculateModel();
-                    }
-                    //toastr.success('删除成功');
-                    layer.msg('删除成功', optLayerSuccess);
-                } catch (e) {
-                    layer.msg(e.name + ":" + e.message, optLayerError);
+            try {
+                if($('li').hasClass('cus-selected')){
+                    var item = this.collection.at(this.i);
+                    this.collection.remove(item);
+                    this.i = 0;
+                    this.renderCartList();
+                    this.calculateModel();
                 }
+                layer.msg('删除成功', optLayerSuccess);
+            } catch (e) {
+                layer.msg(e.name + ":" + e.message, optLayerError);
             }
         },
         /**
@@ -885,16 +879,32 @@ define([
          */
         onDeleteClicked: function () {
             var _self = this;
-            if(this.isDeleteKey){
+            var len = this.collection.length;
+            console.log(len);
+            if (len == 0) {
+                layer.msg('没有可删除的商品', optLayerWarning);
+                return;
+            }
+            if (auth_delete == AUTH_CODE.GRANTED) {
                 this.deleteItem();
-            }else{
-                var secondLoginView = new SecondLoginView({
-                    pageid: window.PAGE_ID.MAIN,
+            } else if (auth_delete == AUTH_CODE.CARD) {
+                var attrs = {
+                    pageid: pageId,
+                    is_navigate: false,
                     callback: function () {
                         _self.deleteItem();
                     }
-                });
-                this.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要管理卡验证', LayerAuthCardView, attrs, {area: '300px'});
+            } else if (auth_delete == AUTH_CODE.COMMAND) {
+                var attrs = {
+                    pageid: pageId,
+                    is_navigate: false,
+                    callback: function () {
+                        _self.deleteItem();
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要口令验证', LayerAuthCommandView, attrs, {area: '300px'});
             }
         },
         /**
