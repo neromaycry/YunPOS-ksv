@@ -68,12 +68,15 @@ define([
         },
 
         onOKClicked: function () {
-            this.attrs.callback();
+            var _self = this;
             if (this.attrs.is_navigate) {
                 this.confirmCloseLayer(this.attrs.navigate_page);
             } else {
                 this.confirmCloseLayer(this.attrs.pageid);
             }
+            setTimeout(function () {
+                _self.attrs.callback();
+            }, 50);
         },
 
         closeLayer: function (id) {

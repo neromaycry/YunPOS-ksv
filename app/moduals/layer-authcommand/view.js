@@ -70,12 +70,12 @@ define([
                 layer.msg('请输入口令', optLayerWarning);
                 return;
             }
-            this.attrs.callback();
             if (this.attrs.is_navigate) {
                 this.confirmCloseLayer(this.attrs.navigate_page);
             } else {
                 this.confirmCloseLayer(this.attrs.pageid);
             }
+            this.attrs.callback();
         },
 
         closeLayer: function (id) {

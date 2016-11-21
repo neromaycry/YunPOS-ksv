@@ -17,7 +17,6 @@ define([
 
         events: {
             'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
             'click .btn-backspace':'onBackspaceClicked',
             'click .btn-clear':'onClearClicked'
@@ -56,13 +55,15 @@ define([
         },
 
         swipeCard: function () {
-            //var _self = this;
-            //var value = $(this.input).val();
-            this.attrs.callback();
-            if (this.attrs.is_navigate) {
-                this.confirmCloseLayer(this.attrs.navigate_page);
-            } else {
-                this.confirmCloseLayer(this.attrs.pageid);
+            var _self = this;
+            var value = $(this.input).val();
+            if (value != undefined&&value != '') {
+                this.attrs.callback();
+                if (this.attrs.is_navigate) {
+                    this.confirmCloseLayer(this.attrs.navigate_page);
+                } else {
+                    this.confirmCloseLayer(this.attrs.pageid);
+                }
             }
         },
 

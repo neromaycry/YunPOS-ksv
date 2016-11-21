@@ -166,7 +166,7 @@ define([
             //    window.wsClient.send(message);
             //    window.wsClient.send(DIRECTIVES.OpenCashDrawer)
             //}
-            this.onDeleteKey();
+            //this.onDeleteKey();
             this.initTemplates();
             this.handleEvents();
         },
@@ -412,7 +412,7 @@ define([
          */
         doLogout: function () {
             $(this.input).val('');
-            this.openLayer(PAGE_ID.LAYER_LOGOUT, pageId, '登出需要验证', LayerLogoutView, null, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_LOGOUT, pageId, '登出需要验证', LayerLogoutView, undefined, {area: '300px'});
         },
         /**
          * 结算
@@ -437,7 +437,7 @@ define([
             //$('.modal').on('shown.bs.modal',function(e) {
             //    $('input[name = salesman_id]').focus();
             //});
-            this.openLayer(PAGE_ID.LAYER_SALESMAN, pageId, '营业员登录', LayerSalesmanView, null, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_SALESMAN, pageId, '营业员登录', LayerSalesmanView, undefined, {area: '300px'});
         },
         /**
          * 购物车光标向下
@@ -482,7 +482,7 @@ define([
                 //$('.modal').on('shown.bs.modal',function(e) {
                 //    $('input[name = restorder]').focus();
                 //});
-                this.openLayer(PAGE_ID.LAYER_RESTORDER, pageId, '订单解挂', LayerRestOrderView, null, {area: '300px'});
+                this.openLayer(PAGE_ID.LAYER_RESTORDER, pageId, '订单解挂', LayerRestOrderView, undefined, {area: '300px'});
             }
         },
         /**
@@ -827,20 +827,20 @@ define([
             this.buttonSelected();
             this.renderPosInfo();
         },
-        /**
-         * 判断当前营业员是否有删除商品的权限
-         */
-        onDeleteKey: function () {
-            for(var j = 0; j < this.deleteKey.length; j++){
-                console.log(this.deleteKey[j]);
-                if(this.deleteKey[j] == '02'){
-                    this.isDeleteKey = true;//判断当前是否有删除权限的key
-                    break;
-                }else{
-                    this.isDeleteKey = false;
-                }
-            }
-        },
+        ///**
+        // * 判断当前营业员是否有删除商品的权限
+        // */
+        //onDeleteKey: function () {
+        //    for(var j = 0; j < this.deleteKey.length; j++){
+        //        console.log(this.deleteKey[j]);
+        //        if(this.deleteKey[j] == '02'){
+        //            this.isDeleteKey = true;//判断当前是否有删除权限的key
+        //            break;
+        //        }else{
+        //            this.isDeleteKey = false;
+        //        }
+        //    }
+        //},
         openHelp: function () {
             //var tipsView = new KeyTipsView('MAIN_PAGE');
             //this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
@@ -866,7 +866,7 @@ define([
          */
         onMemberClicked:function () {
             //router.navigate('member',{trigger:true});
-            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, null, {area: '600px'});
+            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, undefined, {area: '600px'});
         },
         /**
          * 单品优惠按钮点击事件
@@ -880,7 +880,7 @@ define([
         onDeleteClicked: function () {
             var _self = this;
             var len = this.collection.length;
-            console.log(len);
+            //console.log(len);
             if (len == 0) {
                 layer.msg('没有可删除的商品', optLayerWarning);
                 return;
@@ -896,6 +896,7 @@ define([
                     }
                 };
                 this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要管理卡验证', LayerAuthCardView, attrs, {area: '300px'});
+
             } else if (auth_delete == AUTH_CODE.COMMAND) {
                 var attrs = {
                     pageid: pageId,
@@ -923,11 +924,41 @@ define([
                 content: '确定取消交易？',
                 is_navigate: false,
                 callback: function () {
-                    _self.clearCart();
+                    console.log('confirm:'+layerindex);
+                    _self.isClearCartGranted();
                 }
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
         },
+        isClearCartGranted: function () {
+            var _self = this;
+            if (auth_delete == AUTH_CODE.GRANTED) {
+                this.clearCart();
+            } else if (auth_delete == AUTH_CODE.CARD) {
+                var attrs = {
+                    pageid: pageId,
+                    is_navigate: false,
+                    callback: function () {
+                        _self.clearCart();
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
+
+            } else if (auth_delete == AUTH_CODE.COMMAND) {
+                var attrs = {
+                    pageid: pageId,
+                    is_navigate: false,
+                    callback: function () {
+                        console.log('command:' + layerindex);
+                        _self.clearCart();
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
+            }
+        },
+
+
+
         /**
          * 向上选择点击事件
          */
@@ -1062,7 +1093,7 @@ define([
         onWithDrawClicked: function () {
             //var withDrawView = new WithDrawView();
             //this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
-            this.openLayer(PAGE_ID.LAYER_WITHDRAW, pageId, '提大额', LayerWithdrawView, null, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_WITHDRAW, pageId, '提大额', LayerWithdrawView, undefined, {area: '300px'});
         },
         /**
          * 开钱箱

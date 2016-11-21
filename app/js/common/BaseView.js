@@ -154,7 +154,15 @@ define([
                     console.log('layerindex = ' + layerindex);
                 },
                 end: function () {
-                    pageId = mainId;
+                    if (attrs) {
+                        if (attrs.is_navigate) {
+                            pageId = attrs.navigate_page;
+                        } else {
+                            pageId = mainId;
+                        }
+                    } else {
+                        pageId = mainId;
+                    }
                     $(document).unbind('keyup');
                     console.log('end:' + pageId);
                 }
@@ -198,7 +206,11 @@ define([
                     console.log('layerindex = ' + layerindex);
                 },
                 end: function () {
-                    pageId = mainId;
+                    if (attrs.is_navigate) {
+                        pageId = attrs.navigate_page;
+                    } else {
+                        pageId = mainId;
+                    }
                     $(document).unbind('keyup');
                     console.log('end:' + pageId);
                 }
