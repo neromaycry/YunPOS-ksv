@@ -90,6 +90,7 @@ define([
             console.log(result);
             if (result) {
                 Backbone.trigger('SalesmanAdd',result['name']);
+                layer.msg('营业员登录成功', optLayerSuccess);
                 this.closeLayer(layerindex);
                 $('input[name = main]').focus();
             } else {

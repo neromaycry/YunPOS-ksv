@@ -1,0 +1,39 @@
+<div class="panel-heading">
+    <div class="row">
+        <div class="col-xs-4 col-md-4 text-center">
+            收款员：<%= name %>
+        </div>
+        <div class="col-xs-4 col-md-4 text-center">
+            收款机：<%= pos %>
+        </div>
+        <div class="col-xs-4 col-md-4 text-center">
+            <%= lastbill_no %>
+        </div>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-xs-6 col-md-6 text-center">会员：</div>
+        <div class="col-xs-6 col-md-6 text-center"><%= member %></div>
+        <div class="col-xs-6 col-md-6 text-center">积分：</div>
+        <div class="col-xs-6 col-md-6 text-center"><%= score_balance %></div>
+        <div class="col-xs-6 col-md-6 text-center">储值：</div>
+        <div class="col-xs-6 col-md-6 text-center"><%= account_balance %></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 col-md-6 text-center">有效期：</div>
+        <div class="col-xs-6 col-md-6 text-center"><%= account_enddate %></div>
+    </div>
+</div>
+<div class="panel-footer no-padding" style="background: #FFF; border-top: 1px solid #3073AD;">
+    <div class="row text-center no-margining">
+        <div class="row no-margining">
+            <div class="col-xs-12 col-md-12">
+                <div class="row">
+                    <button type="button" class="col-xs-12 col-md-12 button button-border button-primary pos-button-textsize member">会员登录</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

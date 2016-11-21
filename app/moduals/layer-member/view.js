@@ -134,8 +134,9 @@ define([
             this.model.getMemberInfo(data, function (resp) {
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
+                    layer.msg('会员登录成功', optLayerSuccess);
                     $('input[name = main]').focus();
-                    //Backbone.trigger('onPhoneNumResponse', resp);
+                    Backbone.trigger('onMemberSigned', resp);
                 } else {
                     //toastr.error(resp.msg);
                     layer.msg(resp.msg, optLayerError);
@@ -200,8 +201,9 @@ define([
                 //console.log(resp);
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
+                    layer.msg('会员登录成功', optLayerSuccess);
                     $('input[name = main]').focus();
-                    //Backbone.trigger('onMagcardResponse', resp);
+                    Backbone.trigger('onMemberSigned', resp);
                 } else {
                     //toastr.error(resp.msg);
                     layer.msg(resp.msg, optLayerError);

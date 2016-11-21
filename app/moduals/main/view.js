@@ -17,6 +17,7 @@ define([
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
+    'text!../../../../moduals/main/minfotpl.html',
     'text!../../../../moduals/main/cartlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/main/clientdisplaytpl.html',
@@ -24,7 +25,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SecondLoginView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SecondLoginView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, BinstructionView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -38,9 +39,10 @@ define([
         clientScreen: null,
         isInSale: false,
         i: 0,
-        template_posinfo:posinfotpl,
-        template_salesman:salesmantpl,
-        template_cartlisttpl:cartlisttpl,
+        template_posinfo: posinfotpl,
+        template_salesman: salesmantpl,
+        template_minfo: minfotpl,
+        template_cartlisttpl: cartlisttpl,
         template_numpad:numpadtpl,
         template_clientdisplay: clientdisplaytpl,
         template_welcome: welcometpl,
@@ -91,7 +93,8 @@ define([
             var user = storage.get(system_config.LOGIN_USER_KEY);  // 从本地取出登录用户属性
             this.model = new HomeModel();  // 当前view的model
             this.oddchangeModel = new HomeModel();
-            this.loginInfoModel = new HomeModel();  // 存放登录用户及营业员信息的model
+            this.memberModel = new HomeModel();  // 存放登录用户信息的model
+            this.salesmanModel = new HomeModel();
             this.marqueeModel = new HomeModel();
             this.collection = new HomeCollection();  //当前view的collection
             //this.logincollection = new HomeCollection();
@@ -101,7 +104,7 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
-            this.loginInfoModel.set({
+            this.memberModel.set({
                 name:user.user_name,
                 pos: storage.get(system_config.POS_INFO_KEY, 'posid'),
                 lastbill_no: ''
@@ -112,21 +115,23 @@ define([
                 //this.i = storage.get(system_config.SALE_PAGE_KEY, 'i');
             }
             if (storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
-                this.loginInfoModel.set({
+                this.salesmanModel.set({
                     salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman')
                 });
             } else {
-                this.loginInfoModel.set({
-                    salesman:'未登录'
+                this.salesmanModel.set({
+                    salesman:'营业员登录'
                 });
             }
             if (storage.isSet(system_config.VIP_KEY)) {
-                this.loginInfoModel.set({
-                    member:storage.get(system_config.VIP_KEY,'name')
-                });
+                var member = storage.get(system_config.VIP_KEY);
+                this.memberModel.set(member);
             } else {
-                this.loginInfoModel.set({
-                    member:'未登录'
+                this.memberModel.set({
+                    member:'未登录',
+                    score_balance: 0,
+                    account_balance: 0,
+                    account_enddate: '未登录，请查询'
                 });
             }
             if (storage.isSet(system_config.LOGIN_USER_KEY)){
@@ -137,7 +142,7 @@ define([
                 this.oddchangeModel.set({
                     oddchange:storage.get(system_config.ODD_CHANGE,'oddchange')
                 });
-                this.loginInfoModel.set({
+                this.memberModel.set({
                     lastbill_no: storage.get(system_config.ODD_CHANGE, 'lastbill_no')
                 });
             } else {
@@ -177,6 +182,7 @@ define([
             this.renderCartList();
             this.renderOddChange();
             this.renderMarquee();
+            this.renderMinfo();
             if (isFromLogin) {
                 this.renderClientWelcome(isPacked);
                 isFromLogin = false;
@@ -198,6 +204,7 @@ define([
             this.template_welcome = _.template(this.template_welcome);
             this.template_oddchange = _.template(this.template_oddchange);
             this.template_marquee = _.template(this.template_marquee);
+            this.template_minfo = _.template(this.template_minfo);
             //this.template_shopitem = _.template(this.template_shopitem);
         },
         /**
@@ -207,16 +214,17 @@ define([
             var dh = $(window).height();
             var dw = $(window).width();
             var nav = $('.navbar').height();  // 导航栏高度
-            var marquee = $('.marquee-panel').height();
-            console.log('marquee:' + marquee);
+            //var marquee = $('.marquee-panel').height();
+            var oddchange = $('.oddchange-panel').height();
+            console.log('oddchange:' + oddchange);
             var panelheading = $('.panel-heading').height();  //面板heading高度
             var panelfooter = $('.panel-footer').height();  //面板footer高度
             var cart = dh - nav * 2 - panelheading * 2 - panelfooter;
             var leftWidth = $('.main-left').width();
             var cartWidth = dw - leftWidth - 45;
             $('.cart-panel').width(cartWidth);  // 设置购物车面板的宽度
-            $('.marquee-panel').width(cartWidth);
-            $('.for-cartlist').height(cart - marquee - 20);  //设置购物车的高度
+            //$('.marquee-panel').width(cartWidth);
+            $('.for-cartlist').height(cart - oddchange - 20);  //设置购物车的高度
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
             this.listnum = 5;//设置商品列表中的条目数
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
@@ -226,7 +234,11 @@ define([
             return this;
         },
         renderSalesman: function() {
-            this.$el.find('.for-salesman').html(this.template_salesman(this.loginInfoModel.toJSON()));
+            this.$el.find('.for-salesman').html(this.template_salesman(this.salesmanModel.toJSON()));
+            return this;
+        },
+        renderMinfo: function () {
+            this.$el.find('.for-minfo').html(this.template_minfo(this.memberModel.toJSON()));
             return this;
         },
         renderCartList: function() {
@@ -263,14 +275,16 @@ define([
         handleEvents: function () {
             // 注册backbone事件
             Backbone.off('SalesmanAdd');
+            Backbone.off('onMemberSigned');
             Backbone.off('onReleaseOrder');
             //Backbone.off('reBindEvent');
             Backbone.on('SalesmanAdd', this.SalesmanAdd, this);
+            Backbone.on('onMemberSigned', this.onMemberSigned, this);
             Backbone.on('onReleaseOrder', this.onReleaseOrder ,this);
         },
         SalesmanAdd: function (result) {
             storage.set(system_config.SALE_PAGE_KEY, 'salesman', result);
-            this.loginInfoModel.set({
+            this.salesmanModel.set({
                 salesman: result
             });
             this.renderSalesman();
@@ -753,10 +767,22 @@ define([
                 itemamount: 0,
                 discountamount: 0
             });
+            this.memberModel.set({
+                member:'未登录',
+                score_balance: 0,
+                account_balance: 0,
+                account_enddate: '未登录，请查询'
+            });
+            this.salesmanModel.set({
+                salesman:'营业员登录'
+            });
             this.buttonSelected();
             this.renderPosInfo();
             this.renderCartList();
+            this.renderMinfo();
+            this.renderSalesman();
             storage.remove(system_config.SALE_PAGE_KEY);
+            storage.remove(system_config.VIP_KEY);
             //this.ctrlClientInfo('none', this.ids, isPacked);
             this.isInSale = false;
             //toastr.success('交易已取消');
@@ -1044,8 +1070,17 @@ define([
             this.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
         },
 
-
-
+        onMemberSigned: function (resp) {
+            console.log(resp);
+            this.memberModel.set({
+                member: resp.name,
+                score_balance: resp.score_balance,
+                account_balance: resp.account_balance,
+                account_enddate: resp.account_enddate
+            });
+            storage.set(system_config.VIP_KEY,this.memberModel.toJSON());
+            this.renderMinfo();
+        }
     });
     return mainView;
 });
