@@ -2,15 +2,15 @@
  * Created by gjwlg on 2016/9/9.
  */
 define([
-    '../../js/common/BaseModalView',
-    '../../moduals/modal-bankcard/model',
-    'text!../../moduals/modal-bankcard/contenttpl.html',
-    'text!../../moduals/modal-bankcard/tpl.html'
-], function (BaseModalView, BankCardModel, contenttpl, tpl) {
+    '../../js/common/BaseLayerView',
+    '../../moduals/layer-bankcard/model',
+    'text!../../moduals/layer-bankcard/contenttpl.html',
+    'text!../../moduals/layer-bankcard/tpl.html'
+], function (BaseLayerView, LayerBankCardModel, contenttpl, tpl) {
 
-    var bankcardView = BaseModalView.extend({
+    var layerbankcardView = BaseLayerView.extend({
 
-        id: "bankcardView",
+        id: "layerbankcardView",
 
         template: tpl,
 
@@ -23,7 +23,8 @@ define([
             'click .ok': 'onOKClicked'
         },
 
-        modalInitPage: function () {
+        LayerInitPage: function () {
+            this.model = new LayerBankCardModel();
             var data = {};
             data['transaction_amount'] = '20.22';
             data['cashier_no'] = '2222';
@@ -32,13 +33,12 @@ define([
             this.sendWebSocketDirective([DIRECTIVES.Bank_sale],[data] , wsClient);
         },
 
-        bindModalKeys: function () {
+        bindLayerKeys: function () {
             var _self = this;
-            this.bindModalKeyEvents(window.PAGE_ID.MODAL_BANK_CARD, window.KEYS.Esc , function () {
-                _self.hideModal(window.PAGE_ID.BILLING);
-                $('input[name = billing]').focus();
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Esc , function () {
+                _self.onCancelClicked();
             });
-            this.bindModalKeyEvents(window.PAGE_ID.MODAL_BANK_CARD, window.KEYS.Enter, function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Enter, function () {
                 _self.confirm();
             });
         },
@@ -48,12 +48,10 @@ define([
             data['gather_id'] = this.attrs.gather_id;
             data['gather_money'] = this.attrs.gather_money;
             data['gather_name'] = this.attrs.gather_name;
-            //data['gather_no'] = bankCardAccount;
             data['gather_kind'] = this.attrs.gather_kind;
             data['payment_bill'] = '';
             Backbone.trigger('onReceivedsum',data);
-            this.hideModal(window.PAGE_ID.BILLING);
-            $('input[name = billing]').focus();
+            this.closeLayer(layerindex)
         },
 
         onOKClicked: function () {
@@ -61,11 +59,10 @@ define([
         },
 
         onCancelClicked: function () {
-            this.hideModal(window.PAGE_ID.BILLING);
-            $('input[name = billing]').focus();
+            this.closeLayer(layerindex);
         }
 
     });
 
-    return bankcardView;
+    return layerbankcardView;
 });
