@@ -188,7 +188,7 @@ window.PAGE_ID = {
     'ONECARD_PAY':24,
     'RT_ONECARD_LOGIN':25,
     'RT_ONECARD_PAY':26,
-    'QUICK_PAY':27,
+    'LAYER_QUICK_PAY':27,
     'LAYER_RESTORDER':28,
     'ALIPAY':29,
     'WECHAT':30,

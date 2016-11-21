@@ -115,6 +115,8 @@ define([
                         if (resp.status == '00') {
                             data['payment_bill'] = resp.xfb_bill,
                             _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
+                        } else {
+                            toastr.error(resp.msg);
                         }
                     });
                     break;
@@ -122,7 +124,9 @@ define([
                     this.requestmodel.xfbbillno(xfbdata, function (resp) {
                         if (resp.status == '00') {
                             data['payment_bill'] = resp.xfb_bill,
-                                _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
+                            _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
+                        } else {
+                            toastr.error(resp.msg);
                         }
                     });
                     break;
