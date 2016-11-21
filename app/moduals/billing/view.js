@@ -9,7 +9,7 @@ define([
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
-    '../../../../moduals/modal-ecardlogin/view',
+    '../../../../moduals/layer-ecardlogin/view',
     '../../../../moduals/layer-quickpay/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/billing/billinfotpl.html',
@@ -17,7 +17,7 @@ define([
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, OneCardView, LayerQuickPayView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerQuickPayView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -865,19 +865,11 @@ define([
             } else if(receivedSum == ''){
                 data['unpaidamount'] = 0;
                 data['receivedsum'] = unpaidamount;
-                this.onecard = new OneCardView(data);
-                this.showModal(window.PAGE_ID.ONECARD_LOGIN,this.onecard);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = medium_id]').focus();
-                });
+                this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登陆', layerECardView, data, {area:'600px'});
             } else{
                 data['unpaidamount'] = unpaidamount;
                 data['receivedsum'] = receivedSum;
-                this.onecard = new OneCardView(data);
-                this.showModal(window.PAGE_ID.ONECARD_LOGIN,this.onecard);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = medium_id]').focus();
-                });
+                this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登陆', layerECardView, data, {area:'600px'});
             }
             $('input[name = billing]').val('');
         },
