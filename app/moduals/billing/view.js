@@ -327,11 +327,11 @@ define([
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
-               _self.payment('01', '', '支票类');
+               _self.payment('01', _self.billNumber, '支票类');
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
-                _self.payment('02', '', '礼券类');
+                _self.payment('02', _self.billNumber, '礼券类');
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
@@ -1078,14 +1078,14 @@ define([
          *支票类付款
          */
         onCheckClicked:function () {
-            this.payment('01', '' , '支票类');
+            this.payment('01', this.billNumber , '支票类');
             $('button[name = check]').blur();
         },
         /**
          * 礼券
          */
         onGiftClicked: function () {
-            this.payment('02', '', '礼券类');
+            this.payment('02', this.billNumber, '礼券类');
             $('button[name = gift-certificate]').blur();
         },
         onPosClicked:function () {
@@ -1101,7 +1101,7 @@ define([
 
         onThirdPayClicked: function () {
             toastr.info('该功能正在调试中...');
-            $('input[name = billing]').val('');
+            //$('input[name = billing]').val('');
             //this.payment('05', this.billNumber, '第三方支付');
             //$('button[name = third-pay]').blur();
         },

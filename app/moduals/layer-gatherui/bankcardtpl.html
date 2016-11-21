@@ -16,10 +16,10 @@ s += '0';
 return s;
 }%>
 <div class="panel panel-primary" style="border: none;margin: 0;">
-    <div class="panel-heading pos-textsize">银行卡付款确认</div>
     <div class="panel-body">
-        <div class="row">
-            <div class="text-center text-primary bottom-margin" style="font-size:18px;">付款金额：<%= toDecimal2(gather_money) %></div>
+        <div class="row m-b">
+            <div class="col-xs-6 col-md-6 text-right pos-textsize">付款金额：</div>
+            <div class="col-xs-6 col-md-6 text-left text-red" style="font-size: 18px">￥<%= toDecimal2(gather_money) %></div>
         </div>
         <div class="row no-margining">
             <div class="col-xs-12 col-md-12 button-group">
