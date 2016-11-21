@@ -8,9 +8,10 @@ define([
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-gateway/view',
     '../../../../moduals/layer-confirm/view',
+    '../../../../moduals/layer-gateway/view',
     'text!../../../../moduals/login/clientlogintpl.html',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, ConfirmView, GatewayView, LayerConfirmView, clientlogintpl, tpl) {
+], function (BaseView, LoginModel, LoginCollection, ConfirmView, GatewayView, LayerConfirmView, LayerGatewayView, clientlogintpl, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -209,8 +210,9 @@ define([
                 //失败回调
                 console.log(textStatus);
                 console.log(errorThrown);
-                var gatewayView = new GatewayView();
-                _self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
+                //var gatewayView = new GatewayView();
+                //_self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
+                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, null, {area: '400px'});
             });
             var loginDate = new Date();
             if (storage.isSet(system_config.LOGIN_DATE)) {
@@ -241,8 +243,9 @@ define([
                 //失败回调
                 console.log(textStatus);
                 console.log(errorThrown);
-                var gatewayView = new GatewayView();
-                _self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
+                //var gatewayView = new GatewayView();
+                //_self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
+                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, null, {area: '400px'});
             });
         },
 

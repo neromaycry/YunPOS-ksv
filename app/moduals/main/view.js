@@ -105,7 +105,7 @@ define([
                 discountamount: this.discountamount
             });
             this.memberModel.set({
-                name:user.user_name,
+                username: user.user_name,
                 pos: storage.get(system_config.POS_INFO_KEY, 'posid'),
                 lastbill_no: ''
             });
@@ -116,11 +116,11 @@ define([
             }
             if (storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
                 this.salesmanModel.set({
-                    salesman:storage.get(system_config.SALE_PAGE_KEY,'salesman')
+                    salesman: storage.get(system_config.SALE_PAGE_KEY,'salesman')
                 });
             } else {
                 this.salesmanModel.set({
-                    salesman:'营业员登录'
+                    salesman: '营业员登录'
                 });
             }
             if (storage.isSet(system_config.VIP_KEY)) {
@@ -128,7 +128,7 @@ define([
                 this.memberModel.set(member);
             } else {
                 this.memberModel.set({
-                    member:'未登录',
+                    name: '未登录',
                     score_balance: 0,
                     account_balance: 0,
                     account_enddate: '未登录，请查询'
@@ -1073,12 +1073,12 @@ define([
         onMemberSigned: function (resp) {
             console.log(resp);
             this.memberModel.set({
-                member: resp.name,
+                name: resp.name,
                 score_balance: resp.score_balance,
                 account_balance: resp.account_balance,
                 account_enddate: resp.account_enddate
             });
-            storage.set(system_config.VIP_KEY,this.memberModel.toJSON());
+            storage.set(system_config.VIP_KEY, resp);
             this.renderMinfo();
         }
     });
