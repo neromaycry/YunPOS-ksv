@@ -3,16 +3,16 @@
  */
 define([
     '../../js/common/BaseModalView',
-    '../../moduals/modal-gatherui/model',
+    '/model',
     '../../moduals/modal-bankcard/view',
-    'text!../../moduals/modal-gatherui/contenttpl.html',
-    'text!../../moduals/modal-gatherui/commontpl.html',
-    'text!../../moduals/modal-gatherui/alipaytpl.html',
-    'text!../../moduals/modal-gatherui/wechatpaytpl.html',
-    'text!../../moduals/modal-gatherui/quickpaytpl.html',
-    'text!../../moduals/modal-gatherui/numpadtpl.html',
-    'text!../../moduals/modal-gatherui/bankcardtpl.html',
-    'text!../../moduals/modal-gatherui/tpl.html'
+    'text!../../moduals/layer-gatherui/contenttpl.html',
+    'text!../../moduals/layer-gatherui/commontpl.html',
+    'text!../../moduals/layer-gatherui/alipaytpl.html',
+    'text!../../moduals/layer-gatherui/wechatpaytpl.html',
+    'text!../../moduals/layer-gatherui/quickpaytpl.html',
+    'text!../../moduals/layer-gatherui/numpadtpl.html',
+    'text!../../moduals/layer-gatherui/bankcardtpl.html',
+    'text!../../moduals/layer-gatherui/tpl.html'
 ], function (BaseModalView, GatherUIModel,BankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl,quickpaytpl,numpadtpl,bankcardtpl, tpl) {
 
     var gahterUIView = BaseModalView.extend({

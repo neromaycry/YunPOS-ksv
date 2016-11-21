@@ -5,7 +5,7 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-qpwechat/model',
     '../../moduals/modal-qpwechat/collection',
-    'text!../../moduals/modal-gatherui/numpadtpl.html',
+    'text!../../moduals/layer-gatherui/numpadtpl.html',
     'text!../../moduals/modal-qpwechat/tpl.html',
 ], function (BaseModalView,QPWechatModel,QPWechatCollection,numpadtpl, tpl) {
 

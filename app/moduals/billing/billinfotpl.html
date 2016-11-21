@@ -16,11 +16,11 @@ s += '0';
 return s;
 }%>
 
-<div class="panel-heading">付款详情</div>
-<div class="panel-body text-center">
+<div class="panel-heading pos-textsize">付款详情</div>
+<div class="panel-body text-center" style="font-size: 18px;">
     <div class="row">
         <div class="col-xs-6 col-md-6 ">应收金额：</div>
-        <div class="col-xs-6 col-md-6" style="color:#f36c60;"><%= toDecimal2(totalamount) %></div>
+        <div class="col-xs-6 col-md-6 text-red"><%= toDecimal2(totalamount) %></div>
     </div>
     <div class="row" style="margin-top: 5px;margin-bottom: 5px;">
         <div class="col-xs-6 col-md-6">实付金额：</div>
@@ -28,7 +28,7 @@ return s;
     </div>
     <div class="row">
         <div class="col-xs-6 col-md-6">优惠金额：</div>
-        <div class="col-xs-6 col-md-6" style="color: #4db6ac;"><%= toDecimal2(totaldiscount + discountamount) %></div>
+        <div class="col-xs-6 col-md-6 text-teal"><%= toDecimal2(totaldiscount + discountamount) %></div>
     </div>
     <div class="row" style="margin-top: 5px;margin-bottom: 5px;">
         <div class="col-xs-6 col-md-6">未付金额：</div>

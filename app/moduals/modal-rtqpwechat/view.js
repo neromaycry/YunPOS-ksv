@@ -5,7 +5,7 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-rtqpwechat/model',
     '../../moduals/modal-rtqpwechat/collection',
-    'text!../../moduals/modal-gatherui/numpadtpl.html',
+    'text!../../moduals/layer-gatherui/numpadtpl.html',
     'text!../../moduals/modal-rtqpwechat/tpl.html',
 ], function (BaseModalView,RTQPWechatModel,RTQPWechatCollection,numpadtpl, tpl) {
 

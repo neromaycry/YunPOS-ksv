@@ -9,7 +9,7 @@ define([
     'text!../../moduals/modal-rtgatherui/alipaytpl.html',
     'text!../../moduals/modal-rtgatherui/wechatpaytpl.html',
     'text!../../moduals/modal-rtgatherui/quickpaytpl.html',
-    'text!../../moduals/modal-gatherui/numpadtpl.html',
+    'text!../../moduals/layer-gatherui/numpadtpl.html',
     'text!../../moduals/modal-rtgatherui/tpl.html'
 ], function (BaseModalView, GatherUIModel, contenttpl, commontpl, alipaytpl, wechatpaytpl,quickpaytpl,numpadtpl, tpl) {
 

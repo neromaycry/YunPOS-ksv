@@ -2,21 +2,24 @@
  * Created by gjwlg on 2016/9/9.
  */
 define([
-    '../../js/common/BaseModalView',
-    '../../moduals/modal-billtype/model',
-    '../../moduals/modal-billtype/collection',
-    '../../moduals/modal-gatherui/view',
-    'text!../../moduals/modal-billtype/billingtypetpl.html',
-    'text!../../moduals/modal-billtype/tpl.html',
-], function (BaseModalView,BilltypeModel,BilltypeCollection, GatherUIView, billingtypetpl, tpl) {
+    '../../js/common/BaseLayerView',
+    '../../moduals/layer-billtype/model',
+    '../../moduals/layer-billtype/collection',
+    '../layer-gatherui/view',
+    'text!../../moduals/layer-billtype/billingtypetpl.html',
+    'text!../../moduals/layer-billtype/receivedsumtpl.html',
+    'text!../../moduals/layer-billtype/tpl.html',
+], function (BaseLayerView, LayerBillTypeModel, LayerBillTypeCollection, GatherUIView, billingtypetpl,receivedsumtpl, tpl) {
 
-    var billtypeView = BaseModalView.extend({
+    var billtypeView = BaseLayerView.extend({
 
         id: "billtypeView",
 
         template: tpl,
 
         template_billingtype:billingtypetpl,
+
+        template_receivedsum:receivedsumtpl,
 
         i:0,
 
@@ -28,20 +31,21 @@ define([
             'click [data-index]':'onBillTypeClicked'
         },
 
-        modalInitPage: function () {
-            this.model = new BilltypeModel();
-            this.requestmodel = new BilltypeModel();
+        LayerInitPage: function () {
+            var _self = this;
+            this.model = new LayerBillTypeModel();
+            this.requestmodel = new LayerBillTypeModel();
             this.model.set({
                 receivedsum:this.attrs['gather_money']
             });
             var gatherKind = this.attrs['gather_kind'];
             if(storage.isSet(system_config.GATHER_KEY)) {
-                this.collection = new BilltypeCollection();
+                this.collection = new LayerBillTypeCollection();
                 var tlist = storage.get(system_config.GATHER_KEY);
                 this.visibleTypes = _.where(tlist,{visible_flag:'1'});
                 var gatherList = _.where(this.visibleTypes ,{gather_kind:gatherKind});
                 for(var i in gatherList){
-                    var item = new BilltypeModel();
+                    var item = new LayerBillTypeModel();
                     item.set({
                         gather_id:gatherList[i].gather_id,
                         gather_name:gatherList[i].gather_name
@@ -50,28 +54,30 @@ define([
                 }
             }
             this.initTemplates();
-            this.render();
-            this.renderBilltype();
+            setTimeout(function () {
+                _self.renderReceivedsum();
+                _self.renderBilltype();
+            }, 100);
         },
 
         initTemplates: function () {
             this.template_billingtype = _.template(this.template_billingtype);
+            this.template_receivedsum = _.template(this.template_receivedsum);
         },
 
-        bindModalKeys: function () {
+        bindLayerKeys: function () {
             var _self = this;
-            this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Esc , function () {
-                _self.hideModal(window.PAGE_ID.BILLING);
-                $('input[name = billing]').focus();
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_TYPE, KEYS.Esc , function () {
+                _self.onCancelClicked();
             });
-            this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Down, function() {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_TYPE, KEYS.Down, function() {
                _self.scrollDown();
             });
-            this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Up, function() {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_TYPE, KEYS.Up, function() {
                _self.scrollUp();
             });
 
-            this.bindModalKeyEvents(window.PAGE_ID.BILLING_TYPE, window.KEYS.Enter, function() {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_TYPE, KEYS.Enter, function() {
                 _self.onReceived(_self.i);
             });
         },
@@ -87,8 +93,9 @@ define([
             var gatherKind = this.attrs.gather_kind;
             var gatherModel = _.where(this.visibleTypes,{gather_id:gatherId});
             var gatherUI = gatherModel[0].gather_ui;
-            $('.modal-backdrop').remove();
-            this.hideModal(window.PAGE_ID.BILLING);
+            //$('.modal-backdrop').remove();
+            this.closeLayer(layerindex);
+            //this.hideModal(window.PAGE_ID.BILLING);
             if(gatherUI == '01' && gatherId != '05'){
                 var gaterUIView = new GatherUIView({
                     pageid:window.PAGE_ID.BILLING,
@@ -267,9 +274,13 @@ define([
             return this;
         },
 
+        renderReceivedsum: function () {
+            this.$el.find('.for-receivedsum').html(this.template_receivedsum(this.model.toJSON()));
+            return this;
+        },
+
         onCancelClicked: function () {
-            this.hideModal(window.PAGE_ID.BILLING);
-            $('input[name = billing]').focus();
+            this.closeLayer(layerindex);
         },
 
         onOkClicked: function () {

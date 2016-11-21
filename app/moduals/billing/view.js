@@ -5,7 +5,7 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/billing/model',
     '../../../../moduals/billing/collection',
-    '../../../../moduals/modal-billtype/view',
+    '../../../../moduals/layer-billtype/view',
     '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
@@ -14,14 +14,14 @@ define([
     '../../../../moduals/modal-quickpay/view',
     '../../../../moduals/modal-qpalipay/view',
     '../../../../moduals/modal-qpwechat/view',
-    '../../../../moduals/modal-gatherui/view',
+    '../../../../moduals/layer-gatherui/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,BilltypeView, BilldiscountView, LayerHelpView, LayerConfirm, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -327,21 +327,21 @@ define([
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
-               _self.payment('01', '');
+               _self.payment('01', '', '支票类');
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function() {
-                _self.payment('02', '');
+                _self.payment('02', '', '礼券类');
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function() {
-                _self.payment('03', _self.billNumber);
+                _self.payment('03', _self.billNumber, '银行POS');
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
                 $('input[name = billing]').val('');
                 toastr.info('该功能正在调试中...');
-               //_self.payment('05', _self.billNumber);
+               //_self.payment('05', _self.billNumber, '第三方支付');
             });
             //整单优惠输入实际优惠金额
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F1, function () {
@@ -1078,18 +1078,18 @@ define([
          *支票类付款
          */
         onCheckClicked:function () {
-            this.payment('01', '');
+            this.payment('01', '' , '支票类');
             $('button[name = check]').blur();
         },
         /**
          * 礼券
          */
         onGiftClicked: function () {
-            this.payment('02', '');
+            this.payment('02', '', '礼券类');
             $('button[name = gift-certificate]').blur();
         },
         onPosClicked:function () {
-            this.payment('03', this.billNumber);
+            this.payment('03', this.billNumber, '银行POS');
             $('button[name = pos]').blur();
         },
         /**
@@ -1102,13 +1102,13 @@ define([
         onThirdPayClicked: function () {
             toastr.info('该功能正在调试中...');
             $('input[name = billing]').val('');
-            //this.payment('05', this.billNumber);
+            //this.payment('05', this.billNumber, '第三方支付');
             //$('button[name = third-pay]').blur();
         },
         /**
          *点击支付大类按钮的点击事件
          */
-        payment:function (gatherkind , billNumber){
+        payment:function (gatherkind , billNumber ,title){
             var data = {};
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
@@ -1122,14 +1122,12 @@ define([
                 data['gather_kind'] = gatherkind;
                 data['gather_money'] = unpaidamount;
                 data['bill_no'] = billNumber;
-                this.billtypeview = new BilltypeView(data);
-                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
+                this.openLayer(PAGE_ID.LAYER_BILLING_TYPE, pageId, title, LayerBillTypeView, data, {area:'300px'});
             } else{
                 data['gather_kind'] = gatherkind;//支付方式类别：包括现金类,礼券类等
                 data['gather_money'] = receivedsum;
                 data['bill_no'] = billNumber;
-                this.billtypeview = new BilltypeView(data);
-                this.showModal(window.PAGE_ID.BILLING_TYPE,this.billtypeview);
+                this.openLayer(PAGE_ID.LAYER_BILLING_TYPE, pageId, title, LayerBillTypeView, data, {area:'300px'});
             }
             $('input[name = billing]').val('');
         },

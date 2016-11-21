@@ -5,7 +5,7 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-rtqpalipay/model',
     '../../moduals/modal-rtqpalipay/collection',
-    'text!../../moduals/modal-gatherui/numpadtpl.html',
+    'text!../../moduals/layer-gatherui/numpadtpl.html',
     'text!../../moduals/modal-rtqpalipay/tpl.html',
 ], function (BaseModalView,RTQPAlipayModel,RTQPAlipayCollection,numpadtpl, tpl) {
 

@@ -5,7 +5,7 @@ define([
     '../../js/common/BaseModalView',
     '../../moduals/modal-qpalipay/model',
     '../../moduals/modal-qpalipay/collection',
-    'text!../../moduals/modal-gatherui/numpadtpl.html',
+    'text!../../moduals/layer-gatherui/numpadtpl.html',
     'text!../../moduals/modal-qpalipay/tpl.html',
 ], function (BaseModalView,QPAlipayModel,QPAlipayCollection,numpadtpl, tpl) {
 
