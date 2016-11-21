@@ -92,18 +92,13 @@ define([
             //var gatherModel = _.where(this.visibleTypes, {gather_id: gatherId});
             var gatherName = this.collection.at(index).get('gather_name');
             var data = {};
+            var xfbdata = {};//生成payment_bill
             data['gather_id'] = gatherId;
             data['gather_name'] = gatherName;
             data['gather_money'] = this.attrs.gather_money;
             data['gather_kind'] = this.attrs.gather_kind;
-            var xfbdata = {};
             xfbdata['pos_id'] = '002';
             xfbdata['bill_no'] = this.attrs.bill_no;
-                //var gatherMoney  = this.attrs.gather_money;
-                //var gatherKind = this.attrs.gather_kind;
-                //var gatherUI = gatherModel[0].gather_ui;
-                //$('.modal-backdrop').remove();
-                //this.hideModal(window.PAGE_ID.BILLING);
             this.closeLayer(layerindex);
             switch (gatherId) {
                 case '05':
@@ -115,6 +110,8 @@ define([
                         if (resp.status == '00') {
                             data['payment_bill'] = resp.xfb_bill,
                             _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
+                        } else {
+                            toastr.error(resp.msg);
                         }
                     });
                     break;
@@ -122,7 +119,9 @@ define([
                     this.requestmodel.xfbbillno(xfbdata, function (resp) {
                         if (resp.status == '00') {
                             data['payment_bill'] = resp.xfb_bill,
-                                _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
+                            _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
+                        } else {
+                            toastr.error(resp.msg);
                         }
                     });
                     break;

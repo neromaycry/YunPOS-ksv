@@ -51,7 +51,8 @@ define([
             data['gather_kind'] = this.attrs.gather_kind;
             data['payment_bill'] = '';
             Backbone.trigger('onReceivedsum',data);
-            this.closeLayer(layerindex)
+            this.closeLayer(layerindex);
+            $('input[name = billing]').focus();
         },
 
         onOKClicked: function () {

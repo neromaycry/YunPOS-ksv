@@ -1,22 +1,20 @@
-/**
- * Created by gjwlg on 2016/9/9.
- */
+
 define([
     '../../js/common/BaseLayerView',
-    '../../moduals/layer-gatherui/model',
+    '../../moduals/layer-quickpay/model',
     '../../moduals/layer-bankcard/view',
-    'text!../../moduals/layer-gatherui/contenttpl.html',
-    'text!../../moduals/layer-gatherui/commontpl.html',
-    'text!../../moduals/layer-gatherui/alipaytpl.html',
-    'text!../../moduals/layer-gatherui/wechatpaytpl.html',
+    'text!../../moduals/layer-quickpay/contenttpl.html',
+    'text!../../moduals/layer-quickpay/commontpl.html',
+    'text!../../moduals/layer-quickpay/alipaytpl.html',
+    'text!../../moduals/layer-quickpay/wechattpl.html',
     'text!../../moduals/layer-gatherui/numpadtpl.html',
-    'text!../../moduals/layer-gatherui/bankcardtpl.html',
-    'text!../../moduals/layer-gatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel,LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl,bankcardtpl, tpl) {
+    'text!../../moduals/layer-quickpay/bankcardtpl.html',
+    'text!../../moduals/layer-quickpay/tpl.html'
+], function (BaseLayerView, LayerQuickPayModel,LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl,bankcardtpl, tpl) {
 
-    var layerGatherUIView = BaseLayerView.extend({
+    var layerQuickPayView = BaseLayerView.extend({
 
-        id: "layerGatherUIView",
+        id: "layerQuickPayView",
 
         template: tpl,
 
@@ -37,7 +35,10 @@ define([
         LayerInitPage: function () {
             var _self = this;
             this.gatherId = this.attrs.gather_id;
-            this.model = new LayerGatherUIModel();
+            this.model = new LayerQuickPayModel();
+            this.model.set({
+                gather_money:this.attrs.gather_money
+            });
             this.switchTemplate(this.gatherId);
             this.template_content = _.template(this.template_content);
             this.prepay(this.gatherUI);
@@ -76,7 +77,7 @@ define([
         },
 
         renderContent: function () {
-            this.$el.find('.gatherui-content').html(this.template_content(this.model.toJSON()));
+            this.$el.find('.quickpay-content').html(this.template_content(this.model.toJSON()));
             return this;
         },
 
@@ -89,9 +90,6 @@ define([
             switch (gatherId) {
                 case '05':
                     this.template_content = bankcardtpl;
-                    this.model.set({
-                        gather_money:this.attrs.gather_money
-                    });
                     break;
                 case '12':
                     this.template_content = wechatpaytpl;
@@ -103,16 +101,16 @@ define([
                     break;
                 default:
                     this.template_content = commontpl;
-                    this.input = 'input[name = receive-account]';
+                    this.input = 'input[name = quickpay-account]';
             }
         },
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Esc , function () {
-               _self.onCancelClicked();
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_QUICK_PAY, KEYS.Esc , function () {
+                _self.onCancelClicked();
             });
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Enter, function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_QUICK_PAY, KEYS.Enter, function () {
                 _self.confirm();
             });
         },
@@ -167,10 +165,11 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
+            $('input[name = billing]').focus();
         },
 
         onOKClicked: function () {
-           this.confirm();
+            this.confirm();
         },
 
         onBackspaceClicked: function (e) {
@@ -226,5 +225,5 @@ define([
 
     });
 
-    return layerGatherUIView;
+    return layerQuickPayView;
 });

@@ -10,18 +10,14 @@ define([
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/modal-ecardlogin/view',
-    '../../../../moduals/modal-changing/view',
-    '../../../../moduals/modal-quickpay/view',
-    '../../../../moduals/modal-qpalipay/view',
-    '../../../../moduals/modal-qpwechat/view',
-    '../../../../moduals/layer-gatherui/view',
+    '../../../../moduals/layer-quickpay/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, OneCardView,ChangingView, QuickPayView,QPAliPayView,QPWeChatView,GatherUIView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, OneCardView, LayerQuickPayView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -303,15 +299,6 @@ define([
             //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
                 _self.judgeEcardExistance(_self.i);
-                //var confirmView = new ConfirmView({
-                //    pageid: window.PAGE_ID.BILLING,
-                //    callback: function () {
-                //        _self.judgeEcardExistance(_self.i);
-                //
-                //    },
-                //    content:'确定删除此条支付记录？' //confirm模态框的提示内容
-                //});
-                //_self.showModal(window.PAGE_ID.CONFIRM, confirmView);
             });
             //结算
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Space, function() {
@@ -403,8 +390,6 @@ define([
          * 帮助
          */
         openHelp:function () {
-            //var tipsView = new KeyTipsView('BILLING_PAGE');
-            //this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             var attrs = {
                 page: 'BILLING_PAGE'
             };
@@ -917,14 +902,6 @@ define([
          */
         onDeleteClicked: function () {
            this.judgeEcardExistance(this.i);
-            //var confirmView = new ConfirmView({
-            //    pageid: window.PAGE_ID.BILLING,
-            //    callback: function () {
-            //        _self.judgeEcardExistance(_self.i);
-            //    },
-            //    content:'确定删除此条支付记录？' //confirm模态框的提示内容
-            //});
-            //this.showModal(window.PAGE_ID.CONFIRM, confirmView);
         },
         /**
          * 整单优惠点击事件
@@ -1011,62 +988,45 @@ define([
                         if(result == - 1){
                             toastr.info('无效的付款编码');
                         }else{
+                            var item = _.findWhere(visibleTypes, {gather_id:gatherId});
                             var data = {};
-                            var item = _.findWhere(visibleTypes,{gather_id:gatherId});
-                            var gatherUI = item.gather_ui;
-                            if(gatherUI == '01'){
-                                data['gather_money'] = unpaidamount;
-                                data['gather_id'] = gatherId;
-                                data['gather_name'] = item.gather_name;
-                                data['payment_bill'] = '';
-                                this.quickpayview = new QuickPayView(data);
-                                this.showModal(window.PAGE_ID.QUICK_PAY,this.quickpayview);
-                                $('.modal').on('shown.bs.modal',function(e){
-                                    $('input[name = quickpay-account]').focus();
-                                });
-                            }else if(gatherUI == '04'){
-
-                                toastr.info('该功能正在调试中...');
-                                //var xfbdata = {};
-                                //xfbdata['pos_id'] = '002';
-                                //xfbdata['bill_no'] = this.billNumber;
-                                //this.requestmodel.xfbbillno(xfbdata, function(resp) {
-                                //    if(resp.status == '00') {
-                                //        data['gather_money'] = unpaidamount;
-                                //        data['gather_id'] = gatherId;
-                                //        data['gather_name'] = item.gather_name;
-                                //        data['payment_bill'] = resp.xfb_bill;
-                                //        _self.alipayview = new QPAliPayView(data);
-                                //        _self.showModal(window.PAGE_ID.QP_ALIPAY,_self.alipayview);
-                                //        $('.modal').on('shown.bs.modal',function(e){
-                                //            $('input[name = alipay-account]').focus();
-                                //        });
-                                //    }else {
-                                //        toastr.error(resp.msg);
-                                //    }
-                                //});
-
-                            }else if(gatherUI == '05') {
-                                toastr.info('该功能正在调试中...');
-                                //var xfbdata = {};
-                                //xfbdata['pos_id'] = '002';
-                                //xfbdata['bill_no'] = this.billNumber;
-                                //this.requestmodel.xfbbillno(xfbdata, function(resp) {
-                                //    if(resp.status == '00') {
-                                //        data['gather_money'] = unpaidamount;
-                                //        data['gather_id'] = gatherId;
-                                //        data['gather_name'] = item.gather_name;
-                                //        data['payment_bill'] = resp.xfb_bill;
-                                //        _self.wechatview = new QPWeChatView(data);
-                                //        _self.showModal(window.PAGE_ID.QP_WECHAT,_self.wechatview);
-                                //        $('.modal').on('shown.bs.modal',function(e) {
-                                //            $('input[name = wechat-account]').focus();
-                                //        });
-                                //    }else {
-                                //        toastr.error(resp.msg);
-                                //    }
-                                //});
-
+                            var xfbdata = {};
+                            xfbdata['pos_id'] = '002';
+                            xfbdata['bill_no'] = _self.billNumber;
+                            data['gather_money'] = unpaidamount;
+                            data['gather_id'] = gatherId;
+                            data['gather_name'] = item.gather_name;
+                            switch(gatherId) {
+                                case '05':
+                                    data['payment_bill'] = ''
+                                    this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, '银行卡支付确认', LayerQuickPayView, data, {area: '300px'});
+                                    break;
+                                    break;
+                                case '12':
+                                    toastr.info('该功能正在调试中...');
+                                    //_self.requestmodel.xfbbillno(xfbdata, function(resp){
+                                    //    if(resp.status == '00') {
+                                    //        data['payment_bill'] = resp.xfb_bill;
+                                    //        _self.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'600px'});
+                                    //    } else {
+                                    //        toastr.error(resp.msg);
+                                    //    }
+                                    //});
+                                    break;
+                                case '13':
+                                    toastr.info('该功能正在调试中...');
+                                    //_self.requestmodel.xfbbillno(xfbdata, function(resp){
+                                    //    if(resp.status == '00') {
+                                    //        data['payment_bill'] = resp.xfb_bill;
+                                    //        _self.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'600px'});
+                                    //    } else {
+                                    //        toastr.error(resp.msg);
+                                    //    }
+                                    //});
+                                    break;
+                                default :
+                                    data['payment_bill'] = '';
+                                    this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'300px'});
                             }
                         }
                     }
