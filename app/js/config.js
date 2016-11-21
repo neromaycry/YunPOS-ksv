@@ -210,16 +210,19 @@ requirejs([
 
     window.wsClient = new Recwebsocket(SOCKET_ADDR);
     window.wsClient.onopen = function (e) {
-        window.toastr.success('已与硬件建立连接');
+        //window.toastr.success('已与硬件建立连接');
+        window.layer.msg('已与硬件建立连接', optLayerSuccess);
     };
     window.wsClient.onmessage = function (e) {
         console.log(e);
     };
     window.wsClient.onclose = function (e) {
-        window.toastr.warning('与硬件连接断开');
+        //window.toastr.warning('与硬件连接断开');
+        window.layer.msg('与硬件断开，请检查硬件', optLayerError);
     };
     window.wsClient.onerror = function (e) {
-        window.toastr.warning('与硬件连接出现问题，请检查硬件');
+        //window.toastr.warning('与硬件连接出现问题，请检查硬件');
+        console.log(e);
     };
 
     // 定义调试标志

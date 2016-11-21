@@ -81,7 +81,8 @@ define([
             var search = $(this.input).val();
             console.log(search);
             if (search == '') {
-                toastr.warning('您输入的营业员编号为空');
+                //toastr.warning('您输入的营业员编号为空');
+                layer.msg('您输入的营业员编号为空', optLayerWarning);
                 return;
             }
             console.log(this.collection.toJSON());
@@ -92,26 +93,9 @@ define([
                 this.closeLayer(layerindex);
                 $('input[name = main]').focus();
             } else {
-                toastr.warning('您输入的营业员不存在,请重新输入');
+                //toastr.warning('您输入的营业员不存在,请重新输入');
+                layer.msg('您输入的营业员不存在,请重新输入', optLayerError);
             }
-
-
-            //for(var i=0;i<this.collection.length;i++){
-            //    n++;
-            //    if(search == this.collection.at(i).get("number")) {
-            //        this.closeLayer();
-            //        toastr.success('营业员' + search + '登录成功');
-            //        var attrData = {};
-            //        attrData['name'] = this.collection.at(i).get("name");
-            //        Backbone.trigger('SalesmanAdd',attrData);
-            //        $('input[name = main]').focus();
-            //        break;
-            //    }
-            //}
-            //if(n == this.collection.length){
-            //
-            //    n = 0;
-            //}
             $(this.input).val('');
         }
     });

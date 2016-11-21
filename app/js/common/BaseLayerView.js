@@ -70,6 +70,20 @@ define([
             //});
         },
 
+        /**
+         * 打开一般layer的通用方法
+         * @param LayerId 即将打开的layer的pageid
+         * @param mainId  layer所处的页面的pageid
+         * @param title  layer的标题
+         * @param View  layer中要加载的view
+         * @param attrs  将要传到view中的参数
+         * @param options  layer的参数
+         * 示例：
+         * var attrs = {
+                page: 'MAIN_PAGE'
+            };
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
+         */
         openLayer: function (LayerId, mainId, title, View, attrs, options) {
             var _self = this;
             options = _.extend({
@@ -96,7 +110,12 @@ define([
             });
         },
 
-
+        /**
+         * 关闭layer的通用方法
+         * @param index 当前layer的index， 一般都传入layerindex这个window变量
+         * 注意：如果layer所处页面中存在input，则需要在关闭时手动将焦点赋到input框上 $('input的selector').focus(),
+         * 否则会出现失去焦点的bug
+         */
         closeLayer: function (index) {
             console.log('close layer');
             isModal = false;

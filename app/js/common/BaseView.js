@@ -30,7 +30,7 @@ define([
             var _self = this;
             console.log(">>> " + this.id);
             this.undelegateEvents();
-            $(document).unbind('keyup');
+            $(document).unbind('keydown');
             //$(document).unbind('keydown');
             this.$el.empty().off();
             if (attrs) {
@@ -126,6 +126,20 @@ define([
             });
         },
 
+        /**
+         * 打开一般layer的通用方法
+         * @param LayerId 即将打开的layer的pageid
+         * @param mainId  layer所处的页面的pageid
+         * @param title  layer的标题
+         * @param View  layer中要加载的view
+         * @param attrs  将要传到view中的参数
+         * @param options  layer的参数
+         * 示例：
+         * var attrs = {
+                page: 'MAIN_PAGE'
+            };
+         this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
+         */
         openLayer: function (LayerId, mainId, title, View, attrs, options) {
             var _self = this;
             options = _.extend({
@@ -152,6 +166,25 @@ define([
             });
         },
 
+        /**
+         * 打开确认layer的通用方法
+         * @param LayerId  即将打开的layer的pageid
+         * @param mainId  layer所处的页面的pageid
+         * @param View  layer中要加载的view
+         * @param attrs  将要传到view中的参数
+         * @param options  layer的参数
+         * 示例：
+         * var attrs = {
+                pageid: pageId,  //打开当前layer所处的页面
+                content: '确定取消交易？',  //layer中要显示的内容
+                is_navigate: false,  //确认后是否有跳页
+                callback: function () {
+                    //确认键的回调的代码
+                }
+            };
+         this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
+         *
+         */
         openConfirmLayer: function (LayerId, mainId, View, attrs, options) {
             options = _.extend({
                 title: '请确认',
@@ -176,9 +209,6 @@ define([
                 view.render();
             })
         },
-
-
-
 
         /**
          * 键盘绑定公用方法
