@@ -109,7 +109,7 @@ define([
             if (storage.isSet(system_config.SALE_PAGE_KEY)) {
                 this.collection.set(storage.get(system_config.SALE_PAGE_KEY, 'shopcart'));
                 this.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
-                this.i = storage.get(system_config.SALE_PAGE_KEY, 'i');
+                //this.i = storage.get(system_config.SALE_PAGE_KEY, 'i');
             }
             if (storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
                 this.loginInfoModel.set({
@@ -319,17 +319,7 @@ define([
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.D, function () {
-                if(_self.isDeleteKey){
-                    _self.deleteItem();
-                }else{
-                    var secondLoginView = new SecondLoginView({
-                        pageid: window.PAGE_ID.MAIN,
-                        callback: function () {
-                            _self.deleteItem();
-                        }
-                    });
-                    _self.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
-                }
+                _self.onDeleteClicked();
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F12, function () {
@@ -349,11 +339,11 @@ define([
             });
             //强制退货/单品退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F, function () {
-                router.navigate('returnforce',{ trigger:true });
+                _self.onReturnForceClicked();
             });
             //整单退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F3, function () {
-                router.navigate('returnwhole',{ trigger:true });
+                _self.onReturnWholeClicked();
             });
             //打开帮助
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.T, function () {
@@ -361,7 +351,7 @@ define([
             });
             //收银对账
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F10, function () {
-                router.navigate('checking',{trigger:true});
+                _self.onCheckingClicked();
             });
             //折让
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F2, function () {
@@ -369,7 +359,7 @@ define([
             });
             //小票打印
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.H, function() {
-                router.navigate('print', {trigger:true});
+                _self.onPrintClicked();
             });
             //提大额
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F9, function() {
@@ -418,7 +408,7 @@ define([
                 layer.msg('购物车内无商品', optLayerWarning);
             } else {
                 console.log(this.i);
-                storage.set(system_config.SALE_PAGE_KEY, 'i', this.i);
+                //storage.set(system_config.SALE_PAGE_KEY, 'i', this.i);
                 router.navigate('billing', {trigger:true});
             }
         },
@@ -667,15 +657,26 @@ define([
          * 单品删除
          */
         deleteItem: function () {
-            if($('li').hasClass('cus-selected')){
-                var item = this.collection.at(this.i);
-                this.collection.remove(item);
-                this.i = 0;
-                this.renderCartList();
-                this.calculateModel();
+            console.log(this.i);
+            var len = this.collection.length;
+            console.log(len);
+            if (len == 0) {
+                layer.msg('没有可删除的商品', optLayerWarning);
+            } else {
+                try {
+                    if($('li').hasClass('cus-selected')){
+                        var item = this.collection.at(this.i);
+                        this.collection.remove(item);
+                        this.i = 0;
+                        this.renderCartList();
+                        this.calculateModel();
+                    }
+                    //toastr.success('删除成功');
+                    layer.msg('删除成功', optLayerSuccess);
+                } catch (e) {
+                    layer.msg(e.name + ":" + e.message, optLayerError);
+                }
             }
-            //toastr.success('删除成功');
-            layer.msg('删除成功', optLayerSuccess);
         },
         /**
          * 添加商品

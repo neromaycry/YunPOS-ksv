@@ -200,6 +200,7 @@ window.PAGE_ID = {
     'RT_QP_ALIPAY':36,
     'RT_QP_WECHAT':37,
     'PRINT':38,
+    'RETURN_WHOLE': 39,
     'MODAL_MEMBER_CARD':40,
     'MODAL_PHONENUM':41,
     'LAYER_WITHDRAW': 42,

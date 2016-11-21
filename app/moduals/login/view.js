@@ -7,9 +7,10 @@ define([
     '../../../../moduals/login/collection',
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-gateway/view',
+    '../../../../moduals/layer-confirm/view',
     'text!../../../../moduals/login/clientlogintpl.html',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, ConfirmView, GatewayView, clientlogintpl, tpl) {
+], function (BaseView, LoginModel, LoginCollection, ConfirmView, GatewayView, LayerConfirmView, clientlogintpl, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -36,7 +37,7 @@ define([
             'click input[name = username]':'focusInputUser',
             'click input[name = password]':'focusInputPasswd',
             //'click .login-init':'onInitClicked',
-            'click .login-reconnecthw':'onReconnectHardwareClicked',
+            //'click .login-reconnecthw':'onReconnectHardwareClicked',
             'click .power-off':'onPowerOffClicked',
             'click .lock': 'lockScreen',
             'click .bankcheckin': 'checkIn'
@@ -129,14 +130,24 @@ define([
         },
 
         onPowerOffClicked: function () {
-            var confirmView = new ConfirmView({
-                pageid: window.PAGE_ID.LOGIN, //当前打开confirm模态框的页面id
-                callback: function () { //点击确认键的回调
-                    wsClient.send(DIRECTIVES.ShutDown);
-                },
-                content:'确定关机？' //confirm模态框的提示内容
-            });
-            this.showModal(window.PAGE_ID.CONFIRM, confirmView);
+            //var confirmView = new ConfirmView({
+            //    pageid: window.PAGE_ID.LOGIN, //当前打开confirm模态框的页面id
+            //    callback: function () { //点击确认键的回调
+            //        wsClient.send(DIRECTIVES.ShutDown);
+            //    },
+            //    content:'确定关机？' //confirm模态框的提示内容
+            //});
+            //this.showModal(window.PAGE_ID.CONFIRM, confirmView);
+            var _self = this;
+            var attrs = {
+                pageid: pageId,
+                content: '确定关机？',
+                is_navigate: false,
+                callback: function () {
+                    _self.sendWebSocketDirective([DIRECTIVES.ShutDown], [''], wsClient);
+                }
+            };
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
         },
 
         focusInputUser: function () {
@@ -151,21 +162,23 @@ define([
         //    this.iniSettngs();
         //},
 
-        onReconnectHardwareClicked: function () {
-            wsClient.close();
-            window.location.reload();
-        },
+        //onReconnectHardwareClicked: function () {
+        //    wsClient.close();
+        //    window.location.reload();
+        //},
 
         doLogin: function () {
             var _self = this;
             var username = $('input[name = username]').val();
             var password = $('input[name = password]').val();
             if (username == '') {
-                toastr.warning('请输入用户名');
+                //toastr.warning('请输入用户名');
+                layer.msg('请输入用户名', optLayerWarning);
                 return;
             }
             if (password == '') {
-                toastr.warning('请输入密码');
+                //toastr.warning('请输入密码');
+                layer.msg('请输入密码', optLayerWarning);
                 return;
             }
             var data = {};
@@ -185,10 +198,12 @@ define([
                         isFromLogin = true;
                         //toastr.success('登录成功');
                     } else {
-                        toastr.error(response.msg);
+                        //toastr.error(response.msg);
+                        layer.msg(response.msg, optLayerError)
                     }
                 } else {
-                    toastr.error(response.msg);
+                    //toastr.error(response.msg);
+                    layer.msg(response.msg, optLayerError)
                 }
             }, function(jqXHR, textStatus, errorThrown) {
                 //失败回调
@@ -219,7 +234,8 @@ define([
                     storage.set(system_config.GATHER_KEY,resp.gather_detail);
                     toastr.success('支付方式列表更新成功');
                 } else {
-                    toastr.error(resp.msg);
+                    //toastr.error(resp.msg);
+                    layer.msg(resp.msg, optLayerError);
                 }
             }, function(jqXHR, textStatus, errorThrown) {
                 //失败回调
@@ -231,7 +247,8 @@ define([
         },
 
         checkIn: function () {
-            toastr.info('签到');
+            //toastr.info('签到');
+            layer.msg('签到', optLayerSuccess);
             this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
         },
 

@@ -48,10 +48,11 @@ define([
             this.bindLayerKeyEvents(PAGE_ID.LAYER_CONFIRM, KEYS.Enter, function () {
                 _self.onOKClicked();
             });
-
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_CONFIRM, KEYS.Esc, function () {
-                _self.onCancelClicked();
-            });
+            setTimeout(function () {
+                _self.bindLayerKeyEvents(PAGE_ID.LAYER_CONFIRM, KEYS.Esc, function () {
+                    _self.onCancelClicked();
+                });
+            }, 500);
         },
 
         onNavigateStateChanged: function (isNavigate) {
@@ -59,7 +60,11 @@ define([
         },
 
         onCancelClicked: function () {
-            this.closeLayer(layerindex)
+            if (this.attrs.is_navigate) {
+                this.confirmCloseLayer(this.attrs.navigate_page);
+            } else {
+                this.confirmCloseLayer(this.attrs.pageid);
+            }
         },
 
         onOKClicked: function () {
@@ -80,6 +85,7 @@ define([
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
                     this.closeLayer(PAGE_ID.LOGIN);
+                    $('input[name = username]').focus();
                     break;
                 case window.PAGE_ID.SETDNS:
                     this.closeLayer(PAGE_ID.SETDNS);

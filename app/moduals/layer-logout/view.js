@@ -52,7 +52,8 @@ define([
             //    return;
             //}
             if (password == '') {
-                toastr.warning('请输入密码');
+                //toastr.warning('请输入密码');
+                layer.msg('请输入密码', optLayerWarning);
                 return;
             }
             var data = {
@@ -66,10 +67,12 @@ define([
                         _self.closeLayer(layerindex);
                         router.navigate('login', {trigger:true});
                     } else {
-                        toastr.error(response.msg);
+                        //toastr.error(response.msg);
+                        layer.msg(response.msg, optLayerError);
                     }
                 } else {
-                    toastr.error(response.msg);
+                    //toastr.error(response.msg);
+                    layer.msg(response.msg, optLayerError);
                 }
             });
         },
