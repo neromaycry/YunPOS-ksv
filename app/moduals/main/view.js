@@ -5,9 +5,7 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
-    '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-login/view',
-    '../../../../moduals/modal-withdraw/view',
     '../../../../moduals/modal-priceentry/view',
     '../../../../moduals/layer-member/view',
     '../../../../moduals/layer-logout/view',
@@ -15,6 +13,7 @@ define([
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-restorder/view',
+    '../../../../moduals/layer-withdraw/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
@@ -25,7 +24,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, KeyTipsView, SecondLoginView, WithDrawView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SecondLoginView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -1004,8 +1003,9 @@ define([
          * 提大额
          */
         onWithDrawClicked: function () {
-            var withDrawView = new WithDrawView();
-            this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
+            //var withDrawView = new WithDrawView();
+            //this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
+            this.openLayer(PAGE_ID.LAYER_WITHDRAW, pageId, '提大额', LayerWithdrawView, null, {area: '300px'});
         },
         /**
          * 开钱箱

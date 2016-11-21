@@ -213,6 +213,7 @@ window.PAGE_ID = {
     'LAYER_CONFIRM': 50,
     'LAYER_HELP': 51,
     'LAYER_RESTORDER':52,
+    'LAYER_WITHDRAW': 53,
 };
 
 window.KEYS = {
