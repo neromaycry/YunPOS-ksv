@@ -153,6 +153,7 @@ define([
                         data['gather_no'] = gatherNo;
                         Backbone.trigger('onReceivedsum',data)
                         this.closeLayer(layerindex);
+                        $('input[name = billing]').focus();
                 }
             }
         },
