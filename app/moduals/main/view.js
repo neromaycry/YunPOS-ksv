@@ -5,18 +5,15 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
-    '../../../../moduals/modal-billingdiscount/view',
-    '../../../../moduals/keytips-member/view',
-    '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-login/view',
-    '../../../../moduals/modal-restorder/view',
-    '../../../../moduals/modal-withdraw/view',
     '../../../../moduals/modal-priceentry/view',
     '../../../../moduals/layer-member/view',
     '../../../../moduals/layer-logout/view',
     '../../../../moduals/layer-salesman/view',
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-help/view',
+    '../../../../moduals/layer-restorder/view',
+    '../../../../moduals/layer-withdraw/view',
     '../../../../moduals/modal-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
@@ -27,7 +24,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, BilldiscountView, KeyTipsView, ConfirmView, SecondLoginView, RestOrderView, WithDrawView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SecondLoginView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, BinstructionView, posinfotpl, salesmantpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -472,11 +469,12 @@ define([
                 toastr.warning('购物车内有商品，不能执行解挂操作');
             }else {
                 //router.navigate('restorder',{trigger:true});
-                var restOrderView = new RestOrderView();
-                this.showModal(window.PAGE_ID.MODAL_RESTORDER, restOrderView);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = restorder]').focus();
-                });
+                //var restOrderView = new RestOrderView();
+                //this.showModal(window.PAGE_ID.MODAL_RESTORDER, restOrderView);
+                //$('.modal').on('shown.bs.modal',function(e) {
+                //    $('input[name = restorder]').focus();
+                //});
+                this.openLayer(PAGE_ID.LAYER_RESTORDER, pageId, '订单解挂', LayerRestOrderView, null, {area: '300px'});
             }
         },
         /**
@@ -1005,8 +1003,9 @@ define([
          * 提大额
          */
         onWithDrawClicked: function () {
-            var withDrawView = new WithDrawView();
-            this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
+            //var withDrawView = new WithDrawView();
+            //this.showModal(window.PAGE_ID.MODAL_WITHDRAW, withDrawView);
+            this.openLayer(PAGE_ID.LAYER_WITHDRAW, pageId, '提大额', LayerWithdrawView, null, {area: '300px'});
         },
         /**
          * 开钱箱

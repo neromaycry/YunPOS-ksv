@@ -2,20 +2,20 @@
  * Created by gjwlg on 2016/9/9.
  */
 define([
-    '../../js/common/BaseModalView',
-    '../../moduals/modal-withdraw/model',
-    'text!../../moduals/modal-withdraw/tpl.html',
-], function (BaseModalView, withDrawModel, tpl) {
+    '../../js/common/BaseLayerView',
+    '../../moduals/layer-withdraw/model',
+    'text!../../moduals/layer-withdraw/tpl.html',
+], function (BaseLayerView, LayerWithdrawModel, tpl) {
 
-    var withDrawView = BaseModalView.extend({
+    var layerWithdrawView = BaseLayerView.extend({
 
-        id: "withDrawView",
+        id: "layerWithdrawView",
 
         template: tpl,
 
         input: 'input[name = withdraw]',
 
-        events:{
+        events: {
             'click .cancel':'onCancelClicked',
             'click .ok':'onOKClicked',
             'click .btn-num':'onNumClicked',
@@ -23,17 +23,27 @@ define([
             'click .btn-clear':'onClearClicked'
         },
 
-
-        modalInitPage: function () {
+        LayerInitPage: function () {
             var _self = this;
-            $('.modal').on('shown.bs.modal', function () {
+            this.model = new LayerWithdrawModel();
+            setTimeout(function () {
                 $(_self.input).focus();
             });
+        },
 
+        bindLayerKeys: function () {
+            var _self = this;
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_WITHDRAW, KEYS.Enter, function () {
+                _self.onOKClicked();
+            });
+
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_WITHDRAW, KEYS.Esc, function () {
+                _self.onCancelClicked();
+            });
         },
 
         onCancelClicked: function () {
-            this.hideModal(window.PAGE_ID.MAIN);
+            this.closeLayer(layerindex);
         },
 
         onNumClicked: function (e) {
@@ -56,7 +66,7 @@ define([
         onOKClicked: function () {
             var money = $(this.input).val();
             if (money == '') {
-                toastr.waring('请输入提款金额');
+                toastr.warning('请输入提款金额');
                 return;
             }
             var pos = '收款机(2341)';
@@ -71,18 +81,7 @@ define([
             printText += '        提取金额：' + toDecimal2(money) + ' 元\n\n\n\n';
             printText += '    提款人签字：\n\n\n\n\n\n\n\n';
             this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT, DIRECTIVES.OpenCashDrawer], [printText, ''], wsClient);
-            this.hideModal(window.PAGE_ID.MAIN);
-        },
-
-        bindModalKeys: function () {
-            var _self = this;
-            this.bindModalKeyEvents(window.PAGE_ID.MODAL_WITHDRAW, window.KEYS.Enter, function () {
-                _self.onOKClicked();
-            });
-            this.bindModalKeyEvents(window.PAGE_ID.MODAL_WITHDRAW, window.KEYS.Esc, function () {
-                _self.hideModal(window.PAGE_ID.MAIN);
-                $('input[name = main]').focus();
-            });
+            this.closeLayer(layerindex);
         },
 
         getCurrentFormatDate: function () {
@@ -106,5 +105,5 @@ define([
 
     });
 
-    return withDrawView;
+    return layerWithdrawView;
 });

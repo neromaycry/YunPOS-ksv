@@ -212,6 +212,8 @@ window.PAGE_ID = {
     'MODAL_BANK_INSTRUCTION':49,
     'LAYER_CONFIRM': 50,
     'LAYER_HELP': 51,
+    'LAYER_RESTORDER':52,
+    'LAYER_WITHDRAW': 53,
 };
 
 window.KEYS = {
