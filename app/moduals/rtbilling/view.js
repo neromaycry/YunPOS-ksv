@@ -10,12 +10,12 @@ define([
     '../../../../moduals/layer-rtquickpay/view',
     '../../../../moduals/layer-rtgatherui/view',
     '../../../../moduals/layer-rtbilltype/view',
-    '../../../../moduals/modal-rtecardlogin/view',
+    '../../../../moduals/layer-ecardlogin/view',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/rtbilling/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/rtbilling/tpl.html'
-], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView,LayerConfirmView,RTQuickPayView, GatherUIView,RTLayerTypeView,OneCardView, numpadtpl,billinfotpl,billingdetailtpl, tpl) {
+], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView,LayerConfirmView,RTQuickPayView, GatherUIView,RTLayerTypeView,layerECardView, numpadtpl,billinfotpl,billingdetailtpl, tpl) {
     var rtbillingView = BaseView.extend({
 
         id: "rtbillingView",
@@ -202,9 +202,9 @@ define([
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Q, function () {
-                //$('input[name = billingrt]').val('');
-                //toastr.info('该功能正在调试中...');
-                _self.payment('05', '第三方支付');
+                $('input[name = billingrt]').val('');
+                toastr.info('该功能正在调试中...');
+                //_self.payment('05', '第三方支付');
             });
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.T, function () {
@@ -545,11 +545,11 @@ define([
                 switch(gatherId) {
                     case '12':
                         toastr.info('该功能正在调试中...');
-                        this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
+                        //this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
                         break;
                     case '13':
                         toastr.info('该功能正在调试中...');
-                        this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
+                        //this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
                         break;
                     default :
                         data['payment_bill'] = '';
@@ -597,30 +597,37 @@ define([
          * 一卡通支付
          */
         payByECard: function () {
+            var data = {};
             var unpaidamount = this.model.get('unpaidamount');
             var receivedSum = $(this.input).val();
             if(unpaidamount == 0){
-                toastr.info('待退款金额为零，请进行结算');
-            }else if(receivedSum == ''){
-                toastr.info('退款金额不能为空');
-            }else if(receivedSum == 0){
-                toastr.info('退款金额不能为零');
-            }else if(receivedSum == '.'){
-                toastr.info('无效的退款金额');
-            }else if(receivedSum > unpaidamount){
-                toastr.info('不设找零');
-            }else{
-                var data = {};
-                data['unpaidamount'] = unpaidamount;
-                data['receivedsum'] = receivedSum;
-                data['isfromForce'] = isfromForce;
-                this.onecard = new OneCardView(data);
-                this.showModal(window.PAGE_ID.RT_ONECARD_LOGIN,this.onecard);
-                $('.modal').on('shown.bs.modal',function(e) {
-                    $('input[name = medium_id]').focus();
-                });
+                //toastr.info('待退款金额为零，请进行结算');
+                layer.msg('待退款金额为零,请进行退款', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
-        $(this.input).val('');
+            if(receivedSum == '.' || parseFloat(receivedSum) == 0){
+                //toastr.info('无效的退款金额');
+                layer.msg('无效的退款金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedSum > unpaidamount){
+                //toastr.info('不设找零');
+                layer.msg('不设找零', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedSum == '') {
+                data['gather_money'] = unpaidamount;
+            }else {
+                data['gather_money'] = receivedSum;
+            }
+
+            data['unpaidamount'] = unpaidamount;
+            data['isfromForce'] = isfromForce;
+            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area:'600px'});
+            $(this.input).val('');
         },
 
         /**
@@ -769,10 +776,10 @@ define([
         },
 
         onThirdPayClicked: function () {
-            //toastr.info('该功能正在调试中...');
-            //$('input[name = billingrt]').val('');
-            this.payment('05', '第三方支付');
-            $('button[name = third-pay]').blur();
+            toastr.info('该功能正在调试中...');
+            $('input[name = billingrt]').val('');
+            //this.payment('05', '第三方支付');
+            //$('button[name = third-pay]').blur();
         },
 
 
