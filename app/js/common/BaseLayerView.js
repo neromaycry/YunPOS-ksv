@@ -126,34 +126,34 @@ define([
             isModal = false;
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
-                    this.hideModal(window.PAGE_ID.LOGIN);
+                    this.closeLayer(window.PAGE_ID.LOGIN);
                     break;
                 case window.PAGE_ID.SETDNS:
-                    this.hideModal(window.PAGE_ID.SETDNS);
+                    this.closeLayer(window.PAGE_ID.SETDNS);
                     break;
                 case window.PAGE_ID.MAIN:
-                    this.hideModal(window.PAGE_ID.MAIN);
+                    this.closeLayer(window.PAGE_ID.MAIN);
                     break;
                 case window.PAGE_ID.MEMBER:
-                    this.hideModal(window.PAGE_ID.MEMBER);
+                    this.closeLayer(window.PAGE_ID.MEMBER);
                     break;
                 case window.PAGE_ID.RESTORDER:
-                    this.hideModal(window.PAGE_ID.RESTORDER);
+                    this.closeLayer(window.PAGE_ID.RESTORDER);
                     break;
                 case window.PAGE_ID.RETURN_WHOLE:
-                    this.hideModal(window.PAGE_ID.RETURN_WHOLE);
+                    this.closeLayer(window.PAGE_ID.RETURN_WHOLE);
                     break;
                 case window.PAGE_ID.BILLING:
-                    this.hideModal(window.PAGE_ID.BILLING);
+                    this.closeLayer(window.PAGE_ID.BILLING);
                     break;
                 case window.PAGE_ID.BILLING_RETURN:
-                    this.hideModal(window.PAGE_ID.BILLING_RETURN);
+                    this.closeLayer(window.PAGE_ID.BILLING_RETURN);
                     break;
                 case window.PAGE_ID.RETURN_FORCE:
-                    this.hideModal(window.PAGE_ID.RETURN_FORCE);
+                    this.closeLayer(window.PAGE_ID.RETURN_FORCE);
                     break;
                 case window.PAGE_ID.CHECKING:
-                    this.hideModal(window.PAGE_ID.CHECKING);
+                    this.closeLayer(window.PAGE_ID.CHECKING);
                     break;
             }
         },

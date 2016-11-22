@@ -528,52 +528,54 @@ define([
          */
         modifyItemDiscount: function () {
             var _self = this;
-            var value = $(this.input).val();
-            if(_self.model.get('itemamount') == 0) {
-                //toastr.warning('当前购物车内无商品');
-                layer.msg('当前购物车内无商品', optLayerWarning);
-                //}else{
-                //    if(this.isDiscountPercent) {
-                //        if (value == '') {
-                //            toastr.warning('输入的折扣不能为空');
-                //        } else if (value >= 100) {
-                //            toastr.warning('折扣比率不能大于100%');
-                //        } else {
-                //            var rate = value/100;
-                //            var item = _self.collection.at(_self.i);
-                //            var price = item.get('price');
-                //            _self.collection.at(_self.i).set({
-                //                discount:price*(1-rate)
-                //            }) ;
-                //            _self.calculateModel();
-                //            $('#li' + _self.i).addClass('cus-selected');
-                //        }
-                //    }
-                // else {
-            } else if(value == '') {
-                //toastr.warning('优惠金额不能为空');
-                layer.msg('优惠金额不能为空', optLayerWarning);
-            } else if(value == '.' || (value.split('.').length - 1) > 1){
-                //toastr.warning('请输入有效的优惠金额');
-                layer.msg('请输入有效的优惠金额', optLayerWarning);
-            } else {
-                var item = _self.collection.at(_self.i);
-                var price = item.get('price');
-                var num = item.get('num');
-                var discount = item.get('discount');
-                if (value <= parseFloat(price * num - discount) ) {
-                    _self.collection.at(_self.i).set({
-                        discount: value,
-                        money:price * num - value
-                    });
-                    _self.calculateModel();
-                    $('#li' + _self.i).addClass('cus-selected');
+            this.evalAuth(auth_discount, function () {
+                var value = $(_self.input).val();
+                if(_self.model.get('itemamount') == 0) {
+                    //toastr.warning('当前购物车内无商品');
+                    layer.msg('当前购物车内无商品', optLayerWarning);
+                    //}else{
+                    //    if(this.isDiscountPercent) {
+                    //        if (value == '') {
+                    //            toastr.warning('输入的折扣不能为空');
+                    //        } else if (value >= 100) {
+                    //            toastr.warning('折扣比率不能大于100%');
+                    //        } else {
+                    //            var rate = value/100;
+                    //            var item = _self.collection.at(_self.i);
+                    //            var price = item.get('price');
+                    //            _self.collection.at(_self.i).set({
+                    //                discount:price*(1-rate)
+                    //            }) ;
+                    //            _self.calculateModel();
+                    //            $('#li' + _self.i).addClass('cus-selected');
+                    //        }
+                    //    }
+                    // else {
+                } else if(value == '') {
+                    //toastr.warning('优惠金额不能为空');
+                    layer.msg('优惠金额不能为空', optLayerWarning);
+                } else if(value == '.' || (value.split('.').length - 1) > 1){
+                    //toastr.warning('请输入有效的优惠金额');
+                    layer.msg('请输入有效的优惠金额', optLayerWarning);
                 } else {
-                    //toastr.warning('优惠金额不能大于商品金额');
-                    layer.msg('优惠金额不能大于商品金额', optLayerWarning);
+                    var item = _self.collection.at(_self.i);
+                    var price = item.get('price');
+                    var num = item.get('num');
+                    var discount = item.get('discount');
+                    if (value <= parseFloat(price * num - discount) ) {
+                        _self.collection.at(_self.i).set({
+                            discount: value,
+                            money:price * num - value
+                        });
+                        _self.calculateModel();
+                        $('#li' + _self.i).addClass('cus-selected');
+                    } else {
+                        //toastr.warning('优惠金额不能大于商品金额');
+                        layer.msg('优惠金额不能大于商品金额', optLayerWarning);
+                    }
                 }
-            }
-            $(this.input).val('');
+                $(_self.input).val('');
+            });
         },
         //切换优惠模式
         onDiscountPercentClicked: function () {
@@ -586,34 +588,36 @@ define([
             //    $('#main-input').addClass('input-group');
             //    $('#input-percent').show();
             //}
-            //var _self = this;
-            var discountpercent = $(this.input).val();
-            if(this.model.get('itemamount') == 0) {
-                //toastr.warning('当前购物车内无商品');
-                layer.msg('当前购物车内无商品', optLayerWarning);
-            }else if(discountpercent == '') {
-                //toastr.warning('折扣比率不能为空');
-                layer.msg('折扣比率不能为空', optLayerWarning);
-            }else if(discountpercent >= 100) {
-                //toastr.warning('折扣比率不能大于100');
-                layer.msg('折扣比率不能大于100', optLayerWarning);
-            }else if((discountpercent.split('.').length - 1) > 0){
-                //toastr.warning('请输入有效的折扣比率');
-                layer.msg('请输入有效的折扣比率', optLayerWarning);
-            }else {
-                var rate = discountpercent / 100;
-                console.log(rate);
-                var item = this.collection.at(this.i);
-                var price = item.get('price');
-                var num = item.get('num');
-                this.collection.at(this.i).set({
-                    discount:price * num * (1 - rate),
-                    money:price * num * rate
-                });
-                this.calculateModel();
-                $('#li' + this.i).addClass('cus-selected');
-            }
-            $(this.input).val('');
+            var _self = this;
+            this.evalAuth(auth_discount, function () {
+                var discountpercent = $(_self.input).val();
+                if(_self.model.get('itemamount') == 0) {
+                    //toastr.warning('当前购物车内无商品');
+                    layer.msg('当前购物车内无商品', optLayerWarning);
+                }else if(discountpercent == '') {
+                    //toastr.warning('折扣比率不能为空');
+                    layer.msg('折扣比率不能为空', optLayerWarning);
+                }else if(discountpercent >= 100) {
+                    //toastr.warning('折扣比率不能大于100');
+                    layer.msg('折扣比率不能大于100', optLayerWarning);
+                }else if((discountpercent.split('.').length - 1) > 0){
+                    //toastr.warning('请输入有效的折扣比率');
+                    layer.msg('请输入有效的折扣比率', optLayerWarning);
+                }else {
+                    var rate = discountpercent / 100;
+                    console.log(rate);
+                    var item = _self.collection.at(_self.i);
+                    var price = item.get('price');
+                    var num = item.get('num');
+                    _self.collection.at(_self.i).set({
+                        discount:price * num * (1 - rate),
+                        money:price * num * rate
+                    });
+                    _self.calculateModel();
+                    $('#li' + _self.i).addClass('cus-selected');
+                }
+                $(_self.input).val('');
+            });
         },
         /**
          * 修改单品数量
@@ -873,28 +877,31 @@ define([
                 layer.msg('没有可删除的商品', optLayerWarning);
                 return;
             }
-            if (auth_delete == AUTH_CODE.GRANTED) {
-                this.deleteItem();
-            } else if (auth_delete == AUTH_CODE.CARD) {
-                var attrs = {
-                    pageid: pageId,
-                    is_navigate: false,
-                    callback: function () {
-                        _self.deleteItem();
-                    }
-                };
-                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要管理卡验证', LayerAuthCardView, attrs, {area: '300px'});
-
-            } else if (auth_delete == AUTH_CODE.COMMAND) {
-                var attrs = {
-                    pageid: pageId,
-                    is_navigate: false,
-                    callback: function () {
-                        _self.deleteItem();
-                    }
-                };
-                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要口令验证', LayerAuthCommandView, attrs, {area: '300px'});
-            }
+            this.evalAuth(auth_delete, function () {
+                _self.deleteItem();
+            });
+            //if (auth_delete == AUTH_CODE.GRANTED) {
+            //    this.deleteItem();
+            //} else if (auth_delete == AUTH_CODE.CARD) {
+            //    var attrs = {
+            //        pageid: pageId,
+            //        is_navigate: false,
+            //        callback: function () {
+            //            _self.deleteItem();
+            //        }
+            //    };
+            //    this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要管理卡验证', LayerAuthCardView, attrs, {area: '300px'});
+            //
+            //} else if (auth_delete == AUTH_CODE.COMMAND) {
+            //    var attrs = {
+            //        pageid: pageId,
+            //        is_navigate: false,
+            //        callback: function () {
+            //            _self.deleteItem();
+            //        }
+            //    };
+            //    this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要口令验证', LayerAuthCommandView, attrs, {area: '300px'});
+            //}
         },
         /**
          * 修改数量点击事件
@@ -919,28 +926,32 @@ define([
         },
         isClearCartGranted: function () {
             var _self = this;
-            if (auth_delete == AUTH_CODE.GRANTED) {
-                this.clearCart();
-            } else if (auth_delete == AUTH_CODE.CARD) {
-                var attrs = {
-                    pageid: pageId,
-                    is_navigate: false,
-                    callback: function () {
-                        _self.clearCart();
-                    }
-                };
-                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
-
-            } else if (auth_delete == AUTH_CODE.COMMAND) {
-                var attrs = {
-                    pageid: pageId,
-                    is_navigate: false,
-                    callback: function () {
-                        _self.clearCart();
-                    }
-                };
-                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
-            }
+            this.evalAuth(auth_delete, function () {
+                _self.clearCart();
+            });
+            //
+            //if (auth_delete == AUTH_CODE.GRANTED) {
+            //     _self.clearCart();
+            //} else if (auth_delete == AUTH_CODE.CARD) {
+            //    var attrs = {
+            //        pageid: pageId,
+            //        is_navigate: false,
+            //        callback: function () {
+            //            _self.clearCart();
+            //        }
+            //    };
+            //    this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
+            //
+            //} else if (auth_delete == AUTH_CODE.COMMAND) {
+            //    var attrs = {
+            //        pageid: pageId,
+            //        is_navigate: false,
+            //        callback: function () {
+            //            _self.clearCart();
+            //        }
+            //    };
+            //    this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
+            //}
         },
 
 
@@ -973,14 +984,21 @@ define([
          * 整单退货按钮点击事件
          */
         onReturnWholeClicked: function () {
-            router.navigate('returnwhole',{ trigger:true });
+            this.evalAuth(auth_return, function () {
+                router.navigate('returnwhole',{ trigger:true });
+            });
         },
         /**
          * 强制退货按钮点击事件
          */
         onReturnForceClicked: function () {
-            router.navigate('returnforce',{ trigger:true });
+            this.evalAuth(auth_return, function () {
+                router.navigate('returnforce',{ trigger:true });
+            });
         },
+
+
+
         /**
          * 收银对账按钮点击事件
          */
@@ -1071,7 +1089,9 @@ define([
          * 跳转打印页面
          */
         onPrintClicked: function () {
-            router.navigate('print', {trigger:true});
+            this.evalAuth(auth_reprint, function () {
+                router.navigate('print', {trigger:true});
+            });
         },
         /**
          * 提大额
@@ -1084,26 +1104,9 @@ define([
          */
         openCashDrawer: function () {
             var _self = this;
-            if (auth_cashdrawer == AUTH_CODE.GRANTED) {
-                this.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
-            } else if (auth_cashdrawer == AUTH_CODE.COMMAND) {
-                var attrs = {
-                    pageid: pageId,
-                    callback: function () {
-                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
-                    }
-                };
-                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
-
-            } else if (auth_cashdrawer == AUTH_CODE.CARD) {
-                var attrs = {
-                    pageid: pageId,
-                    callback: function () {
-                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
-                    }
-                };
-                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
-            }
+            this.evalAuth(auth_cashdrawer, function () {
+                _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
+            });
         },
         /**
          * 银行业务
@@ -1122,6 +1125,31 @@ define([
             });
             storage.set(system_config.VIP_KEY, resp);
             this.renderMinfo();
+        },
+
+        evalAuth: function (authtype, callback) {
+            if (authtype == AUTH_CODE.GRANTED) {
+
+            } else if (authtype == AUTH_CODE.COMMAND) {
+                var attrs = {
+                    pageid: pageId,
+                    is_navigate: false,
+                    callback: function () {
+                        callback();
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
+
+            } else if (authtype == AUTH_CODE.CARD) {
+                var attrs = {
+                    pageid: pageId,
+                    is_navigate: false,
+                    callback: function () {
+                        callback();
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
+            }
         },
 
         addClickedState: function () {

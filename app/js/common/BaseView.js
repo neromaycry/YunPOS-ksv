@@ -314,6 +314,7 @@ define([
         //},
 
         addClickEvents: function () {
+            var _self = this;
             $('.cbtn').mousedown(function () {
                 $(this).addClass('clicked');
             });
@@ -339,7 +340,9 @@ define([
                 $(this).removeClass('ok-clicked');
             });
             $(document).mouseup(function () {
+
                 if (!isModal) {
+                    console.log('mouse up');
                     $(_self.input).focus();
                 }
             });
@@ -382,6 +385,7 @@ define([
                 var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
                 $('input').attr('readonly',!isKeyboardPlugged);
             }
+
             this.addClickEvents();
             return this;
         }

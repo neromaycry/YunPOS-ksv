@@ -169,7 +169,7 @@ requirejs([
     //    }
     //});
 
-    window.storage.set('pos_limit', '11111222222');
+    window.storage.set('pos_limit', '11112111111');
 
     var pos_limit = window.storage.get('pos_limit').toString();
     console.log(pos_limit);
