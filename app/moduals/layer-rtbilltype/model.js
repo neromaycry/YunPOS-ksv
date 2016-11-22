@@ -3,12 +3,12 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var rtbilltypeModel=BaseModel.extend({
+    var rtLayerTypeModel = BaseModel.extend({
 
         defaults:{
 
         },
 
     });
-    return rtbilltypeModel;
+    return rtLayerTypeModel;
 });

@@ -15,14 +15,11 @@ s += '0';
 }
 return s;
 }%>
-
-<div class="panel panel-primary" style="border: none;margin: 0;">
-    <div class="panel-heading pos-textsize">微信</div>
+<div class="panel" style="border: none;margin: 0;">
     <div class="panel-body">
         <div class="form-group no-margining">
-            <label class="sr-only" for="wechat-account">wechat</label>
-            <input type="text" class="form-control" id="wechat-account" name="wechat-account" placeholder="请输入微信退款账号" onkeyup="return ValidateFloat($(this),value)"
-                   onkeypress="return myNumberic(event)"/>
+            <label class="sr-only" for="wechat-account">commontpl</label>
+            <input type="text" id="wechat-account" name="wechat-account" class="form-control" placeholder="请输入微信退款账号" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"/>
         </div>
     </div>
 </div>
@@ -31,4 +28,5 @@ return s;
 
     </div>
 </div>
+
 
