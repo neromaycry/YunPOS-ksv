@@ -5,15 +5,15 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/return-force/model',
     '../../../../moduals/return-force/collection',
-    '../../../../moduals/keytips-member/view',
-    '../../../../moduals/modal-confirm/view',
+    '../../../../moduals/layer-help/view',
+    '../../../../moduals/layer-confirm/view',
     '../../../../moduals/modal-login/view',
     '../../../../moduals/layer-priceentry/view',
     'text!../../../../moduals/return-force/posinfotpl.html',
     'text!../../../../moduals/return-force/cartlisttpl.html',
     'text!../../../../moduals/return-force/numpadtpl.html',
     'text!../../../../moduals/return-force/tpl.html',
-], function (BaseView, ReturnForceModel, ReturnForceCollection,KeyTipsView,ConfirmView,SecondLoginView,PriceEntryView, posinfotpl,cartlisttpl,numpadtpl, tpl) {
+], function (BaseView, ReturnForceModel, ReturnForceCollection,LayerHelpView,LayerConfirmView,SecondLoginView,LayerPriceEntryView, posinfotpl,cartlisttpl,numpadtpl, tpl) {
 
     var returnForceView = BaseView.extend({
 
@@ -86,7 +86,6 @@ define([
 
         initPlugins: function () {
             $(this.input).focus();
-            $('input[name = sku_id]').focus();
             //this.initLayoutHeight();
             //$('#li' + _self.i).addClass('cus-selected');
             $('.for-cartlist').perfectScrollbar();
@@ -181,8 +180,7 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.T, function () {
-                var tipsView = new KeyTipsView('RETURNFORCE_PAGE');
-                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+                _self.onHelpClicked();
             });
         },
 
@@ -233,9 +231,11 @@ define([
          */
         cancelForceReturn: function () {
             var _self = this;
-            var confirmView = new ConfirmView({
-                pageid:window.PAGE_ID.RETURN_FORCE, //当前打开confirm模态框的页面id
-                callback: function () { //
+            var attrs = {
+                pageid: pageId,
+                content: '确定取消退货？',
+                is_navigate: false,
+                callback: function () {
                     _self.collection.reset();
                     _self.model.set({
                         totalamount: 0,
@@ -246,10 +246,9 @@ define([
                     _self.renderCartList();
                     storage.remove(system_config.FORCE_RETURN_KEY);
                     toastr.success('取消退货成功');
-                },
-                content:'确定取消退货？'
-            });
-            _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+                }
+            };
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
         },
 
         onAddItem: function (JSONData) {
@@ -282,11 +281,11 @@ define([
                     if(resp.status == '00') {
                         var temp = resp.goods_detail[resp.goods_detail.length - 1];
                         if(temp['price_auto'] == 1) {
-                            var priceentryview = new PriceEntryView({
+                            var attrs = {
+
+                                pageid: pageId,
 
                                 originalprice: temp['price'],
-
-                                pageid: window.PAGE_ID.RETURN_FORCE,
 
                                 callback: function () {
                                     var price = $('input[name = price]').val();
@@ -295,11 +294,8 @@ define([
                                     _self.onAddItem(resp.goods_detail);
                                     $('input[name = sku_id]').focus();
                                 }
-                            });
-                            _self.showModal(window.PAGE_ID.MODAL_PRICE_ENTRY, priceentryview);
-                            $('.modal').on('shown.bs.modal', function (e) {
-                                $('input[name = price]').focus();
-                            });
+                            };
+                            _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area:'300px'});
                         }else {
                             _self.onAddItem(resp.goods_detail);
                         }
@@ -530,8 +526,10 @@ define([
             this.scrollDown();
         },
         onHelpClicked:function (){
-            var tipsView = new KeyTipsView('RETURNFORCE_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+            var attrs = {
+                page: 'RETURNFORCE_PAGE'
+            };
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
         onReturnClicked: function () {
             router.navigate('main',{trigger:true});
