@@ -14,7 +14,7 @@ define([
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-restorder/view',
     '../../../../moduals/layer-withdraw/view',
-    '../../../../moduals/layer-authcard/view',
+    '../../../../moduals/layer-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/minfotpl.html',
