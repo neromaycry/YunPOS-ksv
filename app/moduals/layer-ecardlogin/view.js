@@ -69,7 +69,7 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function(){
-                _self.onOKClicked();
+                _self.doLogin(_self.type);
             });
 
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.X, function () {
@@ -80,58 +80,12 @@ define([
             });
         },
 
-
-
-        /**
-         * 确认事件
-         */
-        doLogin:function() {
-            var _self = this;
-            var isUserFocused = $('input[name = medium_id]').is(':focus');
-            if(isUserFocused){
-                $('input[name = medium_password]').focus();
-            } else {
-                var cardid = $('input[name = medium_id]').val();
-                var password = $('input[name = medium_password]').val();
-                if(cardid == '' || password == ''){
-                    toastr.warning('会员卡号或者密码不能为空');
-                }
-                if(cardid != '' && password != ''){
-                    var data = {};
-                    data['cardid'] = cardid;
-                    data['password'] = password;
-                    data['type'] = '00';
-                    _self.request.vipinfo(data,function(resp) {
-                        if(resp.status == '00'){
-                            var dataAccount = {};
-                            dataAccount['unpaidamount'] = _self.attrs.unpaidamount;
-                            dataAccount['receivedsum'] = _self.attrs.receivedsum;
-                            dataAccount['card_id'] = cardid;
-                            dataAccount['cust_id'] = resp.cust_id;
-                            dataAccount['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
-                            dataAccount['gather_detail'] = storage.get(system_config.GATHER_KEY);
-                            $('.modal-backdrop').remove();
-                            _self.hideModal(window.PAGE_ID.BILLING);
-                            this.ecardpayview = new EcardpayView(dataAccount);
-                            _self.showModal(window.PAGE_ID.ONECARD_PAY,_self.ecardpayview);
-
-                        }else{
-                            toastr.error(resp.msg);
-                        }
-                    });
-
-                    $('input[name = medium_id]').val("");
-                    $('input[name = medium_password]').val("");
-                }
-            }
-        },
-
         onCancelClicked: function () {
             this.closeLayer(layerindex);
             $('input[name = billing]').focus();
         },
 
-        onOKClicked: function (type) {
+        doLogin: function (type) {
             switch (type) {
                 case '01':
                     console.log('会员卡登录');
@@ -142,6 +96,10 @@ define([
                     this.inputPhoneNum();
                     break;
             }
+        },
+
+        onOkClicked: function () {
+            this.doLogin(this.type);
         },
         inputPhoneNum: function () {
             var _self = this;
@@ -161,16 +119,12 @@ define([
             data['mobile'] = phoneNum;
             data['password'] = '*';
             data['type'] = this.type;
-            this.model.getMemberInfo(data, function (resp) {
-                if (resp.status == '00') {
-                    _self.closeLayer(layerindex);
-                    layer.msg('会员登录成功', optLayerSuccess);
-                    //$('input[name = main]').focus();
-                    //Backbone.trigger('onMemberSigned', resp);
-                } else {
-                    //toastr.error(resp.msg);
-                    layer.msg(resp.msg, optLayerError);
-                }
+            this.request.vipinfo(data, function (resp) {
+               if(resp.status == '00') {
+                   layer.msg('登录成功', optLayerSuccess);
+               } else {
+                   layer.msg(resp.msg, optLayerError);
+               }
             });
         },
 
@@ -286,6 +240,51 @@ define([
         onClearClicked: function () {
             $(this.input).val('');
         },
+
+        ///**
+        // * 确认事件
+        // */
+        //doLogin:function() {
+        //    var _self = this;
+        //    var isUserFocused = $('input[name = medium_id]').is(':focus');
+        //    if(isUserFocused){
+        //        $('input[name = medium_password]').focus();
+        //    } else {
+        //        var cardid = $('input[name = medium_id]').val();
+        //        var password = $('input[name = medium_password]').val();
+        //        if(cardid == '' || password == ''){
+        //            toastr.warning('会员卡号或者密码不能为空');
+        //        }
+        //        if(cardid != '' && password != ''){
+        //            var data = {};
+        //            data['cardid'] = cardid;
+        //            data['password'] = password;
+        //            data['type'] = '00';
+        //            _self.request.vipinfo(data,function(resp) {
+        //                if(resp.status == '00'){
+        //                    var dataAccount = {};
+        //                    dataAccount['unpaidamount'] = _self.attrs.unpaidamount;
+        //                    dataAccount['receivedsum'] = _self.attrs.receivedsum;
+        //                    dataAccount['card_id'] = cardid;
+        //                    dataAccount['cust_id'] = resp.cust_id;
+        //                    dataAccount['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
+        //                    dataAccount['gather_detail'] = storage.get(system_config.GATHER_KEY);
+        //                    $('.modal-backdrop').remove();
+        //                    _self.hideModal(window.PAGE_ID.BILLING);
+        //                    this.ecardpayview = new EcardpayView(dataAccount);
+        //                    _self.showModal(window.PAGE_ID.ONECARD_PAY,_self.ecardpayview);
+        //
+        //                }else{
+        //                    toastr.error(resp.msg);
+        //                }
+        //            });
+        //
+        //            $('input[name = medium_id]').val("");
+        //            $('input[name = medium_password]').val("");
+        //        }
+        //    }
+        //},
+
 
     });
 

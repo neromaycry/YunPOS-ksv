@@ -167,6 +167,7 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
+            $('input[name = billing]').focus();
         },
 
         onOKClicked: function () {

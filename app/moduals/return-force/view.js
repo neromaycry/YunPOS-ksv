@@ -8,7 +8,7 @@ define([
     '../../../../moduals/keytips-member/view',
     '../../../../moduals/modal-confirm/view',
     '../../../../moduals/modal-login/view',
-    '../../../../moduals/modal-priceentry/view',
+    '../../../../moduals/layer-priceentry/view',
     'text!../../../../moduals/return-force/posinfotpl.html',
     'text!../../../../moduals/return-force/cartlisttpl.html',
     'text!../../../../moduals/return-force/numpadtpl.html',

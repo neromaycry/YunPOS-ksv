@@ -6,7 +6,7 @@ define([
     '../../../../moduals/main/model',
     '../../../../moduals/main/collection',
     '../../../../moduals/modal-login/view',
-    '../../../../moduals/modal-priceentry/view',
+    '../../../../moduals/layer-priceentry/view',
     '../../../../moduals/layer-member/view',
     '../../../../moduals/layer-logout/view',
     '../../../../moduals/layer-salesman/view',
@@ -16,7 +16,7 @@ define([
     '../../../../moduals/layer-withdraw/view',
     '../../../../moduals/layer-authcard/view',
     '../../../../moduals/layer-authcommand/view',
-    '../../../../moduals/modal-binstruction/view',
+    '../../../../moduals/layer-binstruction/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/minfotpl.html',
@@ -27,7 +27,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, SecondLoginView, PriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerAuthCardView, LayerAuthCommandView, BinstructionView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, SecondLoginView, LayerPriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerAuthCardView, LayerAuthCommandView, LayerBInstructionView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -391,10 +391,7 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.V, function () {
-                var binstructionview = new BinstructionView({
-                    pageid: window.PAGE_ID.MAIN
-                });
-                _self.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
+                _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
             });
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
@@ -705,12 +702,10 @@ define([
                         }
                         var temp = resp.goods_detail[resp.goods_detail.length - 1];
                         if(temp['price_auto'] == 1) {
-                            var priceentryview = new PriceEntryView({
-
+                            var attrs = {
+                                pageid:pageId,
                                 originalprice:temp['price'],
-
-                                pageid: window.PAGE_ID.MAIN,
-
+                                is_navigate:false,
                                 callback: function () {
                                     var price = $('input[name = price]').val();
                                     resp.goods_detail[resp.goods_detail.length - 1].price = price;
@@ -718,11 +713,8 @@ define([
                                     _self.onAddItem(resp.goods_detail);
                                     $('input[name = main]').focus();
                                 }
-                            });
-                            _self.showModal(window.PAGE_ID.MODAL_PRICE_ENTRY, priceentryview);
-                            $('.modal').on('shown.bs.modal',function(e) {
-                                $('input[name = price]').focus();
-                            });
+                            };
+                            _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area:'300px'});
                         }else {
                             _self.onAddItem(resp.goods_detail);
                         }
@@ -1110,10 +1102,7 @@ define([
          * 银行业务
          */
         onBusinessClicked: function () {
-            var binstructionview = new BinstructionView({
-                pageid: window.PAGE_ID.BILLING
-            });
-            this.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
+            this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
         },
 
         onMemberSigned: function (resp) {

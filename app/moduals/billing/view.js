@@ -11,13 +11,13 @@ define([
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-ecardlogin/view',
     '../../../../moduals/layer-quickpay/view',
-    '../../../../moduals/modal-binstruction/view',
+    '../../../../moduals/layer-binstruction/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection,LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerQuickPayView, BinstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection,LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerQuickPayView, LayerBInstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -147,6 +147,7 @@ define([
         },
 
         onReceivedsum: function (data) {
+            console.log(data);
             var gatherMoney = parseFloat(data['gather_money']);//number类型
             var gatherNo = data['gather_no'];//付款账号
             var gatherName = data['gather_name'];
@@ -356,10 +357,7 @@ define([
                 _self.QuickPay();
             });
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.V, function () {
-                var binstructionview = new BinstructionView({
-                    pageid: window.PAGE_ID.BILLING
-                });
-                _self.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
+                _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
             });
 
         },
@@ -865,11 +863,11 @@ define([
             } else if(receivedSum == ''){
                 data['unpaidamount'] = 0;
                 data['receivedsum'] = unpaidamount;
-                this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登陆', layerECardView, data, {area:'600px'});
+                this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area:'600px'});
             } else{
                 data['unpaidamount'] = unpaidamount;
                 data['receivedsum'] = receivedSum;
-                this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登陆', layerECardView, data, {area:'600px'});
+                this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area:'600px'});
             }
             $('input[name = billing]').val('');
         },
@@ -1068,7 +1066,7 @@ define([
                 toastr.info('待支付金额为零,请进行结算');
             } else if((receivedsum.split('.').length-1) > 1 || receivedsum =='.' || parseFloat(receivedsum) == 0){
                 toastr.info('无效的支付金额');
-            } else if(receivedsum > unpaidamount){
+            } else if(gatherkind != '02' && receivedsum > unpaidamount){
                 toastr.info('不设找零');
             } else if(receivedsum == '') {
                 data['gather_kind'] = gatherkind;
@@ -1084,10 +1082,7 @@ define([
             $('input[name = billing]').val('');
         },
         onBusinessClicked: function () {
-            var binstructionview = new BinstructionView({
-                pageid: window.PAGE_ID.BILLING
-            });
-            this.showModal(window.PAGE_ID.MODAL_BANK_INSTRUCTION, binstructionview);
+            this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
         },
 
 
