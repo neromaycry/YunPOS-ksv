@@ -166,7 +166,12 @@ div .panel-group {
 }
 
 div .clicked {
-    background-color: #e0e0e0;
+    background-color: #609ED3;
+    color: #FFF;
+}
+
+div .ok-clicked {
+    background-color: #DD191D;
 }
 
 div .numpad-ok {

@@ -197,6 +197,7 @@ define([
                 gap: 500,
                 pauseOnHover: true
             });
+            this.addClickedState();
         },
         initTemplates: function () {
             this.template_posinfo = _.template(this.template_posinfo);
@@ -1115,7 +1116,24 @@ define([
             });
             storage.set(system_config.VIP_KEY, resp);
             this.renderMinfo();
+        },
+
+        addClickedState: function () {
+            $('.salesman-panel').mousedown(function () {
+                $(this).addClass('clicked');
+            });
+            $('.salesman-panel').mouseup(function () {
+                $(this).removeClass('clicked');
+            });
+            $('.salesman-panel').on('touchstart', function (e) {
+                $(this).addClass('clicked');
+            });
+            $('.salesman-panel').on('touchend', function (e) {
+                $(this).removeClass('clicked');
+            });
         }
+
+
     });
     return mainView;
 });

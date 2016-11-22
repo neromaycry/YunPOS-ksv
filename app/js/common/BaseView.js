@@ -313,6 +313,43 @@ define([
         //    },10);
         //},
 
+        addClickEvents: function () {
+            $('.cbtn').mousedown(function () {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').mouseup(function () {
+                $(this).removeClass('clicked');
+            });
+            $('.cbtn').on('touchstart', function (e) {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').on('touchend', function (e) {
+                $(this).removeClass('clicked');
+            });
+            $('.numpad-ok').mousedown(function () {
+                $(this).addClass('ok-clicked');
+            });
+            $('.numpad-ok').mouseup(function () {
+                $(this).removeClass('ok-clicked');
+            });
+            $('.numpad-ok').on('touchstart', function (e) {
+                $(this).addClass('ok-clicked');
+            });
+            $('.numpad-ok').on('touchend', function (e) {
+                $(this).removeClass('ok-clicked');
+            });
+            $(document).mouseup(function () {
+                if (!isModal) {
+                    $(_self.input).focus();
+                }
+            });
+            $(document).on('touchend', function (e) {
+                if (!isModal) {
+                    $(_self.input).focus();
+                }
+            });
+        },
+
         render: function () {
             var _self = this;
             console.log('render');
@@ -326,29 +363,7 @@ define([
                 var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
                 $('input').attr('readonly',!isKeyboardPlugged);
             }
-
-            $('.cbtn').mousedown(function () {
-                $(this).addClass('clicked');
-            });
-            $('.cbtn').mouseup(function () {
-                $(this).removeClass('clicked');
-            });
-            $('.cbtn').on('touchstart', function (e) {
-                $(this).addClass('clicked');
-            });
-            $('.cbtn').on('touchend', function (e) {
-                $(this).removeClass('clicked');
-            });
-            $(document).mouseup(function () {
-                if (!isModal) {
-                    $(_self.input).focus();
-                }
-            });
-            $(document).on('touchend', function (e) {
-                if (!isModal) {
-                    $(_self.input).focus();
-                }
-            });
+            this.addClickEvents();
             return this;
         }
 
