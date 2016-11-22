@@ -80,7 +80,6 @@ define([
             if(storage.isSet(system_config.LOGIN_USER_KEY)){
                 this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
             }
-            this.onDeleteKey();
             this.initTemplates();
         },
 
@@ -146,17 +145,7 @@ define([
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D,function () {
-                //if(_self.isDeleteKey){
-                //    _self.deleteItem();
-                //}else{
-                    var secondLoginView = new SecondLoginView({
-                        pageid: window.PAGE_ID.RETURN_FORCE,
-                        callback: function () {
-                            _self.deleteItem();
-                        }
-                    });
-                    _self.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
-                //}
+                _self.deleteItem();
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F12,function () {
@@ -461,20 +450,6 @@ define([
             this.renderPosInfo();
         },
 
-        /**
-         * 判断当前营业员是否有删除商品的权限
-         */
-        onDeleteKey: function () {
-            for(var j = 0; j < this.deleteKey.length; j++){
-                console.log(this.deleteKey[j]);
-                if(this.deleteKey[j] == '02'){
-                    this.isDeleteKey = true;//判断当前是否有删除权限的key
-                    break;
-                }else{
-                    this.isDeleteKey = false;
-                }
-            }
-        },
         onOKClicked:function (){
             this.searchGoods();
         },
