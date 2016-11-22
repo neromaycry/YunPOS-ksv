@@ -30,7 +30,7 @@ define([
             var _self = this;
             console.log(">>> " + this.id);
             this.undelegateEvents();
-            $(document).unbind('keydown');
+            $(document).off('keydown');
             //$(document).unbind('keydown');
             this.$el.empty().off();
             if (attrs) {
@@ -163,7 +163,7 @@ define([
                     } else {
                         pageId = mainId;
                     }
-                    $(document).unbind('keyup');
+                    $(document).off('keyup');
                     console.log('end:' + pageId);
                 }
             }, options);
@@ -211,7 +211,7 @@ define([
                     } else {
                         pageId = mainId;
                     }
-                    $(document).unbind('keyup');
+                    $(document).off('keyup');
                     console.log('end:' + pageId);
                 }
             }, options);

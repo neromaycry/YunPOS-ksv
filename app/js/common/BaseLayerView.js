@@ -99,7 +99,7 @@ define([
                 },
                 end: function () {
                     pageId = mainId;
-                    $(document).unbind('keyup');
+                    $(document).off('keyup');
                     console.log('end:' + pageId);
                 }
             }, options);

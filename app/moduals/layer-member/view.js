@@ -206,6 +206,7 @@ define([
                     Backbone.trigger('onMemberSigned', resp);
                 } else {
                     //toastr.error(resp.msg);
+                    $(_self.input).val('');
                     layer.msg(resp.msg, optLayerError);
                 }
             });
