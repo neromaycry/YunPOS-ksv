@@ -33,6 +33,7 @@ define([
             console.log(">>> " + this.id);
             this.undelegateEvents();
             $(document).off('keydown');
+            $(document).off('mouseup');
             //$(document).unbind('keydown');
             this.$el.empty().off();
             if (attrs) {
@@ -165,6 +166,7 @@ define([
                     } else {
                         pageId = mainId;
                     }
+                    isModal = false;
                     $(document).off('keyup');
                     console.log('end:' + pageId);
                 }
@@ -213,6 +215,7 @@ define([
                     } else {
                         pageId = mainId;
                     }
+                    isModal = false;
                     $(document).off('keyup');
                     console.log('end:' + pageId);
                 }
@@ -342,7 +345,7 @@ define([
                 $(this).removeClass('ok-clicked');
             });
             $(document).mouseup(function () {
-
+                console.log(_self.input);
                 if (!isModal) {
                     console.log('mouse up');
                     $(_self.input).focus();
@@ -376,7 +379,7 @@ define([
 
         evalAuth: function (authtype, callback) {
             if (authtype == AUTH_CODE.GRANTED) {
-
+                callback();
             } else if (authtype == AUTH_CODE.COMMAND) {
                 var attrs = {
                     pageid: pageId,

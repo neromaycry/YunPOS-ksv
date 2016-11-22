@@ -99,6 +99,7 @@ define([
                 },
                 end: function () {
                     pageId = mainId;
+                    isModal = false;
                     $(document).off('keyup');
                     console.log('end:' + pageId);
                 }
