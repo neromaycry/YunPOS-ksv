@@ -5,14 +5,14 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/return-whole/model',
     '../../../../moduals/return-whole/collection',
-    '../../../../moduals/keytips-member/view',
-    '../../../../moduals/modal-confirm/view',
+    '../../../../moduals/layer-confirm/view',
+    '../../../../moduals/layer-help/view',
     'text!../../../../moduals/return-whole/returninfotpl.html',
     'text!../../../../moduals/return-whole/rtcarttpl.html',
     'text!../../../../moduals/return-whole/rtpayedlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, RtWholeModel, RtWholeCollection, KeyTipsView,ConfirmView, returninfotpl, rtcarttpl, rtpayedlisttpl,numpadtpl, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, returninfotpl, rtcarttpl, rtpayedlisttpl,numpadtpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -67,7 +67,7 @@ define([
         },
 
         initPlugins: function () {
-            $('input[name = whole_return_order]').focus();
+            $(this.input).focus();
             if (storage.isSet(system_config.RETURN_KEY)) {
                 this.RtPayedlistCollection.set(storage.get(system_config.RETURN_KEY,'paymentlist'));
                 this.RtcartCollection.set(storage.get(system_config.RETURN_KEY,'cartlist'));
@@ -122,7 +122,7 @@ define([
 
         requestOrder: function () {
             var _self = this;
-            var orderNo = $('input[name = whole_return_order]').val();
+            var orderNo = $(this.input).val();
             if (orderNo == '') {
                 toastr.info('请输入订单号');
                 return;
@@ -167,8 +167,7 @@ define([
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.T,function () {
-                var tipsView = new KeyTipsView('RETURNWHOLE_PAGE');
-                _self.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+               _self.onHelpClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Esc,function () {
@@ -185,16 +184,16 @@ define([
             });
             //取消整单退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function() {
-                _self.cancelReturn();
+                _self.onCancelClicked();
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
-                if ($('input[name = whole_return_order]').val() == '') {
+                if ($(this.input).val() == '') {
                     toastr.warning('订单编号不能为空');
                     return;
                 }
                 _self.requestOrder();
-                $('input[name = whole_return_order]').val("");
+                $(_self.input).val('');
                 //if($('input[name = return_order_date]').val() == '') {
                 //    toastr.warning('订单日期不能为空');
                 //} else if ($('input[name = whole_return_order]').val() == ''){
@@ -214,31 +213,41 @@ define([
             });
         },
 
+
+        onCancelClicked: function () {
+            var _self = this;
+            var len = this.RtcartCollection.length;
+            if(len == 0) {
+                layer.msg('请先查询订单', optLayerWarning);
+                return;
+            }
+            var attrs = {
+                pageid: pageId,
+                content: '确定取消退货？',
+                callback: function () {
+                    _self.cancelReturn();
+                }
+            };
+            _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
+        },
+
         /**
          * 取消退货
          */
         cancelReturn: function () {
-            var _self = this;
-            var confirmView = new ConfirmView({
-                pageid:window.PAGE_ID.RETURN_WHOLE, //当前打开confirm模态框的页面id
-                callback: function () { //
-                    //_self.showModal(window.PAGE_ID.CONFIRM, confirmView);
-                    _self.RtcartCollection.reset();
-                    _self.RtPayedlistCollection.reset();
-                    _self.model.set({
-                        totalamount: 0,
-                        itemamount: 0,
-                        discountamount: 0
-                    });
-                    _self.renderRtcart();
-                    _self.renderRtInfo();
-                    //_self.renderRtPayedlist();
-                    toastr.success('取消退货成功');
-                    storage.remove(system_config.RETURN_KEY);
-                },
-                content:'确定取消整单退货？'
+            this.RtcartCollection.reset();
+            this.RtPayedlistCollection.reset();
+            this.model.set({
+                totalamount: 0,
+                itemamount: 0,
+                discountamount: 0
             });
-            _self.showModal(window.PAGE_ID.CONFIRM, confirmView);
+            this.renderRtcart();
+            this.renderRtInfo();
+            //_self.renderRtPayedlist();
+            toastr.success('取消退货成功');
+            storage.remove(system_config.RETURN_KEY);
+            $('input[name = whole_return_order]').focus();
         },
 
         scrollDown: function () {
@@ -273,9 +282,6 @@ define([
             router.navigate('main',{trigger:true});
         },
 
-        onCancelClicked: function () {
-            this.cancelReturn();
-        },
 
         onBillingClicked: function () {
             var itemamount = this.model.get('itemamount');
@@ -288,12 +294,12 @@ define([
         },
 
         onOKClicked: function () {
-            if ($('input[name = whole_return_order]').val() == '') {
+            if ($(this.input).val() == '') {
                 toastr.warning('订单编号不能为空');
                 return;
             }
             this.requestOrder();
-            $('input[name = whole_return_order]').val("");
+            $(this.input).val("");
         },
 
         onNumClicked: function (e) {
@@ -312,9 +318,12 @@ define([
         onClearClicked: function () {
             $(this.input).val('');
         },
+
         onHelpClicked:function () {
-            var tipsView = new KeyTipsView('RETURNWHOLE_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER,tipsView);
+            var attrs = {
+                page:'RETURNWHOLE_PAGE'
+            };
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area:'600px'});
         },
 
     });

@@ -81,11 +81,6 @@ define([
             return this;
         },
 
-        renderThirdPay: function () {
-            this.$el.find('.third-pay').html(this.template_content);
-            return this;
-        },
-
         switchTemplate: function (gatherId) {
             switch (gatherId) {
                 case '05':

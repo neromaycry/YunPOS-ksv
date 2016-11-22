@@ -81,8 +81,12 @@ define([
         },
 
         onCancelClicked: function () {
+            if(this.attrs.pageid == PAGE_ID.BILLING) {
+                $('input[name = billing]').focus();
+            }else {
+                $('input[name = billingrt]').focus();
+            }
             this.closeLayer(layerindex);
-            $('input[name = billing]').focus();
         },
 
         doLogin: function (type) {

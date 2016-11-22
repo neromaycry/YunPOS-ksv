@@ -3,12 +3,12 @@
  */
 define(['../../js/common/BaseModel'],function(BaseModel){
 
-    var rtqpwechatModel=BaseModel.extend({
+    var rtLayerTypeModel = BaseModel.extend({
 
         defaults:{
 
         },
 
     });
-    return rtqpwechatModel;
+    return rtLayerTypeModel;
 });
