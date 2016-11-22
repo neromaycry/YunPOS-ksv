@@ -465,10 +465,10 @@ define([
          */
         releaseOrder: function () {
             var itemamount = this.model.get('itemamount');
-            if(itemamount != 0){
+            if (itemamount != 0) {
                 //toastr.warning('购物车内有商品，不能执行解挂操作');
                 layer.msg('购物车内有商品，不能执行解挂操作', optLayerWarning);
-            }else {
+            } else {
                 this.openLayer(PAGE_ID.LAYER_RESTORDER, pageId, '订单解挂', LayerRestOrderView, undefined, {area: '300px'});
             }
         },
@@ -514,6 +514,12 @@ define([
                 storage.remove(system_config.SALE_PAGE_KEY);
                 //toastr.success('挂单号：' + orderNum);
                 layer.msg('挂单号：' + orderNum, optLayerSuccess);
+                var time = this.getCurrentFormatDate();
+                var printText = '\n\n\n\n';
+                printText += '        订单挂单\n\n\n';
+                printText += '    挂单时间：' + time + '\n\n';
+                printText += '    挂单号：' + orderNum + '\n\n\n\n\n\n';
+                this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [printText], wsClient);
             }
         },
 
@@ -544,13 +550,13 @@ define([
                 //        }
                 //    }
                 // else {
-            }else if(value == '') {
+            } else if(value == '') {
                 //toastr.warning('优惠金额不能为空');
                 layer.msg('优惠金额不能为空', optLayerWarning);
-            }else if(value == '.' || (value.split('.').length - 1) > 1){
+            } else if(value == '.' || (value.split('.').length - 1) > 1){
                 //toastr.warning('请输入有效的优惠金额');
                 layer.msg('请输入有效的优惠金额', optLayerWarning);
-            }else {
+            } else {
                 var item = _self.collection.at(_self.i);
                 var price = item.get('price');
                 var num = item.get('num');
@@ -562,7 +568,7 @@ define([
                     });
                     _self.calculateModel();
                     $('#li' + _self.i).addClass('cus-selected');
-                }else {
+                } else {
                     //toastr.warning('优惠金额不能大于商品金额');
                     layer.msg('优惠金额不能大于商品金额', optLayerWarning);
                 }
