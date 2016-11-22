@@ -935,63 +935,64 @@ define([
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
                 toastr.info('待支付金额为零,请进行结算');
-            }else{
-                if(gatherId == ''){
-                    toastr.info('付款方式编码不能为空');
-                }else{
-                    if(storage.isSet(system_config.GATHER_KEY)){
-                        //从gather_key里面把visible_flag = 1 的付款方式的id都取出来
-                        var tlist = storage.get(system_config.GATHER_KEY);
-                        var visibleTypes = _.where(tlist,{visible_flag:'1'});
-                        var gatheridlist = _.pluck(visibleTypes, 'gather_id');//返回gather_id数组
-                        var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
-                        if(result == - 1){
-                            toastr.info('无效的付款编码');
-                        }else{
-                            var item = _.findWhere(visibleTypes, {gather_id:gatherId});
-                            var data = {};
-                            var xfbdata = {};
-                            xfbdata['pos_id'] = '002';
-                            xfbdata['bill_no'] = _self.billNumber;
-                            data['gather_money'] = unpaidamount;
-                            data['gather_id'] = gatherId;
-                            data['gather_name'] = item.gather_name;
-                            switch(gatherId) {
-                                case '05':
-                                    data['payment_bill'] = ''
-                                    this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, '银行卡支付确认', LayerQuickPayView, data, {area: '300px'});
-                                    break;
-                                    break;
-                                case '12':
-                                    toastr.info('该功能正在调试中...');
-                                    //_self.requestmodel.xfbbillno(xfbdata, function(resp){
-                                    //    if(resp.status == '00') {
-                                    //        data['payment_bill'] = resp.xfb_bill;
-                                    //        _self.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'600px'});
-                                    //    } else {
-                                    //        toastr.error(resp.msg);
-                                    //    }
-                                    //});
-                                    break;
-                                case '13':
-                                    toastr.info('该功能正在调试中...');
-                                    //_self.requestmodel.xfbbillno(xfbdata, function(resp){
-                                    //    if(resp.status == '00') {
-                                    //        data['payment_bill'] = resp.xfb_bill;
-                                    //        _self.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'600px'});
-                                    //    } else {
-                                    //        toastr.error(resp.msg);
-                                    //    }
-                                    //});
-                                    break;
-                                default :
-                                    data['payment_bill'] = '';
-                                    this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'300px'});
-                            }
-                        }
-                    }
+                return;
+            }
+            if(gatherId == ''){
+                toastr.info('付款方式编码不能为空');
+                return;
+            }
+            if(storage.isSet(system_config.GATHER_KEY)){
+                //从gather_key里面把visible_flag = 1 的付款方式的id都取出来
+                var tlist = storage.get(system_config.GATHER_KEY);
+                var visibleTypes = _.where(tlist,{visible_flag:'1'});
+                var gatheridlist = _.pluck(visibleTypes, 'gather_id');//返回gather_id数组
+                var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
+                if(result == - 1){
+                    toastr.info('无效的付款编码');
+                    return;
+                }
+                var item = _.findWhere(visibleTypes, {gather_id:gatherId});
+                var data = {};
+                var xfbdata = {};
+                xfbdata['pos_id'] = '002';
+                xfbdata['bill_no'] = _self.billNumber;
+                data['gather_money'] = unpaidamount;
+                data['gather_id'] = gatherId;
+                data['gather_name'] = item.gather_name;
+                switch(gatherId) {
+                    case '05':
+                        data['payment_bill'] = ''
+                        this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, '银行卡支付确认', LayerQuickPayView, data, {area: '300px'});
+                        break;
+                        break;
+                    case '12':
+                        toastr.info('该功能正在调试中...');
+                        //_self.requestmodel.xfbbillno(xfbdata, function(resp){
+                        //    if(resp.status == '00') {
+                        //        data['payment_bill'] = resp.xfb_bill;
+                        //        _self.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'600px'});
+                        //    } else {
+                        //        toastr.error(resp.msg);
+                        //    }
+                        //});
+                        break;
+                    case '13':
+                        toastr.info('该功能正在调试中...');
+                        //_self.requestmodel.xfbbillno(xfbdata, function(resp){
+                        //    if(resp.status == '00') {
+                        //        data['payment_bill'] = resp.xfb_bill;
+                        //        _self.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'600px'});
+                        //    } else {
+                        //        toastr.error(resp.msg);
+                        //    }
+                        //});
+                        break;
+                    default :
+                        data['payment_bill'] = '';
+                        this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'300px'});
                 }
             }
+
             $(this.input).val('');
         },
         /**

@@ -3,19 +3,19 @@
  */
 define([
     '../../js/common/BaseLayerView',
-    '../../moduals/layer-rtgatherui/model',
-    'text!../../moduals/layer-rtgatherui/contenttpl.html',
-    'text!../../moduals/layer-rtgatherui/commontpl.html',
-    'text!../../moduals/layer-rtgatherui/alipaytpl.html',
-    'text!../../moduals/layer-rtgatherui/wechatpaytpl.html',
-    'text!../../moduals/layer-rtgatherui/numpadtpl.html',
-    'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
-    'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl,bankcardtpl, tpl) {
+    '../../moduals/layer-quickpay/model',
+    'text!../../moduals/layer-rtquickpay/contenttpl.html',
+    'text!../../moduals/layer-rtquickpay/commontpl.html',
+    'text!../../moduals/layer-rtquickpay/alipaytpl.html',
+    'text!../../moduals/layer-rtquickpay/wechattpl.html',
+    'text!../../moduals/layer-gatherui/numpadtpl.html',
+    'text!../../moduals/layer-rtquickpay/bankcardtpl.html',
+    'text!../../moduals/layer-rtquickpay/tpl.html'
+], function (BaseLayerView, LayerQuickPayModel, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl,bankcardtpl, tpl) {
 
-    var layerGatherUIView = BaseLayerView.extend({
+    var layerQuickPayView = BaseLayerView.extend({
 
-        id: "layerGatherUIView",
+        id: "layerQuickPayView",
 
         template: tpl,
 
@@ -36,7 +36,10 @@ define([
         LayerInitPage: function () {
             var _self = this;
             this.gatherId = this.attrs.gather_id;
-            this.model = new LayerGatherUIModel();
+            this.model = new LayerQuickPayModel();
+            this.model.set({
+                gather_money:this.attrs.gather_money
+            });
             this.switchTemplate(this.gatherId);
             this.template_content = _.template(this.template_content);
             setTimeout(function () {
@@ -46,9 +49,8 @@ define([
 
         },
 
-
         renderContent: function () {
-            this.$el.find('.gatherui-content').html(this.template_content(this.model.toJSON()));
+            this.$el.find('.quickpay-content').html(this.template_content(this.model.toJSON()));
             return this;
         },
 
@@ -69,16 +71,16 @@ define([
                     break;
                 default:
                     this.template_content = commontpl;
-                    this.input = 'input[name = receive-account]';
+                    this.input = 'input[name = quickpay-account]';
             }
         },
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Esc , function () {
-               _self.onCancelClicked();
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_QUICKPAY, KEYS.Esc , function () {
+                _self.onCancelClicked();
             });
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_QUICKPAY, KEYS.Enter, function () {
                 _self.confirm();
             });
         },
@@ -93,7 +95,7 @@ define([
             data['payment_bill'] = this.attrs.payment_bill;
             var gatherNo = $(this.input).val();
             if(gatherNo == '') {
-                toastr.warning('退款账号不能为空');
+                toastr.warning('账号不能为空');
                 $(this.input).val('');
                 return false;
             }
@@ -106,16 +108,18 @@ define([
                 case '12':
                     data['gather_no'] = gatherNo;
                     Backbone.trigger('onReceivedsum',data);
+                    this.closeLayer(layerindex);
                     break;
                 case '13':
                     data['gather_no'] = gatherNo;
                     Backbone.trigger('onReceivedsum',data);
+                    this.closeLayer(layerindex);
                     break;
                 default :
                     data['gather_no'] = gatherNo;
                     Backbone.trigger('onReceivedsum',data);
+                    this.closeLayer(layerindex);
             }
-            this.closeLayer(layerindex);
             $('input[name = billingrt]').focus();
         },
 
@@ -132,7 +136,7 @@ define([
         },
 
         onOKClicked: function () {
-           this.confirm();
+            this.confirm();
         },
 
         onBackspaceClicked: function (e) {
@@ -145,7 +149,8 @@ define([
             $(this.input).val('');
         },
 
+
     });
 
-    return layerGatherUIView;
+    return layerQuickPayView;
 });

@@ -200,7 +200,7 @@ window.PAGE_ID = {
     'QP_WECHAT':32,
     'RT_ALIPAY':33,
     'RT_WECHAT':34,
-    'RT_QUICK_PAY':35,
+    'LAYER_RT_QUICKPAY':35,
     'RT_QP_ALIPAY':36,
     'RT_QP_WECHAT':37,
     'PRINT':38,

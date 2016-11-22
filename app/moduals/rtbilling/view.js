@@ -7,9 +7,7 @@ define([
     '../../../../moduals/rtbilling/collection',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
-    '../../../../moduals/modal-rtquickpay/view',
-    '../../../../moduals/modal-rtqpalipay/view',
-    '../../../../moduals/modal-rtqpwechat/view',
+    '../../../../moduals/layer-rtquickpay/view',
     '../../../../moduals/layer-rtgatherui/view',
     '../../../../moduals/layer-rtbilltype/view',
     '../../../../moduals/modal-rtecardlogin/view',
@@ -17,7 +15,7 @@ define([
     'text!../../../../moduals/rtbilling/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/rtbilling/tpl.html'
-], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView,LayerConfirmView,RTQuickPayView,RTQPAliPayView,RTQPWeChatView,GatherUIView,RTLayerTypeView,OneCardView, numpadtpl,billinfotpl,billingdetailtpl, tpl) {
+], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView,LayerConfirmView,RTQuickPayView, GatherUIView,RTLayerTypeView,OneCardView, numpadtpl,billinfotpl,billingdetailtpl, tpl) {
     var rtbillingView = BaseView.extend({
 
         id: "rtbillingView",
@@ -516,61 +514,46 @@ define([
          * 快捷支付
          */
         QuickPay: function () {
+            var _self = this;
             var gatherId = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
-                toastr.info('待退款金额为零');
-            }else{
-                if(gatherId == ''){
-                    toastr.info('退款方式编码不能为空');
-                }else{
-                    if(storage.isSet(system_config.GATHER_KEY)){
-                        //从gather_key里面把visible_flag = ‘0’ 的付款方式的id都取出来
-                        var tlist = storage.get(system_config.GATHER_KEY);
-                        var visibleTypes = _.where(tlist,{visible_flag:'1'});
-                        var gatheridlist = _.pluck(visibleTypes, 'gather_id');
-                        var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
-                        if(result == - 1){
-                            toastr.info('退款方式编码无效');
-                        }else{
-                            var gathermodel = _.where(visibleTypes,{gather_id:gatherId});
-                            var gatherUI = gathermodel[0].gather_ui;
-                            var gatherName = gathermodel[0].gather_name;
-                            if(gatherUI == '01'){
-                                var data = {};
-                                data['unpaidamount'] = this.model.get('unpaidamount');
-                                data['gather_id'] = gatherId;
-                                data['gather_name'] = gatherName;
-                                this.rtquickpayview = new RTQuickPayView(data);
-                                this.showModal(window.PAGE_ID.RT_QUICK_PAY,this.rtquickpayview);
-                                $('.modal').on('shown.bs.modal',function(e){
-                                    $('input[name = rtquickpay-account]').focus();
-                                });
-                            }else if(gatherUI == '04'){
-                                toastr.info('该功能正在调试中...');
-                                //var data = {};
-                                //data['receivedsum'] = this.model.get('unpaidamount');
-                                //data['gather_id'] = gatherId;
-                                //data['gather_name'] = gathermodel[0].gather_name;
-                                //this.rtalipayview = new RTQPAliPayView(data);
-                                //this.showModal(window.PAGE_ID.RT_QP_ALIPAY,this.rtalipayview);
-                                //$('.modal').on('shown.bs.modal',function(e){
-                                //    $('input[name = rtalipay-account]').focus();
-                                //});
-                            }else if(gatherUI == '05') {
-                                toastr.info('该功能正在调试中...');
-                                //var data = {};
-                                //data['receivedsum'] = this.model.get('unpaidamount');
-                                //data['gather_id'] = gatherId;
-                                //data['gather_name'] = gathermodel[0].gather_name;
-                                //this.rtwechatview = new RTQPWeChatView(data);
-                                //this.showModal(window.PAGE_ID.RT_QP_WECHAT,this.rtwechatview);
-                                //$('.modal').on('shown.bs.modal',function(e) {
-                                //    $('input[name = rtwechat-account]').focus();
-                                //});
-                            }
-                        }
-                    }
+                toastr.info('待支付金额为零,请进行结算');
+                return;
+            }
+            if(gatherId == '') {
+                toastr.info('付款方式编码不能为空');
+                return;
+            }
+            if(storage.isSet(system_config.GATHER_KEY)){
+                var tlist = storage.get(system_config.GATHER_KEY);
+                var visibleTypes = _.where(tlist,{visible_flag:'1'});
+                var gatheridlist = _.pluck(visibleTypes, 'gather_id');
+                var result = $.inArray(gatherId,gatheridlist);
+                if(result == - 1){
+                    toastr.info('无效的付款编码');
+                    return;
+                }
+                var item = _.findWhere(visibleTypes, {gather_id:gatherId});
+                var data = {};
+                var xfbdata = {};
+                xfbdata['pos_id'] = '002';
+                xfbdata['bill_no'] = _self.billNumber;
+                data['gather_money'] = unpaidamount;
+                data['gather_id'] = gatherId;
+                data['gather_name'] = item.gather_name;
+                switch(gatherId) {
+                    case '12':
+                        toastr.info('该功能正在调试中...');
+                        this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
+                        break;
+                    case '13':
+                        toastr.info('该功能正在调试中...');
+                        this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
+                        break;
+                    default :
+                        data['payment_bill'] = '';
+                        this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
                 }
             }
             $(this.input).val('');
