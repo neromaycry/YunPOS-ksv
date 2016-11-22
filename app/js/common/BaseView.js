@@ -210,7 +210,7 @@ define([
                     console.log('layerindex = ' + layerindex);
                 },
                 end: function () {
-                    if (attrs.is_navigate) {
+                    if (attrs.is_navigate&&attrs.is_confirm) {
                         pageId = attrs.navigate_page;
                     } else {
                         pageId = mainId;

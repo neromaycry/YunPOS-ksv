@@ -60,11 +60,12 @@ define([
         },
 
         onCancelClicked: function () {
-            if (this.attrs.is_navigate) {
-                this.confirmCloseLayer(this.attrs.navigate_page);
-            } else {
-                this.confirmCloseLayer(this.attrs.pageid);
-            }
+            //if (this.attrs.is_navigate) {
+            //    this.confirmCloseLayer(this.attrs.navigate_page);
+            //} else {
+            //    this.confirmCloseLayer(this.attrs.pageid);
+            //}
+            this.closeLayer(layerindex);
         },
 
         onOKClicked: function () {
@@ -80,11 +81,13 @@ define([
         },
 
         closeLayer: function (id) {
+            this.attrs['is_confirm'] = false;
             pageId = id;
             layer.close(layerindex);
         },
 
         confirmCloseLayer:function(pageid) {
+            this.attrs['is_confirm'] = true;
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
                     this.closeLayer(PAGE_ID.LOGIN);
