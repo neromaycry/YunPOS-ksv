@@ -68,9 +68,7 @@ define([
             } else {
                 this.attrs.callback();
                 this.closeLayer(layerindex);
-                $('input[name = main]').focus();
             }
-            $(this.input).val('');
         },
 
         onCancelClicked: function () {

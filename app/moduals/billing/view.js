@@ -18,6 +18,7 @@ define([
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
 ], function (BaseView, BillModel, BillCollection,LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerQuickPayView, LayerBInstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+
     var billingView = BaseView.extend({
 
         id: "billingView",
@@ -147,7 +148,6 @@ define([
         },
 
         onReceivedsum: function (data) {
-            console.log(data);
             var gatherMoney = parseFloat(data['gather_money']);//number类型
             var gatherNo = data['gather_no'];//付款账号
             var gatherName = data['gather_name'];
@@ -163,85 +163,55 @@ define([
          *向已付款列表中插入新的行
          * @param totalamount 总金额
          * @param gatherName 付款方式名称
-         * @param receivedsum 付款金额
-         * @param gatherAccount 付款账号
+         * @param gatherMoney 付款金额
+         * @param gatherNo 付款账号
          * @param gatherId 付款方式Id
          * @param gatherKind 付款方式类别
          * @param cardId 一卡通付款卡号
-         * @param orderNo 订单编号
+         * @param paymentBill 订单编号
          */
         addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, cardId,paymentBill) {
-            var temp = this.collection.findWhere({gather_id:gatherId,gather_no:gatherNo});
+            var oddchange = 0;
+            var gather_money = 0;
+            var change_money = 0;
+            var havepay_money = 0
+            var model = this.collection.findWhere({gather_id:gatherId,gather_no:gatherNo});
             var unpaidamount = this.model.get('unpaidamount');
-            if(temp != undefined){
-                for(var i = 0;i < this.collection.length;i++){
-                    var model = this.collection.at(i);
-                    if(model.get('gather_id') == gatherId && model.get('gather_no') == gatherNo){
-                        var havePayMoney = model.get('gather_money') + gatherMoney;
-                        if(gatherMoney > unpaidamount) {
-                            var gather_money = model.get('gather_money') + unpaidamount;
-                            model.set({
-                                fact_money:0,
-                                gather_id:gatherId,
-                                gather_name:gatherName,
-                                gather_money:gather_money,
-                                gather_no:gatherNo,
-                                gather_kind:gatherKind,
-                                card_id:cardId,
-                                payment_bill: paymentBill,//第三方支付方式订单号
-                                havepay_money:havePayMoney ,//实收金额
-                                change_money: gatherMoney - unpaidamount
-                            });
-                        }else {
-                            var gather_money = model.get('gather_money') + gatherMoney;
-                            model.set({
-                                fact_money: 0,
-                                gather_id: gatherId,
-                                gather_name: gatherName,
-                                gather_money:gather_money,
-                                gather_no: gatherNo,
-                                gather_kind: gatherKind,
-                                card_id: cardId,
-                                payment_bill: paymentBill,
-                                havepay_money:havePayMoney,
-                                change_money: 0
-                            });
-                        }
-                    }
+            if(model != undefined){
+                if(gatherMoney > unpaidamount) {
+                    havepay_money = model.get('gather_money') + gatherMoney;
+                    gather_money = model.get('gather_money') + unpaidamount;
+                    change_money = gatherMoney - unpaidamount;
+                }else {
+                    havepay_money = model.get('gather_money') + gatherMoney;
+                    gather_money = model.get('gather_money') + gatherMoney;
                 }
             }else {
                 var model = new BillModel();
-                var oddchange = 0;
                 if (gatherMoney > unpaidamount) {
+                    gather_money = unpaidamount;
+                    havepay_money = gatherMoney;
+                    change_money = gatherMoney - unpaidamount;
                     //如果支付金额大于未支付金额，则支付列表中显示的支付金额为  receivedsum = unpaidamount
-                    model.set({
-                        fact_money: 0,
-                        gather_id: gatherId,
-                        gather_name: gatherName,
-                        gather_money: unpaidamount,
-                        gather_no: gatherNo,
-                        gather_kind: gatherKind,
-                        card_id: cardId,
-                        payment_bill: paymentBill,//第三方支付方式订单号
-                        havepay_money:gatherMoney,//实收金额
-                        change_money: gatherMoney - unpaidamount
-                    });
                 } else {
-                    model.set({
-                        fact_money: 0,
-                        gather_id: gatherId,
-                        gather_name: gatherName,
-                        gather_money:gatherMoney,
-                        gather_no: gatherNo,
-                        gather_kind: gatherKind,
-                        card_id: cardId,
-                        payment_bill: paymentBill,
-                        havepay_money:gatherMoney,
-                        change_money: 0
-                    });
+                    gather_money = gatherMoney;
+                    havepay_money = gatherMoney;
                 }
             }
+            model.set({
+                fact_money: 0,
+                gather_id: gatherId,
+                gather_name: gatherName,
+                gather_money:gather_money,
+                gather_no: gatherNo,
+                gather_kind: gatherKind,
+                card_id: cardId,
+                payment_bill: paymentBill,
+                havepay_money:havepay_money,
+                change_money:change_money
+            });
             this.collection.add(model);
+            console.log(this.collection);
             this.totalreceived = this.totalreceived + gatherMoney;
             if(this.totalreceived >= totalamount){
                 this.unpaidamount = 0;
