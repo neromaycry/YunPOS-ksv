@@ -15,5 +15,5 @@ s += '0';
 }
 return s;
 }%>
-<div class="col-xs-4 col-md-4">录入价格</div>
-<div class="col-xs-8 col-md-8 text-right">建议单价:<%= toDecimal2(originalprice) %></div>
+<div class="col-xs-6 col-md-6 text-right pos-textsize no-padding">建议单价：</div>
+<div class="col-xs-6 col-md-6 text-red text-left no-padding" style="font-size: 18px;">￥<%= toDecimal2(originalprice) %></div>

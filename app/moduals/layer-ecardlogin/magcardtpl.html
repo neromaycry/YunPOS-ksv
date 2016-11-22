@@ -1,12 +1,12 @@
-<div class="panel panel-primary" style="border: none;margin: 0;">
-    <div class="panel-body">
-        <div class="row confirm-content text-center bottom-margin">
-            <div class="col-xs-12 col-md-12 bottom-margin">
-                <div class="text-center text-primary">请刷卡.....</div>
-            </div>
-            <div class="col-xs-12 col-md-12 bottom-margin">
-                <input type="text" class="form-control" name="magcard" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)">
-            </div>
-        </div>
+
+<div class="row confirm-content">
+    <div class="col-xs-12 col-md-12 m-t">
+        <div class="text-center text-primary">请刷卡.....</div>
+    </div>
+</div>
+<div class="row left-margin m-t" style="margin-right: 15px;">
+    <div class="form-group">
+        <label class="sr-only" for="magcard">magcard</label>
+        <input type="text" class="form-control" id="magcard" name="magcard" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)">
     </div>
 </div>
