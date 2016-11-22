@@ -5,8 +5,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'bootstrap'
-], function ($, _, Backbone,Bootstrap) {
+    'bootstrap',
+    '../../moduals/layer-authcard/view',
+    '../../moduals/layer-authcommand/view',
+], function ($, _, Backbone, Bootstrap, LayerAuthCardView,LayerAuthCommandView) {
 
     var BaseView = Backbone.View.extend({
 
@@ -372,6 +374,31 @@ define([
             return currentdate;
         },
 
+        evalAuth: function (authtype, callback) {
+            if (authtype == AUTH_CODE.GRANTED) {
+
+            } else if (authtype == AUTH_CODE.COMMAND) {
+                var attrs = {
+                    pageid: pageId,
+                    is_navigate: false,
+                    callback: function () {
+                        callback();
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
+
+            } else if (authtype == AUTH_CODE.CARD) {
+                var attrs = {
+                    pageid: pageId,
+                    is_navigate: false,
+                    callback: function () {
+                        callback();
+                    }
+                };
+                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
+            }
+        },
+
         render: function () {
             var _self = this;
             console.log('render');
@@ -385,7 +412,6 @@ define([
                 var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
                 $('input').attr('readonly',!isKeyboardPlugged);
             }
-
             this.addClickEvents();
             return this;
         }
