@@ -37,7 +37,7 @@ define([
             'click .btn-clear': 'onClearClicked',
             'click input[name = username]': 'focusInputUser',
             'click input[name = password]': 'focusInputPasswd',
-            //'click .login-init':'onInitClicked',
+            'click .doinit':'onInitClicked',
             //'click .login-reconnecthw':'onReconnectHardwareClicked',
             'click .power-off': 'onPowerOffClicked',
             'click .lock': 'lockScreen',
@@ -83,20 +83,18 @@ define([
             }
         },
 
-        //iniSettngs: function () {
-        //    var confirmView = new ConfirmView({
-        //        pageid: window.PAGE_ID.LOGIN,
-        //        is_navigate:true,
-        //        navigate_page:window.PAGE_ID.SETDNS,
-        //        callback: function () {
-        //            storage.remove(system_config.SETTING_DATA_KEY);
-        //            storage.remove(system_config.IS_FIRST_KEY);
-        //            router.navigate("setdns",{trigger:true,replace:true});
-        //        },
-        //        content:'确定初始化吗？'
-        //    });
-        //    this.showModal(window.PAGE_ID.CONFIRM, confirmView);
-        //},
+        iniSettngs: function () {
+            var attrs = {
+                pageid: pageId,
+                content: '确定初始化？',
+                is_navigate: false,
+                callback: function () {
+                    storage.removeAll();
+                    window.location.reload();
+                }
+            };
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
+        },
 
         onNumpadClicked: function () {
             var isDisplay = $('.numpad').css('display') == 'none';
@@ -159,9 +157,9 @@ define([
             this.input = 'input[name = password]';
         },
 
-        //onInitClicked: function () {
-        //    this.iniSettngs();
-        //},
+        onInitClicked: function () {
+            this.iniSettngs();
+        },
 
         //onReconnectHardwareClicked: function () {
         //    wsClient.close();
@@ -294,9 +292,9 @@ define([
                     $('input[name = username]').focus();
                 }
             });
-            //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
-            //    _self.iniSettngs();
-            //});
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
+                _self.iniSettngs();
+            });
             //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
             //    var SOCKET_ADDR = 'ws://localhost:7110/';
             //    wsClient.close();
