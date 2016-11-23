@@ -169,7 +169,7 @@ requirejs([
     //    }
     //});
 
-    window.storage.set('pos_limit', '11112111111');
+    window.storage.set('pos_limit', '11111111111');
 
     var pos_limit = window.storage.get('pos_limit').toString();
     console.log(pos_limit);
@@ -230,7 +230,7 @@ requirejs([
         window.layer.msg('已与硬件建立连接', optLayerSuccess);
     };
     window.wsClient.onmessage = function (e) {
-        console.log(e);
+        console.log('websocket message:' + e);
     };
     window.wsClient.onclose = function (e) {
         //window.toastr.warning('与硬件连接断开');
@@ -343,22 +343,22 @@ requirejs([
     document.onkeydown = forbidBackSpace;
 
     $(document).ready(function () {
-        $('*').keydown(function (e) {
-            e = window.event || e || e.which;
-            if (e.keyCode == 112 || e.keyCode == 113
-                || e.keyCode == 114 || e.keyCode == 115
-                || e.keyCode == 116 || e.keyCode == 117
-                || e.keyCode == 118 || e.keyCode == 119
-                || e.keyCode == 120 || e.keyCode == 121
-                || e.keyCode == 122 || e.keyCode == 123) {
-                e.keyCode = 0;
-                return false;
-            }
-        });
-        window.onhelp = function () {
-            //ie下面不能屏蔽f1键的补充方法
-            return false;
-        };
+        //$('*').keydown(function (e) {
+        //    e = window.event || e || e.which;
+        //    if (e.keyCode == 112 || e.keyCode == 113
+        //        || e.keyCode == 114 || e.keyCode == 115
+        //        || e.keyCode == 116 || e.keyCode == 117
+        //        || e.keyCode == 118 || e.keyCode == 119
+        //        || e.keyCode == 120 || e.keyCode == 121
+        //        || e.keyCode == 122 || e.keyCode == 123) {
+        //        e.keyCode = 0;
+        //        return false;
+        //    }
+        //});
+        //window.onhelp = function () {
+        //    //ie下面不能屏蔽f1键的补充方法
+        //    return false;
+        //};
 
 
         window.loading = {
