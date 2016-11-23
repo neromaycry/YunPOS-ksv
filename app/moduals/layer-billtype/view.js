@@ -101,10 +101,6 @@ define([
             xfbdata['bill_no'] = this.attrs.bill_no;
             this.closeLayer(layerindex);
             switch (gatherId) {
-                case '05':
-                    data['payment_bill'] = ''
-                    this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, '银行卡支付确认', layerGatherUIView, data, {area: '300px'});
-                    break;
                 case '12':
                     this.requestmodel.xfbbillno(xfbdata, function (resp) {
                         if (resp.status == '00') {
@@ -125,7 +121,13 @@ define([
                         }
                     });
                     break;
+                case '16':
+                    console.log('银行mis');
+                    data['payment_bill'] = ''
+                    this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, '银行卡支付确认', layerGatherUIView, data, {area: '300px'});
+                    break;
                 default:
+                    console.log('******');
                     data['payment_bill'] = ''
                     this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '300px'});
             }

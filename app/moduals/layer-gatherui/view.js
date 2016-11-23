@@ -83,12 +83,6 @@ define([
 
         switchTemplate: function (gatherId) {
             switch (gatherId) {
-                case '05':
-                    this.template_content = bankcardtpl;
-                    this.model.set({
-                        gather_money:this.attrs.gather_money
-                    });
-                    break;
                 case '12':
                     this.template_content = wechatpaytpl;
                     this.input = 'input[name = wechat-account]';
@@ -96,6 +90,12 @@ define([
                 case '13':
                     this.template_content = alipaytpl;
                     this.input = 'input[name = alipay-account]';
+                    break;
+                case '16':
+                    this.template_content = bankcardtpl;
+                    this.model.set({
+                        gather_money:this.attrs.gather_money
+                    });
                     break;
                 default:
                     this.template_content = commontpl;
@@ -121,7 +121,7 @@ define([
             data['gather_name'] = this.attrs.gather_name;
             data['gather_kind'] = this.attrs.gather_kind;
             data['payment_bill'] = this.attrs.payment_bill;
-            if(this.gatherId == '05'){
+            if(this.gatherId == '16'){
                 this.closeLayer(layerindex);
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行POS', LayerBankCardView, data, {area:'300px'});
             }else {

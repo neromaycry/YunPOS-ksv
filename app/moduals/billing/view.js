@@ -434,57 +434,70 @@ define([
 
         deleteItem:function(index){
             var item = this.collection.at(index);
+            //var gatherMoney = item.get('gather_money');
+            //var changeMoney = item.get('change_money');//利用删除那条数据时候含有找零来判断
+            //var oddchange = this.model.get('oddchange');
+            ////var factMoney = this.model.get('fact_money');//判断礼券类支付的盈余金额
+            //this.collection.remove(item);
+            //if(changeMoney == 0 && gatherMoney > oddchange) {
+            //
+            //    oddchange = 0;
+            //    for(var i = 0;i < this.collection.length;i++) {
+            //        var temp = this.collection.at(i);
+            //        var havaPayMoney = temp.get('havepay_money');
+            //        var gathermoney = temp.get('gather_money');
+            //        if(temp.get('change_money') != 0) {
+            //            temp.set({
+            //                gather_money:havaPayMoney
+            //            });
+            //            this.collection.push(temp);
+            //            break;
+            //        }
+            //    }
+            //}
+            //if(changeMoney == 0 && gatherMoney < oddchange) {
+            //
+            //    for(var i = 0;i < this.collection.length;i++) {
+            //        var temp = this.collection.at(i);
+            //        var gathermoney = temp.get('gather_money');//现金支付金额
+            //        if(temp.get('change_money') != 0) {
+            //            temp.set({
+            //                gather_money:gathermoney + gatherMoney
+            //            });
+            //
+            //            this.collection.push(temp);
+            //            break;
+            //        }
+            //    }
+            //}
+            //
+
+
             var gatherMoney = item.get('gather_money');
-            var changeMoney = item.get('change_money');//利用删除那条数据时候含有找零来判断
-            var oddchange = this.model.get('oddchange');
-            var factMoney = this.model.get('fact_money');//判断礼券类支付的盈余金额
+            var oddChange = this.model.get('oddchange');//判断当前是否有找零
             this.collection.remove(item);
-            if(changeMoney == 0 && gatherMoney > oddchange) {
-                this.totalreceived = this.totalreceived - gatherMoney;
-                oddchange = 0;
-                for(var i = 0;i < this.collection.length;i++) {
-                    var temp = this.collection.at(i);
-                    var havaPayMoney = temp.get('havepay_money');
-                    var gathermoney = temp.get('gather_money');
-                    if(temp.get('change_money') != 0) {
-                        temp.set({
-                            gather_money:havaPayMoney
-                        });
-                        this.collection.push(temp);
-                        break;
-                    }
-                }
-            }
-            if(changeMoney == 0 && gatherMoney < oddchange) {
-                this.totalreceived = this.totalreceived - gatherMoney;
-                for(var i = 0;i < this.collection.length;i++) {
-                    var temp = this.collection.at(i);
-                    var gathermoney = temp.get('gather_money');//现金支付金额
-                    if(temp.get('change_money') != 0) {
-                        temp.set({
-                            gather_money:gathermoney + gatherMoney
-                        });
-                        oddchange = oddchange - gatherMoney;
-                        this.collection.push(temp);
-                        break;
-                    }
-                }
+            for(var i = 0;i < this.collection.length;i++) {
+                var temp = this.collection.at(i);
+                var factMoney = temp.get('fact_money');
+                var changeMoney = temp.get('change_money');
+
+
             }
 
-            if(changeMoney != 0) {
-                this.totalreceived = this.totalreceived - item.get('havepay_money');
-                oddchange = 0;
-            }
 
+
+            this.totalreceived = this.totalreceived - item.get('havepay_money');
             if(this.totalreceived > this.totalamount) {
                 this.unpaidamount = 0;
+                this.oddchange = this.totalreceived - this.totalamount;
             }else {
+                this.oddchange = 0;
                 this.unpaidamount = this.totalamount - this.totalreceived;
             }
             this.model.set({
                 receivedsum: this.totalreceived,
                 unpaidamount: this.unpaidamount,
-                oddchange:oddchange
+                oddchange:this.oddchange
             });
             console.log(this.collection);
             this.i = 0;
@@ -960,11 +973,6 @@ define([
                 data['gather_id'] = gatherId;
                 data['gather_name'] = item.gather_name;
                 switch(gatherId) {
-                    case '05':
-                        data['payment_bill'] = ''
-                        this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, '银行卡支付确认', LayerQuickPayView, data, {area: '300px'});
-                        break;
-                        break;
                     case '12':
                         toastr.info('该功能正在调试中...');
                         //_self.requestmodel.xfbbillno(xfbdata, function(resp){
@@ -986,6 +994,10 @@ define([
                         //        toastr.error(resp.msg);
                         //    }
                         //});
+                        break;
+                    case '16':
+                        data['payment_bill'] = ''
+                        this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, '银行卡支付确认', LayerQuickPayView, data, {area: '300px'});
                         break;
                     default :
                         data['payment_bill'] = '';
