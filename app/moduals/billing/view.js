@@ -170,7 +170,6 @@ define([
          * @param paymentBill 订单编号
          */
         addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, cardId, paymentBill) {
-            var oddchange = 0;
             var gather_money = 0;
             var change_money = 0;
             var havepay_money = 0;
@@ -202,8 +201,8 @@ define([
                 fact_money = gatherMoney - unpaidamount;
                 change_money = 0;
                 havepay_money = gatherMoney;
-                gatherMoney = unpaidamount;
             }
+
             model.set({
                 fact_money: fact_money,
                 gather_id: gatherId,
@@ -217,19 +216,29 @@ define([
                 change_money:change_money
             });
             this.collection.add(model);
+            console.log(this.collection);
             this.totalreceived = this.totalreceived + gatherMoney;
-            console.log(this.totalreceived + '收到的总额');
-            if(this.totalreceived >= totalamount){
+            var changeList = this.collection.pluck('change_money');//因为当存在礼券类支付的时候无法判断找零，所以用change_money判断
+            for(var i in changeList) {
+                this.oddchange = this.oddchange + changeList[i];
+            }
+            if(this.totalreceived >= totalamount) {
                 this.unpaidamount = 0;
-                oddchange = this.totalreceived - totalamount;
-            }else{
-                oddchange = 0;
+            }else {
                 this.unpaidamount = parseFloat((totalamount - this.totalreceived).toFixed(2));
             }
+
+            //if(this.totalreceived >= totalamount){
+            //    this.unpaidamount = 0;
+            //    this.oddchange = this.totalreceived - totalamount;
+            //}else{
+            //    this.oddchange = 0;
+            //    this.unpaidamount = parseFloat((totalamount - this.totalreceived).toFixed(2));
+            //}
             this.model.set({
                 receivedsum: this.totalreceived,
                 unpaidamount: this.unpaidamount,
-                oddchange:oddchange
+                oddchange:this.oddchange
             });
             this.renderBillInfo();
             this.renderBillDetail();
@@ -434,58 +443,42 @@ define([
 
         deleteItem:function(index){
             var item = this.collection.at(index);
-            //var gatherMoney = item.get('gather_money');
-            //var changeMoney = item.get('change_money');//利用删除那条数据时候含有找零来判断
-            //var oddchange = this.model.get('oddchange');
-            ////var factMoney = this.model.get('fact_money');//判断礼券类支付的盈余金额
-            //this.collection.remove(item);
-            //if(changeMoney == 0 && gatherMoney > oddchange) {
-            //
-            //    oddchange = 0;
-            //    for(var i = 0;i < this.collection.length;i++) {
-            //        var temp = this.collection.at(i);
-            //        var havaPayMoney = temp.get('havepay_money');
-            //        var gathermoney = temp.get('gather_money');
-            //        if(temp.get('change_money') != 0) {
-            //            temp.set({
-            //                gather_money:havaPayMoney
-            //            });
-            //            this.collection.push(temp);
-            //            break;
-            //        }
-            //    }
-            //}
-            //if(changeMoney == 0 && gatherMoney < oddchange) {
-            //
-            //    for(var i = 0;i < this.collection.length;i++) {
-            //        var temp = this.collection.at(i);
-            //        var gathermoney = temp.get('gather_money');//现金支付金额
-            //        if(temp.get('change_money') != 0) {
-            //            temp.set({
-            //                gather_money:gathermoney + gatherMoney
-            //            });
-            //
-            //            this.collection.push(temp);
-            //            break;
-            //        }
-            //    }
-            //}
-            //
-
-
             var gatherMoney = item.get('gather_money');
-            var oddChange = this.model.get('oddchange');//判断当前是否有找零
             this.collection.remove(item);
             for(var i = 0;i < this.collection.length;i++) {
                 var temp = this.collection.at(i);
-                var factMoney = temp.get('fact_money');
-                var changeMoney = temp.get('change_money');
+                var fact_money = temp.get('fact_money');//当前这条数据的fact_money
+                var change_money = temp.get('change_money');//当前这条数据的change_money
+                var gather_money = temp.get('gather_money');//当前这条数据的gather_money
+                if(fact_money != 0 && gatherMoney > fact_money) {
+                    temp.set({
+                        gather_money:gather_money + fact_money,
+                        fact_money:0
+                    });
+                }
 
+                if(fact_money != 0 && gatherMoney < fact_money) {
+                    temp.set({
+                        gather_money:gather_money + gatherMoney,
+                        fact_money:fact_money - gatherMoney
+                    });
+                }
 
+                if(change_money != 0 && gatherMoney > change_money) {
+                    temp.set({
+                        gather_money:gather_money + change_money,
+                        change_money:0
+                    });
+                }
+
+                if(change_money != 0 && gatherMoney < change_money) {
+                    temp.set({
+                        gather_money:gather_money + gatherMoney,
+                        change_money:change_money - gatherMoney
+                    });
+                }
+                this.collection.push(temp);
             }
-
-
-
             this.totalreceived = this.totalreceived - item.get('havepay_money');
             if(this.totalreceived > this.totalamount) {
                 this.unpaidamount = 0;
