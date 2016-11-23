@@ -84,13 +84,9 @@ define([
                     unpaidamount:this.unpaidamount
                 });
             }else{
-                this.totalamount = storage.get(system_config.RETURN_KEY,'panel','totalamount');
-                this.unpaidamount = 0;
-                this.receivedsum = this.totalamount;
-                var tempcollection = storage.get(system_config.RETURN_KEY,'paymentlist');
-                for(var i in tempcollection) {
-                    this.collection.push(tempcollection[i]);
-                }
+                this.totalamount = Math.abs(storage.get(system_config.RETURN_KEY,'panel','totalamount'));
+                this.unpaidamount = this.totalamount;
+                this.receivedsum = 0;
                 this.model.set({
                     receivedsum:this.receivedsum,
                     totalamount:this.totalamount,
@@ -162,11 +158,7 @@ define([
             var _self = this;
             //返回上一层
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Esc, function () {
-                if (isfromForce) {
-                    router.navigate('returnforce',{trigger:true});
-                } else {
-                    router.navigate('returnwhole',{trigger:true});
-                }
+                _self.onReturnClicked();
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Enter, function () {
@@ -235,45 +227,27 @@ define([
          * @param gatherKind 付款方式类别
          * @param cardId 一卡通付款卡号
          */
-        addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId,gatherKind,cardId) {
+        addToPaymentList: function (totalamount, gatherName, receivedsum, gatherAccount, gatherId, gatherKind, cardId) {
             var temp = this.collection.findWhere({gather_id: gatherId, gather_no:gatherAccount});
-            if(temp != undefined){
-                for(var i = 0;i < this.collection.length;i++){
-                    var model = this.collection.at(i);
-                    if(model.get('gather_id') == gatherId){
-                        var gather_money = model.get('gather_money');
-                        gather_money = parseFloat(gather_money) + receivedsum;
-                        model.set({
-                            fact_money:0,
-                            gather_id:gatherId,
-                            gather_name:gatherName,
-                            gather_money:parseFloat(gather_money),
-                            gather_no:gatherAccount,
-                            gather_kind:gatherKind,
-                            card_id:cardId,
-                            havepay_money:receivedsum,
-                            payment_bill:'',
-                            change_money:0
-                        });
-                    }
-                    this.collection.add(model);
-                }
-            }else{
-                var model = new RTBillModel();
-                model.set({
-                    fact_money:0,
-                    gather_id:gatherId,
-                    gather_name:gatherName,
-                    gather_money:receivedsum,
-                    gather_no:gatherAccount,
-                    gather_kind:gatherKind,
-                    card_id:cardId,
-                    havepay_money:receivedsum,
-                    payment_bill:'',
-                    change_money:0
-                });
-                this.collection.add(model);
+            var model = new RTBillModel();
+            if(temp != undefined) {
+                model = temp;
+                var gather_money = model.get('gather_money');
+                receivedsum = parseFloat(gather_money) + receivedsum;
             }
+            model.set({
+                fact_money:0,
+                gather_id:gatherId,
+                gather_name:gatherName,
+                gather_money:receivedsum,
+                gather_no:gatherAccount,
+                gather_kind:gatherKind,
+                card_id:cardId,
+                havepay_money:receivedsum,
+                payment_bill:'',
+                change_money:0
+            });
+            this.collection.push(model);
             var totalreceived = 0;
             var trList = this.collection.pluck('gather_money');
             console.log(trList);
@@ -310,19 +284,30 @@ define([
          */
         confirm:function(){
             var receivedsum = $(this.input).val();
-            var unpaidamount = this.model.get('unpaidamount');
+            var unpaidamount = Math.abs(this.model.get('unpaidamount'));
             if(unpaidamount == 0) {
-                toastr.warning('退货金额为零，请进行结算');
-            }else if(receivedsum == '.' || (receivedsum.split('.').length-1) > 1 || parseFloat(receivedsum) == 0) {
-                toastr.warning('无效的退货金额');
-            }else if(receivedsum > unpaidamount){
-                toastr.warning('不设找零');
-            }else if(receivedsum == '') {
-                this.addToPaymentList(this.totalamount,"现金",unpaidamount,"*","00","00",this.card_id);
-            }else{
-                this.i = 0;
-                this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id);
+                //toastr.warning('退货金额为零，请进行结算');
+                layer.msg('退货金额为零，请进行结算', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
+            if(receivedsum == '.' || (receivedsum.split('.').length-1) > 1 || parseFloat(receivedsum) == 0) {
+                //toastr.warning('无效的退货金额');
+                layer.msg('无效的退货金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum == '') {
+                receivedsum = unpaidamount;
+            }
+            if(receivedsum > unpaidamount){
+                //toastr.warning('不设找零');
+                layer.msg('不设找零', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            //this.i = 0;
+            this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id);
             $(this.input).val("");
         },
 
@@ -463,6 +448,7 @@ define([
                 data['gather_detail'] = _self.collection.toJSON();
                 for(var i = 0;i<data['gather_detail'].length;i++) {
                     data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
+                    data['gather_detail'][i].havepay_money = - data['gather_detail'][i].havepay_money;
                     console.log(data['gather_detail'][i]);
                 }
                 confirmBill.trade_confirm(data, function (resp) {
@@ -496,6 +482,7 @@ define([
                 data['gather_detail'] = _self.collection.toJSON();
                 for(var i = 0;i<data['gather_detail'].length;i++) {
                     data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
+                    data['gather_detail'][i].havepay_money = - data['gather_detail'][i].havepay_money;
                     console.log(data['gather_detail'][i]);
                 }
                 confirmBill.trade_confirm(data, function (resp) {
