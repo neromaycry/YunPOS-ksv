@@ -1041,7 +1041,7 @@ define([
         /**
          *点击支付大类按钮的点击事件
          */
-        payment:function (gatherkind , billNumber ,title){
+        payment:function (gatherkind , billNumber, title){
             var data = {};
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');

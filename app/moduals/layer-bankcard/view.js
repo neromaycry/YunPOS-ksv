@@ -24,13 +24,20 @@ define([
         },
 
         LayerInitPage: function () {
+            console.log(this.attrs);
             this.model = new LayerBankCardModel();
-            var data = {};
-            data['transaction_amount'] = '20.22';
-            data['cashier_no'] = '2222';
-            data['pos_no'] = '002';
-            data['bill_no'] = this.attrs.bill_no;
-            this.sendWebSocketDirective([DIRECTIVES.Bank_sale],[data] , wsClient);
+            var data = {
+                transaction_amount: '0.01',
+                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                bill_no: this.attrs.bill_no
+            };
+            console.log(data);
+            //data['transaction_amount'] = '0.01';
+            //data['cashier_no'] = '2222';
+            //data['pos_no'] = '002';
+            //data['bill_no'] = this.attrs.bill_no;
+            this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [data] , wsClient);
         },
 
         bindLayerKeys: function () {

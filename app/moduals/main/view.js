@@ -533,6 +533,11 @@ define([
                 layer.msg('优惠金额不能为空', optLayerWarning);
                 return;
             }
+            if (discount == '.' || (discount.split('.').length - 1) > 1) {
+                //toastr.warning('请输入有效的优惠金额');
+                layer.msg('请输入有效的优惠金额', optLayerWarning);
+                return;
+            }
             var rate = ((price - discount) / price).toFixed(2);
             console.log(rate);
             this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
@@ -558,9 +563,6 @@ define([
                     //        }
                     //    }
                     // else {
-                } else if (value == '.' || (value.split('.').length - 1) > 1) {
-                    //toastr.warning('请输入有效的优惠金额');
-                    layer.msg('请输入有效的优惠金额', optLayerWarning);
                 } else {
                     var item = _self.collection.at(_self.i);
                     var price = item.get('price');
@@ -569,7 +571,8 @@ define([
                     if (value <= parseFloat(price * num - discount)) {
                         _self.collection.at(_self.i).set({
                             discount: value,
-                            money: price * num - value
+                            money: price * num - value,
+                            manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                         });
                         _self.calculateModel();
                         $('#li' + _self.i).addClass('cus-selected');
@@ -622,7 +625,8 @@ define([
                 var num = item.get('num');
                 _self.collection.at(_self.i).set({
                     discount: price * num * (1 - rate),
-                    money: price * num * rate
+                    money: price * num * rate,
+                    manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
                 _self.calculateModel();
                 $('#li' + _self.i).addClass('cus-selected');

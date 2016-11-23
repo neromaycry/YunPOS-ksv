@@ -169,7 +169,7 @@ requirejs([
     //    }
     //});
 
-    window.storage.set('pos_limit', '11112111111');
+    window.storage.set('pos_limit', '11111111111');
 
     var pos_limit = window.storage.get('pos_limit').toString();
     console.log(pos_limit);
@@ -230,7 +230,7 @@ requirejs([
         window.layer.msg('已与硬件建立连接', optLayerSuccess);
     };
     window.wsClient.onmessage = function (e) {
-        console.log(e);
+        console.log('websocket message:' + e);
     };
     window.wsClient.onclose = function (e) {
         //window.toastr.warning('与硬件连接断开');
