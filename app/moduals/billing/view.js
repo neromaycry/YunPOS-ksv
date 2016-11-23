@@ -298,8 +298,8 @@ define([
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
                 $('input[name = billing]').val('');
-                toastr.info('该功能正在调试中...');
-               //_self.payment('05', _self.billNumber, '第三方支付');
+                //toastr.info('该功能正在调试中...');
+               _self.payment('05', _self.billNumber, '第三方支付');
             });
             //整单优惠输入实际优惠金额
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F1, function () {
@@ -1023,7 +1023,7 @@ define([
         onThirdPayClicked: function () {
             toastr.info('该功能正在调试中...');
             //$('input[name = billing]').val('');
-            //this.payment('05', this.billNumber, '第三方支付');
+            this.payment('05', this.billNumber, '第三方支付');
             //$('button[name = third-pay]').blur();
         },
         /**
