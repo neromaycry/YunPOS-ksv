@@ -58,15 +58,33 @@ define([
             var _self = this;
             var value = $(this.input).val();
             if (value != undefined && value != '') {
-                this.attrs.callback();
-                if (this.attrs.is_navigate) {
-                    this.confirmCloseLayer(this.attrs.navigate_page);
-                } else {
-                    this.confirmCloseLayer(this.attrs.pageid);
+                var data = {};
+                var trackValues = this.parseMagTracks(value);
+                var tracks = ['track1', 'track2', 'track3'];
+                for (var i = 0; i < tracks.length; i++) {
+                    data[tracks[i]] = trackValues[i];
                 }
+                data['type'] = '01';
+                var accredit_type = this.attrs.accredit_type;
+                data['accredit_type'] = accredit_type;
+                if (accredit_type == '01' || accredit_type == '02') {
+                    console.log(this.attrs.discount_rate);
+                    data['discount'] = this.attrs.discount_rate;
+                }
+                this.model.authAccess(data, function (resp) {
+                    if (resp.status == '00') {
+                        _self.attrs.callback();
+                        if (_self.attrs.is_navigate) {
+                            this.confirmCloseLayer(_self.attrs.navigate_page);
+                        } else {
+                            this.confirmCloseLayer(_self.attrs.pageid);
+                        }
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                    }
+                });
             }
         },
-
 
         closeLayer: function (id) {
             pageId = id;

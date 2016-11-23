@@ -111,6 +111,42 @@ define([
             });
         },
 
+        parseMagTracks: function (value) {
+            //var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
+            var index1, index2, track1, track2, track3;
+            //var value = '%768000001 383837934874352?;768000001?;383837934874352?';
+            var str = value.charAt(0);
+            console.log(str);
+            if (str == '%') {
+                index1 = value.indexOf('?');
+                track1 = value.substring(1, index1);
+                value = value.substring(index1 + 1);
+                str = value.charAt(0);
+                console.log('track1 str:' + str);
+            } else {
+                track1 = '*';
+            }
+            if (str == ';') {
+                index2 = value.indexOf('?');
+                track2 = value.substring(1, index2);
+                value = value.substring(index2 + 1);
+                str = value.charAt(0);
+                console.log('track2 str:' + str);
+            } else {
+                track2 = '*';
+            }
+            if (str == ';') {
+                track3 = value.substring(1, value.length - 1);
+            } else {
+                track3 = '*'
+            }
+            console.log('track1:' + track1 + ',track2:' + track2 + ',track3:' + track3);
+            var tracks = [track1, track2, track3];
+            return tracks;
+        },
+
+
+
         /**
          * 关闭layer的通用方法
          * @param index 当前layer的index， 一般都传入layerindex这个window变量
