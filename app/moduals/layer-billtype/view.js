@@ -89,7 +89,6 @@ define([
         onReceived: function (index) {
             var _self = this;
             var gatherId = this.collection.at(index).get('gather_id');
-            //var gatherModel = _.where(this.visibleTypes, {gather_id: gatherId});
             var gatherName = this.collection.at(index).get('gather_name');
             var data = {};
             var xfbdata = {};//生成payment_bill
@@ -122,14 +121,12 @@ define([
                     });
                     break;
                 case '16':
-                    console.log('银行mis');
-                    data['payment_bill'] = '';
+                    data['payment_bill'] = '*';
                     data['bill_no'] = this.attrs.bill_no
                     this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, '银行卡支付确认', layerGatherUIView, data, {area: '300px'});
                     break;
                 default:
-                    console.log('******');
-                    data['payment_bill'] = '';
+                    data['payment_bill'] = '*';
                     this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '300px'});
             }
             //if(gatherUI == '01' && gatherId != '05'){

@@ -1,3 +1,8 @@
+<%function abs(x){
+var x = Math.abs(x);
+return x;
+}%>
+
 <!--<div class="panel-heading">退款详情</div>-->
 <!--<div class="panel-body">-->
     <!--<div class="row bottom-margin">-->
@@ -38,9 +43,9 @@
 
 
 
-<div class="col-xs-2 col-md-2 cart-billing no-padding text-nowrap">件数：<%= itemamount %></div>
-<div class="col-xs-3 col-md-3 cart-billing text-teal text-nowrap">优惠： - <%= toDecimal2(discountamount) %></div>
-<div class="col-xs-3 col-md-3 cart-billing text-red text-nowrap">退款：<%= toDecimal2(totalamount-discountamount) %></div>
+<div class="col-xs-2 col-md-2 cart-billing no-padding text-nowrap">件数：<%= abs(itemamount) %></div>
+<div class="col-xs-3 col-md-3 cart-billing text-teal text-nowrap">优惠： - <%= toDecimal2(abs(discountamount)) %></div>
+<div class="col-xs-3 col-md-3 cart-billing text-red text-nowrap">退款：<%= toDecimal2(abs(totalamount-discountamount)) %></div>
 <div class="col-xs-2 col-md-2 no-padding">
     <div class="cart-billing button-highlight rt-cancel">取消退货</div>
 </div>

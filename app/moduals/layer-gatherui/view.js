@@ -122,6 +122,7 @@ define([
             data['gather_name'] = this.attrs.gather_name;
             data['gather_kind'] = this.attrs.gather_kind;
             data['bill_no'] = this.attrs.bill_no;
+            data['payment_bill'] = this.attrs.payment_bill;
             if(this.gatherId == '16'){
                 this.closeLayer(layerindex);
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行MIS', LayerBankCardView, data, {area:'300px'});

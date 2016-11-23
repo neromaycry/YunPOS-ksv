@@ -1051,23 +1051,28 @@ define([
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0) {
-                toastr.info('待支付金额为零,请进行结算');
-            } else if((receivedsum.split('.').length-1) > 1 || receivedsum == '.' || parseFloat(receivedsum) == 0){
-                toastr.info('无效的支付金额');
-            } else if(gatherkind != '02' && receivedsum > unpaidamount){
-                toastr.info('不设找零');
-            } else if(receivedsum == '') {
-                data['gather_kind'] = gatherkind;
-                data['gather_money'] = unpaidamount;
-                data['bill_no'] = billNumber;
-                this.openLayer(PAGE_ID.LAYER_BILLING_TYPE, pageId, title, LayerBillTypeView, data, {area:'300px'});
-            } else{
-                data['gather_kind'] = gatherkind;//支付方式类别：包括现金类,礼券类等
-                data['gather_money'] = receivedsum;
-                data['bill_no'] = billNumber;
-                this.openLayer(PAGE_ID.LAYER_BILLING_TYPE, pageId, title, LayerBillTypeView, data, {area:'300px'});
+                layer.msg('待支付金额为零,请进行结算', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
-            $('input[name = billing]').val('');
+            if((receivedsum.split('.').length-1) > 1 || receivedsum == '.' || parseFloat(receivedsum) == 0){
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(gatherkind != '02' && receivedsum > unpaidamount){
+                layer.msg('不设找零', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum == '') {
+                receivedsum = unpaidamount;
+            }
+            data['gather_kind'] = gatherkind;//支付方式类别：包括现金类,礼券类等
+            data['gather_money'] = receivedsum;
+            data['bill_no'] = billNumber;
+            this.openLayer(PAGE_ID.LAYER_BILLING_TYPE, pageId, title, LayerBillTypeView, data, {area:'300px'});
+            $(this.input).val('');
         },
         onBusinessClicked: function () {
             this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
