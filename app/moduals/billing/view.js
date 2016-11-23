@@ -1001,11 +1001,11 @@ define([
                         //});
                         break;
                     case '16':
-                        data['payment_bill'] = ''
+                        data['payment_bill'] = '*'
                         this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, '银行卡支付确认', LayerQuickPayView, data, {area: '300px'});
                         break;
                     default :
-                        data['payment_bill'] = '';
+                        data['payment_bill'] = '*';
                         this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'300px'});
                 }
             }
