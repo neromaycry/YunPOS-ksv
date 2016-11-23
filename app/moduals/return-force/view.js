@@ -131,7 +131,7 @@ define([
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Enter, function () {
-                _self.searchGoods();
+                _self.onOKClicked();
             });
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Esc,function () {
                 router.navigate('main',{trigger:true});
@@ -248,53 +248,48 @@ define([
         /**
          * 查找商品
          */
-        searchGoods:function (){
+        addItem:function (){
             var _self = this;
-            search = $('#sku_id').val();
-            if(search == ''){
-                toastr.warning('您输入的商品编码为空，请重新输入');
+            var search = $(this.input).val();
+            var data = {};
+            data['skucode'] = search;
+            if(storage.isSet(system_config.VIP_KEY)) {
+                data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
             }else{
-                var data = {};
-                data['skucode'] = search;
-                if(storage.isSet(system_config.VIP_KEY)) {
-                    data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-                    data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                    data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                }else{
-                    data['cust_id'] = '*';
-                    data['medium_id'] = '*';
-                    data['medium_type'] = '*';
-                }
-                data['goods_detail'] = JSON.stringify(_self.collection);
-                _self.requestModel.sku(data , function(resp) {
-                    if(resp.status == '00') {
-                        var temp = resp.goods_detail[resp.goods_detail.length - 1];
-                        if(temp['price_auto'] == 1) {
-                            var attrs = {
-
-                                pageid: pageId,
-
-                                originalprice: temp['price'],
-
-                                callback: function () {
-                                    var price = $('input[name = price]').val();
-                                    resp.goods_detail[resp.goods_detail.length - 1].price = price;
-                                    resp.goods_detail[resp.goods_detail.length - 1].money = price;
-                                    _self.onAddItem(resp.goods_detail);
-                                    $('input[name = sku_id]').focus();
-                                }
-                            };
-                            _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area:'300px'});
-                        }else {
-                            _self.onAddItem(resp.goods_detail);
-                        }
-                    }else{
-                        toastr.warning(resp.msg);
-                    }
-                });
-                $('#sku_id').val('');
-                _self.i = 0;
+                data['cust_id'] = '*';
+                data['medium_id'] = '*';
+                data['medium_type'] = '*';
             }
+            data['goods_detail'] = JSON.stringify(_self.collection);
+            this.requestModel.sku(data , function(resp) {
+                if(resp.status == '00') {
+                    var temp = resp.goods_detail[resp.goods_detail.length - 1];
+                    if(temp['price_auto'] == 1) {
+                        var attrs = {
+                            pageid: pageId,
+
+                            originalprice: temp['price'],
+
+                            callback: function () {
+                                var price = $('input[name = price]').val();
+                                resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
+                                resp.goods_detail[resp.goods_detail.length - 1].money = -parseFloat(price);
+                                _self.onAddItem(resp.goods_detail);
+                                $('input[name = sku_id]').focus();
+                            }
+                        };
+                        _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area:'300px'});
+                    }else {
+                        _self.onAddItem(resp.goods_detail);
+                    }
+                }else{
+                    toastr.warning(resp.msg);
+                }
+            });
+            $(this.input).val('');
+            _self.i = 0;
         },
         /**
          * 结算
@@ -312,29 +307,35 @@ define([
          * 单品优惠
          */
         modifyItemDiscount: function () {
-            var value = $('#sku_id').val();
-            if(value == '') {
-                toastr.warning('优惠金额不能为空');
-            }else if(value == '.' || (value.split('.').length - 1) > 1){
-                toastr.warning('请输入有效的优惠金额');
-            }else {
-                var item = this.collection.at(this.i);
-                var price = item.get('price');
-                var num = item.get('num');
-                var discount = item.get('discount');
-                if (value <= parseFloat(price * num - discount) ) {
-                    this.collection.at(this.i).set({
-                        discount: value,
-                        money:price * num - value
-                    });
-                    this.calculateModel();
-                    $('#li' + this.i).addClass('cus-selected');
-
-                }else {
-                    toastr.warning('优惠金额不能大于商品金额');
-                }
+            var value = $(this.input).val();
+            if(this.model.get('itemamount') == 0) {
+                //toastr.warning('当前购物车内无商品');
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
-            $('#sku_id').val('');
+            if(value == '.' || (value.split('.').length - 1) > 1 || value == ''){
+                //toastr.warning('请输入有效的优惠金额');
+                layer.msg('无效的单品优惠金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            var item = this.collection.at(this.i);
+            var price = Math.abs(item.get('price'));
+            var num = Math.abs(item.get('num'));
+            var discount = Math.abs(item.get('discount'));
+            if (value <= parseFloat(price * num) ) {
+                this.collection.at(this.i).set({
+                    discount: -value,
+                    money:-parseFloat(price * num - value)
+                });
+                this.calculateModel();
+                $('#li' + this.i).addClass('cus-selected');
+
+            }else {
+                toastr.warning('优惠金额不能大于商品金额');
+            }
+            $(this.input).val('');
         },
 
 
@@ -342,67 +343,64 @@ define([
         onDiscountPercentClicked: function () {
             var discountpercent = $(this.input).val();
             if(this.model.get('itemamount') == 0) {
-                toastr.warning('当前购物车内无商品');
-            }else if(discountpercent == '') {
-                toastr.warning('折扣比率不能为空');
-            }else if(discountpercent >= 100) {
-                toastr.warning('折扣比率不能大于100');
-            }else if((discountpercent.split('.').length - 1) > 0){
-                toastr.warning('请输入有效的折扣比率');
-            }else {
-                var rate = discountpercent / 100;
-                console.log(rate);
-                var item = this.collection.at(this.i);
-                var price = item.get('price');
-                var num = item.get('num');
-                this.collection.at(this.i).set({
-                    discount:price * num * (1 - rate),
-                    money:price * num * rate
-                });
-                this.calculateModel();
-                $('#li' + this.i).addClass('cus-selected');
+                //toastr.warning('当前购物车内无商品');
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
+            if(discountpercent == '' || discountpercent >= 100 || (discountpercent.split('.').length - 1) > 0) {
+                //toastr.warning('折扣比率不能为空');
+                layer.msg('无效的折扣比率', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            var rate = discountpercent / 100;
+            console.log(rate);
+            var item = this.collection.at(this.i);
+            var price = Math.abs(item.get('price'));
+            var num = Math.abs(item.get('num'));
+            this.collection.at(this.i).set({
+                discount:-parseFloat(price * num * (1 - rate)),
+                money:-parseFloat(price * num * rate)
+            });
+            this.calculateModel();
+            $('#li' + this.i).addClass('cus-selected');
+
             $(this.input).val('');
         },
         /**
          * 修改数量
          */
         modifyItemNum: function () {
-            var _self = this;
-            var number = $('#sku_id').val();
-            if(number == ''){
-                toastr.warning('您未输入任何数量，请重新输入');
-            }else if (number == 0) {
-                toastr.warning('输入的数量不能为零，请重新输入');
-            }else if((number.split('.').length - 1) > 0) {
-                toastr.warning('请输入有效的数量');
-            } else {
-                var item = _self.collection.at(_self.i);
-                var num = item.get('num');
-                var discount = item.get('discount');
-                var price = item.get('price');
-                item.set({
-                    num:parseFloat(number),
-                    money:price * number - discount
-                });
-                console.log(_self.collection);
-                _self.totalamount = 0;
-                _self.itemamount = 0;
-                _self.discountamount = 0;
-                var priceList = _self.collection.pluck('price');
-                var discounts = _self.collection.pluck('discount');
-                var itemNum = _self.collection.pluck('num');
-                for (var i = 0; i < priceList.length; i++) {
-                    discounts[i] = parseFloat(discounts[i]);
-                    _self.totalamount += priceList[i] * itemNum[i];
-                    _self.itemamount += itemNum[i];
-                    _self.discountamount += discounts[i] * itemNum[i];
-                }
-                _self.calculateModel();
+            var number = $(this.input).val();
+            if(number == '' || number == 0 ||(number.split('.').length - 1) > 1 ){
+                toastr.warning('无效的商品数量');
+                $(this.input).val('');
+                return;
             }
-            $('#sku_id').val('');
-            console.log(_self.i);
-            $('#li' + _self.i).addClass('cus-selected');
+            var item = this.collection.at(this.i);
+            var num = Math.abs(item.get('num'));
+            var discount = Math.abs(item.get('discount'));
+            var price = Math.abs(item.get('price'));
+            item.set({
+                num:-parseFloat(number),
+                money:-parseFloat(price * number - discount)
+            });
+            this.totalamount = 0;
+            this.itemamount = 0;
+            this.discountamount = 0;
+            var priceList = Math.abs(this.collection.pluck('price'));
+            var discounts = Math.abs(this.collection.pluck('discount'));
+            var itemNum = Math.abs(this.collection.pluck('num'));
+            for (var i = 0; i < priceList.length; i++) {
+                discounts[i] = parseFloat(discounts[i]);
+                this.totalamount += priceList[i] * itemNum[i];
+                this.itemamount += itemNum[i];
+                this.discountamount += discounts[i] * itemNum[i];
+            }
+            this.calculateModel();
+            $(this.input).val('');
+            $('#li' + this.i).addClass('cus-selected');
         },
         /**
          * 每次添加商品时，向新添加的商品插入serial属性值
@@ -410,7 +408,8 @@ define([
         insertSerial: function () {
             for (var i = 0; i < this.collection.length; i++) {
                 this.collection.at(i).set({
-                    serial: i + 1
+                    serial: i + 1,
+                    manager_id: '*'
                 });
             }
         },
@@ -422,12 +421,23 @@ define([
             this.totalamount = 0;
             this.itemamount = 0;
             this.discountamount = 0;
+            for(var i = 0;i < this.collection.length;i++) {
+                var item = this.collection.at(i);
+                var money = -Math.abs(item.get('money'));
+                var num = -Math.abs(item.get('num'));
+                var discount = -Math.abs(item.get('discount'));
+                item.set({
+                    money:money,
+                    num:num,
+                    discount:discount
+                });
+            }
             var priceList = this.collection.pluck('price');
             var itemNum = this.collection.pluck('num');
             var discounts = this.collection.pluck('discount');
             for (var i = 0; i < this.collection.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
-                this.totalamount += priceList[i] * itemNum[i];
+                this.totalamount += -(Math.abs(priceList[i]) * Math.abs(itemNum[i]));
                 this.itemamount += itemNum[i];
                 this.discountamount += discounts[i];
             }
@@ -451,7 +461,7 @@ define([
         },
 
         onOKClicked:function (){
-            this.searchGoods();
+            this.addItem();
         },
         onNumClicked: function (e) {
             var value = $(e.currentTarget).data('num');
