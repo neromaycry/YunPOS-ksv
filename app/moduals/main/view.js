@@ -790,7 +790,8 @@ define([
         insertSerial: function () {
             for (var i = 0; i < this.collection.length; i++) {
                 this.collection.at(i).set({
-                    serial: i + 1
+                    serial: i + 1,
+                    manager_id: '*'
                 });
             }
         },

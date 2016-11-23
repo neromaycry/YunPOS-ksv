@@ -398,7 +398,7 @@ define([
                         callback();
                     }
                 };
-                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
+                this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要口令验证', LayerAuthCommandView, attrs, {area: '300px'});
 
             } else if (authtype == AUTH_CODE.CARD) {
                 var attrs = {
@@ -410,7 +410,7 @@ define([
                         callback();
                     }
                 };
-                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
+                this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要管理卡验证', LayerAuthCardView, attrs, {area: '300px'});
             }
         },
 
