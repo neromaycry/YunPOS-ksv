@@ -77,7 +77,6 @@ define([
             'click .billing-keydown':'onKeyDown',
             'click .billing':'onBillingClicked',
             'click .billing-clean':'onCleanClicked',
-            'click [data-index]': 'onPayClick',
             'click .quick-pay':'onQuickPayClicked',//快捷支付
             'click .check':'onCheckClicked',//支票类付款
             'click .gift-certificate':'onGiftClicked',//礼券类
@@ -170,11 +169,12 @@ define([
          * @param cardId 一卡通付款卡号
          * @param paymentBill 订单编号
          */
-        addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, cardId,paymentBill) {
+        addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, cardId, paymentBill) {
             var oddchange = 0;
             var gather_money = 0;
             var change_money = 0;
-            var havepay_money = 0
+            var havepay_money = 0;
+            var fact_money = 0;//礼券类支付的盈余字段
             var model = this.collection.findWhere({gather_id:gatherId,gather_no:gatherNo});
             var unpaidamount = this.model.get('unpaidamount');
             if(model != undefined){
@@ -198,8 +198,14 @@ define([
                     havepay_money = gatherMoney;
                 }
             }
+            if(gatherKind == '02' && gatherMoney > unpaidamount) {
+                fact_money = gatherMoney - unpaidamount;
+                change_money = 0;
+                havepay_money = gatherMoney;
+                gatherMoney = unpaidamount;
+            }
             model.set({
-                fact_money: 0,
+                fact_money: fact_money,
                 gather_id: gatherId,
                 gather_name: gatherName,
                 gather_money:gather_money,
@@ -211,12 +217,11 @@ define([
                 change_money:change_money
             });
             this.collection.add(model);
-            console.log(this.collection);
             this.totalreceived = this.totalreceived + gatherMoney;
+            console.log(this.totalreceived + '收到的总额');
             if(this.totalreceived >= totalamount){
                 this.unpaidamount = 0;
                 oddchange = this.totalreceived - totalamount;
-                this.oddchange = oddchange;
             }else{
                 oddchange = 0;
                 this.unpaidamount = parseFloat((totalamount - this.totalreceived).toFixed(2));
@@ -256,12 +261,7 @@ define([
             var _self = this;
             //返回上一层
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Esc, function () {
-                var receivedSum = _self.model.get('receivedsum');
-                if(receivedSum != 0) {
-                    toastr.warning('请先清空支付列表');
-                }else {
-                    router.navigate('main',{trigger:true});
-                }
+               _self.onReturnMainClicked();
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Enter, function () {
@@ -339,19 +339,29 @@ define([
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0) {
-                toastr.info('待支付金额为零，请进行结算');
-            }else if(receivedsum > (unpaidamount + 100)) {
-                toastr.info('找零金额超限');
-            }else if((receivedsum.split('.').length-1) > 1 || receivedsum == '.' || parseFloat(receivedsum) == 0) {
-                toastr.info('无效的支付金额');
-            }else if(receivedsum == '') {
-                this.addToPaymentList(this.totalamount,"现金",unpaidamount,"*","00","00",this.card_id,"");
-                this.renderClientDisplay(this.model, isPacked);
-            } else{
-                this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id,"");
-                this.renderClientDisplay(this.model, isPacked);
+                //toastr.info('待支付金额为零，请进行结算');
+                layer.msg('待支付金额为零，请进行结算', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
-            $('#input_billing').val("");
+            if(receivedsum > (unpaidamount + 100)) {
+                //toastr.info('找零金额超限');
+                layer.msg('找零金额超限', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if((receivedsum.split('.').length-1) > 1 || receivedsum == '.' || parseFloat(receivedsum) == 0) {
+                //toastr.info('无效的支付金额');
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum == '') {
+                receivedsum = unpaidamount;
+            }
+            this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id,"");
+            this.renderClientDisplay(this.model, isPacked);
+            $(this.input).val('');
         },
 
         /**
@@ -371,56 +381,55 @@ define([
             var receivedSum = this.model.get('receivedsum');
             var _self = this;
             if(receivedSum == 0) {
-                toastr.info('尚未付款');
-            }else {
-                var attrs = {
-                    pageid: pageId,
-                    content: '确定删除此条支付记录？',
-                    //is_navigate: false,
-                    callback: function () {
-                        var item = _self.collection.at(index);
-                        console.log(item);
-                        var gatherKind = item.get('gather_kind');
-                        var gatherId = item.get('gather_id');
-                        if(gatherKind == '06'){
-                            var gatherid = item.get('gather_id');
-                            var cardId = item.get('card_id');
-                            var ecardcollection = storage.get(system_config.ONE_CARD_KEY, cardId, 'detail');
-                            console.log(ecardcollection);
-                            this.tempcollection = new BillCollection();
-                            for(var i in ecardcollection) {
-                                if(ecardcollection[i].gather_id == gatherid){
-                                    var temp = ecardcollection[i];
-                                    var gather_money = parseFloat(temp.gather_money);
-                                    gather_money = gather_money + item.get('gather_money');
-                                    gather_money = gather_money.toFixed(2);
-                                    temp['gather_money'] = gather_money;
-                                    this.tempcollection.push(temp);
-                                } else {
-                                    this.tempcollection.push(ecardcollection[i]);
-                                }
+                //toastr.info('尚未付款');
+                layer.msg('尚未付款', optLayerWarning);
+                return;
+            }
+            var attrs = {
+                pageid: pageId,
+                content: '确定删除此条支付记录？',
+                callback: function () {
+                    var item = _self.collection.at(index);
+                    console.log(item);
+                    var gatherKind = item.get('gather_kind');
+                    var gatherId = item.get('gather_id');
+                    if(gatherKind == '06'){
+                        var gatherid = item.get('gather_id');
+                        var cardId = item.get('card_id');
+                        var ecardcollection = storage.get(system_config.ONE_CARD_KEY, cardId, 'detail');
+                        console.log(ecardcollection);
+                        this.tempcollection = new BillCollection();
+                        for(var i in ecardcollection) {
+                            if(ecardcollection[i].gather_id == gatherid){
+                                var temp = ecardcollection[i];
+                                var gather_money = parseFloat(temp.gather_money);
+                                gather_money = gather_money + item.get('gather_money');
+                                gather_money = gather_money.toFixed(2);
+                                temp['gather_money'] = gather_money;
+                                this.tempcollection.push(temp);
+                            } else {
+                                this.tempcollection.push(ecardcollection[i]);
                             }
-                            storage.remove(system_config.ONE_CARD_KEY);
-                            storage.set(system_config.ONE_CARD_KEY, cardId, 'detail', this.tempcollection);
-                            this.deleteItem(this.i);
-                            toastr.success('删除成功');
-                        }else if(gatherId == '12' || gatherId == '13'){
-                            _self.refund(gatherId , item.get('payment_bill'));
-                            //this.deleteItem();
-                        }else {
-                            _self.deleteItem(index);
-                            toastr.success('删除成功');
                         }
-                        var isExist = _self.collection.findWhere({gather_kind: "06"});
-                        if(isExist == undefined){
-                            if(storage.isSet(system_config.ONE_CARD_KEY)){
-                                storage.remove(system_config.ONE_CARD_KEY);
-                            }
+                        storage.remove(system_config.ONE_CARD_KEY);
+                        storage.set(system_config.ONE_CARD_KEY, cardId, 'detail', this.tempcollection);
+                        this.deleteItem(this.i);
+                        toastr.success('删除成功');
+                    }else if(gatherId == '12' || gatherId == '13'){
+                        _self.refund(gatherId , item.get('payment_bill'));
+                    }else {
+                        _self.deleteItem(index);
+                        toastr.success('删除成功');
+                    }
+                    var isExist = _self.collection.findWhere({gather_kind: "06"});
+                    if(isExist == undefined){
+                        if(storage.isSet(system_config.ONE_CARD_KEY)){
+                            storage.remove(system_config.ONE_CARD_KEY);
                         }
                     }
-                };
-                _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
-            }
+                }
+            };
+            _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
         },
 
         deleteItem:function(index){
@@ -428,6 +437,7 @@ define([
             var gatherMoney = item.get('gather_money');
             var changeMoney = item.get('change_money');//利用删除那条数据时候含有找零来判断
             var oddchange = this.model.get('oddchange');
+            var factMoney = this.model.get('fact_money');//判断礼券类支付的盈余金额
             this.collection.remove(item);
             if(changeMoney == 0 && gatherMoney > oddchange) {
                 this.totalreceived = this.totalreceived - gatherMoney;
@@ -435,6 +445,7 @@ define([
                 for(var i = 0;i < this.collection.length;i++) {
                     var temp = this.collection.at(i);
                     var havaPayMoney = temp.get('havepay_money');
+                    var gathermoney = temp.get('gather_money');
                     if(temp.get('change_money') != 0) {
                         temp.set({
                             gather_money:havaPayMoney
@@ -443,7 +454,8 @@ define([
                         break;
                     }
                 }
-            }else if(changeMoney == 0 && gatherMoney < oddchange) {
+            }
+            if(changeMoney == 0 && gatherMoney < oddchange) {
                 this.totalreceived = this.totalreceived - gatherMoney;
                 for(var i = 0;i < this.collection.length;i++) {
                     var temp = this.collection.at(i);
@@ -457,10 +469,13 @@ define([
                         break;
                     }
                 }
-            }else if(changeMoney != 0) {
+            }
+
+            if(changeMoney != 0) {
                 this.totalreceived = this.totalreceived - item.get('havepay_money');
                 oddchange = 0;
             }
+
             if(this.totalreceived > this.totalamount) {
                 this.unpaidamount = 0;
             }else {
@@ -471,6 +486,7 @@ define([
                 unpaidamount: this.unpaidamount,
                 oddchange:oddchange
             });
+            console.log(this.collection);
             this.i = 0;
             this.renderBillInfo();
             this.renderBillDetail();
@@ -503,11 +519,6 @@ define([
                 //$('button[name = totaldiscount]').css('display', 'none');
                 //$('button[name = cancel-totaldiscount]').css('display', 'block');
                 toastr.success('整单优惠成功,优惠金额为:' + this.totaldiscount);
-                //var billdiscountview = new BilldiscountView();
-                //this.showModal(window.PAGE_ID.BILL_DISCOUNT,billdiscountview);
-                //$('.modal').on('shown.bs.modal', function (){
-                //    $('input[name = percentage]').focus();
-                //});
             }else if(this.totaldiscount != 0) {
                 //如果进行过优惠  则原支付金额为 this.totalamount + this.totaldiscout
                 this.totalamount = this.totalamount + this.totaldiscount;
@@ -718,18 +729,6 @@ define([
                 _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area:'300px'});
             }
 
-            //this.receivedsum = 0;
-            //this.oddchange = 0;
-            //this.model.set({
-            //    receivedsum:this.receivedsum,
-            //    oddchange:this.oddchange,
-            //    unpaidamount:this.totalamount
-            //});
-            //this.collection.reset();
-            //storage.remove(system_config.ONE_CARD_KEY);
-            //this.renderBillDetail();
-            //this.renderBillInfo();
-            //toastr.success('清空支付方式列表成功');
         },
 
         /**
@@ -852,7 +851,8 @@ define([
          */
         onReturnMainClicked: function () {
             if(this.collection.length != 0) {
-                toastr.warning('请先清空支付列表');
+                layer.msg('请先清空支付列表', optLayerWarning);
+                //toastr.warning('请先清空支付列表');
             }else {
                 router.navigate('main',{trigger:true});
             }
@@ -1073,6 +1073,27 @@ define([
                 }
             });
         },
+
+        /**
+         * 保留两位小数的方法
+         */
+        toDecimal2: function () {
+            var f = parseFloat(x);
+            if (isNaN(f)) {
+                return false;
+            }
+            var f = Math.round(x*100)/100;
+            var s = f.toString();
+            var rs = s.indexOf('.');
+            if (rs < 0) {
+                rs = s.length;
+                s += '.';
+            }
+            while (s.length <= rs + 2) {
+                s += '0';
+            }
+            return s;
+        }
 
 
         ///**

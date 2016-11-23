@@ -134,6 +134,7 @@ define([
                 if (resp.status == '00') {
                     _self.RtcartCollection.set(resp.goods_detail);
                     _self.RtPayedlistCollection.set(resp.gather_detail);
+                    console.log(resp.gather_detail);
                     _self.calculateModel();
                 } else {
                     toastr.error(resp.msg);

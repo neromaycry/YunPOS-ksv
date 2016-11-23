@@ -236,7 +236,6 @@ define([
          * @param cardId 一卡通付款卡号
          */
         addToPaymentList: function (totalamount,gatherName,receivedsum,gatherAccount,gatherId,gatherKind,cardId) {
-            //console.log(this.collection);
             var temp = this.collection.findWhere({gather_id: gatherId, gather_no:gatherAccount});
             if(temp != undefined){
                 for(var i = 0;i < this.collection.length;i++){
@@ -251,7 +250,10 @@ define([
                             gather_money:parseFloat(gather_money),
                             gather_no:gatherAccount,
                             gather_kind:gatherKind,
-                            card_id:cardId
+                            card_id:cardId,
+                            havepay_money:receivedsum,
+                            payment_bill:'',
+                            change_money:0
                         });
                     }
                     this.collection.add(model);
@@ -265,7 +267,10 @@ define([
                     gather_money:receivedsum,
                     gather_no:gatherAccount,
                     gather_kind:gatherKind,
-                    card_id:cardId
+                    card_id:cardId,
+                    havepay_money:receivedsum,
+                    payment_bill:'',
+                    change_money:0
                 });
                 this.collection.add(model);
             }
