@@ -213,7 +213,7 @@ define([
                 this.renderCartList();
                 this.calculateModel();
             }
-            toastr.success('删除成功');
+            layer.msg('删除成功', optLayerSuccess);
         },
         /**
          *取消退货
@@ -234,7 +234,7 @@ define([
                     _self.renderPosInfo();
                     _self.renderCartList();
                     storage.remove(system_config.FORCE_RETURN_KEY);
-                    toastr.success('取消退货成功');
+                    layer.msg('取消退货成功', optLayerSuccess);
                 }
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
@@ -285,7 +285,7 @@ define([
                         _self.onAddItem(resp.goods_detail);
                     }
                 }else{
-                    toastr.warning(resp.msg);
+                    layer.msg(resp.msg, optLayerError);
                 }
             });
             $(this.input).val('');
@@ -297,7 +297,7 @@ define([
         doBilling: function () {
             var itemamount = this.model.get('itemamount');
             if (itemamount == 0) {
-                toastr.info('请添加要退货的商品');
+                layer.msg('请添加要退货的商品', optLayerWarning);
             } else {
                 isfromForce = true;
                 router.navigate('billingreturn',{trigger:true});
@@ -309,13 +309,11 @@ define([
         modifyItemDiscount: function () {
             var value = $(this.input).val();
             if(this.model.get('itemamount') == 0) {
-                //toastr.warning('当前购物车内无商品');
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(value == '.' || (value.split('.').length - 1) > 1 || value == ''){
-                //toastr.warning('请输入有效的优惠金额');
                 layer.msg('无效的单品优惠金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -333,7 +331,7 @@ define([
                 $('#li' + this.i).addClass('cus-selected');
 
             }else {
-                toastr.warning('优惠金额不能大于商品金额');
+                layer.msg('优惠金额不能大于商品金额', optLayerWarning);
             }
             $(this.input).val('');
         },
@@ -343,13 +341,11 @@ define([
         onDiscountPercentClicked: function () {
             var discountpercent = $(this.input).val();
             if(this.model.get('itemamount') == 0) {
-                //toastr.warning('当前购物车内无商品');
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(discountpercent == '' || discountpercent >= 100 || (discountpercent.split('.').length - 1) > 0) {
-                //toastr.warning('折扣比率不能为空');
                 layer.msg('无效的折扣比率', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -374,7 +370,7 @@ define([
         modifyItemNum: function () {
             var number = $(this.input).val();
             if(number == '' || number == 0 ||(number.split('.').length - 1) > 1 ){
-                toastr.warning('无效的商品数量');
+                layer.msg('无效的商品数量', optLayerWarning);
                 $(this.input).val('');
                 return;
             }

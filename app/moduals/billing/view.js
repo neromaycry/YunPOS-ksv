@@ -309,9 +309,9 @@ define([
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
-                $('input[name = billing]').val('');
-                //toastr.info('该功能正在调试中...');
-               _self.payment('05', _self.billNumber, '第三方支付');
+                //$('input[name = billing]').val('');
+                layer.msg('该功能正在调试中', optLayerWarning);
+               //_self.payment('05', _self.billNumber, '第三方支付');
             });
             //整单优惠输入实际优惠金额
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F1, function () {
@@ -350,19 +350,16 @@ define([
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0) {
-                //toastr.info('待支付金额为零，请进行结算');
                 layer.msg('待支付金额为零，请进行结算', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(receivedsum > (unpaidamount + 100)) {
-                //toastr.info('找零金额超限');
                 layer.msg('找零金额超限', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if((receivedsum.split('.').length-1) > 1 || receivedsum == '.' || parseFloat(receivedsum) == 0) {
-                //toastr.info('无效的支付金额');
                 layer.msg('无效的支付金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -392,7 +389,6 @@ define([
             var receivedSum = this.model.get('receivedsum');
             var _self = this;
             if(receivedSum == 0) {
-                //toastr.info('尚未付款');
                 layer.msg('尚未付款', optLayerWarning);
                 return;
             }
@@ -425,12 +421,12 @@ define([
                         storage.remove(system_config.ONE_CARD_KEY);
                         storage.set(system_config.ONE_CARD_KEY, cardId, 'detail', this.tempcollection);
                         this.deleteItem(this.i);
-                        toastr.success('删除成功');
+                        layer.msg('删除成功', optLayerSuccess);
                     }else if(gatherId == '12' || gatherId == '13'){
                         _self.refund(gatherId , item.get('payment_bill'));
                     }else {
                         _self.deleteItem(index);
-                        toastr.success('删除成功');
+                        layer.msg('删除成功', optLayerSuccess);
                     }
                     var isExist = _self.collection.findWhere({gather_kind: "06"});
                     if(isExist == undefined){
@@ -507,20 +503,17 @@ define([
             var discount = $(this.input).val();
             var receivedsum = this.model.get('receivedsum');
             if(receivedsum != 0) {
-                //toastr.warning('您已选择支付方式，不能再进行整单优惠');
                 layer.msg('您已选择支付方式，不能再进行整单优惠', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(discount == '.' || (discount.split('.').length-1) > 0 || discount == '') {
-                //toastr.warning('无效的整单优惠金额');
                 layer.msg('无效的整单优惠金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
 
             if(discount > this.totalamount + this.totaldiscount) {
-                //toastr.warning('整单优惠金额不能大于应付金额');
                 layer.msg('整单优惠金额不能大于应付金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -540,7 +533,6 @@ define([
                     unpaidamount:this.unpaidamount,
                     totaldiscount:this.totaldiscount
                 });
-                //toastr.success('整单优惠成功,优惠金额为:' + this.totaldiscount);
                 layer.msg('整单优惠成功,优惠金额为：' + this.totaldiscount, optLayerSuccess);
                 $(this.input).val('');
                 this.renderBillInfo();
@@ -557,21 +549,18 @@ define([
             var rate = percentage / 100;
             var receivedsum = this.model.get('receivedsum');
             if(receivedsum != 0) {
-                //toastr.warning('您已选择支付方式，不能再进行整单优惠');
                 layer.msg('您已选择支付方式，不能再进行整单优惠', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
 
             if(percentage == '.' || (percentage.split('.').length-1) > 0 || percentage == '' || percentage == 0) {
-                //toastr.warning('整单优惠折扣无效');
                 layer.msg('无效的整单优惠折扣', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
 
             if(percentage > 100) {
-                //toastr.warning('整单优惠折扣不能大于100');
                 layer.msg('整单优惠折扣不能大于100', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -591,7 +580,7 @@ define([
                     unpaidamount:this.unpaidamount,
                     totaldiscount:this.totaldiscount
                 });
-                toastr.success('整单优惠成功,折扣比率为：' + percentage + '折');
+                layer.msg('整单优惠成功,折扣比率为：' + percentage + '折', optLayerSuccess);
                 console.log('折扣后金额' + this.totalamount + typeof (this.totalamount));
                 console.log('折扣金额' + this.totaldiscount + typeof (this.discountamount));
                 $(this.input).val('');
@@ -658,7 +647,6 @@ define([
                         storage.remove(system_config.VIP_KEY);
                     }
                     //router.navigate("main", {trigger: true, replace:true});
-                    //toastr.success("订单号：" +  resp.bill_no);
                     var lastbill_no = resp.bill_no;
                     lastbill_no = lastbill_no.substr(8);
                     storage.set(system_config.ODD_CHANGE, 'oddchange', _self.model.get('oddchange'));
@@ -667,7 +655,7 @@ define([
                     _self.renderClientDisplay(_self.model);
                     router.navigate("main", {trigger: true, replace: true});
                 } else {
-                    toastr.error(resp.msg);
+                    layer.msg(resp.msg, optLayerError);
                     Backbone.trigger('onNavigateStateChanged', false);
                 }
             });
@@ -680,7 +668,6 @@ define([
             var data = {};
             var receivedSum = this.model.get('receivedsum');
             if (receivedSum == 0) {
-                //toastr.info('尚未付款');
                 layer.msg('尚未付款', optLayerWarning);
                 return;
             }
@@ -701,9 +688,9 @@ define([
                                     if (resp.data['flag'] == '00') {
                                         _self.deleteItem(j);
                                     } else if (resp.data['flag'] == undefined) {
-                                        toastr.error('微信退款失败,清空支付列表失败');
+                                        layer.msg('微信退款失败,清空支付列表失败', optLayerError);
                                     } else {
-                                        toastr.error(resp.data['msg']);
+                                        layer.msg(resp.data['msg'], optLayerError);
                                     }
                                 });
                                 break;
@@ -717,9 +704,9 @@ define([
                                     if (resp.data['flag'] == '00') {
                                         _self.deleteItem(j);
                                     } else if (resp.data['flag'] == undefined) {
-                                        toastr.error('支付宝退款失败,清空支付列表失败');
+                                        layer.msg('支付宝退款失败,清空支付列表失败', optLayerError);
                                     } else {
-                                        toastr.error(resp.data['msg']);
+                                        layer.msg(resp.data['msg'], optLayerError);
                                     }
                                 });
                                 break;
@@ -754,11 +741,11 @@ define([
                 console.log(resp.data['flag']);
                 if(resp.data['flag'] == '00') {
                     _self.deleteItem(_self.i);
-                    toastr.success('删除成功');
+                    layer.msg('删除成功', optLayerSuccess);
                 }else if(resp.data['flag'] == undefined){
-                    toastr.error('删除失败');
+                    layer.msg('删除失败', optLayerError);
                 }else{
-                    toastr.error(resp.data['msg']);
+                    layer.msg(resp.data['msg'], optLayerError);
                 }
             });
         },
@@ -821,25 +808,32 @@ define([
          * 一卡通支付
          */
         payByECard: function () {
-            var data = {};
             var unpaidamount = this.model.get('unpaidamount');
             var receivedSum = $(this.input).val();
             if(unpaidamount == 0){
-                toastr.info('待支付金额为零，请进行结算');
-            } else if(receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length-1) > 0){
-                toastr.info('无效的支付金额');
-            } else if(receivedSum > unpaidamount){
-                toastr.info('不设找零');
-            } else if(receivedSum == ''){
-                data['unpaidamount'] = 0;
-                data['receivedsum'] = unpaidamount;
-                this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area:'600px'});
-            } else{
-                data['unpaidamount'] = unpaidamount;
-                data['receivedsum'] = receivedSum;
-                this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area:'600px'});
+                layer.msg('待支付金额为零，请进行结算', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
-            $('input[name = billing]').val('');
+            if(receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length-1) > 0){
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedSum == '') {
+                receivedSum = unpaidamount
+            }
+            if(receivedSum > unpaidamount){
+                layer.msg('不设找零', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            var attrs = {
+                pageid:pageId,
+                receivedsum:receivedSum
+            }
+            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area:'600px'});
+            $(this.input).val('');
         },
         /**
          * 帮助按钮点击事件
@@ -853,7 +847,6 @@ define([
         onReturnMainClicked: function () {
             if(this.collection.length != 0) {
                 layer.msg('请先清空支付列表', optLayerWarning);
-                //toastr.warning('请先清空支付列表');
             }else {
                 router.navigate('main',{trigger:true});
             }
@@ -895,7 +888,6 @@ define([
             var _self = this;
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount != 0){
-                //toastr.info('还有未支付的金额，请支付完成后再进行结算');
                 layer.msg('还有未支付的金额，请支付完成后再进行结算', optLayerWarning);
                 return;
             }
@@ -952,11 +944,13 @@ define([
             var gatherId = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
-                toastr.info('待支付金额为零,请进行结算');
+                layer.msg('待支付金额为零,请进行结算', optLayerWarning);
+                $(this.input).val('');
                 return;
             }
             if(gatherId == ''){
-                toastr.info('付款方式编码不能为空');
+                layer.msg('无效的付款编码', optLayerWarning);
+                $(this.input).val('');
                 return;
             }
             if(storage.isSet(system_config.GATHER_KEY)){
@@ -966,7 +960,8 @@ define([
                 var gatheridlist = _.pluck(visibleTypes, 'gather_id');//返回gather_id数组
                 var result = $.inArray(gatherId,gatheridlist);//判断付款编码里面是否存在
                 if(result == - 1){
-                    toastr.info('无效的付款编码');
+                    layer.msg('无效的付款编码', optLayerWarning);
+                    $(this.input).val('');
                     return;
                 }
                 var item = _.findWhere(visibleTypes, {gather_id:gatherId});
@@ -979,7 +974,7 @@ define([
                 data['gather_name'] = item.gather_name;
                 switch(gatherId) {
                     case '12':
-                        toastr.info('该功能正在调试中...');
+                        layer.msg('该功能正在调试中', optLayerHelp);
                         //_self.requestmodel.xfbbillno(xfbdata, function(resp){
                         //    if(resp.status == '00') {
                         //        data['payment_bill'] = resp.xfb_bill;
@@ -990,7 +985,7 @@ define([
                         //});
                         break;
                     case '13':
-                        toastr.info('该功能正在调试中...');
+                        layer.msg('该功能正在调试中', optLayerHelp);
                         //_self.requestmodel.xfbbillno(xfbdata, function(resp){
                         //    if(resp.status == '00') {
                         //        data['payment_bill'] = resp.xfb_bill;
@@ -1038,7 +1033,7 @@ define([
         },
 
         onThirdPayClicked: function () {
-            toastr.info('该功能正在调试中...');
+            layer.msg('该功能正在调试中', optLayerHelp);
             //$('input[name = billing]').val('');
             this.payment('05', this.billNumber, '第三方支付');
             //$('button[name = third-pay]').blur();
@@ -1090,7 +1085,7 @@ define([
                     _self.billNumber = resp.bill_no;
                     console.log(_self.billNumber);
                 } else {
-                    toastr.error(resp.msg);
+                    layer.msg(resp.msg, optLayerWarning);
                 }
             });
         },

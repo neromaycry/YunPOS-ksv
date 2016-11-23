@@ -195,7 +195,7 @@ define([
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Q, function () {
                 $('input[name = billingrt]').val('');
-                toastr.info('该功能正在调试中...');
+                layer.msg('该功能正在调试中', optLayerHelp);
                 //_self.payment('05', '第三方支付');
             });
             //帮助
@@ -286,13 +286,11 @@ define([
             var receivedsum = $(this.input).val();
             var unpaidamount = Math.abs(this.model.get('unpaidamount'));
             if(unpaidamount == 0) {
-                //toastr.warning('退货金额为零，请进行结算');
                 layer.msg('退货金额为零，请进行结算', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(receivedsum == '.' || (receivedsum.split('.').length-1) > 1 || parseFloat(receivedsum) == 0) {
-                //toastr.warning('无效的退货金额');
                 layer.msg('无效的退货金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -301,7 +299,6 @@ define([
                 receivedsum = unpaidamount;
             }
             if(receivedsum > unpaidamount){
-                //toastr.warning('不设找零');
                 layer.msg('不设找零', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -404,7 +401,7 @@ define([
             this.i = 0;
             this.renderBillInfo();
             this.renderBillDetail();
-            toastr.success('删除成功');
+            layer.msg('删除成功', optLayerSuccess);
         },
 
         /**
@@ -422,7 +419,7 @@ define([
             storage.remove(system_config.ONE_CARD_KEY);
             this.renderBillDetail();
             this.renderBillInfo();
-            toastr.success('清空退款方式列表成功');
+            layer.msg('清空退款方式列表成功', optLayerSuccess);
         },
         /**
          * 结算
@@ -460,9 +457,9 @@ define([
                             storage.remove(system_config.VIP_KEY);
                         }
                         router.navigate("main", {trigger: true,replace:true});
-                        toastr.success("订单号：" + resp.bill_no);
+                        layer.msg("订单号：" + resp.bill_no, optLayerSuccess);
                     } else {
-                        toastr.error(resp.msg);
+                        layer.msg(resp.msg, optLayerError);
                     }
                 });
 
@@ -494,10 +491,9 @@ define([
                             storage.remove(system_config.VIP_KEY);
                         }
                         router.navigate("main", {trigger: true,replace:true});
-                        //f7app.alert('订单号：' + resp.bill_no,'提示');
-                        toastr.success('订单号：' + resp.bill_no)
+                        layer.msg("订单号：" + resp.bill_no, optLayerSuccess);
                     } else {
-                        toastr.error(resp.msg);
+                        layer.msg(resp.msg, optLayerError);
                     }
                 });
             }
@@ -510,11 +506,11 @@ define([
             var gatherId = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0){
-                toastr.info('待支付金额为零,请进行结算');
+                layer.msg('待支付金额为零,请进行结算', optLayerWarning);
                 return;
             }
             if(gatherId == '') {
-                toastr.info('付款方式编码不能为空');
+                layer.msg('无效的付款编码', optLayerWarning);
                 return;
             }
             if(storage.isSet(system_config.GATHER_KEY)){
@@ -523,7 +519,7 @@ define([
                 var gatheridlist = _.pluck(visibleTypes, 'gather_id');
                 var result = $.inArray(gatherId,gatheridlist);
                 if(result == - 1){
-                    toastr.info('无效的付款编码');
+                    layer.msg('无效的付款编码', optLayerWarning);
                     return;
                 }
                 var item = _.findWhere(visibleTypes, {gather_id:gatherId});
@@ -536,11 +532,11 @@ define([
                 data['gather_name'] = item.gather_name;
                 switch(gatherId) {
                     case '12':
-                        toastr.info('该功能正在调试中...');
+                       layer.msg('该功能正在调试中', optLayerHelp);
                         //this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
                         break;
                     case '13':
-                        toastr.info('该功能正在调试中...');
+                        layer.msg('该功能正在调试中', optLayerHelp);
                         //this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
                         break;
                     default :
@@ -568,12 +564,10 @@ define([
                 layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
-                //toastr.info('退款金额不能为空');
             }
             if(receivedsum > unpaidamount){
                 layer.msg('不设找零', optLayerWarning);
                 $(this.input).val('');
-                //toastr.info('不设找零');
                 return;
             }
             if(receivedsum == '') {
@@ -593,19 +587,16 @@ define([
             var unpaidamount = this.model.get('unpaidamount');
             var receivedSum = $(this.input).val();
             if(unpaidamount == 0){
-                //toastr.info('待退款金额为零，请进行结算');
                 layer.msg('待退款金额为零,请进行退款', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(receivedSum == '.' || parseFloat(receivedSum) == 0){
-                //toastr.info('无效的退款金额');
                 layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(receivedSum > unpaidamount){
-                //toastr.info('不设找零');
                 layer.msg('不设找零', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -719,7 +710,6 @@ define([
             var _self = this;
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount != 0) {
-                //toastr.warning('还有未退款的金额');
                 layer.msg('还有未退款的金额', optLayerWarning);
                 return;
             }
@@ -768,7 +758,7 @@ define([
         },
 
         onThirdPayClicked: function () {
-            toastr.info('该功能正在调试中...');
+            layer.msg('该功能正在调试中',optLayerHelp);
             $('input[name = billingrt]').val('');
             //this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();

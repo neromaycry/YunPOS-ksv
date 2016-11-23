@@ -106,7 +106,7 @@ define([
                             data['payment_bill'] = resp.xfb_bill,
                             _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
                         } else {
-                            toastr.error(resp.msg);
+                            layer.msg(resp.msg, optLayerError);
                         }
                     });
                     break;
@@ -116,7 +116,7 @@ define([
                             data['payment_bill'] = resp.xfb_bill;
                             _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
                         } else {
-                            toastr.error(resp.msg);
+                            layer.msg(resp.msg, optLayerError);
                         }
                     });
                     break;
