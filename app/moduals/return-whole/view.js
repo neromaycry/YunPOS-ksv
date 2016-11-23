@@ -142,13 +142,26 @@ define([
             });
         },
         calculateModel: function () {
+            console.log(this.RtcartCollection);
+            for(var i = 0;i < this.RtcartCollection.length;i++) {
+                var item = this.RtcartCollection.at(i);
+                var money = item.get('money');
+                var num = item.get('num');
+                var discount = item.get('discount');
+                item.set({
+                    money:-money,
+                    num:-num,
+                    discount:-discount
+                });
+            }
+            console.log(this.RtcartCollection);
             this.totalamount = 0;
             var priceList = this.RtcartCollection.pluck('price');
             var itemNum = this.RtcartCollection.pluck('num');
             var discounts = this.RtcartCollection.pluck('discount');
             for (var i = 0; i < this.RtcartCollection.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
-                this.totalamount += priceList[i] * itemNum[i];
+                this.totalamount += -(Math.abs(priceList[i]) * Math.abs(itemNum[i]));
                 this.itemamount += itemNum[i];
                 this.discountamount += discounts[i];
             }

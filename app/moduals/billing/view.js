@@ -139,6 +139,13 @@ define([
             this.listnum = 9; //设置商品列表中的条目数
             $('.li-billdetail').height(this.listheight / this.listnum - 21);
         },
+
+        initTemplates: function () {
+            this.template_billinfo = _.template(this.template_billinfo);
+            this.template_billingdetailtpl = _.template(this.template_billingdetailtpl);
+            this.template_clientbillingtpl = _.template(this.template_clientbillingtpl);
+        },
+
         handleEvents: function () {
             Backbone.off('onReceivedsum');
             //Backbone.off('onBillDiscount');
@@ -170,7 +177,6 @@ define([
          * @param paymentBill 订单编号
          */
         addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, cardId, paymentBill) {
-            var oddchange = 0;
             var gather_money = 0;
             var change_money = 0;
             var havepay_money = 0;
@@ -202,8 +208,8 @@ define([
                 fact_money = gatherMoney - unpaidamount;
                 change_money = 0;
                 havepay_money = gatherMoney;
-                gatherMoney = unpaidamount;
             }
+
             model.set({
                 fact_money: fact_money,
                 gather_id: gatherId,
@@ -217,29 +223,35 @@ define([
                 change_money:change_money
             });
             this.collection.add(model);
+            console.log(this.collection);
             this.totalreceived = this.totalreceived + gatherMoney;
-            console.log(this.totalreceived + '收到的总额');
-            if(this.totalreceived >= totalamount){
+            var changeList = this.collection.pluck('change_money');//因为当存在礼券类支付的时候无法判断找零，所以用change_money判断
+            for(var i in changeList) {
+                this.oddchange = this.oddchange + changeList[i];
+            }
+            if(this.totalreceived >= totalamount) {
                 this.unpaidamount = 0;
-                oddchange = this.totalreceived - totalamount;
-            }else{
-                oddchange = 0;
+            }else {
                 this.unpaidamount = parseFloat((totalamount - this.totalreceived).toFixed(2));
             }
+
+            //if(this.totalreceived >= totalamount){
+            //    this.unpaidamount = 0;
+            //    this.oddchange = this.totalreceived - totalamount;
+            //}else{
+            //    this.oddchange = 0;
+            //    this.unpaidamount = parseFloat((totalamount - this.totalreceived).toFixed(2));
+            //}
             this.model.set({
                 receivedsum: this.totalreceived,
                 unpaidamount: this.unpaidamount,
-                oddchange:oddchange
+                oddchange:this.oddchange
             });
             this.renderBillInfo();
             this.renderBillDetail();
         },
 
-        initTemplates: function () {
-            this.template_billinfo = _.template(this.template_billinfo);
-            this.template_billingdetailtpl = _.template(this.template_billingdetailtpl);
-            this.template_clientbillingtpl = _.template(this.template_clientbillingtpl);
-        },
+
         renderBillInfo: function () {
             this.$el.find('.for-billinfo').html(this.template_billinfo(this.model.toJSON()));
             return this;
@@ -273,7 +285,7 @@ define([
             });
             //结算
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Space, function() {
-                _self.billing();
+                _self.onBillingClicked();
             });
             //方向下
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
@@ -309,7 +321,6 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING,window.KEYS.F2, function () {
                _self.billPercentDiscount();
             });
-
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
                _self.openHelp();
@@ -434,58 +445,42 @@ define([
 
         deleteItem:function(index){
             var item = this.collection.at(index);
-            //var gatherMoney = item.get('gather_money');
-            //var changeMoney = item.get('change_money');//利用删除那条数据时候含有找零来判断
-            //var oddchange = this.model.get('oddchange');
-            ////var factMoney = this.model.get('fact_money');//判断礼券类支付的盈余金额
-            //this.collection.remove(item);
-            //if(changeMoney == 0 && gatherMoney > oddchange) {
-            //
-            //    oddchange = 0;
-            //    for(var i = 0;i < this.collection.length;i++) {
-            //        var temp = this.collection.at(i);
-            //        var havaPayMoney = temp.get('havepay_money');
-            //        var gathermoney = temp.get('gather_money');
-            //        if(temp.get('change_money') != 0) {
-            //            temp.set({
-            //                gather_money:havaPayMoney
-            //            });
-            //            this.collection.push(temp);
-            //            break;
-            //        }
-            //    }
-            //}
-            //if(changeMoney == 0 && gatherMoney < oddchange) {
-            //
-            //    for(var i = 0;i < this.collection.length;i++) {
-            //        var temp = this.collection.at(i);
-            //        var gathermoney = temp.get('gather_money');//现金支付金额
-            //        if(temp.get('change_money') != 0) {
-            //            temp.set({
-            //                gather_money:gathermoney + gatherMoney
-            //            });
-            //
-            //            this.collection.push(temp);
-            //            break;
-            //        }
-            //    }
-            //}
-            //
-
-
             var gatherMoney = item.get('gather_money');
-            var oddChange = this.model.get('oddchange');//判断当前是否有找零
             this.collection.remove(item);
             for(var i = 0;i < this.collection.length;i++) {
                 var temp = this.collection.at(i);
-                var factMoney = temp.get('fact_money');
-                var changeMoney = temp.get('change_money');
+                var fact_money = temp.get('fact_money');//当前这条数据的fact_money
+                var change_money = temp.get('change_money');//当前这条数据的change_money
+                var gather_money = temp.get('gather_money');//当前这条数据的gather_money
+                if(fact_money != 0 && gatherMoney > fact_money) {
+                    temp.set({
+                        gather_money:gather_money + fact_money,
+                        fact_money:0
+                    });
+                }
 
+                if(fact_money != 0 && gatherMoney < fact_money) {
+                    temp.set({
+                        gather_money:gather_money + gatherMoney,
+                        fact_money:fact_money - gatherMoney
+                    });
+                }
 
+                if(change_money != 0 && gatherMoney > change_money) {
+                    temp.set({
+                        gather_money:gather_money + change_money,
+                        change_money:0
+                    });
+                }
+
+                if(change_money != 0 && gatherMoney < change_money) {
+                    temp.set({
+                        gather_money:gather_money + gatherMoney,
+                        change_money:change_money - gatherMoney
+                    });
+                }
+                this.collection.push(temp);
             }
-
-
-
             this.totalreceived = this.totalreceived - item.get('havepay_money');
             if(this.totalreceived > this.totalamount) {
                 this.unpaidamount = 0;
@@ -512,31 +507,32 @@ define([
             var discount = $(this.input).val();
             var receivedsum = this.model.get('receivedsum');
             if(receivedsum != 0) {
-                toastr.warning('您已选择支付方式，不能再进行整单优惠');
-            }else if(discount == '.' || (discount.split('.').length-1) > 0) {
-                toastr.warning('整单优惠金额无效');
-            }else if(discount == '') {
-                toastr.warning('整单优惠金额不能为空');
-            }else if(discount > this.totalamount + this.totaldiscount) {
-                toastr.warning('整单优惠金额不能大于应付金额');
-            }else if(this.totaldiscount == 0) {
-                //如果未进行过优惠，则支付金额为支付金额 - 优惠金额
-                this.totaldiscount = parseFloat(discount);//优惠金额
-                this.totalamount = this.totalamount - this.totaldiscount;//折扣后的支付金额
-                this.unpaidamount = this.totalamount;
-                this.model.set({
-                    totaldiscount: this.totaldiscount,//整单优惠的金额
-                    totalamount: this.totalamount,
-                    unpaidamount: this.unpaidamount,
-                });
-                //$('button[name = totaldiscount]').css('display', 'none');
-                //$('button[name = cancel-totaldiscount]').css('display', 'block');
-                toastr.success('整单优惠成功,优惠金额为:' + this.totaldiscount);
-            }else if(this.totaldiscount != 0) {
-                //如果进行过优惠  则原支付金额为 this.totalamount + this.totaldiscout
-                this.totalamount = this.totalamount + this.totaldiscount;
-                //将本次优惠金额赋值给this.totaldiscount
-                this.totaldiscount = parseFloat(discount);
+                //toastr.warning('您已选择支付方式，不能再进行整单优惠');
+                layer.msg('您已选择支付方式，不能再进行整单优惠', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(discount == '.' || (discount.split('.').length-1) > 0 || discount == '') {
+                //toastr.warning('无效的整单优惠金额');
+                layer.msg('无效的整单优惠金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+
+            if(discount > this.totalamount + this.totaldiscount) {
+                //toastr.warning('整单优惠金额不能大于应付金额');
+                layer.msg('整单优惠金额不能大于应付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            var rate = ((this.totalamount - discount) / this.totalamount).toFixed(2);
+
+            this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
+                if(this.totaldiscount != 0) {
+                    //如果进行过优惠  则原支付金额为 this.totalamount + this.totaldiscout
+                    this.totalamount = this.totalamount + this.totaldiscount;
+                }
+                this.totaldiscount = parseFloat(discount); //将本次优惠金额赋值给this.totaldiscount
                 this.totalamount = this.totalamount - this.totaldiscount;
                 this.unpaidamount = this.totalamount;
                 this.model.set({
@@ -544,12 +540,11 @@ define([
                     unpaidamount:this.unpaidamount,
                     totaldiscount:this.totaldiscount
                 });
-                //$('button[name = totaldiscount]').css('display','block');
-                //$('button[name = cancel-totaldiscount]').css('display','none');
-                toastr.success('整单优惠成功,优惠金额为:' + this.totaldiscount);
-            }
-            $(this.input).val('');
-            this.renderBillInfo();
+                //toastr.success('整单优惠成功,优惠金额为:' + this.totaldiscount);
+                layer.msg('整单优惠成功,优惠金额为：' + this.totaldiscount, optLayerSuccess);
+                $(this.input).val('');
+                this.renderBillInfo();
+            });
         },
 
         /**
@@ -562,38 +557,46 @@ define([
             var rate = percentage / 100;
             var receivedsum = this.model.get('receivedsum');
             if(receivedsum != 0) {
-                toastr.warning('您已选择支付方式，不能再进行整单优惠');
-                return false;
-            }else if(percentage == 0) {
-                toastr.warning('整单优惠折扣不能为零');
-                return false;
-            }else if(percentage == '.' || (percentage.split('.').length-1) > 0) {
-                toastr.warning('整单优惠折扣无效');
-                return false;
-            }else if(percentage == '') {
-                toastr.warning('整单优惠折扣不能为空');
-                return false;
-            }else if(percentage > 100) {
-                toastr.warning('整单优惠折扣不能大于100');
-                return false;
-            }else if(this.totaldiscount != 0) {
-                this.totalamount = this.totalamount + this.totaldiscount;
+                //toastr.warning('您已选择支付方式，不能再进行整单优惠');
+                layer.msg('您已选择支付方式，不能再进行整单优惠', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
-            this.isTotalDiscount = false;
-            this.percentage = percentage;
-            this.totaldiscount = this.totalamount * (1 - rate)
-            this.totalamount = this.totalamount * rate;
-            this.unpaidamount = parseFloat(this.totalamount.toFixed(2));
-            this.model.set({
-                totalamount:this.totalamount,
-                unpaidamount:this.unpaidamount,
-                totaldiscount:this.totaldiscount
+
+            if(percentage == '.' || (percentage.split('.').length-1) > 0 || percentage == '' || percentage == 0) {
+                //toastr.warning('整单优惠折扣无效');
+                layer.msg('无效的整单优惠折扣', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+
+            if(percentage > 100) {
+                //toastr.warning('整单优惠折扣不能大于100');
+                layer.msg('整单优惠折扣不能大于100', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            var rate = (percentage / 100).toFixed(2);
+            this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
+                if(this.totaldiscount != 0) {
+                    this.totalamount = this.totalamount + this.totaldiscount;
+                }
+                this.isTotalDiscount = false;
+                this.percentage = percentage;
+                this.totaldiscount = this.totalamount * (1 - rate)
+                this.totalamount = this.totalamount * rate;
+                this.unpaidamount = parseFloat(this.totalamount.toFixed(2));
+                this.model.set({
+                    totalamount:this.totalamount,
+                    unpaidamount:this.unpaidamount,
+                    totaldiscount:this.totaldiscount
+                });
+                toastr.success('整单优惠成功,折扣比率为：' + percentage + '折');
+                console.log('折扣后金额' + this.totalamount + typeof (this.totalamount));
+                console.log('折扣金额' + this.totaldiscount + typeof (this.discountamount));
+                $(this.input).val('');
+                this.renderBillInfo();
             });
-            toastr.success('整单优惠成功,折扣比率为：' + percentage + '折');
-            console.log('折扣后金额' + this.totalamount + typeof (this.totalamount));
-            console.log('折扣金额' + this.totaldiscount + typeof (this.discountamount));
-            $(this.input).val('');
-            this.renderBillInfo();
         },
 
         /**
@@ -627,61 +630,47 @@ define([
          * 结算
          */
         billing: function () {
-            var _self = this;
             var confirmBill = new BillModel();
-            var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount != 0){
-                toastr.info('还有未支付的金额，请支付完成后再进行结算');
-            } else {
-                var attrs = {
-                    pageid:pageId,
-                    content:'确认结算此单？',
-                    is_navigate:true,
-                    navigate_page:window.PAGE_ID.MAIN,
-                    callback: function () {
-                        if(_self.totaldiscount != 0) {
-                            _self.calculateDiscount();
-                        }
-                        var data = {};
-                        data['mode'] = '00';
-                        if (storage.isSet(system_config.VIP_KEY)) {
-                            data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                            data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                            data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-                        } else {
-                            data['medium_id'] = "*";
-                            data['medium_type'] = "*";
-                            data['cust_id'] = "*";
-                        }
-                        data['bill_no'] = _self.billNumber;
-                        data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
-                        data['gather_detail'] = _self.collection.toJSON();
-                        console.log(data['gather_detail']);
-                        confirmBill.trade_confirm(data, function (resp) {
-                            if (resp.status == '00') {
-                                storage.remove(system_config.SALE_PAGE_KEY);
-                                storage.remove(system_config.ONE_CARD_KEY);
-                                if (storage.isSet(system_config.VIP_KEY)) {
-                                    storage.remove(system_config.VIP_KEY);
-                                }
-                                //router.navigate("main", {trigger: true, replace:true});
-                                //toastr.success("订单号：" +  resp.bill_no);
-                                var lastbill_no = resp.bill_no;
-                                lastbill_no = lastbill_no.substr(8);
-                                storage.set(system_config.ODD_CHANGE, 'oddchange', _self.model.get('oddchange'));
-                                storage.set(system_config.ODD_CHANGE, 'lastbill_no', lastbill_no);
-                                _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
-                                _self.renderClientDisplay(_self.model);
-                                router.navigate("main", {trigger: true, replace: true});
-                            } else {
-                                toastr.error(resp.msg);
-                                Backbone.trigger('onNavigateStateChanged', false);
-                            }
-                        });
-                    },
-                };
-                _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area:'300px'});
+            var _self = this;
+            if(this.totaldiscount != 0) {
+                this.calculateDiscount();
             }
+            var data = {};
+            data['mode'] = '00';
+            if (storage.isSet(system_config.VIP_KEY)) {
+                data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
+                data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
+                data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+            } else {
+                data['medium_id'] = "*";
+                data['medium_type'] = "*";
+                data['cust_id'] = "*";
+            }
+            data['bill_no'] = _self.billNumber;
+            data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
+            data['gather_detail'] = _self.collection.toJSON();
+            console.log(data['gather_detail']);
+            confirmBill.trade_confirm(data, function (resp) {
+                if (resp.status == '00') {
+                    storage.remove(system_config.SALE_PAGE_KEY);
+                    storage.remove(system_config.ONE_CARD_KEY);
+                    if (storage.isSet(system_config.VIP_KEY)) {
+                        storage.remove(system_config.VIP_KEY);
+                    }
+                    //router.navigate("main", {trigger: true, replace:true});
+                    //toastr.success("订单号：" +  resp.bill_no);
+                    var lastbill_no = resp.bill_no;
+                    lastbill_no = lastbill_no.substr(8);
+                    storage.set(system_config.ODD_CHANGE, 'oddchange', _self.model.get('oddchange'));
+                    storage.set(system_config.ODD_CHANGE, 'lastbill_no', lastbill_no);
+                    _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
+                    _self.renderClientDisplay(_self.model);
+                    router.navigate("main", {trigger: true, replace: true});
+                } else {
+                    toastr.error(resp.msg);
+                    Backbone.trigger('onNavigateStateChanged', false);
+                }
+            });
         },
         /**
          * 清空已支付方式列表
@@ -690,58 +679,57 @@ define([
             var _self = this;
             var data = {};
             var receivedSum = this.model.get('receivedsum');
-            if(receivedSum == 0) {
-                toastr.info('尚未付款');
-            }else {
-                var attrs = {
-                    pageid:pageId,
-                    content:'确定清空支付列表？',
-                    callback: function () {
-                        for(var j = _self.collection.length - 1; j >= 0 ; j--) {
-                            var model = _self.collection.at(j);
-                            var gatherId = model.get('gather_id');
-                            switch (gatherId) {
-                                case '12':
-                                    data['orderid'] = model.get('payment_bill');
-                                    data['merid'] = '000201504171126553';
-                                    data['paymethod'] = 'wx';
-                                    data['refundamount'] = '0.01';
-                                    resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
-                                        if(resp.data['flag'] == '00') {
-                                            _self.deleteItem(j);
-                                        }else if(resp.data['flag'] == undefined){
-                                            toastr.error('微信退款失败,清空支付列表失败');
-                                        }else{
-                                            toastr.error(resp.data['msg']);
-                                        }
-                                    });
-                                    break;
-                                case '13':
-                                    data['orderid'] = model.get('payment_bill');
-                                    data['merid'] = '000201504171126553';
-                                    data['paymethod'] = 'zfb';
-                                    data['refundamount'] = '0.01';
-                                    data['zfbtwo'] = 'zfbtwo';
-                                    resource.post('http://114.55.62.102:9090/api/pay/xfb/refund',data, function (resp) {
-                                        if(resp.data['flag'] == '00') {
-                                            _self.deleteItem(j);
-                                        }else if(resp.data['flag'] == undefined){
-                                            toastr.error('支付宝退款失败,清空支付列表失败');
-                                        }else{
-                                            toastr.error(resp.data['msg']);
-                                        }
-                                    });
-                                    break;
-                                default :
-                                    _self.deleteItem(j);
-                            }
-                        }
-                    }
-                };
-
-                _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area:'300px'});
+            if (receivedSum == 0) {
+                //toastr.info('尚未付款');
+                layer.msg('尚未付款', optLayerWarning);
+                return;
             }
-
+            var attrs = {
+                pageid: pageId,
+                content: '确定清空支付列表？',
+                callback: function () {
+                    for (var j = _self.collection.length - 1; j >= 0; j--) {
+                        var model = _self.collection.at(j);
+                        var gatherId = model.get('gather_id');
+                        switch (gatherId) {
+                            case '12':
+                                data['orderid'] = model.get('payment_bill');
+                                data['merid'] = '000201504171126553';
+                                data['paymethod'] = 'wx';
+                                data['refundamount'] = '0.01';
+                                resource.post('http://114.55.62.102:9090/api/pay/xfb/refund', data, function (resp) {
+                                    if (resp.data['flag'] == '00') {
+                                        _self.deleteItem(j);
+                                    } else if (resp.data['flag'] == undefined) {
+                                        toastr.error('微信退款失败,清空支付列表失败');
+                                    } else {
+                                        toastr.error(resp.data['msg']);
+                                    }
+                                });
+                                break;
+                            case '13':
+                                data['orderid'] = model.get('payment_bill');
+                                data['merid'] = '000201504171126553';
+                                data['paymethod'] = 'zfb';
+                                data['refundamount'] = '0.01';
+                                data['zfbtwo'] = 'zfbtwo';
+                                resource.post('http://114.55.62.102:9090/api/pay/xfb/refund', data, function (resp) {
+                                    if (resp.data['flag'] == '00') {
+                                        _self.deleteItem(j);
+                                    } else if (resp.data['flag'] == undefined) {
+                                        toastr.error('支付宝退款失败,清空支付列表失败');
+                                    } else {
+                                        toastr.error(resp.data['msg']);
+                                    }
+                                });
+                                break;
+                            default :
+                                _self.deleteItem(j);
+                        }
+                    };
+                }
+            };
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
         },
 
         /**
@@ -904,7 +892,24 @@ define([
          * 结算按钮点击事件
          */
         onBillingClicked: function () {
-            this.billing();
+            var _self = this;
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount != 0){
+                //toastr.info('还有未支付的金额，请支付完成后再进行结算');
+                layer.msg('还有未支付的金额，请支付完成后再进行结算', optLayerWarning);
+                return;
+            }
+            console.log(window.auth_quling);
+            var attrs = {
+                pageid:pageId,
+                content:'确认结算此单？',
+                is_navigate:true,
+                navigate_page:window.PAGE_ID.MAIN,
+                callback: function () {
+                    _self.billing();
+                }
+            };
+            _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area:'300px'});
         },
         /**
          * 清空支付方式列表
@@ -1047,7 +1052,7 @@ define([
             var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0) {
                 toastr.info('待支付金额为零,请进行结算');
-            } else if((receivedsum.split('.').length-1) > 1 || receivedsum =='.' || parseFloat(receivedsum) == 0){
+            } else if((receivedsum.split('.').length-1) > 1 || receivedsum == '.' || parseFloat(receivedsum) == 0){
                 toastr.info('无效的支付金额');
             } else if(gatherkind != '02' && receivedsum > unpaidamount){
                 toastr.info('不设找零');
