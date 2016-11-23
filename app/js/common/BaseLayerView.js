@@ -185,6 +185,7 @@ define([
                 $(_self.input).focus();
             }, 300);
             $('.cbtn').mousedown(function () {
+                console.log('baselayer mousedown');
                 $(this).addClass('clicked');
             });
             $('.cbtn').mouseup(function () {

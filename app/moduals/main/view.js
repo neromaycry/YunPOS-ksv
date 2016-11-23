@@ -526,7 +526,16 @@ define([
          */
         modifyItemDiscount: function () {
             var _self = this;
-            this.evalAuth(auth_discount, function () {
+            var item = _self.collection.at(_self.i);
+            var price = item.get('price');
+            var discount = $(this.input).val();
+            if (discount == '') {
+                layer.msg('优惠金额不能为空', optLayerWarning);
+                return;
+            }
+            var rate = ((price - discount)/price).toFixed(2);
+            console.log(rate);
+            this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
                 var value = $(_self.input).val();
                 if(_self.model.get('itemamount') == 0) {
                     //toastr.warning('当前购物车内无商品');
@@ -549,9 +558,6 @@ define([
                     //        }
                     //    }
                     // else {
-                } else if(value == '') {
-                    //toastr.warning('优惠金额不能为空');
-                    layer.msg('优惠金额不能为空', optLayerWarning);
                 } else if(value == '.' || (value.split('.').length - 1) > 1){
                     //toastr.warning('请输入有效的优惠金额');
                     layer.msg('请输入有效的优惠金额', optLayerWarning);
@@ -560,7 +566,7 @@ define([
                     var price = item.get('price');
                     var num = item.get('num');
                     var discount = item.get('discount');
-                    if (value <= parseFloat(price * num - discount) ) {
+                    if (value <= parseFloat(price * num - discount)) {
                         _self.collection.at(_self.i).set({
                             discount: value,
                             money:price * num - value
@@ -575,7 +581,7 @@ define([
                 $(_self.input).val('');
             });
         },
-        //切换优惠模式
+        //折让
         onDiscountPercentClicked: function () {
             //if (this.isDiscountPercent) {
             //    this.isDiscountPercent = false;
@@ -587,33 +593,39 @@ define([
             //    $('#input-percent').show();
             //}
             var _self = this;
-            this.evalAuth(auth_discount, function () {
+            var value = $(this.input).val();
+            if (value == '') {
+                layer.msg('折扣比率不能为空', optLayerWarning);
+                return;
+            }
+            if (value >= 100) {
+                layer.msg('折扣比率不能大于100', optLayerWarning);
+                return;
+            }
+            if((value.split('.').length - 1) > 0){
+                //toastr.warning('请输入有效的折扣比率');
+                layer.msg('请输入有效的折扣比率', optLayerWarning);
+                return;
+            }
+            if(this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                return;
+            }
+            var rate = (value/100).toFixed(2);
+            console.log(rate);
+            this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
                 var discountpercent = $(_self.input).val();
-                if(_self.model.get('itemamount') == 0) {
-                    //toastr.warning('当前购物车内无商品');
-                    layer.msg('当前购物车内无商品', optLayerWarning);
-                }else if(discountpercent == '') {
-                    //toastr.warning('折扣比率不能为空');
-                    layer.msg('折扣比率不能为空', optLayerWarning);
-                }else if(discountpercent >= 100) {
-                    //toastr.warning('折扣比率不能大于100');
-                    layer.msg('折扣比率不能大于100', optLayerWarning);
-                }else if((discountpercent.split('.').length - 1) > 0){
-                    //toastr.warning('请输入有效的折扣比率');
-                    layer.msg('请输入有效的折扣比率', optLayerWarning);
-                }else {
-                    var rate = discountpercent / 100;
-                    console.log(rate);
-                    var item = _self.collection.at(_self.i);
-                    var price = item.get('price');
-                    var num = item.get('num');
-                    _self.collection.at(_self.i).set({
-                        discount:price * num * (1 - rate),
-                        money:price * num * rate
-                    });
-                    _self.calculateModel();
-                    $('#li' + _self.i).addClass('cus-selected');
-                }
+                var rate = discountpercent / 100;
+                console.log(rate);
+                var item = _self.collection.at(_self.i);
+                var price = item.get('price');
+                var num = item.get('num');
+                _self.collection.at(_self.i).set({
+                    discount:price * num * (1 - rate),
+                    money:price * num * rate
+                });
+                _self.calculateModel();
+                $('#li' + _self.i).addClass('cus-selected');
                 $(_self.input).val('');
             });
         },
@@ -875,7 +887,7 @@ define([
                 layer.msg('没有可删除的商品', optLayerWarning);
                 return;
             }
-            this.evalAuth(auth_delete, function () {
+            this.evalAuth(auth_delete, '08', {}, function () {
                 _self.deleteItem();
             });
             //if (auth_delete == AUTH_CODE.GRANTED) {
@@ -924,7 +936,7 @@ define([
         },
         isClearCartGranted: function () {
             var _self = this;
-            this.evalAuth(auth_delete, function () {
+            this.evalAuth(auth_delete, '09', {}, function () {
                 _self.clearCart();
             });
             //
@@ -982,7 +994,7 @@ define([
          * 整单退货按钮点击事件
          */
         onReturnWholeClicked: function () {
-            this.evalAuth(auth_return, function () {
+            this.evalAuth(auth_return, '06', {}, function () {
                 router.navigate('returnwhole',{ trigger:true });
             });
         },
@@ -990,7 +1002,7 @@ define([
          * 强制退货按钮点击事件
          */
         onReturnForceClicked: function () {
-            this.evalAuth(auth_return, function () {
+            this.evalAuth(auth_return, '05', {}, function () {
                 router.navigate('returnforce',{ trigger:true });
             });
         },
@@ -1087,7 +1099,7 @@ define([
          * 跳转打印页面
          */
         onPrintClicked: function () {
-            this.evalAuth(auth_reprint, function () {
+            this.evalAuth(auth_reprint, '', {}, function () {
                 router.navigate('print', {trigger:true});
             });
         },
@@ -1102,7 +1114,7 @@ define([
          */
         openCashDrawer: function () {
             var _self = this;
-            this.evalAuth(auth_cashdrawer, function () {
+            this.evalAuth(auth_cashdrawer, '', {}, function () {
                 _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
             });
         },
@@ -1124,8 +1136,6 @@ define([
             storage.set(system_config.VIP_KEY, resp);
             this.renderMinfo();
         },
-
-
 
         addClickedState: function () {
             $('.salesman-panel').mousedown(function () {

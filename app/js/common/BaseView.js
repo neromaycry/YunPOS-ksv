@@ -377,13 +377,23 @@ define([
             return currentdate;
         },
 
-        evalAuth: function (authtype, callback) {
+        /**
+         * 判断权限控制通用方法
+         * @param authtype 控制类型
+         * @param accreditType 权限类型 '01'：单品优惠，'02'：折让，'03'：整单优惠，'04'：收银对账，'05'：单品退货，
+         *                              '06'：整单退货，'08'：删除商品，'09'：取消交易，'10'：折让，'11'：vip是否允许手输
+         * @param extra 额外参数
+         * @param callback 权限通过后的回调
+         */
+        evalAuth: function (authtype, accreditType, extra, callback) {
             if (authtype == AUTH_CODE.GRANTED) {
                 callback();
             } else if (authtype == AUTH_CODE.COMMAND) {
                 var attrs = {
                     pageid: pageId,
                     is_navigate: false,
+                    accredit_type: accreditType,
+                    discount_rate: extra.discount_rate,
                     callback: function () {
                         callback();
                     }
@@ -394,6 +404,8 @@ define([
                 var attrs = {
                     pageid: pageId,
                     is_navigate: false,
+                    accredit_type: accreditType,
+                    discount_rate: extra.discount_rate,
                     callback: function () {
                         callback();
                     }

@@ -56,6 +56,19 @@ define([
                       break;
                   case '03':
                       this.$el.find('.for-member-login').html(this.template_phone(this.model.toJSON()));
+                      $('.cbtn').mousedown(function () {
+                          console.log('baselayer mousedown');
+                          $(this).addClass('clicked');
+                      });
+                      $('.cbtn').mouseup(function () {
+                          $(this).removeClass('clicked');
+                      });
+                      $('.cbtn').on('touchstart', function (e) {
+                          $(this).addClass('clicked');
+                      });
+                      $('.cbtn').on('touchend', function (e) {
+                          $(this).removeClass('clicked');
+                      });
                       return this;
                       break;
               }
