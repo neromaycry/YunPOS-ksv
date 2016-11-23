@@ -1078,7 +1078,6 @@ define([
             this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
         },
 
-
         /**
          * 从接口获取小票号
          */

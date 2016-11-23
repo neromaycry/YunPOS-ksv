@@ -526,75 +526,42 @@ define([
          */
         modifyItemDiscount: function () {
             var _self = this;
-            var item = _self.collection.at(_self.i);
+            if (this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                return;
+            }
+            var item = this.collection.at(this.i);
             var price = item.get('price');
             var discount = $(this.input).val();
+            var num = item.get('num');
             if (discount == '') {
                 layer.msg('优惠金额不能为空', optLayerWarning);
                 return;
             }
             if (discount == '.' || (discount.split('.').length - 1) > 1) {
-                //toastr.warning('请输入有效的优惠金额');
                 layer.msg('请输入有效的优惠金额', optLayerWarning);
+                return;
+            }
+            if (discount > parseFloat(price * num)) {
+                layer.msg('优惠金额不能大于商品金额', optLayerWarning);
                 return;
             }
             var rate = ((price - discount) / price).toFixed(2);
             console.log(rate);
             this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
-                var value = $(_self.input).val();
-                if (_self.model.get('itemamount') == 0) {
-                    //toastr.warning('当前购物车内无商品');
-                    layer.msg('当前购物车内无商品', optLayerWarning);
-                    //}else{
-                    //    if(this.isDiscountPercent) {
-                    //        if (value == '') {
-                    //            toastr.warning('输入的折扣不能为空');
-                    //        } else if (value >= 100) {
-                    //            toastr.warning('折扣比率不能大于100%');
-                    //        } else {
-                    //            var rate = value/100;
-                    //            var item = _self.collection.at(_self.i);
-                    //            var price = item.get('price');
-                    //            _self.collection.at(_self.i).set({
-                    //                discount:price*(1-rate)
-                    //            }) ;
-                    //            _self.calculateModel();
-                    //            $('#li' + _self.i).addClass('cus-selected');
-                    //        }
-                    //    }
-                    // else {
-                } else {
-                    var item = _self.collection.at(_self.i);
-                    var price = item.get('price');
-                    var num = item.get('num');
-                    var discount = item.get('discount');
-                    if (value <= parseFloat(price * num - discount)) {
-                        _self.collection.at(_self.i).set({
-                            discount: value,
-                            money: price * num - value,
-                            manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
-                        });
-                        _self.calculateModel();
-                        $('#li' + _self.i).addClass('cus-selected');
-                    } else {
-                        //toastr.warning('优惠金额不能大于商品金额');
-                        layer.msg('优惠金额不能大于商品金额', optLayerWarning);
-                    }
-                }
+                //var discount = item.get('discount');
+                _self.collection.at(_self.i).set({
+                    discount: discount,
+                    money: price * num - discount,
+                    manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
+                });
+                _self.calculateModel();
+                $('#li' + _self.i).addClass('cus-selected');
                 $(_self.input).val('');
             });
         },
         //折让
         onDiscountPercentClicked: function () {
-            //if (this.isDiscountPercent) {
-            //    this.isDiscountPercent = false;
-            //    $('#main-input').removeClass('input-group');
-            //    $('#input-percent').hide();
-            //} else {
-            //    this.isDiscountPercent = true;
-            //    $('#main-input').addClass('input-group');
-            //    $('#input-percent').show();
-            //}
             var _self = this;
             var value = $(this.input).val();
             if (value == '') {
@@ -642,42 +609,46 @@ define([
             if (_self.model.get('itemamount') == 0) {
                 //toastr.warning('当前购物车内无商品');
                 layer.msg('购物车内无商品', optLayerWarning);
-            } else {
-                if (number == '') {
-                    //toastr.warning('修改的数量不能为空');
-                    layer.msg('修改的数量不能为空', optLayerWarning);
-                } else if (number == 0) {
-                    //toastr.warning('修改的数量不能为零');
-                    layer.msg('修改的数量不能为零', optLayerWarning);
-                } else if ((number.split('.').length - 1) > 0) {
-                    //toastr.warning('请输入有效的数量');
-                    layer.msg('请输入有效的数量', optLayerWarning);
-                } else {
-                    var item = _self.collection.at(_self.i);
-                    var discount = item.get('discount');
-                    var price = item.get('price');
-                    item.set({
-                        num: parseFloat(number),
-                        money: price * number - discount
-                    });
-                    console.log(_self.collection);
-                    _self.totalamount = 0;
-                    _self.itemamount = 0;
-                    _self.discountamount = 0;
-                    var priceList = _self.collection.pluck('price');
-                    var discounts = _self.collection.pluck('discount');
-                    var itemNum = _self.collection.pluck('num');
-                    for (var i = 0; i < priceList.length; i++) {
-                        discounts[i] = parseFloat(discounts[i]);
-                        _self.totalamount += priceList[i] * itemNum[i];
-                        _self.itemamount += itemNum[i];
-                        _self.discountamount += discounts[i] * itemNum[i];
-                    }
-                    _self.calculateModel();
-                }
+                return;
             }
+            if (number == '') {
+                //toastr.warning('修改的数量不能为空');
+                layer.msg('修改的数量不能为空', optLayerWarning);
+                return;
+            }
+            if (number == 0) {
+                //toastr.warning('修改的数量不能为零');
+                layer.msg('修改的数量不能为零', optLayerWarning);
+                return;
+            }
+            //if ((number.split('.').length - 1) > 0) {
+            //    //toastr.warning('请输入有效的数量');
+            //    layer.msg('请输入有效的数量', optLayerWarning);
+            //    return;
+            //}
+            var item = _self.collection.at(_self.i);
+            var discount = item.get('discount');
+            var price = item.get('price');
+            item.set({
+                num: parseFloat(number),
+                money: price * number - discount
+            });
+            console.log(_self.collection);
+            _self.totalamount = 0;
+            _self.itemamount = 0;
+            _self.discountamount = 0;
+            var priceList = _self.collection.pluck('price');
+            var discounts = _self.collection.pluck('discount');
+            var itemNum = _self.collection.pluck('num');
+            for (var i = 0; i < priceList.length; i++) {
+                discounts[i] = parseFloat(discounts[i]);
+                _self.totalamount += priceList[i] * itemNum[i];
+                _self.itemamount += itemNum[i];
+                _self.discountamount += discounts[i] * itemNum[i];
+            }
+            _self.calculateModel();
             $(this.input).val('');
-            console.log(_self.i);
+            //console.log(_self.i);
             $('#li' + _self.i).addClass('cus-selected');
         },
         /**
@@ -895,28 +866,6 @@ define([
             this.evalAuth(auth_delete, '08', {}, function () {
                 _self.deleteItem();
             });
-            //if (auth_delete == AUTH_CODE.GRANTED) {
-            //    this.deleteItem();
-            //} else if (auth_delete == AUTH_CODE.CARD) {
-            //    var attrs = {
-            //        pageid: pageId,
-            //        is_navigate: false,
-            //        callback: function () {
-            //            _self.deleteItem();
-            //        }
-            //    };
-            //    this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要管理卡验证', LayerAuthCardView, attrs, {area: '300px'});
-            //
-            //} else if (auth_delete == AUTH_CODE.COMMAND) {
-            //    var attrs = {
-            //        pageid: pageId,
-            //        is_navigate: false,
-            //        callback: function () {
-            //            _self.deleteItem();
-            //        }
-            //    };
-            //    this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要口令验证', LayerAuthCommandView, attrs, {area: '300px'});
-            //}
         },
         /**
          * 修改数量点击事件
@@ -944,29 +893,6 @@ define([
             this.evalAuth(auth_delete, '09', {}, function () {
                 _self.clearCart();
             });
-            //
-            //if (auth_delete == AUTH_CODE.GRANTED) {
-            //     _self.clearCart();
-            //} else if (auth_delete == AUTH_CODE.CARD) {
-            //    var attrs = {
-            //        pageid: pageId,
-            //        is_navigate: false,
-            //        callback: function () {
-            //            _self.clearCart();
-            //        }
-            //    };
-            //    this.openLayer(PAGE_ID.LAYER_AUTHCARD, pageId, '需要口令验证', LayerAuthCardView, attrs, {area: '300px'});
-            //
-            //} else if (auth_delete == AUTH_CODE.COMMAND) {
-            //    var attrs = {
-            //        pageid: pageId,
-            //        is_navigate: false,
-            //        callback: function () {
-            //            _self.clearCart();
-            //        }
-            //    };
-            //    this.openLayer(PAGE_ID.LAYER_AUTHCOMMAND, pageId, '需要管理卡验证', LayerAuthCommandView, attrs, {area: '300px'});
-            //}
         },
 
 
