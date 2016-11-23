@@ -11,7 +11,7 @@ define([
 
         el: '.for-layer',
 
-        attrs:null,
+        attrs: null,
 
         layerindex: undefined,
 
@@ -57,7 +57,7 @@ define([
             $(document).keyup(function (e) {
                 e = e || window.event;
                 console.log(e.which);
-                if(e.which == keyCode && pageId == id) {
+                if (e.which == keyCode && pageId == id) {
                     callback();
                 }
             });
@@ -82,7 +82,7 @@ define([
          * var attrs = {
                 page: 'MAIN_PAGE'
             };
-            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
+         this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
          */
         openLayer: function (LayerId, mainId, title, View, attrs, options) {
             var _self = this;
@@ -123,7 +123,7 @@ define([
             layer.close(index);
         },
 
-        confirmHideLayer:function(pageid) {
+        confirmHideLayer: function (pageid) {
             isModal = false;
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
@@ -167,7 +167,7 @@ define([
          */
         sendWebSocketDirective: function (directives, content, websocket) {
             if (websocket.readyState == 1) {
-                for (var i = 0;i < directives.length; i++) {
+                for (var i = 0; i < directives.length; i++) {
                     websocket.send(directives[i] + content[i]);
                 }
             } else {

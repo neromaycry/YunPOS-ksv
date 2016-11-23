@@ -1,9 +1,9 @@
 /**
  * Created by gjwlg on 2016/9/9.
  */
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
-    var loginModel=BaseModel.extend({
+    var loginModel = BaseModel.extend({
 
         initModel: function (options) {
             // 属性验证
@@ -32,10 +32,10 @@ define(['../../js/common/BaseModel'],function(BaseModel){
 
         getFirstClass: function (callback) {
             this.sendPOST({
-                url:window.API_URL.KIND1,
-                data:{},
-                async:false,
-                success:callback
+                url: window.API_URL.KIND1,
+                data: {},
+                async: false,
+                success: callback
             })
         },
 
@@ -48,7 +48,7 @@ define(['../../js/common/BaseModel'],function(BaseModel){
             });
         },
 
-        requestGatherDetail: function (data,callback1, callback2) {
+        requestGatherDetail: function (data, callback1, callback2) {
             this.sendPOST({
                 url: window.API_URL.GATHER,
                 data: data,

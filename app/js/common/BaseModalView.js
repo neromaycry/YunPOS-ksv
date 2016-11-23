@@ -11,7 +11,7 @@ define([
 
         el: '.modal',
 
-        attrs:null,
+        attrs: null,
 
         initialize: function (attrs) {
             console.log('modal:' + this.id);
@@ -46,18 +46,18 @@ define([
         },
 
         onModalShown: function () {
-            
+
         },
 
         bindModalKeys: function () {
 
         },
 
-        bindModalKeyEvents: function (id,keyCode,callback) {
+        bindModalKeyEvents: function (id, keyCode, callback) {
             $(document).keydown(function (e) {
                 e = e || window.event;
                 console.log(e.which);
-                if(e.which == keyCode && pageId == id) {
+                if (e.which == keyCode && pageId == id) {
                     callback();
                 }
             });
@@ -65,7 +65,7 @@ define([
 
         showModal: function (id, view) {
             pageId = id;
-            $('.modal').modal('show',{keyboard:false});
+            $('.modal').modal('show', {keyboard: false});
             $('.modal').on('show.bs.modal', function (e) {
                 view.render();
             });
@@ -79,7 +79,7 @@ define([
             });
         },
 
-        confirmHideModal:function(pageid) {
+        confirmHideModal: function (pageid) {
             isModal = false;
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
@@ -123,7 +123,7 @@ define([
          */
         sendWebSocketDirective: function (directives, content, websocket) {
             if (websocket.readyState == 1) {
-                for (var i = 0;i < directives.length; i++) {
+                for (var i = 0; i < directives.length; i++) {
                     websocket.send(directives[i] + content[i]);
                 }
             } else {

@@ -8,25 +8,25 @@ define([
     'bootstrap',
     '../../moduals/layer-authcard/view',
     '../../moduals/layer-authcommand/view',
-], function ($, _, Backbone, Bootstrap, LayerAuthCardView,LayerAuthCommandView) {
+], function ($, _, Backbone, Bootstrap, LayerAuthCardView, LayerAuthCommandView) {
 
     var BaseView = Backbone.View.extend({
 
         attrs: null,
 
-        is_modal_open:false,
+        is_modal_open: false,
 
-        is_from_force:false,
+        is_from_force: false,
 
-        input:null,
+        input: null,
 
-        listheight:0,//购物车的高度
+        listheight: 0,//购物车的高度
 
-        itemheight:0,//每条商品的高度
+        itemheight: 0,//每条商品的高度
 
-        listnum:0,//购物车显示的商品数量
+        listnum: 0,//购物车显示的商品数量
 
-        n:0,//
+        n: 0,//
 
         initialize: function (attrs) {
             var _self = this;
@@ -110,7 +110,7 @@ define([
          * @param view 弹出的模态框中的view
          */
         showModal: function (id, view) {
-            $('.modal').modal('show',{keyboard:false});
+            $('.modal').modal('show', {keyboard: false});
             $('.modal').on('show.bs.modal', function (e) {
                 pageId = id;
                 view.render();
@@ -210,7 +210,7 @@ define([
                     console.log('layerindex = ' + layerindex);
                 },
                 end: function () {
-                    if (attrs.is_navigate&&attrs.is_confirm) {
+                    if (attrs.is_navigate && attrs.is_confirm) {
                         pageId = attrs.navigate_page;
                     } else {
                         pageId = mainId;
@@ -237,7 +237,7 @@ define([
             $(document).keydown(function (e) {
                 e = e || window.event;
                 console.log(e.which);
-                if(e.which == keyCode && pageId == id) {
+                if (e.which == keyCode && pageId == id) {
                     callback();
                 }
             });
@@ -263,14 +263,14 @@ define([
          * @param websocket websocket实例
          */
         sendWebSocketDirective: function (directives, content, websocket) {
-              if (websocket.readyState == 1) {
-                  for (var i = 0;i < directives.length; i++) {
-                      websocket.send(directives[i] + content[i]);
-                  }
-              } else {
-                  //toastr.warning('没有连接到硬件，请检查硬件连接');
-                  layer.msg('没有连接到硬件，请检查硬件连接', optLayerError);
-              }
+            if (websocket.readyState == 1) {
+                for (var i = 0; i < directives.length; i++) {
+                    websocket.send(directives[i] + content[i]);
+                }
+            } else {
+                //toastr.warning('没有连接到硬件，请检查硬件连接');
+                layer.msg('没有连接到硬件，请检查硬件连接', optLayerError);
+            }
         },
 
         /**
@@ -281,7 +281,7 @@ define([
          */
         ctrlClientInfo: function (displayMode, ids, isPacked) {
             if (isPacked) {
-                for (var i = 0;i< ids.length;i++) {
+                for (var i = 0; i < ids.length; i++) {
                     clientDom.getElementById(ids[i]).style.display = displayMode;
                 }
             }
@@ -292,7 +292,7 @@ define([
          */
         lockScreen: function () {
             storage.set(system_config.LAST_PAGE, pageId);
-            router.navigate('lockscreen', { trigger: true, replace: true });
+            router.navigate('lockscreen', {trigger: true, replace: true});
         },
 
         //sendLargeData2Socket: function (str) {
@@ -425,7 +425,7 @@ define([
             this.initLayoutHeight();
             if (storage.isSet(system_config.IS_KEYBOARD_PLUGGED)) {
                 var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
-                $('input').attr('readonly',!isKeyboardPlugged);
+                $('input').attr('readonly', !isKeyboardPlugged);
             }
             this.addClickEvents();
             return this;

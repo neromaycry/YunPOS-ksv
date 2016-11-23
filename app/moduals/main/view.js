@@ -33,8 +33,8 @@ define([
         totalamount: 0,
         itemamount: 0,
         discountamount: 0,
-        salesman:'',
-        memeber:'',
+        salesman: '',
+        memeber: '',
         ids: ['curSaleState', 'curItem'],
         clientScreen: null,
         isInSale: false,
@@ -43,46 +43,46 @@ define([
         template_salesman: salesmantpl,
         template_minfo: minfotpl,
         template_cartlisttpl: cartlisttpl,
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
         template_clientdisplay: clientdisplaytpl,
         template_welcome: welcometpl,
         template_oddchange: oddchangetpl,
         template_marquee: marqueetpl,
-        salesmanView:null,
-        secondloginView:null,
+        salesmanView: null,
+        secondloginView: null,
         restOrderDelivery: {},
-        deleteKey:{},
-        isDeleteKey:false,
-        isDiscountPercent:false,
+        deleteKey: {},
+        isDeleteKey: false,
+        isDiscountPercent: false,
         //input:'input[name = main]',
         events: {
-            'click .numpad-ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .main-help':'openHelp',
-            'click .h-connect':'onHConnectClicked',
-            'click .main-billing':'onBillingClicked',
-            'click .salesman':'onSalesmanClicked',
-            'click .member':'onMemberClicked',
-            'click .main-discount':'onDiscountClicked',
-            'click .main-discountpercent':'onDiscountPercentClicked',
-            'click .main-delete':'onDeleteClicked',
-            'click .main-modify-num':'onModifyItemNum',
-            'click .main-cancel':'onCleanClicked',
-            'click .main-keyup':'onKeyUpClicked',
-            'click .main-keydown':'onKeyDownClicked',
-            'click #restorder':'onRestorderClicked',
-            'click #unrestorder':'onUnRestOrderClicked',
-            'click .return-whole':'onReturnWholeClicked',
-            'click .return-force':'onReturnForceClicked',
-            'click .checking':'onCheckingClicked',
-            'click .login-out':'onLoginOutClicked',
-            'click .print':'onPrintClicked',//打印页面,
-            'click .withdraw':'onWithDrawClicked',//打印页面
+            'click .numpad-ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click .main-help': 'openHelp',
+            'click .h-connect': 'onHConnectClicked',
+            'click .main-billing': 'onBillingClicked',
+            'click .salesman': 'onSalesmanClicked',
+            'click .member': 'onMemberClicked',
+            'click .main-discount': 'onDiscountClicked',
+            'click .main-discountpercent': 'onDiscountPercentClicked',
+            'click .main-delete': 'onDeleteClicked',
+            'click .main-modify-num': 'onModifyItemNum',
+            'click .main-cancel': 'onCleanClicked',
+            'click .main-keyup': 'onKeyUpClicked',
+            'click .main-keydown': 'onKeyDownClicked',
+            'click #restorder': 'onRestorderClicked',
+            'click #unrestorder': 'onUnRestOrderClicked',
+            'click .return-whole': 'onReturnWholeClicked',
+            'click .return-force': 'onReturnForceClicked',
+            'click .checking': 'onCheckingClicked',
+            'click .login-out': 'onLoginOutClicked',
+            'click .print': 'onPrintClicked',//打印页面,
+            'click .withdraw': 'onWithDrawClicked',//打印页面
             'click .cashdrawer': 'openCashDrawer',
             'click .lock': 'lockScreen',
-            'click .bank-business':'onBusinessClicked'
+            'click .bank-business': 'onBusinessClicked'
             //'click .btn-floatpad':'onFloatPadClicked'
         },
         pageInit: function () {
@@ -114,9 +114,9 @@ define([
                 this.model.set(storage.get(system_config.SALE_PAGE_KEY, 'shopinfo'));
                 //this.i = storage.get(system_config.SALE_PAGE_KEY, 'i');
             }
-            if (storage.isSet(system_config.SALE_PAGE_KEY,'salesman')) {
+            if (storage.isSet(system_config.SALE_PAGE_KEY, 'salesman')) {
                 this.salesmanModel.set({
-                    salesman: storage.get(system_config.SALE_PAGE_KEY,'salesman')
+                    salesman: storage.get(system_config.SALE_PAGE_KEY, 'salesman')
                 });
             } else {
                 this.salesmanModel.set({
@@ -134,20 +134,20 @@ define([
                     account_enddate: '未登录，请查询'
                 });
             }
-            if (storage.isSet(system_config.LOGIN_USER_KEY)){
+            if (storage.isSet(system_config.LOGIN_USER_KEY)) {
                 this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY, 'worker_position'), 'key');
             }
 
-            if(storage.isSet(system_config.ODD_CHANGE)) {
+            if (storage.isSet(system_config.ODD_CHANGE)) {
                 this.oddchangeModel.set({
-                    oddchange:storage.get(system_config.ODD_CHANGE,'oddchange')
+                    oddchange: storage.get(system_config.ODD_CHANGE, 'oddchange')
                 });
                 this.memberModel.set({
                     lastbill_no: storage.get(system_config.ODD_CHANGE, 'lastbill_no')
                 });
             } else {
                 this.oddchangeModel.set({
-                    oddchange:0
+                    oddchange: 0
                 });
                 this.oddchangeModel.set({
                     lastbill_no: '无订单'
@@ -234,7 +234,7 @@ define([
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
             return this;
         },
-        renderSalesman: function() {
+        renderSalesman: function () {
             this.$el.find('.for-salesman').html(this.template_salesman(this.salesmanModel.toJSON()));
             return this;
         },
@@ -242,7 +242,7 @@ define([
             this.$el.find('.for-minfo').html(this.template_minfo(this.memberModel.toJSON()));
             return this;
         },
-        renderCartList: function() {
+        renderCartList: function () {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
             $('#li' + this.i).addClass('cus-selected');
@@ -258,7 +258,7 @@ define([
             if (isPacked) {
                 console.log(collection);
                 var len = collection.length;
-                var model = collection.at(len-1);
+                var model = collection.at(len - 1);
                 $(clientDom).find('.client-display').html(this.template_clientdisplay(model.toJSON()));
                 return this;
             }
@@ -281,7 +281,7 @@ define([
             //Backbone.off('reBindEvent');
             Backbone.on('SalesmanAdd', this.SalesmanAdd, this);
             Backbone.on('onMemberSigned', this.onMemberSigned, this);
-            Backbone.on('onReleaseOrder', this.onReleaseOrder ,this);
+            Backbone.on('onReleaseOrder', this.onReleaseOrder, this);
         },
         SalesmanAdd: function (result) {
             storage.set(system_config.SALE_PAGE_KEY, 'salesman', result);
@@ -313,7 +313,7 @@ define([
                 _self.restOrder();
             });
             //解挂
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F7, function() {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F7, function () {
                 _self.releaseOrder();
             });
             //营业员登陆
@@ -321,15 +321,15 @@ define([
                 _self.doLoginSalesman();
             });
             //退出登录
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Esc, function () {
                 _self.doLogout();
             });
             //结算
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Space,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Space, function () {
                 _self.doBilling();
             });
             //清空购物车
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function() {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.C, function () {
                 _self.onCleanClicked();
             });
             //删除商品
@@ -341,7 +341,7 @@ define([
                 _self.modifyItemNum();
             });
             //单品优惠
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F1,function () {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F1, function () {
                 _self.modifyItemDiscount();
             });
             //向上
@@ -373,24 +373,24 @@ define([
                 _self.onDiscountPercentClicked();
             });
             //小票打印
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.H, function() {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.H, function () {
                 _self.onPrintClicked();
             });
             //提大额
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F9, function() {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F9, function () {
                 _self.onWithDrawClicked();
             });
             //开钱箱
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F5, function() {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F5, function () {
                 _self.openCashDrawer();
             });
             //锁屏
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F4, function() {
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F4, function () {
                 _self.lockScreen();
             });
 
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.V, function () {
-                _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
+                _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
             });
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
@@ -415,13 +415,13 @@ define([
          */
         doBilling: function () {
             //console.log(_self.model.get('itemamount'));
-            if(this.model.get('itemamount') == 0){
+            if (this.model.get('itemamount') == 0) {
                 //toastr.warning('购物车内无商品',{positionClass: 'toast-top-center'});
                 layer.msg('购物车内无商品', optLayerWarning);
             } else {
                 console.log(this.i);
                 //storage.set(system_config.SALE_PAGE_KEY, 'i', this.i);
-                router.navigate('billing', {trigger:true});
+                router.navigate('billing', {trigger: true});
             }
         },
         /**
@@ -451,7 +451,7 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
-            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
+            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
                 //alert(_self.n);
                 $('.for-cartlist').scrollTop(this.listheight * this.n);
@@ -478,7 +478,7 @@ define([
             if (itemamount == 0) {
                 //toastr.warning('当前购物车内无商品，无法执行挂单操作');
                 layer.msg('当前购物车内无商品，无法执行挂单操作', optLayerWarning);
-            }else {
+            } else {
                 //var orderNum = new Date().getTime();
                 var orderNumFromStorage = storage.get(system_config.RESTORDER_NUM);
                 var orderNum = orderNumFromStorage;
@@ -533,11 +533,11 @@ define([
                 layer.msg('优惠金额不能为空', optLayerWarning);
                 return;
             }
-            var rate = ((price - discount)/price).toFixed(2);
+            var rate = ((price - discount) / price).toFixed(2);
             console.log(rate);
             this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
                 var value = $(_self.input).val();
-                if(_self.model.get('itemamount') == 0) {
+                if (_self.model.get('itemamount') == 0) {
                     //toastr.warning('当前购物车内无商品');
                     layer.msg('当前购物车内无商品', optLayerWarning);
                     //}else{
@@ -558,7 +558,7 @@ define([
                     //        }
                     //    }
                     // else {
-                } else if(value == '.' || (value.split('.').length - 1) > 1){
+                } else if (value == '.' || (value.split('.').length - 1) > 1) {
                     //toastr.warning('请输入有效的优惠金额');
                     layer.msg('请输入有效的优惠金额', optLayerWarning);
                 } else {
@@ -569,7 +569,7 @@ define([
                     if (value <= parseFloat(price * num - discount)) {
                         _self.collection.at(_self.i).set({
                             discount: value,
-                            money:price * num - value
+                            money: price * num - value
                         });
                         _self.calculateModel();
                         $('#li' + _self.i).addClass('cus-selected');
@@ -602,16 +602,16 @@ define([
                 layer.msg('折扣比率不能大于100', optLayerWarning);
                 return;
             }
-            if((value.split('.').length - 1) > 0){
+            if ((value.split('.').length - 1) > 0) {
                 //toastr.warning('请输入有效的折扣比率');
                 layer.msg('请输入有效的折扣比率', optLayerWarning);
                 return;
             }
-            if(this.model.get('itemamount') == 0) {
+            if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 return;
             }
-            var rate = (value/100).toFixed(2);
+            var rate = (value / 100).toFixed(2);
             console.log(rate);
             this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
                 var discountpercent = $(_self.input).val();
@@ -621,8 +621,8 @@ define([
                 var price = item.get('price');
                 var num = item.get('num');
                 _self.collection.at(_self.i).set({
-                    discount:price * num * (1 - rate),
-                    money:price * num * rate
+                    discount: price * num * (1 - rate),
+                    money: price * num * rate
                 });
                 _self.calculateModel();
                 $('#li' + _self.i).addClass('cus-selected');
@@ -635,26 +635,26 @@ define([
         modifyItemNum: function () {
             var _self = this;
             var number = $(this.input).val();
-            if(_self.model.get('itemamount') == 0){
+            if (_self.model.get('itemamount') == 0) {
                 //toastr.warning('当前购物车内无商品');
                 layer.msg('购物车内无商品', optLayerWarning);
-            }else {
-                if(number == ''){
+            } else {
+                if (number == '') {
                     //toastr.warning('修改的数量不能为空');
                     layer.msg('修改的数量不能为空', optLayerWarning);
-                }else if(number == 0) {
+                } else if (number == 0) {
                     //toastr.warning('修改的数量不能为零');
                     layer.msg('修改的数量不能为零', optLayerWarning);
-                }else if((number.split('.').length - 1) > 0) {
+                } else if ((number.split('.').length - 1) > 0) {
                     //toastr.warning('请输入有效的数量');
                     layer.msg('请输入有效的数量', optLayerWarning);
-                }else{
+                } else {
                     var item = _self.collection.at(_self.i);
                     var discount = item.get('discount');
                     var price = item.get('price');
                     item.set({
-                        num:parseFloat(number),
-                        money:price * number - discount
+                        num: parseFloat(number),
+                        money: price * number - discount
                     });
                     console.log(_self.collection);
                     _self.totalamount = 0;
@@ -681,7 +681,7 @@ define([
          */
         deleteItem: function () {
             try {
-                if($('li').hasClass('cus-selected')){
+                if ($('li').hasClass('cus-selected')) {
                     var item = this.collection.at(this.i);
                     this.collection.remove(item);
                     this.i = 0;
@@ -699,34 +699,34 @@ define([
         addItem: function () {
             var _self = this;
             var search = $(this.input).val();
-            if(search == ''){
+            if (search == '') {
                 //toastr.warning('商品编码不能为空');
                 layer.msg('商品编码不能为空', optLayerWarning);
-            }else{
+            } else {
                 var data = {};
                 data['skucode'] = search;
-                if(storage.isSet(system_config.VIP_KEY)) {
-                    data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-                    data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                    data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                }else{
+                if (storage.isSet(system_config.VIP_KEY)) {
+                    data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
+                    data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
+                    data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
+                } else {
                     data['cust_id'] = '*';
                     data['medium_id'] = '*';
                     data['medium_type'] = '*';
                 }
                 data['goods_detail'] = JSON.stringify(this.collection);
-                this.requestModel.sku(data , function(resp) {
-                    if(resp.status == '00') {
+                this.requestModel.sku(data, function (resp) {
+                    if (resp.status == '00') {
                         if (!_self.isInSale) {
                             _self.isInSale = true;
                             //_self.ctrlClientInfo('block', _self.ids, isPacked);
                         }
                         var temp = resp.goods_detail[resp.goods_detail.length - 1];
-                        if(temp['price_auto'] == 1) {
+                        if (temp['price_auto'] == 1) {
                             var attrs = {
-                                pageid:pageId,
-                                originalprice:temp['price'],
-                                is_navigate:false,
+                                pageid: pageId,
+                                originalprice: temp['price'],
+                                is_navigate: false,
                                 callback: function () {
                                     var price = $('input[name = price]').val();
                                     resp.goods_detail[resp.goods_detail.length - 1].price = price;
@@ -735,11 +735,11 @@ define([
                                     $('input[name = main]').focus();
                                 }
                             };
-                            _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area:'300px'});
-                        }else {
+                            _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area: '300px'});
+                        } else {
                             _self.onAddItem(resp.goods_detail);
                         }
-                    }else{
+                    } else {
                         //toastr.warning(resp.msg);
                         layer.msg(resp.msg, optLayerWarning);
                     }
@@ -764,13 +764,13 @@ define([
                 discountamount: 0
             });
             this.memberModel.set({
-                member:'未登录',
+                member: '未登录',
                 score_balance: 0,
                 account_balance: 0,
                 account_enddate: '未登录，请查询'
             });
             this.salesmanModel.set({
-                salesman:'营业员登录'
+                salesman: '营业员登录'
             });
             this.buttonSelected();
             this.renderPosInfo();
@@ -866,7 +866,7 @@ define([
         /**
          * 会员登录按钮点击事件
          */
-        onMemberClicked:function () {
+        onMemberClicked: function () {
             //router.navigate('member',{trigger:true});
             this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, undefined, {area: '600px'});
         },
@@ -965,7 +965,6 @@ define([
         },
 
 
-
         /**
          * 向上选择点击事件
          */
@@ -987,7 +986,7 @@ define([
         /**
          * 解挂按钮点击事件
          */
-        onUnRestOrderClicked: function() {
+        onUnRestOrderClicked: function () {
             this.releaseOrder();
         },
         /**
@@ -995,7 +994,7 @@ define([
          */
         onReturnWholeClicked: function () {
             this.evalAuth(auth_return, '06', {}, function () {
-                router.navigate('returnwhole',{ trigger:true });
+                router.navigate('returnwhole', {trigger: true});
             });
         },
         /**
@@ -1003,17 +1002,16 @@ define([
          */
         onReturnForceClicked: function () {
             this.evalAuth(auth_return, '05', {}, function () {
-                router.navigate('returnforce',{ trigger:true });
+                router.navigate('returnforce', {trigger: true});
             });
         },
-
 
 
         /**
          * 收银对账按钮点击事件
          */
         onCheckingClicked: function () {
-            router.navigate('checking',{trigger:true});
+            router.navigate('checking', {trigger: true});
         },
         /**
          * 退出按钮点击事件
@@ -1032,7 +1030,7 @@ define([
         },
         onBackspaceClicked: function () {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
         onClearClicked: function () {
@@ -1058,7 +1056,7 @@ define([
         updateClientCurItem: function (collection, isPacked) {
             if (isPacked) {
                 var len = collection.length;
-                var model = collection.at(len-1).toJSON();
+                var model = collection.at(len - 1).toJSON();
                 var $clientDom = $(clientDom);
                 console.log($(clientDom).find('#itemName'));
                 this.renderClientCart();
@@ -1087,20 +1085,20 @@ define([
             if (itemamount != 0) {
                 $('#restorder').css('display', 'block');
                 $('#unrestorder').css('display', 'none');
-            }else {
-                $('#restorder').css('display','none');
-                $('#unrestorder').css('display','block');
+            } else {
+                $('#restorder').css('display', 'none');
+                $('#unrestorder').css('display', 'block');
             }
         },
         onHConnectClicked: function () {
-            router.navigate('hconnection',{ trigger:true });
+            router.navigate('hconnection', {trigger: true});
         },
         /**
          * 跳转打印页面
          */
         onPrintClicked: function () {
             this.evalAuth(auth_reprint, '', {}, function () {
-                router.navigate('print', {trigger:true});
+                router.navigate('print', {trigger: true});
             });
         },
         /**
@@ -1122,7 +1120,7 @@ define([
          * 银行业务
          */
         onBusinessClicked: function () {
-            this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
+            this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
         },
 
         onMemberSigned: function (resp) {

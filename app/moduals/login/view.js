@@ -25,21 +25,21 @@ define([
 
         clientScreen: null,
 
-        input:'input[name = username]',
+        input: 'input[name = username]',
 
         events: {
             //'click #btn_login':'doLogin',
-            'click .btn-doinit':'doInitialize',
-            'click .btn-numpad':'onNumpadClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click input[name = username]':'focusInputUser',
-            'click input[name = password]':'focusInputPasswd',
+            'click .btn-doinit': 'doInitialize',
+            'click .btn-numpad': 'onNumpadClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click input[name = username]': 'focusInputUser',
+            'click input[name = password]': 'focusInputPasswd',
             //'click .login-init':'onInitClicked',
             //'click .login-reconnecthw':'onReconnectHardwareClicked',
-            'click .power-off':'onPowerOffClicked',
+            'click .power-off': 'onPowerOffClicked',
             'click .lock': 'lockScreen',
             'click .bankcheckin': 'checkIn'
         },
@@ -101,10 +101,10 @@ define([
         onNumpadClicked: function () {
             var isDisplay = $('.numpad').css('display') == 'none';
             if (isDisplay) {
-                $('.numpad').css('display','block');
+                $('.numpad').css('display', 'block');
                 $('.btn-numpad').text('关闭小键盘');
             } else {
-                $('.numpad').css('display','none');
+                $('.numpad').css('display', 'none');
                 $('.btn-numpad').text('打开小键盘');
             }
         },
@@ -122,7 +122,7 @@ define([
 
         onBackspaceClicked: function () {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -186,7 +186,7 @@ define([
             data['user_id'] = username;
             data['user_password'] = $.md5(password);
             data['accredit_type'] = '00';
-            this.model.login(data,function (response) {
+            this.model.login(data, function (response) {
                 //成功回调
                 if (!$.isEmptyObject(response)) {
                     if (response.status == "00") {
@@ -206,7 +206,7 @@ define([
                     //toastr.error(response.msg);
                     layer.msg(response.msg, optLayerError)
                 }
-            }, function(jqXHR, textStatus, errorThrown) {
+            }, function (jqXHR, textStatus, errorThrown) {
                 //失败回调
                 console.log(textStatus);
                 console.log(errorThrown);
@@ -219,10 +219,10 @@ define([
                 var lastLoginDate = storage.get(system_config.LOGIN_DATE);
                 if (loginDate != lastLoginDate) {
                     storage.remove(system_config.RESTORDER_KEY);
-                    storage.set(system_config.RESTORDER_NUM,'00');
+                    storage.set(system_config.RESTORDER_NUM, '00');
                 }
             } else {
-                storage.set(system_config.RESTORDER_NUM,'00');
+                storage.set(system_config.RESTORDER_NUM, '00');
             }
             storage.set(system_config.LOGIN_DATE, loginDate.getDate());
         },
@@ -232,14 +232,14 @@ define([
             var data = {};
             data['modify_date'] = '19700101000000';
             this.requestModel.requestGatherDetail(data, function (resp) {
-                if(resp.status == '00') {
-                    storage.set(system_config.GATHER_KEY,resp.gather_detail);
+                if (resp.status == '00') {
+                    storage.set(system_config.GATHER_KEY, resp.gather_detail);
                     toastr.success('支付方式列表更新成功');
                 } else {
                     //toastr.error(resp.msg);
                     layer.msg(resp.msg, optLayerError);
                 }
-            }, function(jqXHR, textStatus, errorThrown) {
+            }, function (jqXHR, textStatus, errorThrown) {
                 //失败回调
                 console.log(textStatus);
                 console.log(errorThrown);
@@ -335,25 +335,25 @@ define([
         },
 
         setMainKeys: function () {
-            var effects = ['退出登录', '确定', '会员页面','打印页面', '挂单', '解挂',
+            var effects = ['退出登录', '确定', '会员页面', '打印页面', '挂单', '解挂',
                 '营业员登录', '结算', '清空购物车', '删除商品', '修改数量',
-                '单品优惠', '折扣','向上选择', '向下选择', '强制退货页面', '整单退货页面','收银对账', '提大额'];
-            var keys = ['ESC','ENTER','M','H','G','J',
-                'S','Space','C','D','N',
-                'Y','U','↑','↓','F','W','A', 'Q'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.M,window.KEYS.H, window.KEYS.G, window.KEYS.J,
+                '单品优惠', '折扣', '向上选择', '向下选择', '强制退货页面', '整单退货页面', '收银对账', '提大额'];
+            var keys = ['ESC', 'ENTER', 'M', 'H', 'G', 'J',
+                'S', 'Space', 'C', 'D', 'N',
+                'Y', 'U', '↑', '↓', 'F', 'W', 'A', 'Q'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.M, window.KEYS.H, window.KEYS.G, window.KEYS.J,
                 window.KEYS.S, window.KEYS.Space, window.KEYS.C, window.KEYS.D, window.KEYS.N,
                 window.KEYS.Y, window.KEYS.U, window.KEYS.Up, window.KEYS.Down, window.KEYS.F, window.KEYS.W, window.KEYS.A,
                 window.KEYS.Q];
             var mainKeys = [];
-            for (var i = 0;i<effects.length;i++) {
+            for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
                 var key = keys[i];
                 var keyCode = keyCodes[i];
-                var mainKey = { effect:effect, key:key, keyCode:keyCode };
+                var mainKey = {effect: effect, key: key, keyCode: keyCode};
                 mainKeys.push(mainKey);
             }
-            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'MAIN_PAGE',mainKeys);
+            storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'MAIN_PAGE', mainKeys);
         },
 
         setMemberKeys: function () {
@@ -361,45 +361,45 @@ define([
             var keys = ['ESC', 'ENTER', '←', '→', 'X', 'P'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Left, window.KEYS.Right, window.KEYS.X, window.KEYS.P];
             var memberKeys = [];
-            for (var i = 0;i<effects.length;i++) {
+            for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
                 var key = keys[i];
                 var keyCode = keyCodes[i];
-                var memberKey = { effect:effect, key:key, keyCode:keyCode };
+                var memberKey = {effect: effect, key: key, keyCode: keyCode};
                 memberKeys.push(memberKey);
             }
-            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'MEMBER_PAGE',memberKeys);
+            storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'MEMBER_PAGE', memberKeys);
         },
 
         setRestOrderKeys: function () {
-            var effects = ['返回', '确定', '方向上', '方向下','切换到挂单编号','切换到挂单商品信息'];
-            var keys = ['ESC', 'ENTER', '↑', '↓','←','→'];
+            var effects = ['返回', '确定', '方向上', '方向下', '切换到挂单编号', '切换到挂单商品信息'];
+            var keys = ['ESC', 'ENTER', '↑', '↓', '←', '→'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down, window.KEYS.Left, window.KEYS.Right];
             var restOrderKeys = [];
-            for (var i = 0;i<effects.length;i++) {
+            for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
                 var key = keys[i];
                 var keyCode = keyCodes[i];
-                var restOrderKey = { effect:effect, key:key, keyCode:keyCode };
+                var restOrderKey = {effect: effect, key: key, keyCode: keyCode};
                 restOrderKeys.push(restOrderKey);
             }
-            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'RESTORDER_PAGE',restOrderKeys);
+            storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'RESTORDER_PAGE', restOrderKeys);
         },
 
         setReturnForceKeys: function () {
-            var effects = ['返回', '确定', '结算', '取消退货', '删除商品','修改数量','单品优惠','折扣','方向上', '方向下'];
-            var keys = ['ESC', 'ENTER', 'Space','C','D','N','Y', 'U','↑', '↓',];
+            var effects = ['返回', '确定', '结算', '取消退货', '删除商品', '修改数量', '单品优惠', '折扣', '方向上', '方向下'];
+            var keys = ['ESC', 'ENTER', 'Space', 'C', 'D', 'N', 'Y', 'U', '↑', '↓',];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.C,
                 window.KEYS.D, window.KEYS.N, window.KEYS.Y, window.KEYS.U, window.KEYS.Up, window.KEYS.Down];
             var returnForceKeys = [];
-            for (var i = 0;i<effects.length;i++) {
+            for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
                 var key = keys[i];
                 var keyCode = keyCodes[i];
-                var returnForceKey = { effect:effect, key:key, keyCode:keyCode };
+                var returnForceKey = {effect: effect, key: key, keyCode: keyCode};
                 returnForceKeys.push(returnForceKey);
             }
-            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'RETURNFORCE_PAGE',returnForceKeys);
+            storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'RETURNFORCE_PAGE', returnForceKeys);
         },
 
         setReturnWholeKeys: function () {
@@ -407,40 +407,40 @@ define([
             var keys = ['ESC', 'ENTER', 'Space', 'C'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Space, window.KEYS.B, window.KEYS.C];
             var returnWholeKeys = [];
-            for (var i = 0;i<effects.length;i++) {
+            for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
                 var key = keys[i];
                 var keyCode = keyCodes[i];
-                var returnWholeKey = { effect:effect, key:key, keyCode:keyCode };
+                var returnWholeKey = {effect: effect, key: key, keyCode: keyCode};
                 returnWholeKeys.push(returnWholeKey);
             }
-            storage.set(system_config.SETTING_DATA_KEY,system_config.SHORTCUT_KEY,'RETURNWHOLE_PAGE',returnWholeKeys);
+            storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'RETURNWHOLE_PAGE', returnWholeKeys);
         },
 
         setBillingKeys: function () {
-            var effects = ['返回', '确定', '删除已支付的方式','结算', '向上选择', '向下选择',
-                '支票类支付', '礼券类支付', '银行POS支付', '第三方支付', '整单优惠','整单折扣',
-                '一卡通支付','清空支付方式列表','快捷支付'];
+            var effects = ['返回', '确定', '删除已支付的方式', '结算', '向上选择', '向下选择',
+                '支票类支付', '礼券类支付', '银行POS支付', '第三方支付', '整单优惠', '整单折扣',
+                '一卡通支付', '清空支付方式列表', '快捷支付'];
             var keys = ['ESC', 'ENTER', 'D', 'Space', '↑', '↓',
                 'S', 'A', 'P', 'Q', 'Y', 'U'
-                ,'O', 'C', 'F'];
+                , 'O', 'C', 'F'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.D, window.KEYS.Space, window.KEYS.Up, window.KEYS.Down,
                 window.KEYS.S, window.KEYS.A, window.KEYS.P, window.KEYS.Q, window.KEYS.Y, window.KEYS.U,
                 window.KEYS.O, window.KEYS.C, window.KEYS.F];
             var billingKeys = [];
-            for (var i = 0;i<effects.length;i++) {
+            for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
                 var key = keys[i];
                 var keyCode = keyCodes[i];
-                var billingKey = { effect:effect, key:key, keyCode:keyCode };
+                var billingKey = {effect: effect, key: key, keyCode: keyCode};
                 billingKeys.push(billingKey);
-                storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY,'BILLING_PAGE', billingKeys);
+                storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'BILLING_PAGE', billingKeys);
             }
         },
 
         setBillingReturnKeys: function () {
             var effects = ['返回', '确定', '删除已支付的方式', '结算', '向上选择', '向下选择',
-                '支票类支付', '礼券类支付', '银行POS支付', '第三方支付', '一卡通支付','清空支付方式列表','快捷支付'];
+                '支票类支付', '礼券类支付', '银行POS支付', '第三方支付', '一卡通支付', '清空支付方式列表', '快捷支付'];
             var keys = ['ESC', 'ENTER', 'D', 'Space', '↑', '↓',
                 'S', 'A', 'P', 'Q', 'O', 'C', 'F'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.D, window.KEYS.Space, window.KEYS.Up, window.KEYS.Down,
@@ -475,7 +475,7 @@ define([
         },
 
         setPrintKeys: function () {
-            var effects = ['返回', '确定', '向上选择', '向下选择','打印'];
+            var effects = ['返回', '确定', '向上选择', '向下选择', '打印'];
             var keys = ['ESC', 'ENTER', '↑', '↓', 'H'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down, window.KEYS.H];
             var printKeys = [];

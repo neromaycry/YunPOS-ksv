@@ -16,10 +16,10 @@ define([
         input: 'input[name = authcard]',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked'
+            'click .cancel': 'onCancelClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked'
         },
 
         LayerInitPage: function () {
@@ -57,7 +57,7 @@ define([
         swipeCard: function () {
             var _self = this;
             var value = $(this.input).val();
-            if (value != undefined&&value != '') {
+            if (value != undefined && value != '') {
                 this.attrs.callback();
                 if (this.attrs.is_navigate) {
                     this.confirmCloseLayer(this.attrs.navigate_page);
@@ -73,7 +73,7 @@ define([
             layer.close(layerindex);
         },
 
-        confirmCloseLayer:function(pageid) {
+        confirmCloseLayer: function (pageid) {
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:
                     this.closeLayer(PAGE_ID.LOGIN);
