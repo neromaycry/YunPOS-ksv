@@ -107,7 +107,7 @@ define([
             }
             var data = {
                 user_id: authUser,
-                user_password: authcommand,
+                user_password: $.md5(authcommand),
                 accredit_type: this.attrs.accredit_type
             };
             var accredit_type = this.attrs.accredit_type;
@@ -119,9 +119,9 @@ define([
                 if (resp.status == '00') {
                     console.log(resp);
                     if (_self.attrs.is_navigate) {
-                        this.confirmCloseLayer(_self.attrs.navigate_page);
+                        _self.confirmCloseLayer(_self.attrs.navigate_page);
                     } else {
-                        this.confirmCloseLayer(_self.attrs.pageid);
+                        _self.confirmCloseLayer(_self.attrs.pageid);
                     }
                     _self.attrs.callback();
                 } else {

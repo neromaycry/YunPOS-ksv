@@ -191,6 +191,7 @@ define([
                 if (!$.isEmptyObject(response)) {
                     if (response.status == "00") {
                         storage.set(window.system_config.LOGIN_USER_KEY, response);
+                        storage.set(window.system_config.LOGIN_USER_KEY, 'manager_id', '*');
                         storage.set(window.system_config.TOKEN_KEY, response["token"]);
                         router.navigate("main", {
                             trigger: true,

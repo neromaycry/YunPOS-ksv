@@ -211,16 +211,19 @@ define([
                 data['payway'] = 'barcode';
             }
             loading.show();
-            var url = 'http://127.0.0.1:9090/';
+            var url = 'http://127.0.0.1:5000/';
             //var url = 'http://114.55.62.102:9090';
-            resource.post(url + '/api/pay/xfb/micropay', data, function (resp) {
+            resource.post(url + 'api/pay/xfb/micropay', data, function (resp) {
                 if(resp.data['flag'] == '00') {
                     loading.hide();
                     Backbone.trigger('onReceivedsum',data);
                     _self.closeLayer(layerindex);
                 }else {
                     loading.hide();
-                    toastr.error('支付失败');
+                    //toastr.error('支付失败');
+                    layer.msg(resp.data.msg, optLayerError);
+
+
                 }
             });
         },
