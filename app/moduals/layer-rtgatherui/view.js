@@ -92,13 +92,8 @@ define([
             data['gather_kind'] = this.attrs.gather_kind;
             data['payment_bill'] = this.attrs.payment_bill;
             var gatherNo = $(this.input).val();
-            if(gatherNo == '') {
-                toastr.warning('退款账号不能为空');
-                $(this.input).val('');
-                return false;
-            }
-            if((gatherNo.split('.').length-1) > 0) {
-                toastr.warning('无效的支付账号');
+            if((gatherNo.split('.').length-1) > 0 || gatherNo == '') {
+                layer.msg('无效的退款账号', optLayerWarning);
                 $('this.input').val('');
                 return false;
             }

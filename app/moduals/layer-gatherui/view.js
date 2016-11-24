@@ -128,13 +128,8 @@ define([
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行MIS', LayerBankCardView, data, {area:'300px'});
             }else {
                 var gatherNo = $(this.input).val();
-                if(gatherNo == '') {
-                    toastr.warning('账号不能为空');
-                    $(this.input).val('');
-                    return false;
-                }
-                if((gatherNo.split('.').length-1) > 0) {
-                    toastr.warning('无效的支付账号');
+                if((gatherNo.split('.').length-1) > 0 || gatherNo == '') {
+                    layer.msg('无效的支付账号', optLayerWarning);
                     $('this.input').val('');
                     return false;
                 }
@@ -222,7 +217,6 @@ define([
                     _self.closeLayer(layerindex);
                 }else {
                     loading.hide();
-                    //toastr.error('支付失败');
                     layer.msg(resp.data.msg, optLayerError);
 
 

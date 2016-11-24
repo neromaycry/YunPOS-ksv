@@ -81,7 +81,7 @@ define([
         },
 
         onCancelClicked: function () {
-            if(this.attrs.pageid == PAGE_ID.BILLING) {
+            if(this.attrs.pageid == 6) {
                 $('input[name = billing]').focus();
             }else {
                 $('input[name = billingrt]').focus();

@@ -124,7 +124,7 @@ define([
             var _self = this;
             var orderNo = $(this.input).val();
             if (orderNo == '') {
-                toastr.info('请输入订单号');
+                layer.msg('请输入订单号', optLayerWarning);
                 return;
             }
             var data = {};
@@ -137,7 +137,7 @@ define([
                     console.log(resp.gather_detail);
                     _self.calculateModel();
                 } else {
-                    toastr.error(resp.msg);
+                    layer.msg(resp.msg, optLayerError);
                 }
             });
         },
@@ -190,7 +190,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Space,function () {
                 var itemamount = _self.model.get('itemamount');
                 if (itemamount == 0) {
-                    toastr.info('请输入订单号');
+                    layer.msg('请输入订单号', optLayerWarning);
                 } else {
                     isfromForce = false;
                     router.navigate('billingreturn',{trigger:true});
@@ -203,20 +203,11 @@ define([
             //确定
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
                 if ($(this.input).val() == '') {
-                    toastr.warning('订单编号不能为空');
+                    layer.msg('订单编号不能为空', optLayerWarning);
                     return;
                 }
                 _self.requestOrder();
                 $(_self.input).val('');
-                //if($('input[name = return_order_date]').val() == '') {
-                //    toastr.warning('订单日期不能为空');
-                //} else if ($('input[name = whole_return_order]').val() == ''){
-                //    toastr.warning('订单编号不能为空');
-                //}else {
-                //    _self.requestOrder();
-                //    $('input[name = return_order_date]').val("");
-                //    $('input[name = whole_return_order]').val("");
-                //}
             });
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Down, function () {
                 _self.scrollDown();
@@ -259,7 +250,7 @@ define([
             this.renderRtcart();
             this.renderRtInfo();
             //_self.renderRtPayedlist();
-            toastr.success('取消退货成功');
+            layer.msg('取消退货成功', optLayerSuccess);
             storage.remove(system_config.RETURN_KEY);
             $('input[name = whole_return_order]').focus();
         },
@@ -300,7 +291,7 @@ define([
         onBillingClicked: function () {
             var itemamount = this.model.get('itemamount');
             if (itemamount == 0) {
-                toastr.info('请输入订单号');
+                layer.msg('请输入订单号', optLayerWarning);
             } else {
                 isfromForce = false;
                 router.navigate('billingreturn',{trigger:true});
@@ -309,7 +300,7 @@ define([
 
         onOKClicked: function () {
             if ($(this.input).val() == '') {
-                toastr.warning('订单编号不能为空');
+                layer.msg('订单编号不能为空', optLayerWarning);
                 return;
             }
             this.requestOrder();
