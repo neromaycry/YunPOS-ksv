@@ -85,8 +85,6 @@ define([
 
         initPlugins: function () {
             $(this.input).focus();
-            //this.initLayoutHeight();
-            //$('#li' + _self.i).addClass('cus-selected');
             $('.for-cartlist').perfectScrollbar();
             this.$el.find('.for-numpad').html(this.template_numpad);
             this.renderPosInfo();
@@ -275,7 +273,7 @@ define([
                             callback: function () {
                                 var price = $('input[name = price]').val();
                                 resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
-                                resp.goods_detail[resp.goods_detail.length - 1].money = -parseFloat(price);
+                                resp.goods_detail[resp.goods_detail.length - 1].money = parseFloat(price);
                                 _self.onAddItem(resp.goods_detail);
                                 $('input[name = sku_id]').focus();
                             }
@@ -319,13 +317,13 @@ define([
                 return;
             }
             var item = this.collection.at(this.i);
-            var price = Math.abs(item.get('price'));
-            var num = Math.abs(item.get('num'));
-            var discount = Math.abs(item.get('discount'));
+            var price = item.get('price');
+            var num = item.get('num');
+            var discount = item.get('discount');
             if (value <= parseFloat(price * num) ) {
                 this.collection.at(this.i).set({
-                    discount: -value,
-                    money:-parseFloat(price * num - value)
+                    discount: value,
+                    money:parseFloat(price * num - value)
                 });
                 this.calculateModel();
                 $('#li' + this.i).addClass('cus-selected');
@@ -353,11 +351,11 @@ define([
             var rate = discountpercent / 100;
             console.log(rate);
             var item = this.collection.at(this.i);
-            var price = Math.abs(item.get('price'));
-            var num = Math.abs(item.get('num'));
+            var price = item.get('price');
+            var num = item.get('num');
             this.collection.at(this.i).set({
-                discount:-parseFloat(price * num * (1 - rate)),
-                money:-parseFloat(price * num * rate)
+                discount:price * num * (1 - rate),
+                money:price * num * rate
             });
             this.calculateModel();
             $('#li' + this.i).addClass('cus-selected');
@@ -375,19 +373,19 @@ define([
                 return;
             }
             var item = this.collection.at(this.i);
-            var num = Math.abs(item.get('num'));
-            var discount = Math.abs(item.get('discount'));
-            var price = Math.abs(item.get('price'));
+            var num = item.get('num');
+            var discount = item.get('discount');
+            var price = item.get('price');
             item.set({
-                num:-parseFloat(number),
-                money:-parseFloat(price * number - discount)
+                num:parseFloat(number),
+                money:price * number - discount
             });
             this.totalamount = 0;
             this.itemamount = 0;
             this.discountamount = 0;
-            var priceList = Math.abs(this.collection.pluck('price'));
-            var discounts = Math.abs(this.collection.pluck('discount'));
-            var itemNum = Math.abs(this.collection.pluck('num'));
+            var priceList = this.collection.pluck('price');
+            var discounts = this.collection.pluck('discount');
+            var itemNum = this.collection.pluck('num');
             for (var i = 0; i < priceList.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
                 this.totalamount += priceList[i] * itemNum[i];
@@ -419,9 +417,9 @@ define([
             this.discountamount = 0;
             for(var i = 0;i < this.collection.length;i++) {
                 var item = this.collection.at(i);
-                var money = -Math.abs(item.get('money'));
-                var num = -Math.abs(item.get('num'));
-                var discount = -Math.abs(item.get('discount'));
+                var money = item.get('money');
+                var num = item.get('num');
+                var discount = item.get('discount');
                 item.set({
                     money:money,
                     num:num,
@@ -433,7 +431,7 @@ define([
             var discounts = this.collection.pluck('discount');
             for (var i = 0; i < this.collection.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
-                this.totalamount += -(Math.abs(priceList[i]) * Math.abs(itemNum[i]));
+                this.totalamount += priceList[i] * itemNum[i];
                 this.itemamount += itemNum[i];
                 this.discountamount += discounts[i];
             }
