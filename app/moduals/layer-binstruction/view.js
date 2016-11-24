@@ -67,18 +67,19 @@ define([
         },
 
         onBankDailyClicked: function () {
+            loading.show();
             var data = {
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id')
             };
-            console.log(data);
-            this.sendWebSocketDirective([DIRECTIVES.Bank_daily], [data], wsClient);
+            console.log(JSON.stringify(data));
+            this.sendWebSocketDirective([DIRECTIVES.Bank_daily], [JSON.stringify(data)], wsClient);
         },
 
         onBankQueryCliked: function () {
             var data = {
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id')
             };
-            this.sendWebSocketDirective([DIRECTIVES.Bank_query], [data], wsClient);
+            this.sendWebSocketDirective([DIRECTIVES.Bank_query], [JSON.stringify(data)], wsClient);
         }
 
     });
