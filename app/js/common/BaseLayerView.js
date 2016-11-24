@@ -204,7 +204,9 @@ define([
         sendWebSocketDirective: function (directives, content, websocket) {
             if (websocket.readyState == 1) {
                 for (var i = 0; i < directives.length; i++) {
-                    websocket.send(directives[i] + content[i]);
+                    var directive = directives[i] + content[i];
+                    console.log(directive);
+                    websocket.send(directive);
                 }
             } else {
                 //toastr.warning('没有连接到硬件，请检查硬件连接');

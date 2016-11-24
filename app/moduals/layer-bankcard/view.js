@@ -32,12 +32,13 @@ define([
                 pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                 bill_no: this.attrs.bill_no
             };
-            console.log(data);
+            //var data = {};
             //data['transaction_amount'] = '0.01';
             //data['cashier_no'] = '2222';
             //data['pos_no'] = '002';
             //data['bill_no'] = this.attrs.bill_no;
-            this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [data] , wsClient);
+            console.log(JSON.stringify(data));
+            this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)] , wsClient);
         },
 
         bindLayerKeys: function () {
