@@ -580,7 +580,7 @@ define([
             console.log(rate);
             this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
                 var discountpercent = $(_self.input).val();
-                var rate = discountpercent / 100;
+                var rate = parseFloat(discountpercent) / 100;
                 console.log(rate);
                 var item = _self.collection.at(_self.i);
                 var price = item.get('price');
