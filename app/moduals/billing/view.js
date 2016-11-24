@@ -73,8 +73,8 @@ define([
             'click .billing-delete':'onDeleteClicked',
             'click .totaldiscount':'onTotalDiscountClicked',
             'click .discountpercent':'onDiscountPercentClicked',
-            'click .billing-keyup':'onKeyUp',
-            'click .billing-keydown':'onKeyDown',
+            'click .billing-keyup':'onKeyUpClicked',
+            'click .billing-keydown':'onKeyDownClicked',
             'click .billing':'onBillingClicked',
             'click .billing-clean':'onCleanClicked',
             'click .quick-pay':'onQuickPayClicked',//快捷支付
@@ -92,8 +92,10 @@ define([
             this.requestmodel = new BillModel();
             this.collection = new BillCollection();
             this.totalamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','totalamount');
+            console.log(this.totalamount + '------------' + typeof (this.totalamount));
             this.discountamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','discountamount');
             this.itemamount = storage.get(system_config.SALE_PAGE_KEY,'shopinfo','itemamount');
+            //this.quling();
             this.totalamount -= this.discountamount;//优惠金额
             this.unpaidamount = this.totalamount;//未付金额
             this.model.set({
@@ -277,7 +279,7 @@ define([
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Enter, function () {
-                _self.confirm();
+                _self.onOKClicked();
             });
             //删除
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.D, function () {
@@ -289,11 +291,11 @@ define([
             });
             //方向下
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
-               _self.scrollDown();
+               _self.onKeyDownClicked();
             });
             //方向上
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Up, function() {
-               _self.scrollUp();
+               _self.onKeyUpClicked();
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function() {
@@ -341,35 +343,6 @@ define([
                 _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area:'600px'});
             });
 
-        },
-
-        /**
-         * 确认事件
-         */
-        confirm:function() {
-            var receivedsum = $(this.input).val();
-            var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0) {
-                layer.msg('待支付金额为零，请进行结算', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            if(receivedsum > (unpaidamount + 100)) {
-                layer.msg('找零金额超限', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            if((receivedsum.split('.').length-1) > 1 || receivedsum == '.' || parseFloat(receivedsum) == 0) {
-                layer.msg('无效的支付金额', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            if(receivedsum == '') {
-                receivedsum = unpaidamount;
-            }
-            this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id,"");
-            this.renderClientDisplay(this.model, isPacked);
-            $(this.input).val('');
         },
 
         /**
@@ -588,33 +561,7 @@ define([
             });
         },
 
-        /**
-         * 光标向下
-         */
-        scrollDown: function () {
-            if (this.i < this.collection.length - 1) {
-                this.i++;
-            }
-            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
-                this.n++;
-                $('.for-billdetail').scrollTop(this.listheight * this.n);
-            }
-            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-        },
 
-        /**
-         * 光标向上
-         */
-        scrollUp: function () {
-            if (this.i > 0) {
-                this.i--;
-            }
-            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
-                this.n--;
-                $('.for-billdetail').scrollTop(this.listheight * this.n);
-            }
-            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-        },
         /**
          * 结算
          */
@@ -870,15 +817,30 @@ define([
             this.billPercentDiscount();
         },
         /**
-         * 向上按钮点击事件
+         * 光标向上
          */
-        onKeyUp: function () {
-            this.scrollUp();
+        onKeyUpClicked: function () {
+            if (this.i > 0) {
+                this.i--;
+            }
+            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
+                this.n--;
+                $('.for-billdetail').scrollTop(this.listheight * this.n);
+            }
+            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
-         * 向下按钮点击事件
+         * 光标向下
          */
-        onKeyDown: function () {
+        onKeyDownClicked: function () {
+            if (this.i < this.collection.length - 1) {
+                this.i++;
+            }
+            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
+                this.n++;
+                $('.for-billdetail').scrollTop(this.listheight * this.n);
+            }
+            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             this.scrollDown();
         },
         /**
@@ -891,7 +853,6 @@ define([
                 layer.msg('还有未支付的金额，请支付完成后再进行结算', optLayerWarning);
                 return;
             }
-            console.log(window.auth_quling);
             var attrs = {
                 pageid:pageId,
                 content:'确认结算此单？',
@@ -910,8 +871,33 @@ define([
            this.cleanPaylist();
         },
 
+        /**
+         * 确认事件
+         */
         onOKClicked: function () {
-           this.confirm();
+            var receivedsum = $(this.input).val();
+            var unpaidamount = this.model.get('unpaidamount');
+            if(unpaidamount == 0) {
+                layer.msg('待支付金额为零，请进行结算', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum > (unpaidamount + 100)) {
+                layer.msg('找零金额超限', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if((receivedsum.split('.').length-1) > 1 || receivedsum == '.' || parseFloat(receivedsum) == 0) {
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum == '') {
+                receivedsum = unpaidamount;
+            }
+            this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id,"");
+            this.renderClientDisplay(this.model, isPacked);
+            $(this.input).val('');
         },
 
         onNumClicked: function (e) {
@@ -1109,7 +1095,19 @@ define([
                 s += '0';
             }
             return s;
-        }
+        },
+
+        /**
+         * 去零控制
+         */
+        //quling: function () {
+        //    switch (window.auth_quling) {
+        //        case 0:
+        //            this.totalamount =
+        //        case 1:
+        //            break;
+        //    }
+        //}
 
 
         ///**
