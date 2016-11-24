@@ -65,9 +65,11 @@ define([
                 gather_name: this.attrs.gather_name,
                 gather_kind: this.attrs.gather_kind,
                 gather_no: resp.card_no,
-                reference_number: resp.reference_number,
                 payment_bill: '',
-                hasExtra: true
+                hasExtra: true,
+                extras:{
+                    reference_number: resp.reference_number
+                }
             };
             Backbone.trigger('onReceivedsum', data);
             this.closeLayer(layerindex);

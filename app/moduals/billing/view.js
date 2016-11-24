@@ -163,9 +163,7 @@ define([
             var paymentBill = data['payment_bill'];
             var extraArgs = undefined;
             if (data.hasExtra) {
-                extraArgs = {
-                    reference_number: data.reference_number
-                };
+                extraArgs = data.extras;
             }
             this.addToPaymentList(this.totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, this.card_id, paymentBill, extraArgs);
         },
