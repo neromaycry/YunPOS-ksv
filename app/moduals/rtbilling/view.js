@@ -185,7 +185,7 @@ define([
                 _self.payment('01', '支票类');
             });
             //礼券类
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.A, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.B, function() {
                 _self.payment('02', '礼券类');
             });
             //银行POS
@@ -211,7 +211,7 @@ define([
                 _self.onBillCleanClicked();
             });
             //快捷支付
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.F, function () {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.E, function () {
                 _self.QuickPay();
             });
 

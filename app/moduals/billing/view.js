@@ -334,7 +334,7 @@ define([
                 _self.cleanPaylist();
             });
             //快捷支付
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F, function () {
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.E, function () {
                 _self.QuickPay();
             });
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.V, function () {
