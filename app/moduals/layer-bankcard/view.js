@@ -19,13 +19,13 @@ define([
         input:'input[name = bk-account]',
 
         events: {
-            'click .cancel': 'onCancelClicked',
-            'click .ok': 'onOKClicked'
+            'click .cancel': 'onCancelClicked'
         },
 
         LayerInitPage: function () {
             console.log(this.attrs);
             this.model = new LayerBankCardModel();
+            this.handleEvents();
             var data = {
                 transaction_amount: '0.01',
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
@@ -41,30 +41,37 @@ define([
             this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)] , wsClient);
         },
 
+        handleEvents: function () {
+            Backbone.off('onBankSaleSuccess');
+            Backbone.on('onBankSaleSuccess', this.onBankSaleSuccess, this);
+        },
+
+
         bindLayerKeys: function () {
             var _self = this;
             this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Esc , function () {
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Enter, function () {
-                _self.confirm();
+                _self.onCancelClicked();
             });
         },
 
-        confirm: function () {
-            var data = {};
-            data['gather_id'] = this.attrs.gather_id;
-            data['gather_money'] = this.attrs.gather_money;
-            data['gather_name'] = this.attrs.gather_name;
-            data['gather_kind'] = this.attrs.gather_kind;
-            data['payment_bill'] = '';
-            Backbone.trigger('onReceivedsum',data);
+        onBankSaleSuccess: function (resp) {
+            console.log(resp);
+            var data = {
+                gather_id: this.attrs.gather_id,
+                gather_money: this.attrs.gather_money,
+                gather_name: this.attrs.gather_name,
+                gather_kind: this.attrs.gather_kind,
+                gather_no: resp.card_no,
+                reference_number: resp.reference_number,
+                payment_bill: '',
+                hasExtra: true
+            };
+            Backbone.trigger('onReceivedsum', data);
             this.closeLayer(layerindex);
             $('input[name = billing]').focus();
-        },
-
-        onOKClicked: function () {
-            this.confirm();
         },
 
         onCancelClicked: function () {

@@ -142,6 +142,11 @@ requirejs([
 
     window.layerindex = undefined;
 
+    //window.layer.config({
+    //    extend: 'skin/moon/style.css',
+    //    skin: 'layer-ext-moon'
+    //});
+
     window.optLayerWarning = {
         icon: 0,
         time: 3000
@@ -230,7 +235,67 @@ requirejs([
         window.layer.msg('已与硬件建立连接', optLayerSuccess);
     };
     window.wsClient.onmessage = function (e) {
-        console.log('websocket message:' + e);
+        var data = $.parseJSON(e.data);
+        console.log(data.trade_type);
+        switch (data.trade_type) {
+            case DIRECTIVES.Bank_sale:
+                if (data.code == '00') {
+                    window.loading.hide();
+                    Backbone.trigger('onBankSaleSuccess', data);
+                } else {
+                    window.layer.msg(e.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.Bank_backout:
+                if (data.code == '00') {
+                    window.loading.hide();
+                } else {
+                    window.layer.msg(e.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.Bank_refund:
+                if (data.code == '00') {
+                    window.loading.hide();
+                } else {
+                    window.layer.msg(e.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.Bank_balance:
+                if (data.code == '00') {
+                    window.loading.hide();
+                } else {
+                    window.layer.msg(e.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.Bank_reprint:
+                if (data.code == '00') {
+                    window.loading.hide();
+                } else {
+                    window.layer.msg(e.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.Bank_query:
+                if (data.code == '00') {
+                    window.loading.hide();
+                } else {
+                    window.layer.msg(e.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.Bank_signin:
+                if (data.code == '00') {
+                    window.loading.hide();
+                } else {
+                    window.layer.msg(e.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.Bank_daily:
+                if (data.code == '00') {
+                    window.loading.hide();
+                } else {
+                    window.layer.msg(e.msg, optLayerWarning);
+                }
+                break;
+        }
     };
     window.wsClient.onclose = function (e) {
         //window.toastr.warning('与硬件连接断开');
