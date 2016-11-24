@@ -337,72 +337,7 @@ define([
             $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
-        /**
-         * 判断删除的已支付方式里面是否含有一卡通支付。
-         */
-        judgeEcardExistance: function () {
-            var item = this.collection.at(this.i);
-            console.log(this.collection);
-            var gatherKind = item.get('gather_kind');
-            if(gatherKind == '06'){
-                var gatherid = item.get('gather_id');
-                var cardId = item.get('card_id');
-                //取出对应的ONE_CARD_KEY的值
-                var ecardcollection = storage.get(system_config.ONE_CARD_KEY,cardId,'detail');
-                console.log(ecardcollection);
-                this.tempcollection = new RTBillCollection();
-                for(var i in ecardcollection) {
-                    if(ecardcollection[i].gather_id == gatherid){
-                        var temp = ecardcollection[i];
-                        var gather_money = parseFloat(temp.gather_money);
-                        gather_money = gather_money - item.get('gather_money');
-                        gather_money = gather_money.toFixed(2);
-                        temp['gather_money'] = gather_money
-                        this.tempcollection.push(temp);
-                    } else {
-                        this.tempcollection.push(ecardcollection[i]);
-                    }
-                }
-                storage.remove(system_config.ONE_CARD_KEY);
-                storage.set(system_config.ONE_CARD_KEY,cardId,'detail',this.tempcollection);
-                this.deleteItem();
-            }else{
-                this.deleteItem();
-            }
-            var isExist = this.collection.findWhere({gather_kind: "06"});
-            if(isExist == undefined){
-                if(storage.isSet(system_config.ONE_CARD_KEY)){
-                    storage.remove(system_config.ONE_CARD_KEY);
-                }
-            }
-        },
 
-
-        deleteItem:function(){
-            var item = this.collection.at(this.i);
-            this.collection.remove(item);
-            var totalreceived = 0;
-            var trlist = this.collection.pluck('gather_money');
-            for(var i = 0;i < trlist.length; i++) {
-                totalreceived += trlist[i];
-            }
-            if(totalreceived >= this.totalamount) {
-                this.unpaidamount = 0;
-                this.oddchange = totalreceived - this.totalamount;
-            }else{
-                this.oddchange = 0;
-                this.unpaidamount = this.totalamount - totalreceived;
-            }
-            this.model.set({
-                receivedsum: totalreceived,
-                unpaidamount: this.unpaidamount,
-                oddchange:this.oddchange
-            });
-            this.i = 0;
-            this.renderBillInfo();
-            this.renderBillDetail();
-            layer.msg('删除成功', optLayerSuccess);
-        },
 
         /**
          * 清空已支付列表
@@ -659,7 +594,8 @@ define([
         },
 
         /**
-         * 删除按钮点击事件
+         * 删除,如果存在第三方支付，则调用refund函数;如果存在一卡通支付，调用一卡通删除函数;如果存在银行卡支付，则调用银行卡删除函数。
+         * 否则，调用deleteItem
          */
         onDeleteClicked: function () {
             var _self = this;
@@ -672,10 +608,36 @@ define([
                 pageid:pageId,
                 content:'确定删除此条支付记录？',
                 callback: function () {
-                    _self.judgeEcardExistance();
+                    _self.deleteItem();
                 }
             };
            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area:'300px'});
+        },
+
+        deleteItem:function(){
+            var item = this.collection.at(this.i);
+            this.collection.remove(item);
+            var totalreceived = 0;
+            var trlist = this.collection.pluck('gather_money');
+            for(var i = 0;i < trlist.length; i++) {
+                totalreceived += trlist[i];
+            }
+            if(totalreceived >= this.totalamount) {
+                this.unpaidamount = 0;
+                this.oddchange = totalreceived - this.totalamount;
+            }else{
+                this.oddchange = 0;
+                this.unpaidamount = this.totalamount - totalreceived;
+            }
+            this.model.set({
+                receivedsum: totalreceived,
+                unpaidamount: this.unpaidamount,
+                oddchange:this.oddchange
+            });
+            this.i = 0;
+            this.renderBillInfo();
+            this.renderBillDetail();
+            layer.msg('删除成功', optLayerSuccess);
         },
 
         /**

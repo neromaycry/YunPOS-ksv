@@ -872,6 +872,7 @@ define([
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
         },
+
         isClearCartGranted: function () {
             var _self = this;
             this.evalAuth(auth_delete, '09', {}, function () {
