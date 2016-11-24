@@ -68,6 +68,7 @@ define([
                 payment_bill: '',
                 hasExtra: true,
                 extras:{
+                    extra_id: 0,
                     reference_number: resp.reference_number
                 }
             };

@@ -228,9 +228,15 @@ define([
                 card_id: cardId,
                 payment_bill: paymentBill,
                 havepay_money: havepay_money,
-                change_money: change_money,
-                reference_number: extraArgs.reference_number
+                change_money: change_money
             });
+            switch (extraArgs.extra_id) {
+                case 0:
+                    model.set({
+                        reference_number: extraArgs.reference_number
+                    });
+                    break;
+            }
             this.collection.add(model);
             console.log(this.collection);
             this.totalreceived = this.totalreceived + gatherMoney;
