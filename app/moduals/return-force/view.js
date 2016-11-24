@@ -306,31 +306,32 @@ define([
          */
         modifyItemDiscount: function () {
             var value = $(this.input).val();
+            var item = this.collection.at(this.i);
+            var price = item.get('price');
+            var num = item.get('num');
+            var discount = item.get('discount');
             if(this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(value == '.' || (value.split('.').length - 1) > 1 || value == ''){
-                layer.msg('无效的单品优惠金额', optLayerWarning);
+                layer.msg('无效的优惠金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            var item = this.collection.at(this.i);
-            var price = item.get('price');
-            var num = item.get('num');
-            var discount = item.get('discount');
-            if (value <= parseFloat(price * num) ) {
-                this.collection.at(this.i).set({
-                    discount: value,
-                    money:parseFloat(price * num - value)
-                });
-                this.calculateModel();
-                $('#li' + this.i).addClass('cus-selected');
-
-            }else {
+            if (parseFloat(value) > price * num) {
                 layer.msg('优惠金额不能大于商品金额', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
+
+            this.collection.at(this.i).set({
+                discount: parseFloat(value),
+                money:price * num - value
+            });
+            this.calculateModel();
+            $('#li' + this.i).addClass('cus-selected');
             $(this.input).val('');
         },
 
@@ -348,7 +349,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            var rate = discountpercent / 100;
+            var rate = parseFloat(discountpercent) / 100;
             console.log(rate);
             var item = this.collection.at(this.i);
             var price = item.get('price');
@@ -415,17 +416,6 @@ define([
             this.totalamount = 0;
             this.itemamount = 0;
             this.discountamount = 0;
-            for(var i = 0;i < this.collection.length;i++) {
-                var item = this.collection.at(i);
-                var money = item.get('money');
-                var num = item.get('num');
-                var discount = item.get('discount');
-                item.set({
-                    money:money,
-                    num:num,
-                    discount:discount
-                });
-            }
             var priceList = this.collection.pluck('price');
             var itemNum = this.collection.pluck('num');
             var discounts = this.collection.pluck('discount');

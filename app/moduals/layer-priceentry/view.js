@@ -59,16 +59,13 @@ define([
 
         confirm: function () {
             var price = $(this.input).val();
-            if(price == '') {
-                toastr.warning('单价不能为空');
-            }else if(price == 0) {
-                toastr.warning('单价不能为零');
-            }else if((price.split('.').length-1) > 1 || price == '.') {
-                toastr.warning('无效的单价');
-            } else {
-                this.attrs.callback();
-                this.closeLayer(layerindex);
+            if(price == ''|| parseFloat(price) == 0 || (price.split('.').length-1) > 1 || price == '.') {
+                layer.msg('无效的单价', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
+            this.attrs.callback();
+            this.closeLayer(layerindex);
         },
 
         onCancelClicked: function () {
