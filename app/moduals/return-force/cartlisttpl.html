@@ -62,11 +62,6 @@ break;
 return text;
 }%>
 
-<%function abs(x){
-var x = Math.abs(x);
-return x;
-}%>
-
 
 <ul class="list-group ul-cart no-margining">
     <% _.each(obj,function(e,i){ %>
@@ -80,12 +75,12 @@ return x;
                     <div class="col-xs-4 col-md-4 text-red text-right"><%= e.spec%></div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-4 col-md-4 text-left">数量：<%= toDecimal3(abs(e.num)) %></div>
+                    <div class="col-xs-4 col-md-4 text-left">数量：<%= toDecimal3(e.num) %></div>
                     <div class="col-xs-4 col-md-4 text-left">单价：<%= toDecimal2(e.price) %></div>
-                    <div class="col-xs-4 col-md-4" style="color: #4db6ac;">优惠：- <%= toDecimal2(abs(e.discount)) %></div>
+                    <div class="col-xs-4 col-md-4" style="color: #4db6ac;">优惠：- <%= toDecimal2(e.discount) %></div>
                 </div>
             </div>
-            <div class="col-xs-3 col-md-3" style="color:#f36c60;"><%= toDecimal2(abs(e.num*e.price-e.discount)) %></div>
+            <div class="col-xs-3 col-md-3" style="color:#f36c60;"><%= toDecimal2(e.num*e.price-e.discount) %></div>
         </div>
     </li>
     <% }) %>

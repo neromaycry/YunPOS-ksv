@@ -443,10 +443,14 @@ define([
                 }
                 data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY,'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
-                for(var i = 0;i<data['gather_detail'].length;i++) {
+                for(var i = 0;i < data['gather_detail'].length;i++) {
                     data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
                     data['gather_detail'][i].havepay_money = - data['gather_detail'][i].havepay_money;
-                    console.log(data['gather_detail'][i]);
+                }
+                for(var i = 0;i < data['goods_detail'].length;i++) {
+                    data['goods_detail'][i].money = -data['goods_detail'][i].money;
+                    data['goods_detail'][i].num = -data['goods_detail'][i].num;
+                    data['goods_detail'][i].discount = -data['goods_detail'][i].discount;
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);
@@ -481,6 +485,11 @@ define([
                     data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
                     data['gather_detail'][i].havepay_money = - data['gather_detail'][i].havepay_money;
                     console.log(data['gather_detail'][i]);
+                }
+                for(var i = 0;i < data['goods_detail'].length;i++) {
+                    data['goods_detail'][i].money = -data['goods_detail'][i].money;
+                    data['goods_detail'][i].num = -data['goods_detail'][i].num;
+                    data['goods_detail'][i].discount = -data['goods_detail'][i].discount;
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);

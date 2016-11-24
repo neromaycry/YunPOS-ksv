@@ -149,9 +149,9 @@ define([
                 var num = item.get('num');
                 var discount = item.get('discount');
                 item.set({
-                    money:-money,
-                    num:-num,
-                    discount:-discount
+                    money:money,
+                    num:num,
+                    discount:discount
                 });
             }
             console.log(this.RtcartCollection);
@@ -161,7 +161,7 @@ define([
             var discounts = this.RtcartCollection.pluck('discount');
             for (var i = 0; i < this.RtcartCollection.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
-                this.totalamount += -(Math.abs(priceList[i]) * Math.abs(itemNum[i]));
+                this.totalamount += priceList[i] * itemNum[i];
                 this.itemamount += itemNum[i];
                 this.discountamount += discounts[i];
             }
