@@ -103,7 +103,6 @@ define([
                          case PAGE_ID.CHECKING:
                              router.navigate('checking', { trigger: true, replace: true });
                              break;
-
                      }
                  } else {
                      toastr.error(resp.msg);

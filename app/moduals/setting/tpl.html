@@ -1,0 +1,31 @@
+<nav class="navbar" style="background:#337AB7;border-radius: 0px">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <img src="./assets/logo-gsi-notext.png" class="img-logo-notext">
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand" style="color: #FFF;margin-left: 3px">设置</a>
+        </div>
+        <div class="collapse navbar-collapse pos-textsize">
+            <ul class="nav navbar-nav title">
+                <li class="setting-base"><a style="color: #FFF">基本设置</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="help"><a style="color: #ffffff;;margin-right:15px;"><i class="fa fa-question-circle-o"></i></a></li>
+                <li class="back-to-main" ><a style="color: #ffffff"><i class="fa fa-arrow-left"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label for="gateway" class="col-xs-2 col-sm-2 col-md-2 control-label">服务器地址</label>
+        <div class="col-xs-8 col-sm-8 col-md-8 input-group">
+            <input type="text" class="form-control" id="gateway" name="gateway" readonly>
+            <input style="display: none">
+            <span class="input-group-btn">
+                <button id="btn-gateway" class="btn btn-primary">修改</button>
+            </span>
+        </div>
+    </div>
+</form>

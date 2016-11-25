@@ -163,6 +163,11 @@ define([
                         } else {
                             pageId = mainId;
                         }
+                        if (!attrs.callback) {
+                            console.log('callback is null');
+                        } else {
+                            attrs.callback();
+                        }
                     } else {
                         pageId = mainId;
                     }
@@ -425,10 +430,10 @@ define([
             this.initOtherView();
             this.initPlugins();
             this.initLayoutHeight();
-            if (storage.isSet(system_config.IS_KEYBOARD_PLUGGED)) {
-                var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
-                $('input').attr('readonly', !isKeyboardPlugged);
-            }
+            //if (storage.isSet(system_config.IS_KEYBOARD_PLUGGED)) {
+            //    var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
+            //    $('input').attr('readonly', !isKeyboardPlugged);
+            //}
             this.addClickEvents();
             return this;
         }

@@ -219,7 +219,8 @@ window.PAGE_ID = {
     'LAYER_HELP': 51,
     'LAYER_GATEWAY': 52,
     'LAYER_AUTHCOMMAND': 53,
-    'LAYER_AUTHCARD': 54
+    'LAYER_AUTHCARD': 54,
+    'SETTING': 55,
 };
 
 window.KEYS = {

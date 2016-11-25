@@ -7,22 +7,23 @@ define(['backbone'], function (Backbone) {
 
         routes: {
             '': 'login',
-            'setdns':'setdns',
-            'setposkey':'setposkey',
-            'initinfo':'initinfo',
-            'login':'login',
-            'main':'main',
-            'salesman':'salesman',
-            'member':'member',
-            'billing':'billing',
-            'billingreturn':'billingreturn',
-            'restorder':'restorder',
-            'returnforce':'returnforce',
-            'returnwhole':'returnwhole',
-            'checking':'checking',
-            'hconnection':'hconnection',
-            'print':'print',
-            'lockscreen': 'lockscreen'
+            'setdns': 'setdns',
+            'setposkey': 'setposkey',
+            'initinfo': 'initinfo',
+            'login': 'login',
+            'main': 'main',
+            'salesman': 'salesman',
+            'member': 'member',
+            'billing': 'billing',
+            'billingreturn': 'billingreturn',
+            'restorder': 'restorder',
+            'returnforce': 'returnforce',
+            'returnwhole': 'returnwhole',
+            'checking': 'checking',
+            'hconnection': 'hconnection',
+            'print': 'print',
+            'lockscreen': 'lockscreen',
+            'setting': 'setting'
         },
 
         //路由初始化可以做一些事
@@ -61,7 +62,7 @@ define(['backbone'], function (Backbone) {
             //    view.render();
             //});
             var isFirstSet = storage.isSet(window.system_config.IS_FIRST_KEY);
-            console.log('isFirstSet:'+isFirstSet);
+            console.log('isFirstSet:' + isFirstSet);
             if (isFirstSet) {
                 var _url = './moduals/login/view.js';
                 require([_url], function (View) {
@@ -165,8 +166,16 @@ define(['backbone'], function (Backbone) {
             });
         },
 
-        print:function () {
+        print: function () {
             var _url = './moduals/print/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        setting: function () {
+            var _url = './moduals/setting/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

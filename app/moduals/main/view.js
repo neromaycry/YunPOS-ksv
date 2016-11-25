@@ -82,7 +82,8 @@ define([
             'click .withdraw': 'onWithDrawClicked',//打印页面
             'click .cashdrawer': 'openCashDrawer',
             'click .lock': 'lockScreen',
-            'click .bank-business': 'onBusinessClicked'
+            'click .bank-business': 'onBusinessClicked',
+            'click .setting': 'onSettingClicked'
             //'click .btn-floatpad':'onFloatPadClicked'
         },
         pageInit: function () {
@@ -391,6 +392,10 @@ define([
 
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.V, function () {
                 _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Q, function () {
+                _self.onSettingClicked();
             });
             //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
             //    var secondLoginView = new SecondLoginView({
@@ -1037,6 +1042,11 @@ define([
          */
         onBusinessClicked: function () {
             this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
+        },
+
+        onSettingClicked: function () {
+            storage.set(system_config.LAST_PAGE, pageId);
+            router.navigate('setting', {trigger: true});
         },
 
         onMemberSigned: function (resp) {

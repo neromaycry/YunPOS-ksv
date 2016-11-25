@@ -248,6 +248,11 @@ define([
             });
         },
 
+        onSettingClicked: function () {
+            storage.set(system_config.LAST_PAGE, pageId);
+            router.navigate('setting', {trigger: true});
+        },
+
         checkIn: function () {
             //toastr.info('签到');
             layer.msg('签到', optLayerSuccess);
@@ -295,6 +300,13 @@ define([
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.I, function () {
                 _self.iniSettngs();
             });
+
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Q, function () {
+                _self.onSettingClicked();
+            });
+            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.W, function () {
+                _self.checkIn();
+            });
             //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
             //    var SOCKET_ADDR = 'ws://localhost:7110/';
             //    wsClient.close();
@@ -331,6 +343,7 @@ define([
             this.setReturnWholeKeys();
             this.setCheckingKeys();
             this.setPrintKeys();
+            this.setSettingKeys();
         },
 
         setMainKeys: function () {
@@ -487,6 +500,21 @@ define([
                 var printKey = {effect: effect, key: key, keyCode: keyCode};
                 printKeys.push(printKey);
                 storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'PRINT_PAGE', printKeys);
+            }
+        },
+
+        setSettingKeys: function () {
+            var effects = ['返回', '确定', '修改服务器地址'];
+            var keys = ['ESC', 'ENTER', 'Q'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Q];
+            var printKeys = [];
+            for (var i = 0; i < effects.length; i++) {
+                var effect = effects[i];
+                var key = keys[i];
+                var keyCode = keyCodes[i];
+                var printKey = {effect: effect, key: key, keyCode: keyCode};
+                printKeys.push(printKey);
+                storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'SETTING_PAGE', printKeys);
             }
         }
 
