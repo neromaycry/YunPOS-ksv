@@ -222,7 +222,9 @@ define([
                 gather_no: gatherNo,
                 gather_kind: gatherKind,
                 havepay_money: havepay_money,
-                change_money: change_money
+                change_money: change_money,
+                payment_bill:'',
+                reference_number:''
             });
             switch (extraArgs.extra_id) {
                 case 0:

@@ -1,8 +1,8 @@
 /**
  * Created by gjwlg on 2016/9/10.
  */
-//±£ÁôÁ½Î»Ğ¡Êı
-//¹¦ÄÜ£º½«¸¡µãÊıËÄÉáÎåÈë£¬È¡Ğ¡Êıµãºó2Î»
+//ä¿ç•™ä¸¤ä½å°æ•°
+//åŠŸèƒ½ï¼šå°†æµ®ç‚¹æ•°å››èˆäº”å…¥ï¼Œå–å°æ•°ç‚¹å2ä½
 function toDecimal(x) {
     var f = parseFloat(x);
     if (isNaN(f)) {
@@ -12,7 +12,7 @@ function toDecimal(x) {
     return f;
 }
 
-// Ç¿ÖÆ±£Áô2Î»Ğ¡Êı£¬Èç£º2£¬»áÔÚ2ºóÃæ²¹ÉÏ00.¼´2.00
+// å¼ºåˆ¶ä¿ç•™2ä½å°æ•°ï¼Œå¦‚ï¼š2ï¼Œä¼šåœ¨2åé¢è¡¥ä¸Š00.å³2.00
 function toDecimal2(x) {
     var f = parseFloat(x);
     if (isNaN(f)) {
@@ -73,67 +73,67 @@ function myNumberic(e,len) {
     var dot=obj.value.indexOf(".");//alert(e.which);
     len =(typeof(len)=="undefined")?2:len;
     var  key=e.keyCode|| e.which;
-    if(key==8 || key==9 || key==46 || (key>=37  && key<=40))//ÕâÀïÎªÁË¼æÈİFirefoxµÄbackspace,tab,del,·½Ïò¼ü
+    if(key==8 || key==9 || key==46 || (key>=37  && key<=40))//è¿™é‡Œä¸ºäº†å…¼å®¹Firefoxçš„backspace,tab,del,æ–¹å‘é”®
         return true;
-    if (key<=57 && key>=48) { //Êı×Ö
-        if(dot==-1)//Ã»ÓĞĞ¡Êıµã
+    if (key<=57 && key>=48) { //æ•°å­—
+        if(dot==-1)//æ²¡æœ‰å°æ•°ç‚¹
             return true;
-        else if(obj.value.length<=dot+len)//Ğ¡ÊıÎ»Êı
+        else if(obj.value.length<=dot+len)//å°æ•°ä½æ•°
             return true;
-    } else if((key==46) && dot==-1){//Ğ¡Êıµã
+    } else if((key==46) && dot==-1){//å°æ•°ç‚¹
         return true;
     }
     return false;
 }
 
 //Create Time:  07/28/2011
-//Operator:     ÁõÕşÎ°
-//Description:  ÒøĞĞ¿¨ºÅLuhmĞ£Ñé
+//Operator:     åˆ˜æ”¿ä¼Ÿ
+//Description:  é“¶è¡Œå¡å·Luhmæ ¡éªŒ
 
-//LuhmĞ£Ñé¹æÔò£º16Î»ÒøĞĞ¿¨ºÅ£¨19Î»Í¨ÓÃ£©:
+//Luhmæ ¡éªŒè§„åˆ™ï¼š16ä½é“¶è¡Œå¡å·ï¼ˆ19ä½é€šç”¨ï¼‰:
 
-// 1.½«Î´´øĞ£ÑéÎ»µÄ 15£¨»ò18£©Î»¿¨ºÅ´ÓÓÒÒÀ´Î±àºÅ 1 µ½ 15£¨18£©£¬Î»ÓÚÆæÊıÎ»ºÅÉÏµÄÊı×Ö³ËÒÔ 2¡£
-// 2.½«ÆæÎ»³Ë»ıµÄ¸öÊ®Î»È«²¿Ïà¼Ó£¬ÔÙ¼ÓÉÏËùÓĞÅ¼ÊıÎ»ÉÏµÄÊı×Ö¡£
-// 3.½«¼Ó·¨ºÍ¼ÓÉÏĞ£ÑéÎ»ÄÜ±» 10 Õû³ı¡£
+// 1.å°†æœªå¸¦æ ¡éªŒä½çš„ 15ï¼ˆæˆ–18ï¼‰ä½å¡å·ä»å³ä¾æ¬¡ç¼–å· 1 åˆ° 15ï¼ˆ18ï¼‰ï¼Œä½äºå¥‡æ•°ä½å·ä¸Šçš„æ•°å­—ä¹˜ä»¥ 2ã€‚
+// 2.å°†å¥‡ä½ä¹˜ç§¯çš„ä¸ªåä½å…¨éƒ¨ç›¸åŠ ï¼Œå†åŠ ä¸Šæ‰€æœ‰å¶æ•°ä½ä¸Šçš„æ•°å­—ã€‚
+// 3.å°†åŠ æ³•å’ŒåŠ ä¸Šæ ¡éªŒä½èƒ½è¢« 10 æ•´é™¤ã€‚
 
-//·½·¨²½ÖèºÜÇåÎú£¬Ò×Àí½â£¬ĞèÒªÔÚÒ³ÃæÒıÓÃJquery.js
+//æ–¹æ³•æ­¥éª¤å¾ˆæ¸…æ™°ï¼Œæ˜“ç†è§£ï¼Œéœ€è¦åœ¨é¡µé¢å¼•ç”¨Jquery.js
 
 
-//banknoÎªÒøĞĞ¿¨ºÅ banknoInfoÎªÏÔÊ¾ÌáÊ¾ĞÅÏ¢µÄDIV»òÆäËû¿Ø¼ş
+//banknoä¸ºé“¶è¡Œå¡å· banknoInfoä¸ºæ˜¾ç¤ºæç¤ºä¿¡æ¯çš„DIVæˆ–å…¶ä»–æ§ä»¶
 function luhmCheck(bankno){
-    var lastNum=bankno.substr(bankno.length-1,1);//È¡³ö×îºóÒ»Î»£¨Óëluhm½øĞĞ±È½Ï£©
+    var lastNum=bankno.substr(bankno.length-1,1);//å–å‡ºæœ€åä¸€ä½ï¼ˆä¸luhmè¿›è¡Œæ¯”è¾ƒï¼‰
 
-    var first15Num=bankno.substr(0,bankno.length-1);//Ç°15»ò18Î»
+    var first15Num=bankno.substr(0,bankno.length-1);//å‰15æˆ–18ä½
     var newArr=new Array();
-    for(var i=first15Num.length-1;i>-1;i--){    //Ç°15»ò18Î»µ¹Ğò´æ½øÊı×é
+    for(var i=first15Num.length-1;i>-1;i--){    //å‰15æˆ–18ä½å€’åºå­˜è¿›æ•°ç»„
         newArr.push(first15Num.substr(i,1));
     }
-    var arrJiShu=new Array();  //ÆæÊıÎ»*2µÄ»ı <9
-    var arrJiShu2=new Array(); //ÆæÊıÎ»*2µÄ»ı >9
+    var arrJiShu=new Array();  //å¥‡æ•°ä½*2çš„ç§¯ <9
+    var arrJiShu2=new Array(); //å¥‡æ•°ä½*2çš„ç§¯ >9
 
-    var arrOuShu=new Array();  //Å¼ÊıÎ»Êı×é
+    var arrOuShu=new Array();  //å¶æ•°ä½æ•°ç»„
     for(var j=0;j<newArr.length;j++){
-        if((j+1)%2==1){//ÆæÊıÎ»
+        if((j+1)%2==1){//å¥‡æ•°ä½
             if(parseInt(newArr[j])*2<9)
                 arrJiShu.push(parseInt(newArr[j])*2);
             else
                 arrJiShu2.push(parseInt(newArr[j])*2);
         }
-        else //Å¼ÊıÎ»
+        else //å¶æ•°ä½
             arrOuShu.push(newArr[j]);
     }
 
-    var jishu_child1=new Array();//ÆæÊıÎ»*2 >9 µÄ·Ö¸îÖ®ºóµÄÊı×é¸öÎ»Êı
-    var jishu_child2=new Array();//ÆæÊıÎ»*2 >9 µÄ·Ö¸îÖ®ºóµÄÊı×éÊ®Î»Êı
+    var jishu_child1=new Array();//å¥‡æ•°ä½*2 >9 çš„åˆ†å‰²ä¹‹åçš„æ•°ç»„ä¸ªä½æ•°
+    var jishu_child2=new Array();//å¥‡æ•°ä½*2 >9 çš„åˆ†å‰²ä¹‹åçš„æ•°ç»„åä½æ•°
     for(var h=0;h<arrJiShu2.length;h++){
         jishu_child1.push(parseInt(arrJiShu2[h])%10);
         jishu_child2.push(parseInt(arrJiShu2[h])/10);
     }
 
-    var sumJiShu=0; //ÆæÊıÎ»*2 < 9 µÄÊı×éÖ®ºÍ
-    var sumOuShu=0; //Å¼ÊıÎ»Êı×éÖ®ºÍ
-    var sumJiShuChild1=0; //ÆæÊıÎ»*2 >9 µÄ·Ö¸îÖ®ºóµÄÊı×é¸öÎ»ÊıÖ®ºÍ
-    var sumJiShuChild2=0; //ÆæÊıÎ»*2 >9 µÄ·Ö¸îÖ®ºóµÄÊı×éÊ®Î»ÊıÖ®ºÍ
+    var sumJiShu=0; //å¥‡æ•°ä½*2 < 9 çš„æ•°ç»„ä¹‹å’Œ
+    var sumOuShu=0; //å¶æ•°ä½æ•°ç»„ä¹‹å’Œ
+    var sumJiShuChild1=0; //å¥‡æ•°ä½*2 >9 çš„åˆ†å‰²ä¹‹åçš„æ•°ç»„ä¸ªä½æ•°ä¹‹å’Œ
+    var sumJiShuChild2=0; //å¥‡æ•°ä½*2 >9 çš„åˆ†å‰²ä¹‹åçš„æ•°ç»„åä½æ•°ä¹‹å’Œ
     var sumTotal=0;
     for(var m=0;m<arrJiShu.length;m++){
         sumJiShu=sumJiShu+parseInt(arrJiShu[m]);
@@ -147,20 +147,20 @@ function luhmCheck(bankno){
         sumJiShuChild1=sumJiShuChild1+parseInt(jishu_child1[p]);
         sumJiShuChild2=sumJiShuChild2+parseInt(jishu_child2[p]);
     }
-    //¼ÆËã×ÜºÍ
+    //è®¡ç®—æ€»å’Œ
     sumTotal=parseInt(sumJiShu)+parseInt(sumOuShu)+parseInt(sumJiShuChild1)+parseInt(sumJiShuChild2);
 
-    //¼ÆËãLuhmÖµ
+    //è®¡ç®—Luhmå€¼
     var k= parseInt(sumTotal)%10==0?10:parseInt(sumTotal)%10;
     var luhm= 10-k;
 
     if(lastNum==luhm){
-        layer.msg('ÒøĞĞ¿¨ºÅÊäÈëÍê³É', optLayerSuccess);
+        layer.msg('é“¶è¡Œå¡å·è¾“å…¥å®Œæˆ', optLayerSuccess);
         return true;
     }
     else{
-        //$("#banknoInfo").html("ÒøĞĞ¿¨ºÅ±ØĞë·ûºÏLuhmĞ£Ñé");
-        layer.msg('ÒøĞĞ¿¨ºÅ±ØĞë·ûºÏLuhmĞ£Ñé', optLayerError);
+        //$("#banknoInfo").html("é“¶è¡Œå¡å·å¿…é¡»ç¬¦åˆLuhmæ ¡éªŒ");
+        layer.msg('é“¶è¡Œå¡å·å¿…é¡»ç¬¦åˆLuhmæ ¡éªŒ', optLayerError);
         return false;
     }
 }

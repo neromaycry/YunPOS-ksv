@@ -132,6 +132,22 @@ define([
                 return;
             }
             switch (this.gatherId) {
+                case '05':
+                    if(luhmCheck(gatherNo)) {
+                        attrs = {
+                            gather_id:this.attrs.gather_id,
+                            gather_name:this.attrs.gather_name,
+                            gather_money:this.attrs.gather_money,
+                            gather_kind:this.attrs.gather_kind,
+                            gather_no:gatherNo
+                        };
+                        Backbone.trigger('onReceivedsum',attrs);
+                        this.closeLayer(layerindex);
+                        $('input[name = billing]').focus();
+                    }else {
+                        $(this.input).val('');
+                    }
+                    break;
                 case '12':case '13':
                     attrs = {
                         gather_id:this.attrs.gather_id,
