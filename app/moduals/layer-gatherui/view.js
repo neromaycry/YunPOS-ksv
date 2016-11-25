@@ -39,6 +39,9 @@ define([
             var _self = this;
             this.gatherId = this.attrs.gather_id;
             this.model = new LayerGatherUIModel();
+            this.model.set({
+                gather_money:this.attrs.gather_money
+            });
             this.switchTemplate(this.gatherId);
             this.template_content = _.template(this.template_content);
             this.prepay(this.gatherUI);
@@ -116,38 +119,45 @@ define([
 
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
         confirm: function () {
-            var data = {};
-            data['gather_id'] = this.attrs.gather_id;
-            data['gather_money'] = this.attrs.gather_money;
-            data['gather_name'] = this.attrs.gather_name;
-            data['gather_kind'] = this.attrs.gather_kind;
-            data['bill_no'] = this.attrs.bill_no;
-            data['payment_bill'] = this.attrs.payment_bill;
+            var attrs = {};
             if(this.gatherId == '16'){
                 this.closeLayer(layerindex);
-                this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行MIS', LayerBankCardView, data, {area:'300px'});
-            }else {
-                var gatherNo = $(this.input).val();
-                if((gatherNo.split('.').length-1) > 0 || gatherNo == '') {
-                    layer.msg('无效的支付账号', optLayerWarning);
-                    $('this.input').val('');
-                    return false;
-                }
-                switch (this.gatherId) {
-                    case '12':
-                        data['gather_no'] = gatherNo;
-                        this.micropay(this.gatherId, gatherNo, data, this.attrs.payment_bill);
-                        break;
-                    case '13':
-                        data['gather_no'] = gatherNo;
-                        this.micropay(this.gatherId, gatherNo, data, this.attrs.payment_bill);
-                        break;
-                    default :
-                        data['gather_no'] = gatherNo;
-                        Backbone.trigger('onReceivedsum',data);
-                        this.closeLayer(layerindex);
-                        $('input[name = billing]').focus();
-                }
+                this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行MIS', LayerBankCardView, this.attrs, {area:'300px'});
+                return;
+            }
+            var gatherNo = $(this.input).val();
+            if((gatherNo.split('.').length-1) > 0 || gatherNo == '') {
+                layer.msg('无效的支付账号', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            switch (this.gatherId) {
+                case '12':case '13':
+                    attrs = {
+                        gather_id:this.attrs.gather_id,
+                        gather_name:this.attrs.gather_name,
+                        gather_money:this.attrs.gather_money,
+                        gather_kind:this.attrs.gather_kind,
+                        gather_no:gatherNo,
+                        hasExtra: true,
+                        extras:{
+                            extra_id: 1,
+                            payment_bill: this.attrs.payment_bill
+                        }
+                    };
+                    this.micropay(this.gatherId, gatherNo, attrs, this.attrs.payment_bill);
+                    break;
+                default :
+                    attrs = {
+                        gather_id:this.attrs.gather_id,
+                        gather_name:this.attrs.gather_name,
+                        gather_money:this.attrs.gather_money,
+                        gather_kind:this.attrs.gather_kind,
+                        gather_no:gatherNo
+                    };
+                    Backbone.trigger('onReceivedsum',attrs);
+                    this.closeLayer(layerindex);
+                    $('input[name = billing]').focus();
             }
         },
 

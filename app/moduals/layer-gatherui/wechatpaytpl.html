@@ -1,7 +1,9 @@
-
-
 <div class="panel panel-primary" style="border: none;margin: 0;">
-    <div class="panel-body">
+    <div class="panel-body no-padding">
+        <div class="row no-margining" style="margin-top: 15px;margin-bottom: 15px;">
+            <div class="col-xs-6 col-md-6 text-right pos-textsize no-padding">支付金额：</div>
+            <div class="col-xs-6 col-md-6 text-left text-red no-padding" style="font-size: 18px">￥<%= toDecimal2(gather_money) %></div>
+        </div>
         <div class="row no-margining">
             <div class="col-xs-6 col-md-6">
                 <div class="form-group">
@@ -18,7 +20,6 @@
                 <img class="qrcode-img" alt="第三方支付二维码"/>
             </div>
         </div>
-
     </div>
 </div>
 
