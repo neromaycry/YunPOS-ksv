@@ -294,7 +294,8 @@ define([
 
         openHelp: function () {
             var attrs = {
-                page: 'BILLING_RETURN_PAGE'
+                page: 'BILLING_RETURN_PAGE',
+                pageid: pageId
             };
             this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },

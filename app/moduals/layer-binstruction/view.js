@@ -48,14 +48,7 @@ define([
         },
 
         onCancelClicked: function () {
-            this.closeLayer(layerindex);
-            switch (this.attrs.pageid) {
-                case 2:
-                    $('input[name = main]').focus();
-                    break;
-                default:
-                    $('input[name = billing]').focus();
-            }
+            this.confirmHideLayer(this.attrs.pageid);
         },
 
         onBankBalanceClicked: function () {

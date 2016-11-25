@@ -287,7 +287,8 @@ define([
         },
         onHelpClicked: function () {
             var attrs = {
-                page: 'CHECKING_PAGE'
+                page: 'CHECKING_PAGE',
+                pageid: pageId
             };
             this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },

@@ -391,7 +391,7 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.V, function () {
-                _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
+                _self.onBusinessClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Q, function () {
@@ -812,7 +812,8 @@ define([
             //var tipsView = new KeyTipsView('MAIN_PAGE');
             //this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             var attrs = {
-                page: 'MAIN_PAGE'
+                page: 'MAIN_PAGE',
+                pageid: pageId
             };
             this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
@@ -1046,7 +1047,10 @@ define([
          * 银行业务
          */
         onBusinessClicked: function () {
-            this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
+            var attrs = {
+                pageid: pageId
+            };
+            this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, attrs, {area: '600px'});
         },
 
         onSettingClicked: function () {

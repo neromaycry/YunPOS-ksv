@@ -46,9 +46,9 @@ define([
         },
 
         onCloseClicked: function () {
-            this.closeLayer(layerindex);
-            $('input[name = main]').focus();
+            this.confirmHideLayer(this.attrs.pageid);
         },
+
 
     });
 

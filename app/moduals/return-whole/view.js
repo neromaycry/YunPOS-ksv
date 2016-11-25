@@ -326,7 +326,8 @@ define([
 
         onHelpClicked: function () {
             var attrs = {
-                page: 'RETURNWHOLE_PAGE'
+                page: 'RETURNWHOLE_PAGE',
+                pageid: pageId
             };
             this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
