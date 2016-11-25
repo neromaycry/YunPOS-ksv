@@ -163,10 +163,10 @@ define([
                         } else {
                             pageId = mainId;
                         }
-                        if (!attrs.callback) {
-                            console.log('callback is null');
+                        if (!attrs.setting_callback) {
+                            console.log('setting_callback is null');
                         } else {
-                            attrs.callback();
+                            attrs.setting_callback();
                         }
                     } else {
                         pageId = mainId;

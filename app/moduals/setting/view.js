@@ -68,7 +68,7 @@ define([
 
         onGatewayClicked: function () {
             var attrs = {
-                callback: function () {
+                setting_callback: function () {
                     var gateway = storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, 'gateway');
                     $('input[name = gateway]').val(gateway);
                 }

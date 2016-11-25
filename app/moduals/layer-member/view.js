@@ -89,6 +89,32 @@ define([
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_MEMBER, KEYS.P, function () {
                 _self.changeTemplate(3);
             });
+
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_MEMBER, KEYS.Up, function () {
+                if (_self.type == '03') {
+                    var isUserFocused = $('input[name = phone]').is(':focus');
+                    if (isUserFocused) {
+                        $('input[name = passwd]').focus();
+                        _self.input = 'input[name = passwd]';
+                    } else {
+                        $('input[name = phone]').focus();
+                        _self.input = 'input[name = phone]';
+                    }
+                }
+            });
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_MEMBER, KEYS.Down, function () {
+                if (_self.type == '03') {
+                    var isUserFocused = $('input[name = phone]').is(':focus');
+                    if (isUserFocused) {
+                        $('input[name = passwd]').focus();
+                        _self.input = 'input[name = passwd]';
+                    } else {
+                        $('input[name = phone]').focus();
+                        _self.input = 'input[name = phone]';
+                    }
+                }
+            });
+
         },
 
         onCancelClicked: function () {
@@ -121,14 +147,32 @@ define([
                     break;
                 case '03':
                     console.log('手机号登陆');
-                    this.inputPhoneNum();
+                    var isUserFocused = $('input[name = phone]').is(':focus');
+                    if (isUserFocused) {
+                        $('input[name = passwd]').focus();
+                        this.input = 'input[name = passwd]';
+                    } else {
+                        this.inputPhoneNum();
+                    }
                     break;
             }
+        },
+
+        focusInputUser: function () {
+            this.input = 'input[name = phone]';
+        },
+
+        focusInputPasswd: function () {
+            this.input = 'input[name = passwd]';
         },
 
         inputPhoneNum: function () {
             var _self = this;
             var phoneNum = $('input[name = phone]').val();
+            var passwd = $('input[name = passwd]').val();
+            if(passwd == '') {
+                passwd = '*';
+            }
             if (phoneNum == '') {
                 //toastr.error('手机号不能为空');
                 layer.msg('手机号不能为空', optLayerError);
@@ -142,7 +186,7 @@ define([
             }
             var data = {};
             data['mobile'] = phoneNum;
-            data['password'] = '*';
+            data['password'] = passwd;
             data['type'] = this.type;
             this.model.getMemberInfo(data, function (resp) {
                 if (resp.status == '00') {
