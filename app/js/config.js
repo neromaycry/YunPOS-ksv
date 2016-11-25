@@ -263,6 +263,7 @@ requirejs([
             case DIRECTIVES.Bank_balance:
                 if (data.code == '00') {
                     window.loading.hide();
+                    window.layer.close(layerindex);
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }
@@ -270,6 +271,7 @@ requirejs([
             case DIRECTIVES.Bank_reprint:
                 if (data.code == '00') {
                     window.loading.hide();
+                    window.layer.close(layerindex);
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }
@@ -277,6 +279,7 @@ requirejs([
             case DIRECTIVES.Bank_query:
                 if (data.code == '00') {
                     window.loading.hide();
+                    window.layer.close(layerindex);
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }
@@ -291,6 +294,7 @@ requirejs([
             case DIRECTIVES.Bank_daily:
                 if (data.code == '00') {
                     window.loading.hide();
+                    window.layer.close(layerindex);
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }
