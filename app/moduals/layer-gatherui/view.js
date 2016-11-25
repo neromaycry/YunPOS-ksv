@@ -214,7 +214,7 @@ define([
         micropay: function (gatherId, gatherNo, data, paymentBill) {
             var _self = this;
             var data = {};
-            if (gatherId == '13') {
+            if(gatherId == '13') {
                 data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
@@ -224,7 +224,7 @@ define([
                 data['paymethod'] = 'zfb';
                 data['payway'] = 'barcode';
                 data['zfbtwo'] = 'zfbtwo';
-            } else if (gatherId == '12') {
+            }else if(gatherId == '12') {
                 data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
@@ -238,11 +238,11 @@ define([
             var url = 'http://127.0.0.1:5000/';
             //var url = 'http://114.55.62.102:9090';
             resource.post(url + 'api/pay/xfb/micropay', data, function (resp) {
-                if (resp.data['flag'] == '00') {
+                if(resp.data['flag'] == '00') {
                     loading.hide();
-                    Backbone.trigger('onReceivedsum', data);
+                    Backbone.trigger('onReceivedsum',data);
                     _self.closeLayer(layerindex);
-                } else {
+                }else {
                     loading.hide();
                     layer.msg(resp.data.msg, optLayerError);
 
