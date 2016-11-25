@@ -2,13 +2,13 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/checking/model',
     '../../../../moduals/checking/collection',
-    '../../../../moduals/keytips-member/view',
+    '../../../../moduals/layer-help/view',
     'text!../../../../moduals/checking/cashierinfotpl.html',
     'text!../../../../moduals/checking/posdetailtpl.html',
     'text!../../../../moduals/checking/posinfotpl.html',
     'text!../../../../moduals/checking/cashierdetailtpl.html',
     'text!../../../../moduals/checking/tpl.html',
-], function (BaseView, CheckingModel,CheckingCollection, KeyTipsView, cashierinfotpl, posdetailtpl,posinfotpl,casherdetailtpl, tpl) {
+], function (BaseView, CheckingModel,CheckingCollection, LayerHelpView, cashierinfotpl, posdetailtpl,posinfotpl,casherdetailtpl, tpl) {
 
     var checkingView = BaseView.extend({
 
@@ -123,8 +123,7 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.T, function () {
-                var tipsView = new KeyTipsView('CHECKING_PAGE');
-                _self.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+                _self.onHelpClicked();
             });
         },
 
@@ -287,8 +286,10 @@ define([
             this.scrollDown();
         },
         onHelpClicked:function () {
-            var tipsView = new KeyTipsView('CHECKING_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
+            var attrs = {
+                page: 'CHECKING_PAGE'
+            };
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
         onBackClicked:function () {
             router.navigate('main',{trigger:true});

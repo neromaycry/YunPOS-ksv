@@ -5,13 +5,13 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/print/model',
     '../../../../moduals/print/collection',
-    '../../../../moduals/keytips-member/view',
+    '../../../../moduals/layer-help/view',
     'text!../../../../moduals/print/billnotpl.html',
     'text!../../../../moduals/print/cartlisttpl.html',
     'text!../../../../moduals/print/paymentlisttpl.html',
     'text!../../../../moduals/print/numpadtpl.html',
     'text!../../../../moduals/print/tpl.html',
-], function (BaseView, PrintModel, PrintCollection, KeyTipsView, billnotpl, cartlisttpl, paymentlisttpl, numpadtpl, tpl) {
+], function (BaseView, PrintModel, PrintCollection, LayerHelpView, billnotpl, cartlisttpl, paymentlisttpl, numpadtpl, tpl) {
 
     var printView = BaseView.extend({
 
@@ -98,7 +98,7 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.PRINT, window.KEYS.T, function () {
-                _self.openHelp();
+                _self.onHelpClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.PRINT, window.KEYS.H, function () {
@@ -185,11 +185,6 @@ define([
             }
         },
 
-        openHelp: function () {
-            var tipsView = new KeyTipsView('PRINT_PAGE');
-            this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
-        },
-
         onPrintClicked: function () {
             this.onReprintClicked();
         },
@@ -217,7 +212,10 @@ define([
 
 
         onHelpClicked:function () {
-           this.openHelp();
+            var attrs = {
+                page: 'PRINT_PAGE'
+            };
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
 
         onBackClicked:function () {
