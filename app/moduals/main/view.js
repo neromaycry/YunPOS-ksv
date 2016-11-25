@@ -833,7 +833,7 @@ define([
          */
         onMemberClicked: function () {
             //router.navigate('member',{trigger:true});
-            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, undefined, {area: '600px'});
+            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, undefined, {area: '800px'});
         },
         /**
          * 单品优惠按钮点击事件
