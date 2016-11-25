@@ -4,11 +4,11 @@
 
 
 define(['../../js/common/BaseCollection',
-    '../../moduals/print/model'],function(BaseCollection,printModel){
+    '../../moduals/print/model'], function (BaseCollection, printModel) {
 
     var printCollection = BaseCollection.extend({
 
-        model:printModel
+        model: printModel
 
     });
 

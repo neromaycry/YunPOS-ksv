@@ -61,11 +61,11 @@ define([
                 user_password: $.md5(password),
                 accredit_type: '00'
             };
-            this.model.logout(data,function (response) {
+            this.model.logout(data, function (response) {
                 if (!$.isEmptyObject(response)) {
                     if (response.status == "00") {
                         _self.closeLayer(layerindex);
-                        router.navigate('login', {trigger:true});
+                        router.navigate('login', {trigger: true});
                     } else {
                         //toastr.error(response.msg);
                         layer.msg(response.msg, optLayerError);

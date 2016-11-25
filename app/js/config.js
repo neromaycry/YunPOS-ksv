@@ -22,9 +22,9 @@ requirejs.config({
         'json': 'requirePlugin/json',
         '_fetchText': 'requirePlugin/_fetchText',
         'xfb': 'jquery-resource',
-        'marquee':'../marquee/jquery.marquee',
-        'Recwebsocket':'../reconnecting-websocket/reconnecting-websocket',
-        'fecha':'../fecha/fecha',
+        'marquee': '../marquee/jquery.marquee',
+        'Recwebsocket': '../reconnecting-websocket/reconnecting-websocket',
+        'fecha': '../fecha/fecha',
         'noty': '../noty/jquery.noty.packaged',
         'koala': '../koala/jquery.koala',
         'layer': '../layer/layer'
@@ -60,8 +60,8 @@ requirejs.config({
             'deps': ['jquery', 'css!../layer/skin/default/layer.css'],
             'exports': 'layer'
         },
-        'Recwebsocket':{
-            'exports':'Recwebsocket'
+        'Recwebsocket': {
+            'exports': 'Recwebsocket'
         },
         'fecha': {
             'exports': 'fecha'
@@ -204,7 +204,7 @@ requirejs([
             });
             window.clientScreen.moveTo(1366, 0);
             window.clientScreen.enterKioskMode();
-            window.clientScreen.on ('loaded', function(){
+            window.clientScreen.on('loaded', function () {
                 // the native onload event has just occurred
                 window.clientDom = window.clientScreen.window.document;
                 var clientH = $(window.clientDom).height();
@@ -263,6 +263,7 @@ requirejs([
             case DIRECTIVES.Bank_balance:
                 if (data.code == '00') {
                     window.loading.hide();
+                    window.layer.close(layerindex);
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }
@@ -270,6 +271,7 @@ requirejs([
             case DIRECTIVES.Bank_reprint:
                 if (data.code == '00') {
                     window.loading.hide();
+                    window.layer.close(layerindex);
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }
@@ -277,6 +279,7 @@ requirejs([
             case DIRECTIVES.Bank_query:
                 if (data.code == '00') {
                     window.loading.hide();
+                    window.layer.close(layerindex);
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }
@@ -291,6 +294,7 @@ requirejs([
             case DIRECTIVES.Bank_daily:
                 if (data.code == '00') {
                     window.loading.hide();
+                    window.layer.close(layerindex);
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }

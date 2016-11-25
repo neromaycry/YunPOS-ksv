@@ -2,10 +2,10 @@
  * Created by Joey on 2016/7/22.
  */
 define(['../../js/common/BaseCollection',
-    '../../moduals/return-whole/model'],function(BaseCollection,ReturnWholeModel){
-    var returnWholeCollection=BaseCollection.extend({
+    '../../moduals/return-whole/model'], function (BaseCollection, ReturnWholeModel) {
+    var returnWholeCollection = BaseCollection.extend({
 
-        model:ReturnWholeModel
+        model: ReturnWholeModel
 
     });
     return returnWholeCollection;

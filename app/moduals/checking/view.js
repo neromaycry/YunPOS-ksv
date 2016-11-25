@@ -8,7 +8,7 @@ define([
     'text!../../../../moduals/checking/posinfotpl.html',
     'text!../../../../moduals/checking/cashierdetailtpl.html',
     'text!../../../../moduals/checking/tpl.html',
-], function (BaseView, CheckingModel,CheckingCollection, LayerHelpView, cashierinfotpl, posdetailtpl,posinfotpl,casherdetailtpl, tpl) {
+], function (BaseView, CheckingModel, CheckingCollection, LayerHelpView, cashierinfotpl, posdetailtpl, posinfotpl, casherdetailtpl, tpl) {
 
     var checkingView = BaseView.extend({
 
@@ -18,34 +18,34 @@ define([
 
         template: tpl,
 
-        template_cashierinfo:cashierinfotpl,
+        template_cashierinfo: cashierinfotpl,
 
-        template_cashierdetail:casherdetailtpl,
+        template_cashierdetail: casherdetailtpl,
 
-        template_posinfo:posinfotpl,
+        template_posinfo: posinfotpl,
 
-        template_posdetail:posdetailtpl,
+        template_posdetail: posdetailtpl,
 
-        i:0,
+        i: 0,
 
-        isCashier:true,
+        isCashier: true,
 
-        date:'',
+        date: '',
 
         input: 'input[name = checking_date]',
 
         events: {
-            'click .ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .back-to-main':'onBackClicked',
-            'click .help':'onHelpClicked',
-            'click .keyup':'onKeyUpClicked',
-            'click .keydown':'onKeyDownClicked',
-            'click #report':'onReportClicked',
-            'click #daily-report':'onDailyReportClicked',
-            'click .print':'onPrintClicked'
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click .back-to-main': 'onBackClicked',
+            'click .help': 'onHelpClicked',
+            'click .keyup': 'onKeyUpClicked',
+            'click .keydown': 'onKeyDownClicked',
+            'click #report': 'onReportClicked',
+            'click #daily-report': 'onDailyReportClicked',
+            'click .print': 'onPrintClicked'
         },
 
         pageInit: function () {
@@ -75,7 +75,7 @@ define([
             this.template_posdetail = _.template(this.template_posdetail);
         },
 
-        initLayoutHeight:function(){
+        initLayoutHeight: function () {
             var dh = $(window).height();
             var nav = $('.navbar').height();
             var td = $('td').height();
@@ -89,7 +89,7 @@ define([
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Esc, function () {
-                router.navigate('main',{trigger:true});
+                router.navigate('main', {trigger: true});
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Right, function () {
@@ -118,8 +118,8 @@ define([
                 _self.scrollDown();
             });
 
-            this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Up, function() {
-               _self.scrollUp();
+            this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Up, function () {
+                _self.scrollUp();
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.T, function () {
@@ -151,9 +151,9 @@ define([
             return this;
         },
 
-        scrollDown:function (){
+        scrollDown: function () {
             var _self = this;
-            if(_self.isCashier){
+            if (_self.isCashier) {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
@@ -162,7 +162,7 @@ define([
                     $('.for-cashier-detail').scrollTop(_self.listheight * _self.n);
                 }
                 $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-            }else{
+            } else {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
@@ -174,38 +174,38 @@ define([
             }
         },
 
-        scrollUp:function() {
+        scrollUp: function () {
             var _self = this;
-            if(_self.isCashier) {
+            if (_self.isCashier) {
                 if (_self.i > 0) {
                     _self.i--;
                 }
-                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                if ((_self.i + 1) % _self.listnum == 0 && _self.i > 0) {
                     _self.n--;
 
-                    $('.for-cashier-detail').scrollTop(_self.listheight * _self.n );
+                    $('.for-cashier-detail').scrollTop(_self.listheight * _self.n);
                 }
                 $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
 
-            }else {
+            } else {
                 if (_self.i > 0) {
                     _self.i--;
                 }
-                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                if ((_self.i + 1) % _self.listnum == 0 && _self.i > 0) {
                     _self.n--;
-                    $('.for-pos-detail').scrollTop(_self.listheight * _self.n );
+                    $('.for-pos-detail').scrollTop(_self.listheight * _self.n);
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             }
         },
 
-        checkingDate:function() {
+        checkingDate: function () {
             date = $('input[name = checking_date]').val();
             var _self = this;
             //console.log(date);
-            if(date == ''){
+            if (date == '') {
                 toastr.warning('输入的收银对账日期不能为空');
-            }else {
+            } else {
                 var cashierdata = {};
                 cashierdata['date'] = date;
                 cashierdata['type'] = '01';
@@ -232,7 +232,7 @@ define([
                 posdata['type'] = '02';
                 this.posrequest = new CheckingModel();
                 this.posrequest.report(posdata, function (resp) {
-                    if(resp.status == '00') {
+                    if (resp.status == '00') {
                         _self.model.set({
                             pos: resp.pos,
                             name: resp.cashier,
@@ -249,7 +249,7 @@ define([
                         _self.printText = resp.printf;
                         _self.renderPosInfo();
                         _self.renderPosDetail();
-                    }else {
+                    } else {
                         toastr.error(resp.msg);
                     }
                 });
@@ -258,7 +258,7 @@ define([
         },
 
         onOKClicked: function () {
-           this.checkingDate();
+            this.checkingDate();
         },
 
         onNumClicked: function (e) {
@@ -271,7 +271,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -279,27 +279,27 @@ define([
             $(this.input).val('');
         },
 
-        onKeyUpClicked:function () {
+        onKeyUpClicked: function () {
             this.scrollUp();
         },
         onKeyDownClicked: function () {
             this.scrollDown();
         },
-        onHelpClicked:function () {
+        onHelpClicked: function () {
             var attrs = {
                 page: 'CHECKING_PAGE'
             };
             this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
-        onBackClicked:function () {
-            router.navigate('main',{trigger:true});
+        onBackClicked: function () {
+            router.navigate('main', {trigger: true});
         },
-        onReportClicked:function () {
+        onReportClicked: function () {
             this.isCashier = true;
             this.i = 0;
         },
 
-        onDailyReportClicked:function () {
+        onDailyReportClicked: function () {
             this.isCashier = false;
             this.i = 0;
         },

@@ -1,18 +1,17 @@
 /**
  * Created by Joey on 2016/7/22.
  */
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
-    var layerMemberModel=BaseModel.extend({
+    var layerMemberModel = BaseModel.extend({
 
-        defaults:{
-        },
+        defaults: {},
 
-        getMemberInfo: function (data,callback) {
+        getMemberInfo: function (data, callback) {
             this.sendPOST({
-                url:window.API_URL.VIPINFO,
-                data:data,
-                success:callback
+                url: window.API_URL.VIPINFO,
+                data: data,
+                success: callback
             });
         }
 

@@ -2,13 +2,11 @@
  * Created by xuying on 2016/11/7.
  */
 
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
     var printModel = BaseModel.extend({
 
-        defaults:{
-
-        },
+        defaults: {},
 
         print: function (data, callback) {
             this.sendPOST({

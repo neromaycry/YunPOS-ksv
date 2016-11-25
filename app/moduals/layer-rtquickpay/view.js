@@ -11,7 +11,7 @@ define([
     'text!../../moduals/layer-gatherui/numpadtpl.html',
     'text!../../moduals/layer-rtquickpay/bankcardtpl.html',
     'text!../../moduals/layer-rtquickpay/tpl.html'
-], function (BaseLayerView, LayerQuickPayModel, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl,bankcardtpl, tpl) {
+], function (BaseLayerView, LayerQuickPayModel, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
 
     var layerQuickPayView = BaseLayerView.extend({
 
@@ -19,18 +19,18 @@ define([
 
         template: tpl,
 
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
 
-        template_bankcard:bankcardtpl,
+        template_bankcard: bankcardtpl,
 
-        gatherUI:'',
+        gatherUI: '',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .btn-num':'onNumClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
+            'click .cancel': 'onCancelClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
         },
 
         LayerInitPage: function () {
@@ -38,7 +38,7 @@ define([
             this.gatherId = this.attrs.gather_id;
             this.model = new LayerQuickPayModel();
             this.model.set({
-                gather_money:this.attrs.gather_money
+                gather_money: this.attrs.gather_money
             });
             this.switchTemplate(this.gatherId);
             this.template_content = _.template(this.template_content);
@@ -77,7 +77,7 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_QUICKPAY, KEYS.Esc , function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_QUICKPAY, KEYS.Esc, function () {
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_QUICKPAY, KEYS.Enter, function () {
@@ -95,7 +95,7 @@ define([
             data['payment_bill'] = this.attrs.payment_bill;
             var gatherNo = $(this.input).val();
 
-            if((gatherNo.split('.').length-1) > 0 || gatherNo == '') {
+            if ((gatherNo.split('.').length - 1) > 0 || gatherNo == '') {
                 layer.msg('无效的退款账号', optLayerWarning);
                 $('this.input').val('');
                 return false;
@@ -103,17 +103,17 @@ define([
             switch (this.gatherId) {
                 case '12':
                     data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum',data);
+                    Backbone.trigger('onReceivedsum', data);
                     this.closeLayer(layerindex);
                     break;
                 case '13':
                     data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum',data);
+                    Backbone.trigger('onReceivedsum', data);
                     this.closeLayer(layerindex);
                     break;
                 default :
                     data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum',data);
+                    Backbone.trigger('onReceivedsum', data);
                     this.closeLayer(layerindex);
             }
             $('input[name = billingrt]').focus();
@@ -137,7 +137,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 

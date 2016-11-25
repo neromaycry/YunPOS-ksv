@@ -26,7 +26,7 @@ define([
         },
 
         initPlugins: function () {
-            $("form").submit(function(e){
+            $("form").submit(function (e) {
                 e.preventDefault();
             });
             var gateway = storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, 'gateway');
@@ -56,7 +56,6 @@ define([
                 _self.onGatewayClicked();
             });
         },
-
 
 
         onHelpClicked: function () {

@@ -15,16 +15,16 @@ define([
 
         template: tpl,
 
-        template_originalprice:originalpricetpl,
+        template_originalprice: originalpricetpl,
 
         input: 'input[name = price]',
 
-        events:{
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked'
+        events: {
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked'
         },
 
 
@@ -33,7 +33,7 @@ define([
             console.log(this.attrs);
             this.model = new PriceEntryModel();
             this.model.set({
-                originalprice:this.attrs['originalprice']
+                originalprice: this.attrs['originalprice']
             });
             this.template_originalprice = _.template(this.template_originalprice);
             setTimeout(function () {
@@ -50,7 +50,7 @@ define([
         bindLayerKeys: function () {
             var _self = this;
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_PRICE_ENTRY, KEYS.Enter, function () {
-               _self.confirm();
+                _self.confirm();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_PRICE_ENTRY, KEYS.Esc, function () {
                 _self.onCancelClicked();
@@ -59,7 +59,7 @@ define([
 
         confirm: function () {
             var price = $(this.input).val();
-            if(price == ''|| parseFloat(price) == 0 || (price.split('.').length-1) > 1 || price == '.') {
+            if (price == '' || parseFloat(price) == 0 || (price.split('.').length - 1) > 1 || price == '.') {
                 layer.msg('无效的单价', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -88,7 +88,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 

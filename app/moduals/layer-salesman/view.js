@@ -17,11 +17,11 @@ define([
         input: 'input[name = salesman_id]',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked'
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked'
         },
 
         LayerInitPage: function () {
@@ -29,7 +29,7 @@ define([
             this.model = new LayerSalesmanModel();
             this.collection = new LayerSalesmanCollection();
             this.collection.fetch({
-                success: function (collection,resp) {
+                success: function (collection, resp) {
                     console.log(collection);
                     _self.collection.set(collection.toJSON());
                 }
@@ -61,7 +61,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -89,7 +89,7 @@ define([
             var result = _.findWhere(this.collection.toJSON(), {number: search});
             console.log(result);
             if (result) {
-                Backbone.trigger('SalesmanAdd',result['name']);
+                Backbone.trigger('SalesmanAdd', result['name']);
                 layer.msg('营业员登录成功', optLayerSuccess);
                 this.closeLayer(layerindex);
                 $('input[name = main]').focus();

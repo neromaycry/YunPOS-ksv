@@ -1,9 +1,9 @@
 /**
  * Created by Joey on 2016/7/22.
  */
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
-    var lockscreenModel=BaseModel.extend({
+    var lockscreenModel = BaseModel.extend({
 
         login: function (data, callback) {
             this.sendPOST({

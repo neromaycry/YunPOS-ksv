@@ -16,7 +16,7 @@ define([
 
         template_content: contenttpl,
 
-        input:'input[name = bk-account]',
+        input: 'input[name = bk-account]',
 
         events: {
             'click .cancel': 'onCancelClicked'
@@ -38,7 +38,7 @@ define([
             //data['pos_no'] = '002';
             //data['bill_no'] = this.attrs.bill_no;
             console.log(JSON.stringify(data));
-            this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)] , wsClient);
+            this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)], wsClient);
         },
 
         handleEvents: function () {
@@ -49,7 +49,7 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Esc , function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Esc, function () {
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Enter, function () {
@@ -67,7 +67,7 @@ define([
                 gather_no: resp.card_no,
                 payment_bill: '',
                 hasExtra: true,
-                extras:{
+                extras: {
                     extra_id: 0,
                     reference_number: resp.reference_number
                 }

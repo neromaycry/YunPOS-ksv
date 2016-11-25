@@ -13,7 +13,7 @@ define([
     'text!../../../../moduals/return-force/cartlisttpl.html',
     'text!../../../../moduals/return-force/numpadtpl.html',
     'text!../../../../moduals/return-force/tpl.html',
-], function (BaseView, ReturnForceModel, ReturnForceCollection,LayerHelpView,LayerConfirmView,SecondLoginView,LayerPriceEntryView, posinfotpl,cartlisttpl,numpadtpl, tpl) {
+], function (BaseView, ReturnForceModel, ReturnForceCollection, LayerHelpView, LayerConfirmView, SecondLoginView, LayerPriceEntryView, posinfotpl, cartlisttpl, numpadtpl, tpl) {
 
     var returnForceView = BaseView.extend({
 
@@ -31,34 +31,34 @@ define([
 
         i: 0,
 
-        isDeleteKey:false,
+        isDeleteKey: false,
 
-        deleteKey:{},
+        deleteKey: {},
 
         input: 'input[name = sku_id]',
 
-        template_posinfo:posinfotpl,
+        template_posinfo: posinfotpl,
 
-        template_cartlisttpl:cartlisttpl,
+        template_cartlisttpl: cartlisttpl,
 
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
 
 
         events: {
-            'click .numpad-ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .rt-billing':'onBillingClicked',
-            'click .rt-cancel':'onCancelClicked',
-            'click .rt-discount':'onDiscountClicked',
-            'click .rt-delete':'onDeleteClicked',
-            'click .rt-modify-num':'onModifyNumClicked',
-            'click .rt-keyup':'onKeyUpClicked',
-            'click .rt-keydown':'onKeyDownClicked',
-            'click .rt-help':'onHelpClicked',
-            'click .rt-return':'onReturnClicked',
-            'click .rt-discountpercent':'onDiscountPercentClicked'
+            'click .numpad-ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click .rt-billing': 'onBillingClicked',
+            'click .rt-cancel': 'onCancelClicked',
+            'click .rt-discount': 'onDiscountClicked',
+            'click .rt-delete': 'onDeleteClicked',
+            'click .rt-modify-num': 'onModifyNumClicked',
+            'click .rt-keyup': 'onKeyUpClicked',
+            'click .rt-keydown': 'onKeyDownClicked',
+            'click .rt-help': 'onHelpClicked',
+            'click .rt-return': 'onReturnClicked',
+            'click .rt-discountpercent': 'onDiscountPercentClicked'
         },
 
         pageInit: function () {
@@ -74,11 +74,11 @@ define([
                 discountamount: this.discountamount
             });
             if (storage.isSet(system_config.FORCE_RETURN_KEY)) {
-                _self.collection.set(storage.get(system_config.FORCE_RETURN_KEY,'cartlist'));
-                _self.model.set(storage.get(system_config.FORCE_RETURN_KEY,'panel'));
+                _self.collection.set(storage.get(system_config.FORCE_RETURN_KEY, 'cartlist'));
+                _self.model.set(storage.get(system_config.FORCE_RETURN_KEY, 'panel'));
             }
-            if(storage.isSet(system_config.LOGIN_USER_KEY)){
-                this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY,'worker_position'), 'key');
+            if (storage.isSet(system_config.LOGIN_USER_KEY)) {
+                this.deleteKey = _.pluck(storage.get(system_config.LOGIN_USER_KEY, 'worker_position'), 'key');
             }
             this.initTemplates();
         },
@@ -118,7 +118,7 @@ define([
             return this;
         },
 
-        renderCartList: function() {
+        renderCartList: function () {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
             $('#li' + this.i).addClass('cus-selected');
@@ -131,27 +131,27 @@ define([
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Enter, function () {
                 _self.onOKClicked();
             });
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Esc,function () {
-                router.navigate('main',{trigger:true});
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Esc, function () {
+                router.navigate('main', {trigger: true});
             });
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Space,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Space, function () {
                 _self.doBilling();
             });
             //取消退货
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.C, function() {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.C, function () {
                 _self.cancelForceReturn();
             });
             //删除商品
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D, function () {
                 _self.deleteItem();
             });
             //修改数量
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F12,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F12, function () {
                 _self.modifyItemNum();
             });
             //单品优惠
-            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F1,function () {
-               _self.modifyItemDiscount();
+            this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F1, function () {
+                _self.modifyItemDiscount();
             });
             //单品折扣
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F2, function () {
@@ -159,11 +159,11 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Down, function () {
-               _self.scrollDown();
+                _self.scrollDown();
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.Up, function () {
-               _self.scrollUp();
+                _self.scrollUp();
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.T, function () {
@@ -193,10 +193,10 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
-            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
+            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
                 //alert(_self.n);
-                $('.for-cartlist').scrollTop(this.listheight * this.n );
+                $('.for-cartlist').scrollTop(this.listheight * this.n);
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
@@ -204,7 +204,7 @@ define([
          * 单品删除
          */
         deleteItem: function () {
-            if($('li').hasClass('cus-selected')){
+            if ($('li').hasClass('cus-selected')) {
                 var item = this.collection.at(this.i);
                 this.collection.remove(item);
                 this.i = 0;
@@ -246,25 +246,25 @@ define([
         /**
          * 查找商品
          */
-        addItem:function (){
+        addItem: function () {
             var _self = this;
             var search = $(this.input).val();
             var data = {};
             data['skucode'] = search;
-            if(storage.isSet(system_config.VIP_KEY)) {
-                data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
-                data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-            }else{
+            if (storage.isSet(system_config.VIP_KEY)) {
+                data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
+                data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
+                data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
+            } else {
                 data['cust_id'] = '*';
                 data['medium_id'] = '*';
                 data['medium_type'] = '*';
             }
             data['goods_detail'] = JSON.stringify(_self.collection);
-            this.requestModel.sku(data , function(resp) {
-                if(resp.status == '00') {
+            this.requestModel.sku(data, function (resp) {
+                if (resp.status == '00') {
                     var temp = resp.goods_detail[resp.goods_detail.length - 1];
-                    if(temp['price_auto'] == 1) {
+                    if (temp['price_auto'] == 1) {
                         var attrs = {
                             pageid: pageId,
 
@@ -278,11 +278,11 @@ define([
                                 $('input[name = sku_id]').focus();
                             }
                         };
-                        _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area:'300px'});
-                    }else {
+                        _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area: '300px'});
+                    } else {
                         _self.onAddItem(resp.goods_detail);
                     }
-                }else{
+                } else {
                     layer.msg(resp.msg, optLayerError);
                 }
             });
@@ -298,7 +298,7 @@ define([
                 layer.msg('请添加要退货的商品', optLayerWarning);
             } else {
                 isfromForce = true;
-                router.navigate('billingreturn',{trigger:true});
+                router.navigate('billingreturn', {trigger: true});
             }
         },
         /**
@@ -310,12 +310,12 @@ define([
             var price = item.get('price');
             var num = item.get('num');
             var discount = item.get('discount');
-            if(this.model.get('itemamount') == 0) {
+            if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(value == '.' || (value.split('.').length - 1) > 1 || value == ''){
+            if (value == '.' || (value.split('.').length - 1) > 1 || value == '') {
                 layer.msg('无效的优惠金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -328,7 +328,7 @@ define([
 
             this.collection.at(this.i).set({
                 discount: parseFloat(value),
-                money:price * num - value
+                money: price * num - value
             });
             this.calculateModel();
             $('#li' + this.i).addClass('cus-selected');
@@ -339,12 +339,12 @@ define([
         //切换优惠模式
         onDiscountPercentClicked: function () {
             var discountpercent = $(this.input).val();
-            if(this.model.get('itemamount') == 0) {
+            if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(discountpercent == '' || discountpercent >= 100 || (discountpercent.split('.').length - 1) > 0) {
+            if (discountpercent == '' || discountpercent >= 100 || (discountpercent.split('.').length - 1) > 0) {
                 layer.msg('无效的折扣比率', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -355,8 +355,8 @@ define([
             var price = item.get('price');
             var num = item.get('num');
             this.collection.at(this.i).set({
-                discount:price * num * (1 - rate),
-                money:price * num * rate
+                discount: price * num * (1 - rate),
+                money: price * num * rate
             });
             this.calculateModel();
             $('#li' + this.i).addClass('cus-selected');
@@ -368,7 +368,7 @@ define([
          */
         modifyItemNum: function () {
             var number = $(this.input).val();
-            if(number == '' || number == 0 ||(number.split('.').length - 1) > 1 ){
+            if (number == '' || number == 0 || (number.split('.').length - 1) > 1) {
                 layer.msg('无效的商品数量', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -378,8 +378,8 @@ define([
             var discount = item.get('discount');
             var price = item.get('price');
             item.set({
-                num:parseFloat(number),
-                money:price * number - discount
+                num: parseFloat(number),
+                money: price * number - discount
             });
             this.totalamount = 0;
             this.itemamount = 0;
@@ -444,7 +444,7 @@ define([
             this.renderPosInfo();
         },
 
-        onOKClicked:function (){
+        onOKClicked: function () {
             this.addItem();
         },
         onNumClicked: function (e) {
@@ -455,7 +455,7 @@ define([
         },
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
         onClearClicked: function () {
@@ -470,7 +470,7 @@ define([
         onDiscountClicked: function () {
             this.modifyItemDiscount();
         },
-        onDeleteClicked:function (){
+        onDeleteClicked: function () {
             var _self = this;
             //if(_self.isDeleteKey){
             //    _self.deleteItem();
@@ -488,20 +488,20 @@ define([
             this.modifyItemNum();
         },
 
-        onKeyUpClicked:function (){
+        onKeyUpClicked: function () {
             this.scrollUp();
         },
         onKeyDownClicked: function () {
             this.scrollDown();
         },
-        onHelpClicked:function (){
+        onHelpClicked: function () {
             var attrs = {
                 page: 'RETURNFORCE_PAGE'
             };
             this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
         onReturnClicked: function () {
-            router.navigate('main',{trigger:true});
+            router.navigate('main', {trigger: true});
         },
 
     });

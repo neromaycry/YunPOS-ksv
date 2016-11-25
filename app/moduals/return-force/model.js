@@ -1,9 +1,9 @@
 /**
  * Created by Joey on 2016/7/22.
  */
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
-    var returnforceModel=BaseModel.extend({
+    var returnforceModel = BaseModel.extend({
 
         goods: function (data, callback) {
             this.sendPOST({
@@ -21,9 +21,9 @@ define(['../../js/common/BaseModel'],function(BaseModel){
         },
         logout: function (data, callback) {
             this.sendPOST({
-                url:window.API_URL.LOGIN,
-                data:data,
-                success:callback
+                url: window.API_URL.LOGIN,
+                data: data,
+                success: callback
             })
         }
     });

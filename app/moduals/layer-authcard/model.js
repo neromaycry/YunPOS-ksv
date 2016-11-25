@@ -1,12 +1,11 @@
 /**
  * Created by Joey on 2016/7/22.
  */
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
-    var layerAuthCardModel=BaseModel.extend({
+    var layerAuthCardModel = BaseModel.extend({
 
-        defaults:{
-        },
+        defaults: {},
 
         authAccess: function (data, callback) {
             this.sendPOST({

@@ -17,7 +17,7 @@ define([
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView,LayerGatherUIView, LayerBInstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerGatherUIView, LayerBInstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -234,12 +234,12 @@ define([
                     break;
                 case 1:
                     model.set({
-                        payment_bill:extraArgs.payment_bill
+                        payment_bill: extraArgs.payment_bill
                     });
                     break;
                 case 2:
                     model.set({
-                        card_id:extraArgs.card_id
+                        card_id: extraArgs.card_id
                     });
             }
             this.collection.add(model);
@@ -321,7 +321,7 @@ define([
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function () {
-               _self.onGiftClicked();
+                _self.onGiftClicked();
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function () {
@@ -329,7 +329,7 @@ define([
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
-               _self.onThirdPayClicked();
+                _self.onThirdPayClicked();
             });
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
@@ -543,7 +543,7 @@ define([
          * @param authCode
          * @param rate
          */
-        selectDiscountGranted: function (authCode,  rate) {
+        selectDiscountGranted: function (authCode, rate) {
             var _self = this;
             switch (authCode) {
                 case '01':
@@ -662,7 +662,6 @@ define([
         },
 
 
-
         /**
          * 结算按钮点击事件
          */
@@ -709,14 +708,14 @@ define([
             data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
             data['gather_detail'] = _self.collection.toJSON();
             //限制传到接口的小计，折扣，数量，价格数据类型必须为number，且位数为小数点后两位。
-            for(var i = 0;i < data['goods_detail'].length;i++) {
+            for (var i = 0; i < data['goods_detail'].length; i++) {
                 data['goods_detail'][i].money = parseFloat(data['goods_detail'][i].money.toFixed(2));
                 data['goods_detail'][i].discount = parseFloat(data['goods_detail'][i].discount.toFixed(2));
                 data['goods_detail'][i].price = parseFloat(data['goods_detail'][i].price);
                 data['goods_detail'][i].num = parseFloat(data['goods_detail'][i].num);
             }
             //限制传到接口的实收金额，付款金额，找零金额，盈余金额数据类型必须为number，且位数为小数点后两位。
-            for(var i = 0;i < data['gather_detail'].length;i++) {
+            for (var i = 0; i < data['gather_detail'].length; i++) {
                 data['gather_detail'][i].havepay_money = parseFloat(data['gather_detail'][i].havepay_money.toFixed(2));
                 data['gather_detail'][i].gather_money = parseFloat(data['gather_detail'][i].gather_money.toFixed(2));
                 data['gather_detail'][i].change_money = parseFloat(data['gather_detail'][i].change_money.toFixed(2));
@@ -795,7 +794,8 @@ define([
                             default :
                                 _self.deleteItem(j);
                         }
-                    };
+                    }
+                    ;
                 }
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
@@ -948,22 +948,23 @@ define([
                 }
                 var item = _.findWhere(visibleTypes, {gather_id: gatherId});
                 var data = {
-                    gather_money:unpaidamount,
-                    gather_id:gatherId,
-                    gather_name:item.gather_name,
-                    gather_kind:item.gather_kind,
+                    gather_money: unpaidamount,
+                    gather_id: gatherId,
+                    gather_name: item.gather_name,
+                    gather_kind: item.gather_kind,
                 };
                 switch (gatherId) {
-                    case '12':case'13':
+                    case '12':
+                    case'13':
                         var xfbdata = {
-                            pos_id:'002',
-                            bill_no:this.billNumber
+                            pos_id: '002',
+                            bill_no: this.billNumber
                         };
                         layer.msg('该功能正在调试中', optLayerHelp);
-                        _self.requestmodel.xfbbillno(xfbdata, function(resp){
-                            if(resp.status == '00') {
+                        _self.requestmodel.xfbbillno(xfbdata, function (resp) {
+                            if (resp.status == '00') {
                                 data['payment_bill'] = resp.xfb_bill;
-                                _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area:'600px'});
+                                _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '600px'});
                             } else {
                                 toastr.error(resp.msg);
                             }
@@ -1032,9 +1033,9 @@ define([
                 receivedsum = unpaidamount;
             }
             var attrs = {
-                gather_kind:gatherkind,//支付类别
-                gather_money:receivedsum,//支付金额
-                bill_no:this.billNumber//订单号（ps:银行pos和第三方支付需要订单号）
+                gather_kind: gatherkind,//支付类别
+                gather_money: receivedsum,//支付金额
+                bill_no: this.billNumber//订单号（ps:银行pos和第三方支付需要订单号）
             };
             this.openLayer(PAGE_ID.LAYER_BILLING_TYPE, pageId, title, LayerBillTypeView, attrs, {area: '300px'});
             $(this.input).val('');

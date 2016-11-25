@@ -22,12 +22,12 @@ define([
         type: '03',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click [data-index]':'onLoginListClicked',
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click [data-index]': 'onLoginListClicked',
 
         },
 
@@ -49,29 +49,29 @@ define([
 
         renderByType: function (type) {
             console.log(type);
-              switch (type) {
-                  case '01':
-                      this.$el.find('.for-member-login').html(this.template_magcard(this.model.toJSON()));
-                      return this;
-                      break;
-                  case '03':
-                      this.$el.find('.for-member-login').html(this.template_phone(this.model.toJSON()));
-                      $('.cbtn').mousedown(function () {
-                          console.log('baselayer mousedown');
-                          $(this).addClass('clicked');
-                      });
-                      $('.cbtn').mouseup(function () {
-                          $(this).removeClass('clicked');
-                      });
-                      $('.cbtn').on('touchstart', function (e) {
-                          $(this).addClass('clicked');
-                      });
-                      $('.cbtn').on('touchend', function (e) {
-                          $(this).removeClass('clicked');
-                      });
-                      return this;
-                      break;
-              }
+            switch (type) {
+                case '01':
+                    this.$el.find('.for-member-login').html(this.template_magcard(this.model.toJSON()));
+                    return this;
+                    break;
+                case '03':
+                    this.$el.find('.for-member-login').html(this.template_phone(this.model.toJSON()));
+                    $('.cbtn').mousedown(function () {
+                        console.log('baselayer mousedown');
+                        $(this).addClass('clicked');
+                    });
+                    $('.cbtn').mouseup(function () {
+                        $(this).removeClass('clicked');
+                    });
+                    $('.cbtn').on('touchstart', function (e) {
+                        $(this).addClass('clicked');
+                    });
+                    $('.cbtn').on('touchend', function (e) {
+                        $(this).removeClass('clicked');
+                    });
+                    return this;
+                    break;
+            }
         },
 
         bindLayerKeys: function () {
@@ -131,7 +131,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -170,7 +170,7 @@ define([
             var _self = this;
             var phoneNum = $('input[name = phone]').val();
             var passwd = $('input[name = passwd]').val();
-            if(passwd == '') {
+            if (passwd == '') {
                 passwd = '*';
             }
             if (phoneNum == '') {
@@ -210,7 +210,7 @@ define([
             var data = {};
             var tracks = ['track1', 'track2', 'track3'];
             var trackValues = this.parseMagTracks(value);
-            for (var i = 0;i < tracks.length;i++) {
+            for (var i = 0; i < tracks.length; i++) {
                 data[tracks[i]] = trackValues[i];
             }
             data['type'] = this.type;

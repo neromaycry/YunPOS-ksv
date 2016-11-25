@@ -11,7 +11,7 @@ define([
     'text!../../moduals/layer-rtgatherui/numpadtpl.html',
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl,bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -19,18 +19,18 @@ define([
 
         template: tpl,
 
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
 
-        template_bankcard:bankcardtpl,
+        template_bankcard: bankcardtpl,
 
-        gatherUI:'',
+        gatherUI: '',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .btn-num':'onNumClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
+            'click .cancel': 'onCancelClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
         },
 
         LayerInitPage: function () {
@@ -75,8 +75,8 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Esc , function () {
-               _self.onCancelClicked();
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Esc, function () {
+                _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
                 _self.confirm();
@@ -92,7 +92,7 @@ define([
             data['gather_kind'] = this.attrs.gather_kind;
             data['payment_bill'] = this.attrs.payment_bill;
             var gatherNo = $(this.input).val();
-            if((gatherNo.split('.').length-1) > 0 || gatherNo == '') {
+            if ((gatherNo.split('.').length - 1) > 0 || gatherNo == '') {
                 layer.msg('无效的退款账号', optLayerWarning);
                 $('this.input').val('');
                 return false;
@@ -100,15 +100,15 @@ define([
             switch (this.gatherId) {
                 case '12':
                     data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum',data);
+                    Backbone.trigger('onReceivedsum', data);
                     break;
                 case '13':
                     data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum',data);
+                    Backbone.trigger('onReceivedsum', data);
                     break;
                 default :
                     data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum',data);
+                    Backbone.trigger('onReceivedsum', data);
             }
             this.closeLayer(layerindex);
             $('input[name = billingrt]').focus();
@@ -127,12 +127,12 @@ define([
         },
 
         onOKClicked: function () {
-           this.confirm();
+            this.confirm();
         },
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 

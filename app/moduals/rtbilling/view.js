@@ -15,7 +15,7 @@ define([
     'text!../../../../moduals/rtbilling/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/rtbilling/tpl.html'
-], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView,LayerConfirmView,RTQuickPayView, GatherUIView,RTLayerTypeView,layerECardView, numpadtpl,billinfotpl,billingdetailtpl, tpl) {
+], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView, LayerConfirmView, RTQuickPayView, GatherUIView, RTLayerTypeView, layerECardView, numpadtpl, billinfotpl, billingdetailtpl, tpl) {
     var rtbillingView = BaseView.extend({
 
         id: "rtbillingView",
@@ -24,46 +24,46 @@ define([
 
         template: tpl,
 
-        template_billinfo:billinfotpl,
+        template_billinfo: billinfotpl,
 
-        template_billingdetailtpl:billingdetailtpl,
+        template_billingdetailtpl: billingdetailtpl,
 
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
 
-        typeList:null,
+        typeList: null,
 
-        totalamount:0,
+        totalamount: 0,
 
-        discoutamount:0,
+        discoutamount: 0,
 
-        receivedsum:0,
+        receivedsum: 0,
 
-        unpaidamount:0,
+        unpaidamount: 0,
 
-        card_id:'',//一卡通界面传过来的card_id
+        card_id: '',//一卡通界面传过来的card_id
 
-        i:0,
+        i: 0,
 
-        input:'input[name = billingrt]',
+        input: 'input[name = billingrt]',
 
         events: {
-            'click .numpad-ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .rtbilling-help':'onHelpClicked',
-            'click .rtbilling-return':'onReturnClicked',
-            'click .billing-delete':'onDeleteClicked',
-            'click .rtbilling-keyup':'onKeyUpClicked',
-            'click .rtbilling-keydown':'onKeyDownClicked',
-            'click .billing-clean':'onBillCleanClicked',
-            'click .billing':'onBillingClicked',
-            'click .quick-pay':'onQuickPayClicked',//快捷支付
-            'click .check':'onCheckClicked',//支票类付款
-            'click .gift-certificate':'onGiftClicked',//礼券类
-            'click .pos':'onPosClicked',//银行pos
-            'click .ecard':'onEcardClicked',
-            'click .third-pay':'onThirdPayClicked'
+            'click .numpad-ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click .rtbilling-help': 'onHelpClicked',
+            'click .rtbilling-return': 'onReturnClicked',
+            'click .billing-delete': 'onDeleteClicked',
+            'click .rtbilling-keyup': 'onKeyUpClicked',
+            'click .rtbilling-keydown': 'onKeyDownClicked',
+            'click .billing-clean': 'onBillCleanClicked',
+            'click .billing': 'onBillingClicked',
+            'click .quick-pay': 'onQuickPayClicked',//快捷支付
+            'click .check': 'onCheckClicked',//支票类付款
+            'click .gift-certificate': 'onGiftClicked',//礼券类
+            'click .pos': 'onPosClicked',//银行pos
+            'click .ecard': 'onEcardClicked',
+            'click .third-pay': 'onThirdPayClicked'
         },
 
         pageInit: function () {
@@ -73,24 +73,24 @@ define([
             this.typeList = new RTBillCollection();
             this.handleEvents();
             this.initTemplates();
-            if(isfromForce){
+            if (isfromForce) {
                 //强制退货
-                this.totalamount = storage.get(system_config.FORCE_RETURN_KEY,'panel','totalamount');
-                this.discoutamount = storage.get(system_config.FORCE_RETURN_KEY,'panel','discountamount');
+                this.totalamount = storage.get(system_config.FORCE_RETURN_KEY, 'panel', 'totalamount');
+                this.discoutamount = storage.get(system_config.FORCE_RETURN_KEY, 'panel', 'discountamount');
                 this.totalamount = this.totalamount - this.discoutamount;
                 this.unpaidamount = this.totalamount;
                 this.model.set({
-                    totalamount:this.totalamount,
-                    unpaidamount:this.unpaidamount
+                    totalamount: this.totalamount,
+                    unpaidamount: this.unpaidamount
                 });
-            }else{
-                this.totalamount = storage.get(system_config.RETURN_KEY,'panel','totalamount');
+            } else {
+                this.totalamount = storage.get(system_config.RETURN_KEY, 'panel', 'totalamount');
                 this.unpaidamount = this.totalamount;
                 this.receivedsum = 0;
                 this.model.set({
-                    receivedsum:this.receivedsum,
-                    totalamount:this.totalamount,
-                    unpaidamount:this.unpaidamount
+                    receivedsum: this.receivedsum,
+                    totalamount: this.totalamount,
+                    unpaidamount: this.unpaidamount
                 });
             }
         },
@@ -141,7 +141,7 @@ define([
 
         handleEvents: function () {
             Backbone.off('onReceivedsum');
-            Backbone.on('onReceivedsum',this.onReceivedsum,this);
+            Backbone.on('onReceivedsum', this.onReceivedsum, this);
         },
 
         onReceivedsum: function (data) {
@@ -151,7 +151,7 @@ define([
             var gatherId = data['gather_id'];
             var gatherKind = data['gather_kind'];
             this.card_id = data['card_id'];
-            this.addToPaymentList(this.totalamount,gatherName,parseFloat(receivedsum),gatherNo,gatherId,gatherKind,this.card_id);
+            this.addToPaymentList(this.totalamount, gatherName, parseFloat(receivedsum), gatherNo, gatherId, gatherKind, this.card_id);
         },
 
         bindKeys: function () {
@@ -169,7 +169,7 @@ define([
                 _self.onDeleteClicked();
             });
             //结算
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Space, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Space, function () {
                 _self.onBillingClicked();
             });
             //方向下
@@ -177,19 +177,19 @@ define([
                 _self.scrollDown();
             });
             //方向上
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Up, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Up, function () {
                 _self.scrollUp();
             });
             //支票类
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.S, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.S, function () {
                 _self.payment('01', '支票类');
             });
             //礼券类
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.B, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.B, function () {
                 _self.payment('02', '礼券类');
             });
             //银行POS
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.P, function() {
+            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.P, function () {
                 _self.payment('03', '银行POS');
             });
             //第三方支付
@@ -228,45 +228,45 @@ define([
          * @param cardId 一卡通付款卡号
          */
         addToPaymentList: function (totalamount, gatherName, receivedsum, gatherAccount, gatherId, gatherKind, cardId) {
-            var temp = this.collection.findWhere({gather_id: gatherId, gather_no:gatherAccount});
+            var temp = this.collection.findWhere({gather_id: gatherId, gather_no: gatherAccount});
             var model = new RTBillModel();
-            if(temp != undefined) {
+            if (temp != undefined) {
                 model = temp;
                 var gather_money = model.get('gather_money');
                 receivedsum = parseFloat(gather_money) + receivedsum;
             }
             model.set({
-                fact_money:0,
-                gather_id:gatherId,
-                gather_name:gatherName,
-                gather_money:receivedsum,
-                gather_no:gatherAccount,
-                gather_kind:gatherKind,
-                card_id:cardId,
-                havepay_money:receivedsum,
-                payment_bill:'',
-                change_money:0
+                fact_money: 0,
+                gather_id: gatherId,
+                gather_name: gatherName,
+                gather_money: receivedsum,
+                gather_no: gatherAccount,
+                gather_kind: gatherKind,
+                card_id: cardId,
+                havepay_money: receivedsum,
+                payment_bill: '',
+                change_money: 0
             });
             this.collection.push(model);
             var totalreceived = 0;
             var trList = this.collection.pluck('gather_money');
             console.log(trList);
-            for(var i = 0;i<trList.length;i++){
+            for (var i = 0; i < trList.length; i++) {
                 totalreceived += trList[i];
             }
-            console.log('totalreceived:'+totalreceived);
+            console.log('totalreceived:' + totalreceived);
             console.log(totalamount + 'this is totalamount');
-            if(totalreceived >= totalamount){
+            if (totalreceived >= totalamount) {
                 this.unpaidamount = 0;
                 this.oddchange = totalreceived - totalamount;
-            }else{
+            } else {
                 this.oddchange = 0;
                 this.unpaidamount = totalamount - totalreceived;
             }
             this.model.set({
                 receivedsum: totalreceived,
                 unpaidamount: this.unpaidamount,
-                oddchange:this.oddchange
+                oddchange: this.oddchange
             });
             this.renderBillInfo();
             this.renderBillDetail();
@@ -274,37 +274,37 @@ define([
 
         openHelp: function () {
             var attrs = {
-                page:'BILLING_RETURN_PAGE'
+                page: 'BILLING_RETURN_PAGE'
             };
-            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area:'600px'});
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
 
         /**
          * 确认事件
          */
-        confirm:function(){
+        confirm: function () {
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0) {
+            if (unpaidamount == 0) {
                 layer.msg('退货金额为零，请进行结算', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(receivedsum == '.' || (receivedsum.split('.').length-1) > 1 || parseFloat(receivedsum) == 0) {
+            if (receivedsum == '.' || (receivedsum.split('.').length - 1) > 1 || parseFloat(receivedsum) == 0) {
                 layer.msg('无效的退货金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(receivedsum == '') {
+            if (receivedsum == '') {
                 receivedsum = unpaidamount;
             }
-            if(receivedsum > unpaidamount){
+            if (receivedsum > unpaidamount) {
                 layer.msg('不设找零', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             //this.i = 0;
-            this.addToPaymentList(this.totalamount,"现金",parseFloat(receivedsum),"*","00","00",this.card_id);
+            this.addToPaymentList(this.totalamount, "现金", parseFloat(receivedsum), "*", "00", "00", this.card_id);
             $(this.input).val("");
         },
 
@@ -330,13 +330,12 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
-            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
+            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
-                $('.for-billdetail').scrollTop(this.listheight * this.n );
+                $('.for-billdetail').scrollTop(this.listheight * this.n);
             }
             $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
-
 
 
         /**
@@ -347,9 +346,9 @@ define([
             this.oddchange = 0;
             this.collection.reset();
             this.model.set({
-                receivedsum:this.receivedsum,
-                oddchange:this.oddchange,
-                unpaidamount:this.totalamount
+                receivedsum: this.receivedsum,
+                oddchange: this.oddchange,
+                unpaidamount: this.totalamount
             });
             storage.remove(system_config.ONE_CARD_KEY);
             this.renderBillDetail();
@@ -363,28 +362,28 @@ define([
             var _self = this;
             var unpaidamount = this.model.get('unpaidamount');
             var confirmBill = new RTBillModel();
-            if(isfromForce) {
+            if (isfromForce) {
                 var data = {};
                 data['mode'] = '02';
                 if (storage.isSet(system_config.VIP_KEY)) {
-                    data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                    data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                    data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                    data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
+                    data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
+                    data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
 
                 } else {
                     data['medium_id'] = "*";
                     data['medium_type'] = "*";
                     data['cust_id'] = "*";
                 }
-                data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY,'cartlist');
+                data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
-                for(var i = 0;i < data['gather_detail'].length;i++) {
-                    data['gather_detail'][i].gather_money = - parseFloat(data['gather_detail'][i].gather_money.toFixed(2));
-                    data['gather_detail'][i].havepay_money = - parseFloat(data['gather_detail'][i].havepay_money.toFixed(2));
-                    data['gather_detail'][i].change_money = - parseFloat(data['gather_detail'][i].change_money.toFixed(2));
-                    data['gather_detail'][i].fact_money = - parseFloat(data['gather_detail'][i].fact_money.toFixed(2));
+                for (var i = 0; i < data['gather_detail'].length; i++) {
+                    data['gather_detail'][i].gather_money = -parseFloat(data['gather_detail'][i].gather_money.toFixed(2));
+                    data['gather_detail'][i].havepay_money = -parseFloat(data['gather_detail'][i].havepay_money.toFixed(2));
+                    data['gather_detail'][i].change_money = -parseFloat(data['gather_detail'][i].change_money.toFixed(2));
+                    data['gather_detail'][i].fact_money = -parseFloat(data['gather_detail'][i].fact_money.toFixed(2));
                 }
-                for(var i = 0;i < data['goods_detail'].length;i++) {
+                for (var i = 0; i < data['goods_detail'].length; i++) {
                     data['goods_detail'][i].money = -parseFloat(data['goods_detail'][i].money.toFixed(2));
                     data['goods_detail'][i].num = -parseFloat(data['goods_detail'][i].num);
                     data['goods_detail'][i].discount = -parseFloat(data['goods_detail'][i].discount.toFixed(2));
@@ -397,33 +396,33 @@ define([
                         if (storage.isSet(system_config.VIP_KEY)) {
                             storage.remove(system_config.VIP_KEY);
                         }
-                        router.navigate("main", {trigger: true,replace:true});
+                        router.navigate("main", {trigger: true, replace: true});
                         layer.msg("订单号：" + resp.bill_no, optLayerSuccess);
                     } else {
                         layer.msg(resp.msg, optLayerError);
                     }
                 });
 
-            }else {
+            } else {
                 var data = {};
                 data['mode'] = '02';
                 if (storage.isSet(system_config.VIP_KEY)) {
-                    data['medium_id'] = storage.get(system_config.VIP_KEY,'medium_id');
-                    data['medium_type'] = storage.get(system_config.VIP_KEY,'medium_type');
-                    data['cust_id'] = storage.get(system_config.VIP_KEY,'cust_id');
+                    data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
+                    data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
+                    data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
                 } else {
                     data['medium_id'] = "*";
                     data['medium_type'] = "*";
                     data['cust_id'] = "*";
                 }
-                data['goods_detail'] = storage.get(system_config.RETURN_KEY,'cartlist');
+                data['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
-                for(var i = 0;i<data['gather_detail'].length;i++) {
-                    data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
-                    data['gather_detail'][i].havepay_money = - data['gather_detail'][i].havepay_money;
+                for (var i = 0; i < data['gather_detail'].length; i++) {
+                    data['gather_detail'][i].gather_money = -data['gather_detail'][i].gather_money;
+                    data['gather_detail'][i].havepay_money = -data['gather_detail'][i].havepay_money;
                     console.log(data['gather_detail'][i]);
                 }
-                for(var i = 0;i < data['goods_detail'].length;i++) {
+                for (var i = 0; i < data['goods_detail'].length; i++) {
                     data['goods_detail'][i].money = -data['goods_detail'][i].money;
                     data['goods_detail'][i].num = -data['goods_detail'][i].num;
                     data['goods_detail'][i].discount = -data['goods_detail'][i].discount;
@@ -436,7 +435,7 @@ define([
                         if (storage.isSet(system_config.VIP_KEY)) {
                             storage.remove(system_config.VIP_KEY);
                         }
-                        router.navigate("main", {trigger: true,replace:true});
+                        router.navigate("main", {trigger: true, replace: true});
                         layer.msg("订单号：" + resp.bill_no, optLayerSuccess);
                     } else {
                         layer.msg(resp.msg, optLayerError);
@@ -451,24 +450,24 @@ define([
             var _self = this;
             var gatherId = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
+            if (unpaidamount == 0) {
                 layer.msg('待支付金额为零,请进行结算', optLayerWarning);
                 return;
             }
-            if(gatherId == '') {
+            if (gatherId == '') {
                 layer.msg('无效的付款编码', optLayerWarning);
                 return;
             }
-            if(storage.isSet(system_config.GATHER_KEY)){
+            if (storage.isSet(system_config.GATHER_KEY)) {
                 var tlist = storage.get(system_config.GATHER_KEY);
-                var visibleTypes = _.where(tlist,{visible_flag:'1'});
+                var visibleTypes = _.where(tlist, {visible_flag: '1'});
                 var gatheridlist = _.pluck(visibleTypes, 'gather_id');
-                var result = $.inArray(gatherId,gatheridlist);
-                if(result == - 1){
+                var result = $.inArray(gatherId, gatheridlist);
+                if (result == -1) {
                     layer.msg('无效的付款编码', optLayerWarning);
                     return;
                 }
-                var item = _.findWhere(visibleTypes, {gather_id:gatherId});
+                var item = _.findWhere(visibleTypes, {gather_id: gatherId});
                 var data = {};
                 var xfbdata = {};
                 xfbdata['pos_id'] = '002';
@@ -476,9 +475,9 @@ define([
                 data['gather_money'] = unpaidamount;
                 data['gather_id'] = gatherId;
                 data['gather_name'] = item.gather_name;
-                switch(gatherId) {
+                switch (gatherId) {
                     case '12':
-                       layer.msg('该功能正在调试中', optLayerHelp);
+                        layer.msg('该功能正在调试中', optLayerHelp);
                         //this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
                         break;
                     case '13':
@@ -487,7 +486,7 @@ define([
                         break;
                     default :
                         data['payment_bill'] = '';
-                        this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
+                        this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name, RTQuickPayView, data, {area: '300px'});
                 }
             }
             $(this.input).val('');
@@ -496,33 +495,33 @@ define([
         /**
          *点击支付大类按钮的点击事件
          */
-        payment:function (gatherkind, title){
+        payment: function (gatherkind, title) {
             var data = {};
             data['gather_kind'] = gatherkind;
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount == 0){
+            if (unpaidamount == 0) {
                 layer.msg('待退款金额为零,请进行退款', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(parseFloat(receivedsum) == 0 || receivedsum == '.' || (receivedsum.split('.').length-1) > 1){
+            if (parseFloat(receivedsum) == 0 || receivedsum == '.' || (receivedsum.split('.').length - 1) > 1) {
                 layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(receivedsum > unpaidamount){
+            if (receivedsum > unpaidamount) {
                 layer.msg('不设找零', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(receivedsum == '') {
+            if (receivedsum == '') {
                 data['gather_money'] = unpaidamount;
-            }else{
+            } else {
                 data['gather_money'] = receivedsum;
             }
             $(this.input).val('');
-            this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, pageId, title, RTLayerTypeView, data, {area:'300px'});
+            this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, pageId, title, RTLayerTypeView, data, {area: '300px'});
         },
 
         /**
@@ -532,30 +531,30 @@ define([
             var data = {};
             var unpaidamount = this.model.get('unpaidamount');
             var receivedSum = $(this.input).val();
-            if(unpaidamount == 0){
+            if (unpaidamount == 0) {
                 layer.msg('待退款金额为零,请进行退款', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(receivedSum == '.' || parseFloat(receivedSum) == 0){
+            if (receivedSum == '.' || parseFloat(receivedSum) == 0) {
                 layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(receivedSum > unpaidamount){
+            if (receivedSum > unpaidamount) {
                 layer.msg('不设找零', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            if(receivedSum == '') {
+            if (receivedSum == '') {
                 data['gather_money'] = unpaidamount;
-            }else {
+            } else {
                 data['gather_money'] = receivedSum;
             }
 
             data['unpaidamount'] = unpaidamount;
             data['isfromForce'] = isfromForce;
-            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area:'600px'});
+            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area: '600px'});
             $(this.input).val('');
         },
 
@@ -568,9 +567,9 @@ define([
 
         onReturnClicked: function () {
             if (isfromForce) {
-                router.navigate('returnforce',{trigger:true});
+                router.navigate('returnforce', {trigger: true});
             } else {
-                router.navigate('returnwhole',{trigger:true});
+                router.navigate('returnwhole', {trigger: true});
             }
         },
 
@@ -587,7 +586,7 @@ define([
 
         onBackspaceClicked: function () {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -602,39 +601,39 @@ define([
         onDeleteClicked: function () {
             var _self = this;
             var len = this.collection.length;
-            if(len == 0) {
+            if (len == 0) {
                 layer.msg('尚未退款', optLayerWarning);
                 return;
             }
             var attrs = {
-                pageid:pageId,
-                content:'确定删除此条支付记录？',
+                pageid: pageId,
+                content: '确定删除此条支付记录？',
                 callback: function () {
                     _self.deleteItem();
                 }
             };
-           this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area:'300px'});
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
         },
 
-        deleteItem:function(){
+        deleteItem: function () {
             var item = this.collection.at(this.i);
             this.collection.remove(item);
             var totalreceived = 0;
             var trlist = this.collection.pluck('gather_money');
-            for(var i = 0;i < trlist.length; i++) {
+            for (var i = 0; i < trlist.length; i++) {
                 totalreceived += trlist[i];
             }
-            if(totalreceived >= this.totalamount) {
+            if (totalreceived >= this.totalamount) {
                 this.unpaidamount = 0;
                 this.oddchange = totalreceived - this.totalamount;
-            }else{
+            } else {
                 this.oddchange = 0;
                 this.unpaidamount = this.totalamount - totalreceived;
             }
             this.model.set({
                 receivedsum: totalreceived,
                 unpaidamount: this.unpaidamount,
-                oddchange:this.oddchange
+                oddchange: this.oddchange
             });
             this.i = 0;
             this.renderBillInfo();
@@ -648,18 +647,18 @@ define([
         onBillCleanClicked: function () {
             var _self = this;
             var len = this.collection.length;
-            if(len == 0) {
+            if (len == 0) {
                 layer.msg('尚未退款', optLayerWarning);
                 return;
             }
             var attrs = {
-                pageid:pageId,
-                content:'确认清空退款列表？',
+                pageid: pageId,
+                content: '确认清空退款列表？',
                 callback: function () {
                     _self.cleanPaylist();
                 }
             };
-            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area:'300px'});
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
         },
 
         /**
@@ -682,20 +681,20 @@ define([
         onBillingClicked: function () {
             var _self = this;
             var unpaidamount = this.model.get('unpaidamount');
-            if(unpaidamount != 0) {
+            if (unpaidamount != 0) {
                 layer.msg('还有未退款的金额', optLayerWarning);
                 return;
             }
             var attrs = {
-                pageid:pageId,
-                content:'确定进行退货结算？',
-                is_navigate:true,
-                navigate_page:PAGE_ID.MAIN,
+                pageid: pageId,
+                content: '确定进行退货结算？',
+                is_navigate: true,
+                navigate_page: PAGE_ID.MAIN,
                 callback: function () {
-                   _self.doBilling();
-               }
-           };
-            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area:'300px'});
+                    _self.doBilling();
+                }
+            };
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
         },
 
         /**
@@ -708,7 +707,7 @@ define([
         /**
          *支票类付款
          */
-        onCheckClicked:function () {
+        onCheckClicked: function () {
             this.payment('01', '支票类');
             $('button[name = check]').blur();
         },
@@ -719,7 +718,7 @@ define([
             this.payment('02', '礼券类');
             $('button[name = gift-certificate]').blur();
         },
-        onPosClicked:function () {
+        onPosClicked: function () {
             this.payment('03', '银行POS');
             $('button[name = pos]').blur();
         },
@@ -731,12 +730,11 @@ define([
         },
 
         onThirdPayClicked: function () {
-            layer.msg('该功能正在调试中',optLayerHelp);
+            layer.msg('该功能正在调试中', optLayerHelp);
             $('input[name = billingrt]').val('');
             //this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();
         },
-
 
 
     });

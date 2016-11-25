@@ -3,12 +3,11 @@
  */
 
 
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
     var layerquickpaymodel = BaseModel.extend({
 
-        defaults:{
-        },
+        defaults: {},
 
     });
     return layerquickpaymodel;

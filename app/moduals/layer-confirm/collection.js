@@ -2,10 +2,10 @@
  * Created by Joey on 2016/7/22.
  */
 define(['../../js/common/BaseCollection',
-    '../../moduals/layer-salesman/model',],function(BaseCollection,SalesmanModel){
-    var salesmanCollection=BaseCollection.extend({
+    '../../moduals/layer-salesman/model',], function (BaseCollection, SalesmanModel) {
+    var salesmanCollection = BaseCollection.extend({
 
-        model:SalesmanModel,
+        model: SalesmanModel,
 
         initCollection: function () {
             this.url = "./localdata/sales_assistant.json";

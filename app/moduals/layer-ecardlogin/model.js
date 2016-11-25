@@ -1,14 +1,11 @@
 /**
  * Created by Joey on 2016/7/22.
  */
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
-    var ecardModel=BaseModel.extend({
+    var ecardModel = BaseModel.extend({
 
-        defaults:{
-
-        },
-
+        defaults: {},
 
         vipinfo: function (data, callback) {
             this.sendPOST({
@@ -17,7 +14,6 @@ define(['../../js/common/BaseModel'],function(BaseModel){
                 success: callback
             });
         },
-
 
     });
     return ecardModel;

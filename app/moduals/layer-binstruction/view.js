@@ -13,7 +13,7 @@ define([
 
         template: tpl,
 
-        events:{
+        events: {
             'click #bank_balance': 'onBankBalanceClicked',
             'click #bank_reprint': 'onBankRePrintCliked',
             'click #bank_daily': 'onBankDailyClicked',
@@ -28,7 +28,7 @@ define([
         bindLayerKeys: function () {
             var _self = this;
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_BANK_INSTRUCTION, KEYS.Enter, function () {
-               _self.onCancelClicked();
+                _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_BANK_INSTRUCTION, KEYS.Esc, function () {
                 _self.onCancelClicked();
