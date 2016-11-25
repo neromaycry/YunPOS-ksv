@@ -531,15 +531,15 @@ define([
          */
         modifyItemDiscount: function () {
             var _self = this;
-            var item = this.collection.at(this.i);
-            var price = item.get('price');
-            var discount = $(this.input).val();
-            var num = item.get('num');
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
+            var item = this.collection.at(this.i);
+            var price = item.get('price');
+            var discount = $(this.input).val();
+            var num = item.get('num');
             if (discount == '.' || (discount.split('.').length - 1) > 1 || discount == '') {
                 layer.msg('无效的优惠金额', optLayerWarning);
                 $(this.input).val('');
@@ -607,7 +607,7 @@ define([
             var _self = this;
             var number = $(this.input).val();
             if (_self.model.get('itemamount') == 0) {
-                layer.msg('购物车内无商品', optLayerWarning);
+                layer.msg('当前购物车内无商品', optLayerWarning);
                 return;
             }
             if (number == '' || number == 0 || (number.split('.').length - 1) > 1) {
@@ -867,6 +867,11 @@ define([
          */
         onCleanClicked: function () {
             var _self = this;
+            if (this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             var attrs = {
                 pageid: pageId,
                 content: '确定取消交易？',
