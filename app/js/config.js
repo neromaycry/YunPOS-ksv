@@ -237,13 +237,14 @@ requirejs([
     window.wsClient.onmessage = function (e) {
         var data = $.parseJSON(e.data);
         console.log(data.trade_type);
+        console.log(data);
         switch (data.trade_type) {
             case DIRECTIVES.Bank_sale:
                 if (data.code == '00') {
                     window.loading.hide();
                     Backbone.trigger('onBankSaleSuccess', data);
                 } else {
-                    window.layer.msg(e.msg, optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_backout:
@@ -251,14 +252,14 @@ requirejs([
                     window.loading.hide();
                     Backbone.trigger('onBankBackoutSuccess');
                 } else {
-                    window.layer.msg(e.msg, optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_refund:
                 if (data.code == '00') {
                     window.loading.hide();
                 } else {
-                    window.layer.msg(e.msg, optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_balance:
@@ -266,7 +267,7 @@ requirejs([
                     window.loading.hide();
                     window.layer.close(layerindex);
                 } else {
-                    window.layer.msg(e.msg, optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_reprint:
@@ -274,7 +275,7 @@ requirejs([
                     window.loading.hide();
                     window.layer.close(layerindex);
                 } else {
-                    window.layer.msg(e.msg, optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_query:
@@ -282,14 +283,14 @@ requirejs([
                     window.loading.hide();
                     window.layer.close(layerindex);
                 } else {
-                    window.layer.msg(e.msg, optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_signin:
                 if (data.code == '00') {
                     window.loading.hide();
                 } else {
-                    window.layer.msg(e.msg, optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_daily:
@@ -297,7 +298,7 @@ requirejs([
                     window.loading.hide();
                     window.layer.close(layerindex);
                 } else {
-                    window.layer.msg(e.msg, optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
         }

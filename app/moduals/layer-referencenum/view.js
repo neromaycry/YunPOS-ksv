@@ -74,7 +74,7 @@ define([
                 bill_no: this.attrs.bill_no,
                 reference_number: value
             };
-            this.sendWebSocketDirective([DIRECTIVES.Bank_backout], JSON.stringify(data), wsClient);
+            this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
         },
         
         refund: function () {
