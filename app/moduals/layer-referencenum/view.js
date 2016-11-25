@@ -62,7 +62,19 @@ define([
         },
 
         onOKClicked: function () {
-            this.onSalesmanLogin();
+            var value = $(this.input).val();
+            if (value == '') {
+                layer.msg('请输入系统参考号', optLayerWarning);
+                return;
+            }
+            var data = {
+                transaction_amount: this.attrs.transaction_amount,
+                cashier_no: this.attrs.cashier_no,
+                pos_no: this.attrs.pos_no,
+                bill_no: this.attrs.bill_no,
+                reference_number: value
+            };
+            this.sendWebSocketDirective([DIRECTIVES.Bank_backout], JSON.stringify(data), wsClient);
         },
         
         refund: function () {

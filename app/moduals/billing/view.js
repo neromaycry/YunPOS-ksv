@@ -152,6 +152,7 @@ define([
             //Backbone.off('onBillDiscount');
             //Backbone.on('onBillDiscount', this.onBillDiscount,this);
             Backbone.on('onReceivedsum', this.onReceivedsum, this);
+            Backbone.on('onBankBackoutSuccess', this.onBankBackoutSuccess, this);
         },
 
         onReceivedsum: function (data) {
@@ -490,9 +491,10 @@ define([
         deletebankpay: function () {
             var attrs = {
                 pageid:pageId,
-                callback: function () {
-                    this.deleteItem(this.i);
-                }
+                transaction_amount: 0.1,
+                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                bill_no: this.billNumber
             };
             this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, pageId, '输入系统参考号', LayerReferenceNumView, attrs, {area:'300px'});
         },
@@ -1072,6 +1074,10 @@ define([
                     layer.msg(resp.msg, optLayerWarning);
                 }
             });
+        },
+
+        onBankBackoutSuccess: function () {
+            this.deleteItem(this.i);
         },
 
         /**

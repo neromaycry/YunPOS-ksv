@@ -249,6 +249,7 @@ requirejs([
             case DIRECTIVES.Bank_backout:
                 if (data.code == '00') {
                     window.loading.hide();
+                    Backbone.trigger('onBankBackoutSuccess');
                 } else {
                     window.layer.msg(e.msg, optLayerWarning);
                 }
