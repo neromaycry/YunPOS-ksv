@@ -84,7 +84,7 @@ define([
                     unpaidamount:this.unpaidamount
                 });
             }else{
-                this.totalamount = Math.abs(storage.get(system_config.RETURN_KEY,'panel','totalamount'));
+                this.totalamount = storage.get(system_config.RETURN_KEY,'panel','totalamount');
                 this.unpaidamount = this.totalamount;
                 this.receivedsum = 0;
                 this.model.set({
@@ -284,7 +284,7 @@ define([
          */
         confirm:function(){
             var receivedsum = $(this.input).val();
-            var unpaidamount = Math.abs(this.model.get('unpaidamount'));
+            var unpaidamount = this.model.get('unpaidamount');
             if(unpaidamount == 0) {
                 layer.msg('退货金额为零，请进行结算', optLayerWarning);
                 $(this.input).val('');
@@ -379,13 +379,15 @@ define([
                 data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY,'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
                 for(var i = 0;i < data['gather_detail'].length;i++) {
-                    data['gather_detail'][i].gather_money = - data['gather_detail'][i].gather_money;
-                    data['gather_detail'][i].havepay_money = - data['gather_detail'][i].havepay_money;
+                    data['gather_detail'][i].gather_money = - parseFloat(data['gather_detail'][i].gather_money.toFixed(2));
+                    data['gather_detail'][i].havepay_money = - parseFloat(data['gather_detail'][i].havepay_money.toFixed(2));
+                    data['gather_detail'][i].change_money = - parseFloat(data['gather_detail'][i].change_money.toFixed(2));
+                    data['gather_detail'][i].fact_money = - parseFloat(data['gather_detail'][i].fact_money.toFixed(2));
                 }
                 for(var i = 0;i < data['goods_detail'].length;i++) {
-                    data['goods_detail'][i].money = -data['goods_detail'][i].money;
-                    data['goods_detail'][i].num = -data['goods_detail'][i].num;
-                    data['goods_detail'][i].discount = -data['goods_detail'][i].discount;
+                    data['goods_detail'][i].money = -parseFloat(data['goods_detail'][i].money.toFixed(2));
+                    data['goods_detail'][i].num = -parseFloat(data['goods_detail'][i].num);
+                    data['goods_detail'][i].discount = -parseFloat(data['goods_detail'][i].discount.toFixed(2));
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);
