@@ -10,14 +10,14 @@ define([
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-ecardlogin/view',
-    '../../../../moduals/layer-quickpay/view',
+    '../../../../moduals/layer-gatherui/view',
     '../../../../moduals/layer-binstruction/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerQuickPayView, LayerBInstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView,LayerGatherUIView, LayerBInstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -159,13 +159,11 @@ define([
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
             var gatherKind = data['gather_kind'];
-            this.card_id = data['card_id'];
-            var paymentBill = data['payment_bill'];
             var extraArgs = undefined;
             if (data.hasExtra) {
                 extraArgs = data.extras;
             }
-            this.addToPaymentList(this.totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, this.card_id, paymentBill, extraArgs);
+            this.addToPaymentList(this.totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, extraArgs);
         },
 
 
@@ -177,11 +175,9 @@ define([
          * @param gatherNo 付款账号
          * @param gatherId 付款方式Id
          * @param gatherKind 付款方式类别
-         * @param cardId 一卡通付款卡号
-         * @param paymentBill 订单编号
          * @param extraArgs 附加参数
          */
-        addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, cardId, paymentBill, extraArgs) {
+        addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, extraArgs) {
             if (!extraArgs) {
                 extraArgs = {};
             }
@@ -225,8 +221,6 @@ define([
                 gather_money: gather_money,
                 gather_no: gatherNo,
                 gather_kind: gatherKind,
-                card_id: cardId,
-                payment_bill: paymentBill,
                 havepay_money: havepay_money,
                 change_money: change_money
             });
@@ -236,6 +230,15 @@ define([
                         reference_number: extraArgs.reference_number
                     });
                     break;
+                case 1:
+                    model.set({
+                        payment_bill:extraArgs.payment_bill
+                    });
+                    break;
+                case 2:
+                    model.set({
+                        card_id:extraArgs.card_id
+                    });
             }
             this.collection.add(model);
             console.log(this.collection);
@@ -312,21 +315,23 @@ define([
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function () {
-                _self.payment('01', _self.billNumber, '支票类');
+                _self.onCheckClicked();
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.B, function () {
-                _self.payment('02', _self.billNumber, '礼券类');
+               _self.onGiftClicked();
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.P, function () {
-                _self.payment('03', _self.billNumber, '银行POS');
+                _self.onPosClicked();
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
-                //$('input[name = billing]').val('');
-                layer.msg('该功能正在调试中', optLayerWarning);
-                //_self.payment('05', _self.billNumber, '第三方支付');
+               _self.onThirdPayClicked();
+            });
+            //一卡通支付快捷键
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
+                _self.payByECard();
             });
             //整单优惠输入实际优惠金额
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F1, function () {
@@ -340,18 +345,11 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
                 _self.openHelp();
             });
-            //一卡通支付快捷键
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
-                _self.payByECard();
-            });
             //清空支付方式列表
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.C, function () {
                 _self.cleanPaylist();
             });
-            //快捷支付
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.E, function () {
-                _self.QuickPay();
-            });
+
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.V, function () {
                 _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
             });
@@ -401,7 +399,7 @@ define([
          * 删除,如果存在第三方支付，则调用refund函数;如果存在一卡通支付，调用一卡通删除函数;如果存在银行卡支付，则调用银行卡删除函数。
          * 否则，调用deleteItem
          */
-        onDeleteClicked: function (index) {
+        onDeleteClicked: function () {
             var _self = this;
             var len = this.collection.length;
             if (len == 0) {
@@ -412,12 +410,12 @@ define([
                 pageid: pageId,
                 content: '确定删除此条支付记录？',
                 callback: function () {
-                    var item = _self.collection.at(index);
+                    var item = _self.collection.at(_self.i);
                     var gatherId = item.get('gather_id');
                     if (gatherId == '12' || gatherId == '13') {
                         _self.refund(gatherId, item.get('payment_bill'));
                     } else {
-                        _self.deleteItem(index);
+                        _self.deleteItem(_self.i);
                         layer.msg('删除成功', optLayerSuccess);
                     }
                 }
@@ -506,7 +504,7 @@ define([
                 return;
             }
             var rate = (1 - parseFloat(discount) / (this.totalamount + this.totaldiscount)).toFixed(2);
-            this.isDiscountGranted('01', rate);
+            this.selectDiscountGranted('01', rate);
         },
 
 
@@ -535,17 +533,16 @@ define([
                 return;
             }
             var rate = parseFloat((percentage / 100).toFixed(2));
-            this.isDiscountGranted('02', rate);
+            this.selectDiscountGranted('02', rate);
         },
 
         /**
-         * 优惠权限
+         * 选择优惠权限
          * @param authCode
          * @param rate
          */
-        isDiscountGranted: function (authCode,  rate) {
+        selectDiscountGranted: function (authCode,  rate) {
             var _self = this;
-            console.log(rate);
             switch (authCode) {
                 case '01':
                     this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
@@ -923,26 +920,16 @@ define([
         onClearClicked: function () {
             $(this.input).val('');
         },
-        /**
-         * 快捷支付按钮的点击事件
-         */
-        onQuickPayClicked: function () {
-            this.QuickPay();
-        },
+
         /**
          * 快捷支付
          */
-        QuickPay: function () {
+        onQuickPayClicked: function () {
             var _self = this;
             var gatherId = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if (unpaidamount == 0) {
                 layer.msg('待支付金额为零,请进行结算', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            if (gatherId == '') {
-                layer.msg('无效的付款编码', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
@@ -958,43 +945,33 @@ define([
                     return;
                 }
                 var item = _.findWhere(visibleTypes, {gather_id: gatherId});
-                var data = {};
-                var xfbdata = {};
-                xfbdata['pos_id'] = '002';
-                xfbdata['bill_no'] = _self.billNumber;
-                data['gather_money'] = unpaidamount;
-                data['gather_id'] = gatherId;
-                data['gather_name'] = item.gather_name;
+                var data = {
+                    gather_money:unpaidamount,
+                    gather_id:gatherId,
+                    gather_name:item.gather_name,
+                    gather_kind:item.gather_kind,
+                };
                 switch (gatherId) {
-                    case '12':
+                    case '12':case'13':
+                        var xfbdata = {
+                            pos_id:'002',
+                            bill_no:this.billNumber
+                        };
                         layer.msg('该功能正在调试中', optLayerHelp);
-                        //_self.requestmodel.xfbbillno(xfbdata, function(resp){
-                        //    if(resp.status == '00') {
-                        //        data['payment_bill'] = resp.xfb_bill;
-                        //        _self.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'600px'});
-                        //    } else {
-                        //        toastr.error(resp.msg);
-                        //    }
-                        //});
-                        break;
-                    case '13':
-                        layer.msg('该功能正在调试中', optLayerHelp);
-                        //_self.requestmodel.xfbbillno(xfbdata, function(resp){
-                        //    if(resp.status == '00') {
-                        //        data['payment_bill'] = resp.xfb_bill;
-                        //        _self.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area:'600px'});
-                        //    } else {
-                        //        toastr.error(resp.msg);
-                        //    }
-                        //});
+                        _self.requestmodel.xfbbillno(xfbdata, function(resp){
+                            if(resp.status == '00') {
+                                data['payment_bill'] = resp.xfb_bill;
+                                _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area:'600px'});
+                            } else {
+                                toastr.error(resp.msg);
+                            }
+                        });
                         break;
                     case '16':
-                        data['payment_bill'] = '*'
-                        this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, '银行卡支付确认', LayerQuickPayView, data, {area: '300px'});
+                        this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, '银行卡支付确认', LayerGatherUIView, data, {area: '300px'});
                         break;
                     default :
-                        data['payment_bill'] = '*';
-                        this.openLayer(PAGE_ID.LAYER_QUICK_PAY, pageId, item.gather_name, LayerQuickPayView, data, {area: '300px'});
+                        this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '300px'});
                 }
             }
 
@@ -1004,19 +981,16 @@ define([
          *支票类付款
          */
         onCheckClicked: function () {
-            this.payment('01', this.billNumber, '支票类');
-            $('button[name = check]').blur();
+            this.payment('01', '支票');
         },
         /**
          * 礼券
          */
         onGiftClicked: function () {
-            this.payment('02', this.billNumber, '礼券类');
-            $('button[name = gift-certificate]').blur();
+            this.payment('02', '礼券');
         },
         onPosClicked: function () {
-            this.payment('03', this.billNumber, '银行POS');
-            $('button[name = pos]').blur();
+            this.payment('03', '银行卡');
         },
         /**
          * 一卡通支付按钮点击事件
@@ -1028,14 +1002,13 @@ define([
         onThirdPayClicked: function () {
             layer.msg('该功能正在调试中', optLayerHelp);
             //$('input[name = billing]').val('');
-            this.payment('05', this.billNumber, '第三方支付');
+            this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();
         },
         /**
          *点击支付大类按钮的点击事件
          */
-        payment: function (gatherkind, billNumber, title) {
-            var data = {};
+        payment: function (gatherkind, title) {
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if (unpaidamount == 0) {
@@ -1056,10 +1029,12 @@ define([
             if (receivedsum == '') {
                 receivedsum = unpaidamount;
             }
-            data['gather_kind'] = gatherkind;//支付方式类别：包括现金类,礼券类等
-            data['gather_money'] = receivedsum;
-            data['bill_no'] = billNumber;
-            this.openLayer(PAGE_ID.LAYER_BILLING_TYPE, pageId, title, LayerBillTypeView, data, {area: '300px'});
+            var attrs = {
+                gather_kind:gatherkind,//支付类别
+                gather_money:receivedsum,//支付金额
+                bill_no:this.billNumber//订单号（ps:银行pos和第三方支付需要订单号）
+            };
+            this.openLayer(PAGE_ID.LAYER_BILLING_TYPE, pageId, title, LayerBillTypeView, attrs, {area: '300px'});
             $(this.input).val('');
         },
 
@@ -1133,46 +1108,6 @@ define([
             }
             $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
-
-
-        ///**
-        // * 取消整单优惠
-        // */
-        //cancelTotalDiscount: function () {
-        //    var receivedsum = this.model.get('receivedsum');
-        //    if(this.totaldiscount == 0){
-        //        toastr.info('您未进行任何优惠')
-        //    }else if(receivedsum != 0){
-        //        toastr.info('您已选择支付方式，不能取消整单优惠');
-        //    }else{
-        //        this.totalamount = parseFloat(this.model.get("totalamount")) + parseFloat(this.totaldiscount);
-        //        this.unpaidamount = this.totalamount;
-        //        this.totaldiscount = 0;
-        //        this.model.set({
-        //            totalamount:this.totalamount,
-        //            unpaidamount:this.unpaidamount,
-        //            totaldiscount:this.totaldiscount
-        //        });
-        //        this.renderBillInfo();
-        //        $('button[name = totaldiscount]').css('display','block');
-        //        $('button[name = cancel-totaldiscount]').css('display','none');
-        //        toastr.success('取消整单优惠成功');
-        //    }
-        //},
-
-        //onBillDiscount: function (data) {
-        //    this.percentage = data['percentage'] / 100;
-        //    this.totaldiscount = (this.totalamount * ( 1- this.percentage)).toFixed(2);//优惠金额
-        //    this.totalamount = (this.totalamount - this.totaldiscount).toFixed(2);//折扣后的支付金额
-        //    this.unpaidamount = this.totalamount;
-        //    this.model.set({
-        //        totaldiscount:this.totaldiscount,//整单优惠的金额
-        //        totalamount:this.totalamount,
-        //        unpaidamount:this.unpaidamount,
-        //        percentage:percentage
-        //    });
-        //    this.renderBillInfo();
-        //},
 
     });
 

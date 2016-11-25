@@ -37,9 +37,9 @@ define([
             this.model = new LayerBillTypeModel();
             this.requestmodel = new LayerBillTypeModel();
             this.model.set({
-                receivedsum: this.attrs['gather_money']
+                receivedsum: this.attrs.gather_money
             });
-            var gatherKind = this.attrs['gather_kind'];
+            var gatherKind = this.attrs.gather_kind;
             if (storage.isSet(system_config.GATHER_KEY)) {
                 this.collection = new LayerBillTypeCollection();
                 var tlist = storage.get(system_config.GATHER_KEY);
@@ -49,7 +49,8 @@ define([
                     var item = new LayerBillTypeModel();
                     item.set({
                         gather_id: gatherList[i].gather_id,
-                        gather_name: gatherList[i].gather_name
+                        gather_name: gatherList[i].gather_name,
+                        gather_ui:gatherList[i].gather_ui
                     });
                     this.collection.push(item);
                 }
@@ -79,166 +80,62 @@ define([
             });
 
             this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_TYPE, KEYS.Enter, function () {
-                _self.onReceived(_self.i);
+                _self.confirm(_self.i);
             });
         },
 
         /**
          * Enter和确定
          */
-        onReceived: function (index) {
+        confirm:function (index) {
             var _self = this;
+            var attrs = {};
             var gatherId = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');
-            var data = {};
-            var xfbdata = {};//生成payment_bill
-            data['gather_id'] = gatherId;
-            data['gather_name'] = gatherName;
-            data['gather_money'] = this.attrs.gather_money;
-            data['gather_kind'] = this.attrs.gather_kind;
-            xfbdata['pos_id'] = '002';
-            xfbdata['bill_no'] = this.attrs.bill_no;
-            this.closeLayer(layerindex);
-            switch (gatherId) {
-                case '12':
-                    this.requestmodel.xfbbillno(xfbdata, function (resp) {
-                        if (resp.status == '00') {
-                            data['payment_bill'] = resp.xfb_bill,
-                            _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
-                        } else {
-                            layer.msg(resp.msg, optLayerError);
-                        }
-                    });
+            switch (gatherId) {//gather_ui:判断接下来打开的是哪种界面
+                case '12':case'13'://第三方支付类
+                var xfbdata = {
+                    pos_id:'002',
+                    bill_no:this.attrs.bill_no
+                };//生成payment_bill
+                this.requestmodel.xfbbillno(xfbdata, function (resp) {
+                    if (resp.status == '00') {
+                        _self.closeLayer(layerindex);
+                         attrs = {
+                            gather_id:gatherId,
+                            gather_name:gatherName,
+                            gather_money:_self.attrs.gather_money,
+                            gather_kind:_self.attrs.gather_kind,
+                            payment_bill:resp.xfb_bill,
+                        };
+                        _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, attrs, {area: '600px'});
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                    }
+                });
+                break;
+                case '16'://银行mis
+                    this.closeLayer(layerindex);
+                    attrs = {
+                        gather_id:gatherId,
+                        gather_name:gatherName,
+                        gather_money:_self.attrs.gather_money,
+                        gather_kind:_self.attrs.gather_kind,
+                        bill_no:_self.attrs.bill_no,
+                    };
+                    this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, '银行MIS支付确认', layerGatherUIView, attrs, {area: '300px'});
                     break;
-                case '13':
-                    this.requestmodel.xfbbillno(xfbdata, function (resp) {
-                        if (resp.status == '00') {
-                            data['payment_bill'] = resp.xfb_bill;
-                            _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '600px'});
-                        } else {
-                            layer.msg(resp.msg, optLayerError);
-                        }
-                    });
-                    break;
-                case '16':
-                    data['payment_bill'] = '*';
-                    data['bill_no'] = this.attrs.bill_no
-                    this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, '银行卡支付确认', layerGatherUIView, data, {area: '300px'});
-                    break;
-                default:
-                    data['payment_bill'] = '*';
-                    this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, data, {area: '300px'});
+                default ://输入账号类
+                    this.closeLayer(layerindex);
+                    attrs = {
+                        gather_id:gatherId,
+                        gather_name:gatherName,
+                        gather_money:this.attrs.gather_money,
+                        gather_kind:this.attrs.gather_kind,
+                    };
+                    this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, attrs, {area: '300px'});
+
             }
-            //if(gatherUI == '01' && gatherId != '05'){
-            //    var gaterUIView = new GatherUIView({
-            //        pageid:window.PAGE_ID.BILLING,
-            //        currentid:window.PAGE_ID.BILLING_ACCOUNT,
-            //        gather_id:gatherId,
-            //        gather_name:gatherName,
-            //        gather_ui:gatherUI,
-            //        gather_kind:gatherKind,
-            //        gather_money:gatherMoney ,
-            //        callback: function (attrs) {
-            //            var gatherNo = $('input[name = receive-account]').val();
-            //            var attrData = {};
-            //            attrData['gather_id'] = attrs.gather_id;
-            //            attrData['gather_money'] = attrs.gather_money;
-            //            attrData['gather_name'] = attrs.gather_name;
-            //            attrData['gather_no'] = gatherNo;
-            //            attrData['gather_kind'] = attrs.gather_kind;
-            //            attrData['payment_bill'] = '';
-            //            Backbone.trigger('onReceivedsum',attrData);
-            //            _self.hideModal(window.PAGE_ID.BILLING);
-            //            $('input[name = billing]').focus();
-            //        }
-            //    });
-            //    this.showModal(window.PAGE_ID.BILLING_ACCOUNT, gaterUIView);
-            //    $('.modal').on('shown.bs.modal',function(e) {
-            //        $('input[name = receive-account]').focus();
-            //    });
-            //}else if(gatherUI == '04'){
-            //    var xfbdata = {};
-            //    xfbdata['pos_id'] = '002';
-            //    xfbdata['bill_no'] = _self.attrs.bill_no;
-            //    this.requestmodel.xfbbillno(xfbdata, function(resp) {
-            //        if(resp.status == '00') {
-            //            var gaterUIView = new GatherUIView({
-            //                pageid:window.PAGE_ID.BILLING,
-            //                currentid:window.PAGE_ID.ALIPAY,
-            //                gather_id:gatherId,
-            //                gather_name:gatherName,
-            //                gather_ui:gatherUI,
-            //                gather_kind:gatherKind,
-            //                gather_money:gatherMoney,
-            //                payment_bill:resp.xfb_bill,
-            //                callback:function (attrs) {
-            //                    var gatherNo = $('input[name = alipay-account]').val();
-            //                    var attrData = {};
-            //                    attrData['gather_id'] = attrs.gather_id;
-            //                    attrData['gather_money'] = attrs.gather_money;
-            //                    attrData['gather_name'] = attrs.gather_name;
-            //                    attrData['gather_no'] = gatherNo;
-            //                    attrData['gather_kind'] = attrs.gather_kind;
-            //                    attrData['payment_bill'] = attrs.payment_bill;
-            //                    _self.micropay(gatherUI, gatherNo,attrData,attrs.payment_bill);
-            //                }
-            //            });
-            //            _self.showModal(window.PAGE_ID.ALIPAY,gaterUIView);
-            //            $('.modal').on('shown.bs.modal',function(e) {
-            //                $('input[name = alipay-account]').focus();
-            //            });
-            //        }else {
-            //            toastr.error(resp.msg);
-            //        }
-            //    });
-            //}else if(gatherUI == '05'){
-            //    var xfbdata = {};
-            //    xfbdata['pos_id'] = '002';
-            //    xfbdata['bill_no'] = _self.attrs.bill_no;
-            //    this.requestmodel.xfbbillno(xfbdata, function(resp) {
-            //        if(resp.status == '00') {
-            //            var gaterUIView = new GatherUIView({
-            //                pageid:window.PAGE_ID.BILLING,
-            //                currentid:window.PAGE_ID.WECHAT,
-            //                gather_id:gatherId,
-            //                gather_name:gatherName,
-            //                gather_ui:gatherUI,
-            //                gather_kind:gatherKind,
-            //                gather_money:gatherMoney,
-            //                payment_bill:resp.xfb_bill,
-            //                callback:function (attrs) {
-            //                    var gatherNo = $('input[name = wechat-account]').val();
-            //                    var attrData = {};
-            //                    attrData['gather_id'] = attrs.gather_id;
-            //                    attrData['gather_money'] = attrs.gather_money;
-            //                    attrData['gather_name'] = attrs.gather_name;
-            //                    attrData['gather_no'] = gatherNo;
-            //                    attrData['gather_kind'] = attrs.gather_kind;
-            //                    attrData['payment_bill'] = attrs.payment_bill;
-            //                    _self.micropay(gatherUI, gatherNo,attrData, attrs.payment_bill);
-            //                }
-            //            });
-            //            _self.showModal(window.PAGE_ID.WECHAT,gaterUIView);
-            //            $('.modal').on('shown.bs.modal',function(e) {
-            //                $('input[name = wechat-account]').focus();
-            //            });
-            //        }else {
-            //            toastr.error(resp.msg);
-            //        }
-            //    });
-            //}else if(gatherId == '05') {
-            //    var data = {};
-            //    data['gather_id'] = gatherId;
-            //    data['gather_name'] = gatherName;
-            //    data['gather_ui'] = gatherUI;
-            //    data['gather_kind'] = gatherKind;
-            //    data['gather_money'] = gatherMoney;
-            //    data['bill_no'] = _self.attrs.bill_no;
-            //    data['currentid'] = window.PAGE_ID.MODAL_POS;
-            //    data['pageid'] = window.PAGE_ID.BILLING
-            //    var gatherUIView = new GatherUIView(data);
-            //    this.showModal(window.PAGE_ID.MODAL_POS, gaterUIView);
-            //}
         },
 
         /**
@@ -278,7 +175,7 @@ define([
 
         onOkClicked: function () {
             //var index = $('.cus-selected').data('index');
-            this.onReceived(this.index);
+            this.confirm(this.index);
         },
 
         onBillTypeClicked: function (e) {
