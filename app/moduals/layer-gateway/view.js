@@ -16,11 +16,11 @@ define([
         input: 'input[name = server_ip]',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked'
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked'
         },
 
         LayerInitPage: function () {
@@ -53,7 +53,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -63,7 +63,7 @@ define([
 
         onOKClicked: function () {
             var ip = 'http://' + $(this.input).val() + ':3000/v1';
-            storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY, ip);
+            storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY, ip);
             this.closeLayer(layerindex);
             Backbone.trigger('getGatherDetail');
         },
