@@ -1,17 +1,17 @@
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
     var checkingModel = BaseModel.extend({
 
-        defaults:{
-            pos:'',
-            date:'',
-            money:'',
-            sale_num:'',
-            sale_money:'',
-            refund_num:'',
-            refund_money:'',
-            sub_num:'',
-            sub_money:''
+        defaults: {
+            pos: '',
+            date: '',
+            money: '',
+            sale_num: '',
+            sale_money: '',
+            refund_num: '',
+            refund_money: '',
+            sub_num: '',
+            sub_money: ''
         },
 
         report: function (data, callback) {

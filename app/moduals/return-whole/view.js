@@ -12,7 +12,7 @@ define([
     'text!../../../../moduals/return-whole/rtpayedlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, returninfotpl, rtcarttpl, rtpayedlisttpl,numpadtpl, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, returninfotpl, rtcarttpl, rtpayedlisttpl, numpadtpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -22,13 +22,13 @@ define([
 
         template: tpl,
 
-        template_returninfo:returninfotpl,
+        template_returninfo: returninfotpl,
 
-        template_rtcart:rtcarttpl,
+        template_rtcart: rtcarttpl,
 
-        template_rtpayedlist:rtpayedlisttpl,
+        template_rtpayedlist: rtpayedlisttpl,
 
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
 
         totalamount: 0,
 
@@ -41,15 +41,15 @@ define([
         input: 'input[name = whole_return_order]',
 
         events: {
-            'click .numpad-ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .cancel':'onCancelClicked',
-            'click .rt-billing':'onBillingClicked',
-            'click .rt-return':'onBackClicked',
-            'click .rt-help':'onHelpClicked',
-            'click .rt-cancel':'onCancelClicked'
+            'click .numpad-ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click .cancel': 'onCancelClicked',
+            'click .rt-billing': 'onBillingClicked',
+            'click .rt-return': 'onBackClicked',
+            'click .rt-help': 'onHelpClicked',
+            'click .rt-cancel': 'onCancelClicked'
         },
 
         pageInit: function () {
@@ -69,9 +69,9 @@ define([
         initPlugins: function () {
             $(this.input).focus();
             if (storage.isSet(system_config.RETURN_KEY)) {
-                this.RtPayedlistCollection.set(storage.get(system_config.RETURN_KEY,'paymentlist'));
-                this.RtcartCollection.set(storage.get(system_config.RETURN_KEY,'cartlist'));
-                this.model.set(storage.get(system_config.RETURN_KEY,'panel'));
+                this.RtPayedlistCollection.set(storage.get(system_config.RETURN_KEY, 'paymentlist'));
+                this.RtcartCollection.set(storage.get(system_config.RETURN_KEY, 'cartlist'));
+                this.model.set(storage.get(system_config.RETURN_KEY, 'panel'));
             }
             $('.rtcart-content').perfectScrollbar();
             this.renderRtInfo();
@@ -90,7 +90,7 @@ define([
         initLayoutHeight: function () {
             var dh = $(window).height();
             var dw = $(window).width();
-            var navbar =$('.navbar').height();
+            var navbar = $('.navbar').height();
             var panelheading = $('.panel-heading').height();
             var panelfooter = $('.panel-footer').height();
             var payedlist = dh - navbar * 2 - panelheading * 2 - panelfooter;
@@ -143,15 +143,15 @@ define([
         },
         calculateModel: function () {
             console.log(this.RtcartCollection);
-            for(var i = 0;i < this.RtcartCollection.length;i++) {
+            for (var i = 0; i < this.RtcartCollection.length; i++) {
                 var item = this.RtcartCollection.at(i);
                 var money = item.get('money');
                 var num = item.get('num');
                 var discount = item.get('discount');
                 item.set({
-                    money:money,
-                    num:num,
-                    discount:discount
+                    money: money,
+                    num: num,
+                    discount: discount
                 });
             }
             console.log(this.RtcartCollection);
@@ -167,37 +167,37 @@ define([
             }
             this.model.set({
                 totalamount: this.totalamount,
-                itemamount:this.itemamount,
-                discountamount:this.discountamount
+                itemamount: this.itemamount,
+                discountamount: this.discountamount
             });
             this.renderRtcart();
             this.renderRtInfo();
             //this.renderRtPayedlist();
-            storage.set(system_config.RETURN_KEY,'cartlist',this.RtcartCollection.toJSON());
-            storage.set(system_config.RETURN_KEY,'paymentlist',this.RtPayedlistCollection.toJSON());
-            storage.set(system_config.RETURN_KEY,'panel',this.model.toJSON());
+            storage.set(system_config.RETURN_KEY, 'cartlist', this.RtcartCollection.toJSON());
+            storage.set(system_config.RETURN_KEY, 'paymentlist', this.RtPayedlistCollection.toJSON());
+            storage.set(system_config.RETURN_KEY, 'panel', this.model.toJSON());
         },
 
         bindKeys: function () {
             var _self = this;
-            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.T,function () {
-               _self.onHelpClicked();
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.T, function () {
+                _self.onHelpClicked();
             });
 
-            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Esc,function () {
-                router.navigate('main',{trigger:true});
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Esc, function () {
+                router.navigate('main', {trigger: true});
             });
-            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Space,function () {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Space, function () {
                 var itemamount = _self.model.get('itemamount');
                 if (itemamount == 0) {
                     layer.msg('请输入订单号', optLayerWarning);
                 } else {
                     isfromForce = false;
-                    router.navigate('billingreturn',{trigger:true});
+                    router.navigate('billingreturn', {trigger: true});
                 }
             });
             //取消整单退货
-            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function() {
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function () {
                 _self.onCancelClicked();
             });
             //确定
@@ -222,7 +222,7 @@ define([
         onCancelClicked: function () {
             var _self = this;
             var len = this.RtcartCollection.length;
-            if(len == 0) {
+            if (len == 0) {
                 layer.msg('请先查询订单', optLayerWarning);
                 return;
             }
@@ -275,16 +275,16 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
-            if ((this.i+1) % this.listnum == 0 && this.i > 0) {
+            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
                 //alert(_self.n);
-                $('.rtcart-content').scrollTop(this.listheight * this.n );
+                $('.rtcart-content').scrollTop(this.listheight * this.n);
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
         onBackClicked: function () {
-            router.navigate('main',{trigger:true});
+            router.navigate('main', {trigger: true});
         },
 
 
@@ -294,7 +294,7 @@ define([
                 layer.msg('请输入订单号', optLayerWarning);
             } else {
                 isfromForce = false;
-                router.navigate('billingreturn',{trigger:true});
+                router.navigate('billingreturn', {trigger: true});
             }
         },
 
@@ -316,7 +316,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -324,11 +324,11 @@ define([
             $(this.input).val('');
         },
 
-        onHelpClicked:function () {
+        onHelpClicked: function () {
             var attrs = {
-                page:'RETURNWHOLE_PAGE'
+                page: 'RETURNWHOLE_PAGE'
             };
-            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area:'600px'});
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
 
     });

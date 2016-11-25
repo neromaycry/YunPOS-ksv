@@ -14,13 +14,13 @@ define([
 
         template: tpl,
 
-        template_content:contenttpl,
+        template_content: contenttpl,
 
         input: 'input[name = salesman_id]',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked'
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOKClicked'
         },
 
         LayerInitPage: function () {
@@ -29,7 +29,7 @@ define([
             console.log(this.attrs.content);
             this.model = new LayerConfirmModel();
             this.model.set({
-                content:this.attrs.content
+                content: this.attrs.content
             });
             Backbone.off('onNavigateStateChanged');
             Backbone.on('onNavigateStateChanged', this.onNavigateStateChanged, this);
@@ -86,7 +86,7 @@ define([
             layer.close(layerindex);
         },
 
-        confirmCloseLayer:function(pageid) {
+        confirmCloseLayer: function (pageid) {
             this.attrs['is_confirm'] = true;
             switch (pageid) {
                 case window.PAGE_ID.LOGIN:

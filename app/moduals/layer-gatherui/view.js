@@ -12,7 +12,7 @@ define([
     'text!../../moduals/layer-gatherui/numpadtpl.html',
     'text!../../moduals/layer-gatherui/bankcardtpl.html',
     'text!../../moduals/layer-gatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel,LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl,bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -20,18 +20,18 @@ define([
 
         template: tpl,
 
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
 
-        template_bankcard:bankcardtpl,
+        template_bankcard: bankcardtpl,
 
-        gatherUI:'',
+        gatherUI: '',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .btn-num':'onNumClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
+            'click .cancel': 'onCancelClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
         },
 
         LayerInitPage: function () {
@@ -40,7 +40,7 @@ define([
             this.gatherId = this.attrs.gather_id;
             this.model = new LayerGatherUIModel();
             this.model.set({
-                gather_money:this.attrs.gather_money
+                gather_money: this.attrs.gather_money
             });
             this.switchTemplate(this.gatherId);
             this.template_content = _.template(this.template_content);
@@ -70,7 +70,7 @@ define([
                 data['body'] = 'test';
                 data['subject'] = 'test';
                 data['paymethod'] = 'wx';
-            }else {
+            } else {
                 return false;
             }
             resource.post('http://114.55.62.102:9090/api/pay/xfb/prepay', data, function (resp) {
@@ -98,7 +98,7 @@ define([
                 case '16':
                     this.template_content = bankcardtpl;
                     this.model.set({
-                        gather_money:this.attrs.gather_money
+                        gather_money: this.attrs.gather_money
                     });
                     break;
                 default:
@@ -109,8 +109,8 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Esc , function () {
-               _self.onCancelClicked();
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Esc, function () {
+                _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Enter, function () {
                 _self.confirm();
@@ -120,27 +120,28 @@ define([
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
         confirm: function () {
             var attrs = {};
-            if(this.gatherId == '16'){
+            if (this.gatherId == '16') {
                 this.closeLayer(layerindex);
-                this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行MIS', LayerBankCardView, this.attrs, {area:'300px'});
+                this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行MIS', LayerBankCardView, this.attrs, {area: '300px'});
                 return;
             }
             var gatherNo = $(this.input).val();
-            if((gatherNo.split('.').length-1) > 0 || gatherNo == '') {
+            if ((gatherNo.split('.').length - 1) > 0 || gatherNo == '') {
                 layer.msg('无效的支付账号', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             switch (this.gatherId) {
-                case '12':case '13':
+                case '12':
+                case '13':
                     attrs = {
-                        gather_id:this.attrs.gather_id,
-                        gather_name:this.attrs.gather_name,
-                        gather_money:this.attrs.gather_money,
-                        gather_kind:this.attrs.gather_kind,
-                        gather_no:gatherNo,
+                        gather_id: this.attrs.gather_id,
+                        gather_name: this.attrs.gather_name,
+                        gather_money: this.attrs.gather_money,
+                        gather_kind: this.attrs.gather_kind,
+                        gather_no: gatherNo,
                         hasExtra: true,
-                        extras:{
+                        extras: {
                             extra_id: 1,
                             payment_bill: this.attrs.payment_bill
                         }
@@ -149,13 +150,13 @@ define([
                     break;
                 default :
                     attrs = {
-                        gather_id:this.attrs.gather_id,
-                        gather_name:this.attrs.gather_name,
-                        gather_money:this.attrs.gather_money,
-                        gather_kind:this.attrs.gather_kind,
-                        gather_no:gatherNo
+                        gather_id: this.attrs.gather_id,
+                        gather_name: this.attrs.gather_name,
+                        gather_money: this.attrs.gather_money,
+                        gather_kind: this.attrs.gather_kind,
+                        gather_no: gatherNo
                     };
-                    Backbone.trigger('onReceivedsum',attrs);
+                    Backbone.trigger('onReceivedsum', attrs);
                     this.closeLayer(layerindex);
                     $('input[name = billing]').focus();
             }
@@ -174,12 +175,12 @@ define([
         },
 
         onOKClicked: function () {
-           this.confirm();
+            this.confirm();
         },
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -197,7 +198,7 @@ define([
         micropay: function (gatherId, gatherNo, data, paymentBill) {
             var _self = this;
             var data = {};
-            if(gatherId == '13') {
+            if (gatherId == '13') {
                 data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
@@ -207,7 +208,7 @@ define([
                 data['paymethod'] = 'zfb';
                 data['payway'] = 'barcode';
                 data['zfbtwo'] = 'zfbtwo';
-            }else if(gatherId == '12') {
+            } else if (gatherId == '12') {
                 data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
@@ -221,11 +222,11 @@ define([
             var url = 'http://127.0.0.1:5000/';
             //var url = 'http://114.55.62.102:9090';
             resource.post(url + 'api/pay/xfb/micropay', data, function (resp) {
-                if(resp.data['flag'] == '00') {
+                if (resp.data['flag'] == '00') {
                     loading.hide();
-                    Backbone.trigger('onReceivedsum',data);
+                    Backbone.trigger('onReceivedsum', data);
                     _self.closeLayer(layerindex);
-                }else {
+                } else {
                     loading.hide();
                     layer.msg(resp.data.msg, optLayerError);
 

@@ -8,7 +8,7 @@ define([
     '../../moduals/layer-rtgatherui/view',
     'text!../../moduals/layer-rtbilltype/billingtypetpl.html',
     'text!../../moduals/layer-rtbilltype/tpl.html',
-], function (BaseLayerView,RTLayerTypeModel,RTLayerTypeCollection, RTLayerGatherUIView, billingtypetpl, tpl) {
+], function (BaseLayerView, RTLayerTypeModel, RTLayerTypeCollection, RTLayerGatherUIView, billingtypetpl, tpl) {
 
     var billtypeView = BaseLayerView.extend({
 
@@ -16,18 +16,18 @@ define([
 
         template: tpl,
 
-        template_billingtype:billingtypetpl,
+        template_billingtype: billingtypetpl,
 
-        i:0,
+        i: 0,
 
-        index:0,
+        index: 0,
 
         //input: 'input[name = gather-no]',
 
-        events:{
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOkClicked',
-            'click [data-index]':'onBillTypeClicked'
+        events: {
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOkClicked',
+            'click [data-index]': 'onBillTypeClicked'
         },
 
         LayerInitPage: function () {
@@ -35,27 +35,27 @@ define([
             this.model = new RTLayerTypeModel();
             this.collection = new RTLayerTypeCollection();
             var gatherKind = _self.attrs['gather_kind'];
-            if(storage.isSet(system_config.GATHER_KEY)) {
+            if (storage.isSet(system_config.GATHER_KEY)) {
                 var tlist = storage.get(system_config.GATHER_KEY);
-                this.visibleTypes = _.where(tlist,{visible_flag:'1'});
-                var gatherList = _.where(this.visibleTypes ,{gather_kind:gatherKind});
-                for(var i in gatherList){
+                this.visibleTypes = _.where(tlist, {visible_flag: '1'});
+                var gatherList = _.where(this.visibleTypes, {gather_kind: gatherKind});
+                for (var i in gatherList) {
                     var item = new RTLayerTypeModel();
                     item.set({
-                        gather_id:gatherList[i].gather_id,
-                        gather_name:gatherList[i].gather_name
+                        gather_id: gatherList[i].gather_id,
+                        gather_name: gatherList[i].gather_name
                     });
-                   this.collection.push(item);
+                    this.collection.push(item);
                 }
             }
             this.model.set({
-                receivedsum:this.attrs['gather_money']
+                receivedsum: this.attrs['gather_money']
             });
             this.initTemplates();
             setTimeout(function () {
                 _self.render();
                 _self.renderBilltype();
-            },100);
+            }, 100);
 
         },
 
@@ -65,17 +65,17 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Esc , function () {
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Esc, function () {
                 _self.onCancelClicked();
             });
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Down, function() {
-               _self.scrollDown();
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Down, function () {
+                _self.scrollDown();
             });
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Up, function() {
-               _self.scrollUp();
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Up, function () {
+                _self.scrollUp();
             });
 
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Enter, function() {
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Enter, function () {
                 _self.onReceived(_self.i);
             });
         },
@@ -83,7 +83,7 @@ define([
         /**
          * Enter和确定
          */
-        onReceived:function(index) {
+        onReceived: function (index) {
             var _self = this;
             var data = {};
             var gatherId = this.collection.at(index).get('gather_id');
@@ -120,7 +120,7 @@ define([
         /**
          * 方向上
          */
-        scrollUp:function () {
+        scrollUp: function () {
             if (this.i > 0) {
                 this.i--;
             }
@@ -135,7 +135,7 @@ define([
         },
 
         onCancelClicked: function () {
-           this.closeLayer(layerindex);
+            this.closeLayer(layerindex);
             $('input[name = billingrt]').focus();
         },
 

@@ -146,7 +146,6 @@ define([
         },
 
 
-
         /**
          * 关闭layer的通用方法
          * @param index 当前layer的index， 一般都传入layerindex这个window变量

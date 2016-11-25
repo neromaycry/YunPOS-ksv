@@ -18,11 +18,11 @@ define([
         input: 'input[name = passwd]',
 
         events: {
-            'click .btn-numpad':'onNumpadClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .unlock':'onUnlockClicked'
+            'click .btn-numpad': 'onNumpadClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click .unlock': 'onUnlockClicked'
         },
 
         pageInit: function () {
@@ -37,10 +37,10 @@ define([
         onNumpadClicked: function () {
             var isDisplay = $('.numpad').css('display') == 'none';
             if (isDisplay) {
-                $('.numpad').css('display','block');
+                $('.numpad').css('display', 'block');
                 $('.btn-numpad').text('关闭小键盘');
             } else {
-                $('.numpad').css('display','none');
+                $('.numpad').css('display', 'none');
                 $('.btn-numpad').text('打开小键盘');
             }
         },
@@ -54,7 +54,7 @@ define([
 
         onBackspaceClicked: function () {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -65,7 +65,7 @@ define([
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.LOCKSCREEN, window.KEYS.Enter, function () {
-               _self.onUnlockClicked();
+                _self.onUnlockClicked();
             });
         },
 
@@ -79,34 +79,34 @@ define([
             data['user_password'] = $.md5(passwd);
             data['accredit_type'] = '00';
             this.requestModel.login(data, function (resp) {
-                 if (resp.status == '00') {
-                     var pageid = storage.get(system_config.LAST_PAGE);
-                     switch (pageid) {
-                         case PAGE_ID.LOGIN:
-                             router.navigate('login', { trigger: true, replace: true });
-                             break;
-                         case PAGE_ID.MAIN:
-                             router.navigate('main', { trigger: true, replace: true });
-                             break;
-                         case PAGE_ID.BILLING:
-                             router.navigate('billing', { trigger: true, replace: true });
-                             break;
-                         case PAGE_ID.BILLING_RETURN:
-                             router.navigate('billingreturn', { trigger: true, replace: true });
-                             break;
-                         case PAGE_ID.RETURN_WHOLE:
-                             router.navigate('returnwhole', { trigger: true, replace: true });
-                             break;
-                         case PAGE_ID.RETURN_FORCE:
-                             router.navigate('returnforce', { trigger: true, replace: true });
-                             break;
-                         case PAGE_ID.CHECKING:
-                             router.navigate('checking', { trigger: true, replace: true });
-                             break;
-                     }
-                 } else {
-                     toastr.error(resp.msg);
-                 }
+                if (resp.status == '00') {
+                    var pageid = storage.get(system_config.LAST_PAGE);
+                    switch (pageid) {
+                        case PAGE_ID.LOGIN:
+                            router.navigate('login', {trigger: true, replace: true});
+                            break;
+                        case PAGE_ID.MAIN:
+                            router.navigate('main', {trigger: true, replace: true});
+                            break;
+                        case PAGE_ID.BILLING:
+                            router.navigate('billing', {trigger: true, replace: true});
+                            break;
+                        case PAGE_ID.BILLING_RETURN:
+                            router.navigate('billingreturn', {trigger: true, replace: true});
+                            break;
+                        case PAGE_ID.RETURN_WHOLE:
+                            router.navigate('returnwhole', {trigger: true, replace: true});
+                            break;
+                        case PAGE_ID.RETURN_FORCE:
+                            router.navigate('returnforce', {trigger: true, replace: true});
+                            break;
+                        case PAGE_ID.CHECKING:
+                            router.navigate('checking', {trigger: true, replace: true});
+                            break;
+                    }
+                } else {
+                    toastr.error(resp.msg);
+                }
             });
         }
 

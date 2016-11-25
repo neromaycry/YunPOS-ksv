@@ -15,7 +15,7 @@ define([
         template: tpl,
 
         events: {
-            'click .tipclose':'onCloseClicked'
+            'click .tipclose': 'onCloseClicked'
         },
 
         LayerInitPage: function () {

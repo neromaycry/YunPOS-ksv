@@ -17,18 +17,18 @@ define([
         input: 'input[name = restorder]',
 
         events: {
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked'
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked'
         },
 
         LayerInitPage: function () {
             var _self = this;
             this.model = new LayerRestOrderModel();
             this.collection = new LayerRestOrderCollection();
-            if(storage.isSet(system_config.RESTORDER_KEY)) {
+            if (storage.isSet(system_config.RESTORDER_KEY)) {
                 this.obj = storage.get(window.system_config.RESTORDER_KEY);
             }
         },
@@ -58,7 +58,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -86,8 +86,8 @@ define([
                 } else {
                     var orderSelectedDetail = orderSelected[value];
                     console.log(orderSelectedDetail);
-                    Backbone.trigger('onReleaseOrder',orderSelectedDetail);
-                    storage.remove(system_config.RESTORDER_KEY,value);
+                    Backbone.trigger('onReleaseOrder', orderSelectedDetail);
+                    storage.remove(system_config.RESTORDER_KEY, value);
                     this.closeLayer(layerindex);
                     //toastr.success('解挂成功');
                     layer.msg('解挂成功', optLayerSuccess);

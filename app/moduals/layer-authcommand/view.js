@@ -118,7 +118,7 @@ define([
             this.model.authAccess(data, function (resp) {
                 if (resp.status == '00') {
                     console.log(resp);
-                    storage.set(system_config.LOGIN_USER_KEY, 'manager_id' , authUser);
+                    storage.set(system_config.LOGIN_USER_KEY, 'manager_id', authUser);
                     if (_self.attrs.is_navigate) {
                         _self.confirmCloseLayer(_self.attrs.navigate_page);
                     } else {

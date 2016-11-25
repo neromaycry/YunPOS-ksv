@@ -10,7 +10,7 @@ define([
     'text!../../../../moduals/member/memberinfotpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/member/tpl.html',
-], function (BaseView, MemberModel, KMemberView, MemberCardView, PhoneNumView, memberinfotpl,numpadtpl, tpl) {
+], function (BaseView, MemberModel, KMemberView, MemberCardView, PhoneNumView, memberinfotpl, numpadtpl, tpl) {
 
     var memberView = BaseView.extend({
 
@@ -20,25 +20,25 @@ define([
 
         template: tpl,
 
-        template_memberinfo:memberinfotpl,
+        template_memberinfo: memberinfotpl,
 
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
 
-        isRequestSuccess:false,
+        isRequestSuccess: false,
 
-        input:'input[name = custid]',
+        input: 'input[name = custid]',
 
         events: {
-            'click .numpad-ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click input[name = custid]':'focusInputCustid',
-            'click input[name = custpwd]':'focusInputPasswd',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .member_help':'onHelpClicked',
-            'click .member_return':'onReturnClicked',
-            'click [data-index]':'onCardTypeClicked',
-            'click #member-login':'doMemberLogin'
+            'click .numpad-ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click input[name = custid]': 'focusInputCustid',
+            'click input[name = custpwd]': 'focusInputPasswd',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click .member_help': 'onHelpClicked',
+            'click .member_return': 'onReturnClicked',
+            'click [data-index]': 'onCardTypeClicked',
+            'click #member-login': 'doMemberLogin'
         },
 
         pageInit: function () {
@@ -66,7 +66,7 @@ define([
             this.template_memberinfo = _.template(this.template_memberinfo);
         },
 
-        renderMemberInfo:function () {
+        renderMemberInfo: function () {
             this.$el.find('.for-memberinfo').html(this.template_memberinfo(this.model.toJSON()));
             return this;
         },
@@ -74,7 +74,7 @@ define([
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.Esc, function () {
-                router.navigate('main',{trigger:true});
+                router.navigate('main', {trigger: true});
             });
             this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.T, function () {
                 var tipsView = new KMemberView('MEMBER_PAGE');
@@ -96,7 +96,7 @@ define([
                 _self.doMemberLogin();
 
             });
-            this.bindKeyEvents(window.PAGE_ID.MEMBER,window.KEYS.Up, function () {
+            this.bindKeyEvents(window.PAGE_ID.MEMBER, window.KEYS.Up, function () {
                 var isUserFocused = $('input[name = custid]').is(':focus');
                 if (isUserFocused) {
                     $('input[name = custpwd]').focus();
@@ -167,9 +167,9 @@ define([
 
         doMemberLogin: function () {
             if (this.isRequestSuccess) {
-                storage.set(system_config.VIP_KEY,this.model.toJSON());
+                storage.set(system_config.VIP_KEY, this.model.toJSON());
                 toastr.success('会员登录成功');
-                router.navigate('main',{trigger:true});
+                router.navigate('main', {trigger: true});
             } else {
                 toastr.warning('请先查询会员信息');
             }
@@ -177,7 +177,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -213,12 +213,12 @@ define([
                 });
             }
         },
-        onHelpClicked:function() {
+        onHelpClicked: function () {
             var tipsView = new KMemberView('MEMBER_PAGE');
             this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
         },
-        onReturnClicked:function() {
-            router.navigate('main',{trigger:true});
+        onReturnClicked: function () {
+            router.navigate('main', {trigger: true});
         },
 
         onCardTypeClicked: function (e) {

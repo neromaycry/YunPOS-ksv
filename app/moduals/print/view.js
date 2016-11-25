@@ -21,28 +21,28 @@ define([
 
         template: tpl,
 
-        template_billno:billnotpl,
+        template_billno: billnotpl,
 
-        template_cartlist:cartlisttpl,
+        template_cartlist: cartlisttpl,
 
-        template_paymentlist:paymentlisttpl,
+        template_paymentlist: paymentlisttpl,
 
-        template_numpad:numpadtpl,
+        template_numpad: numpadtpl,
 
-        print_content:'',
+        print_content: '',
 
         input: 'input[name = bill_date]',
 
         events: {
-            'click .ok':'onOKClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click .back-to-main':'onBackClicked',
-            'click .help':'onHelpClicked',
-            'click input[name = bill_date]':'focusInputDate',
-            'click input[name = bill_no]':'focusInputNo',
-            'click .print':'onPrintClicked'
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click .back-to-main': 'onBackClicked',
+            'click .help': 'onHelpClicked',
+            'click input[name = bill_date]': 'focusInputDate',
+            'click input[name = bill_no]': 'focusInputNo',
+            'click .print': 'onPrintClicked'
         },
 
         pageInit: function () {
@@ -70,7 +70,7 @@ define([
             this.template_numpad = _.template(this.template_numpad);
         },
 
-        initLayoutHeight:function(){
+        initLayoutHeight: function () {
             var dh = $(window).height();
             var nav = $('.navbar').height();  // 导航栏高度
             var panelheading = $('.panel-heading').height();  //面板heading高度
@@ -82,7 +82,7 @@ define([
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.PRINT, window.KEYS.Esc, function () {
-                router.navigate('main',{trigger:true});
+                router.navigate('main', {trigger: true});
             });
 
             this.bindKeyEvents(window.PAGE_ID.PRINT, window.KEYS.Enter, function () {
@@ -93,7 +93,7 @@ define([
                 _self.focusChange();
             });
 
-            this.bindKeyEvents(window.PAGE_ID.PRINT, window.KEYS.Up, function() {
+            this.bindKeyEvents(window.PAGE_ID.PRINT, window.KEYS.Up, function () {
                 _self.focusChange();
             });
 
@@ -115,11 +115,11 @@ define([
             this.input = $('input[name = bill_no]');
         },
 
-        focusChange:function () {
+        focusChange: function () {
             var isDateFocus = $('input[name = bill_date]').is(':focus');
-            if(isDateFocus) {
+            if (isDateFocus) {
                 $('input[name = bill_no]').focus();
-            }else {
+            } else {
                 $('input[name = bill_date]').focus();
             }
         },
@@ -143,9 +143,9 @@ define([
          * 打印小票
          */
         onReprintClicked: function () {
-            if(this.print_content == '') {
+            if (this.print_content == '') {
                 toastr.warning('请先查询要打印的小票');
-            }else {
+            } else {
                 var str = this.print_content;
                 this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [str], wsClient);
             }
@@ -157,18 +157,18 @@ define([
             var _self = this;
             var date = $('input[name = bill_date]').val();
             var billNo = $('input[name = bill_no]').val();
-            if(date == '' || billNo == '') {
+            if (date == '' || billNo == '') {
                 _self.focusChange();
             }
-            if(date != '' && billNo != '') {
+            if (date != '' && billNo != '') {
                 var data = {};
                 data['day'] = date;
                 data['bill_no'] = billNo;
                 this.request = new PrintModel();
                 this.request.print(data, function (resp) {
-                    if(resp.status == '00') {
+                    if (resp.status == '00') {
                         _self.model.set({
-                            'bill_no':billNo
+                            'bill_no': billNo
                         });
                         _self.goodsCollection.set(resp.goods_detail);
                         _self.gatherCollection.set(resp.gather_detail);
@@ -176,7 +176,7 @@ define([
                         _self.renderBillNo();
                         _self.renderCartlist();
                         _self.renderPaymentlist();
-                    }else {
+                    } else {
                         toastr.error(resp.msg);
                     }
                 });
@@ -202,7 +202,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 
@@ -211,15 +211,15 @@ define([
         },
 
 
-        onHelpClicked:function () {
+        onHelpClicked: function () {
             var attrs = {
                 page: 'PRINT_PAGE'
             };
             this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
 
-        onBackClicked:function () {
-            router.navigate('main',{trigger:true});
+        onBackClicked: function () {
+            router.navigate('main', {trigger: true});
         },
 
     });

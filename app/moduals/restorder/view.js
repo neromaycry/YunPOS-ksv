@@ -9,7 +9,7 @@ define([
     'text!../../../../moduals/restorder/tpl.html',
     'text!../../../../moduals/restorder/restordernumtpl.html',
     'text!../../../../moduals/restorder/restorderdetailtpl.html'
-], function (BaseView,RestorderModel,RestorderCollection, KeyTipsView, tpl, restordernumtpl, restorderdetailtpl) {
+], function (BaseView, RestorderModel, RestorderCollection, KeyTipsView, tpl, restordernumtpl, restorderdetailtpl) {
 
     var restorderView = BaseView.extend({
 
@@ -19,37 +19,37 @@ define([
 
         template: tpl,
 
-        template_restordernumtpl:restordernumtpl,
+        template_restordernumtpl: restordernumtpl,
 
-        template_restorderdetailtpl:restorderdetailtpl,
+        template_restorderdetailtpl: restorderdetailtpl,
 
-        i:0,
+        i: 0,
 
-        orderNum:'',
+        orderNum: '',
 
-        isOrdernum:true,
+        isOrdernum: true,
 
         events: {
-            'click .restorder-help':'onHelpClicked',
-            'click .restorder-return':'onReturnClicked',
-            'click .restorder-keyup':'onKeyUpClicked',
-            'click .restorder-keydown':'onKeyDownClicked',
-            'click .restorder-keyright':'onKeyRightClicked',
-            'click .restorder-keyleft':'onKeyLeftClicked',
-            'click .restorder-ok':'onOKClicked'
+            'click .restorder-help': 'onHelpClicked',
+            'click .restorder-return': 'onReturnClicked',
+            'click .restorder-keyup': 'onKeyUpClicked',
+            'click .restorder-keydown': 'onKeyDownClicked',
+            'click .restorder-keyright': 'onKeyRightClicked',
+            'click .restorder-keyleft': 'onKeyLeftClicked',
+            'click .restorder-ok': 'onOKClicked'
         },
 
         pageInit: function () {
             pageId = window.PAGE_ID.RESTORDER;
             this.collection = new RestorderCollection();
             this.model = new RestorderModel();
-            if(storage.isSet(system_config.RESTORDER_KEY)) {
+            if (storage.isSet(system_config.RESTORDER_KEY)) {
                 this.obj = storage.get(window.system_config.RESTORDER_KEY);
             }
-            for(var key in this.obj){
+            for (var key in this.obj) {
                 var item = new RestorderModel();
                 item.set({
-                    orderNum:key
+                    orderNum: key
                 });
                 this.collection.push(item);
             }
@@ -84,7 +84,7 @@ define([
             var panelheading = $('.panel-heading').height();
             var panelfooter = $('.panel-footer').height();
             var restordernum = dh - nav * 2 - panelheading * 2 - panelfooter;
-            var restorderdetail= dh - nav * 2 - panelheading * 2;
+            var restorderdetail = dh - nav * 2 - panelheading * 2;
             $('.for-restordernum-list').height(restordernum);
             $('.for-restorderdetail-list').height(restorderdetail);
         },
@@ -92,19 +92,19 @@ define([
         bindKeys: function () {
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Esc, function () {
-                router.navigate('main',{trigger:true});
+                router.navigate('main', {trigger: true});
             });
             this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.T, function () {
                 var tipsView = new KeyTipsView('RESTORDER_PAGE');
                 _self.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
             });
-            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Down, function() {
-               _self.scrollDown();
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Down, function () {
+                _self.scrollDown();
             });
-            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Up, function() {
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Up, function () {
                 _self.scrollUp();
             });
-            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Left, function() {
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Left, function () {
                 _self.scrollLeft();
             });
 
@@ -112,10 +112,10 @@ define([
                 _self.scrollRight();
             });
 
-            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Enter, function() {
-                Backbone.trigger('onReleaseOrder',_self.orderSelectedDetail);
-                storage.remove(system_config.RESTORDER_KEY,_self.orderNum);
-                router.navigate('main',{trigger:true});
+            this.bindKeyEvents(window.PAGE_ID.RESTORDER, window.KEYS.Enter, function () {
+                Backbone.trigger('onReleaseOrder', _self.orderSelectedDetail);
+                storage.remove(system_config.RESTORDER_KEY, _self.orderNum);
+                router.navigate('main', {trigger: true});
                 toastr.success('解挂成功');
             });
         },
@@ -125,19 +125,19 @@ define([
             return this;
         },
 
-        renderRestorderdetail:function(){
+        renderRestorderdetail: function () {
             this.$el.find('.for-restorderdetail-list').html(this.template_restorderdetailtpl(this.detailCollection.toJSON()));
             return this;
         },
 
-        restorderdetail: function() {
+        restorderdetail: function () {
             var _self = this;
             this.orderNum = $('.cus-selected').data('index');
             this.localObj = storage.get(window.system_config.RESTORDER_KEY);
             _self.detailCollection = new RestorderCollection();
-            var orderSelected = _.pick(this.localObj,this.orderNum);
+            var orderSelected = _.pick(this.localObj, this.orderNum);
             this.orderSelectedDetail = orderSelected[this.orderNum];
-            for(var i in this.orderSelectedDetail){
+            for (var i in this.orderSelectedDetail) {
                 var item = new RestorderModel();
                 item.set(this.orderSelectedDetail[i]);
                 _self.detailCollection.push(item);
@@ -145,9 +145,9 @@ define([
             console.log(_self.detailCollection);
             _self.renderRestorderdetail();
         },
-        scrollDown:function () {
+        scrollDown: function () {
             var _self = this;
-            if(_self.isOrdernum){
+            if (_self.isOrdernum) {
                 if (_self.i < _self.collection.length - 1) {
                     _self.i++;
                 }
@@ -169,26 +169,26 @@ define([
                 $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             }
         },
-        scrollUp:function () {
+        scrollUp: function () {
             var _self = this;
-            if(_self.isOrdernum){
+            if (_self.isOrdernum) {
                 if (_self.i > 0) {
                     _self.i--;
                 }
-                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                if ((_self.i + 1) % _self.listnum == 0 && _self.i > 0) {
                     _self.n--;
-                    $('.for-restordernum-list').scrollTop(_self.listheight * _self.n );
+                    $('.for-restordernum-list').scrollTop(_self.listheight * _self.n);
                 }
                 $('#li' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                 _self.restorderdetail();
-            }else{
+            } else {
                 if (_self.i > 0) {
                     _self.i--;
                 }
-                if ((_self.i+1) % _self.listnum == 0 && _self.i > 0) {
+                if ((_self.i + 1) % _self.listnum == 0 && _self.i > 0) {
                     _self.n--;
                     //alert(_self.n);
-                    $('.for-restorderdetail-list').scrollTop(_self.listheight * _self.n );
+                    $('.for-restorderdetail-list').scrollTop(_self.listheight * _self.n);
                 }
                 $('#detail' + _self.i).addClass('cus-selected').siblings().removeClass('cus-selected');
             }
@@ -215,22 +215,22 @@ define([
             _self.itemheight = $('li').height() + 20;
             _self.listnum = parseInt(_self.listheight / _self.itemheight);//商品列表中的条目数
         },
-        onHelpClicked:function (){
+        onHelpClicked: function () {
             var tipsView = new KeyTipsView('RESTORDER_PAGE');
             this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
         },
 
         onOKClicked: function () {
-            Backbone.trigger('onReleaseOrder',this.orderSelectedDetail);
-            storage.remove(system_config.RESTORDER_KEY,this.orderNum);
-            router.navigate('main',{trigger:true});
+            Backbone.trigger('onReleaseOrder', this.orderSelectedDetail);
+            storage.remove(system_config.RESTORDER_KEY, this.orderNum);
+            router.navigate('main', {trigger: true});
             toastr.success('解挂成功');
         },
 
-        onReturnClicked:function() {
-            router.navigate('main',{trigger:true});
+        onReturnClicked: function () {
+            router.navigate('main', {trigger: true});
         },
-        onKeyUpClicked:function (){
+        onKeyUpClicked: function () {
             this.scrollUp();
         },
         onKeyDownClicked: function () {

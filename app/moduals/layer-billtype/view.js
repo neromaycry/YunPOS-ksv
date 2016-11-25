@@ -9,7 +9,7 @@ define([
     'text!../../moduals/layer-billtype/billingtypetpl.html',
     'text!../../moduals/layer-billtype/receivedsumtpl.html',
     'text!../../moduals/layer-billtype/tpl.html',
-], function (BaseLayerView, LayerBillTypeModel, LayerBillTypeCollection, layerGatherUIView, billingtypetpl,receivedsumtpl, tpl) {
+], function (BaseLayerView, LayerBillTypeModel, LayerBillTypeCollection, layerGatherUIView, billingtypetpl, receivedsumtpl, tpl) {
 
     var layerbilltypeView = BaseLayerView.extend({
 
@@ -50,7 +50,7 @@ define([
                     item.set({
                         gather_id: gatherList[i].gather_id,
                         gather_name: gatherList[i].gather_name,
-                        gather_ui:gatherList[i].gather_ui
+                        gather_ui: gatherList[i].gather_ui
                     });
                     this.collection.push(item);
                 }
@@ -87,51 +87,52 @@ define([
         /**
          * Enter和确定
          */
-        confirm:function (index) {
+        confirm: function (index) {
             var _self = this;
             var attrs = {};
             var gatherId = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');
             switch (gatherId) {//gather_ui:判断接下来打开的是哪种界面
-                case '12':case'13'://第三方支付类
-                var xfbdata = {
-                    pos_id:'002',
-                    bill_no:this.attrs.bill_no
-                };//生成payment_bill
-                this.requestmodel.xfbbillno(xfbdata, function (resp) {
-                    if (resp.status == '00') {
-                        _self.closeLayer(layerindex);
-                         attrs = {
-                            gather_id:gatherId,
-                            gather_name:gatherName,
-                            gather_money:_self.attrs.gather_money,
-                            gather_kind:_self.attrs.gather_kind,
-                            payment_bill:resp.xfb_bill,
-                        };
-                        _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, attrs, {area: '600px'});
-                    } else {
-                        layer.msg(resp.msg, optLayerError);
-                    }
-                });
-                break;
+                case '12':
+                case'13'://第三方支付类
+                    var xfbdata = {
+                        pos_id: '002',
+                        bill_no: this.attrs.bill_no
+                    };//生成payment_bill
+                    this.requestmodel.xfbbillno(xfbdata, function (resp) {
+                        if (resp.status == '00') {
+                            _self.closeLayer(layerindex);
+                            attrs = {
+                                gather_id: gatherId,
+                                gather_name: gatherName,
+                                gather_money: _self.attrs.gather_money,
+                                gather_kind: _self.attrs.gather_kind,
+                                payment_bill: resp.xfb_bill,
+                            };
+                            _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, attrs, {area: '600px'});
+                        } else {
+                            layer.msg(resp.msg, optLayerError);
+                        }
+                    });
+                    break;
                 case '16'://银行mis
                     this.closeLayer(layerindex);
                     attrs = {
-                        gather_id:gatherId,
-                        gather_name:gatherName,
-                        gather_money:_self.attrs.gather_money,
-                        gather_kind:_self.attrs.gather_kind,
-                        bill_no:_self.attrs.bill_no,
+                        gather_id: gatherId,
+                        gather_name: gatherName,
+                        gather_money: _self.attrs.gather_money,
+                        gather_kind: _self.attrs.gather_kind,
+                        bill_no: _self.attrs.bill_no,
                     };
                     this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, '银行MIS支付确认', layerGatherUIView, attrs, {area: '300px'});
                     break;
                 default ://输入账号类
                     this.closeLayer(layerindex);
                     attrs = {
-                        gather_id:gatherId,
-                        gather_name:gatherName,
-                        gather_money:this.attrs.gather_money,
-                        gather_kind:this.attrs.gather_kind,
+                        gather_id: gatherId,
+                        gather_name: gatherName,
+                        gather_money: this.attrs.gather_money,
+                        gather_kind: this.attrs.gather_kind,
                     };
                     this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, attrs, {area: '300px'});
 
@@ -150,7 +151,7 @@ define([
         /**
          * 方向上
          */
-        scrollUp:function () {
+        scrollUp: function () {
             if (this.i > 0) {
                 this.i--;
             }

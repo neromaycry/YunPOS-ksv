@@ -24,13 +24,13 @@ define([
 
         input: 'input[name = phone]',
 
-        events:{
-            'click .cancel':'onCancelClicked',
-            'click .ok':'onOkClicked',
-            'click .btn-num':'onNumClicked',
-            'click .btn-backspace':'onBackspaceClicked',
-            'click .btn-clear':'onClearClicked',
-            'click [data-index]':'onLoginListClicked',
+        events: {
+            'click .cancel': 'onCancelClicked',
+            'click .ok': 'onOkClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+            'click [data-index]': 'onLoginListClicked',
 
         },
 
@@ -65,10 +65,10 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Esc , function () {
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Esc, function () {
                 _self.onCancelClicked();
             });
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function(){
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function () {
                 _self.doLogin(_self.type);
             });
 
@@ -81,9 +81,9 @@ define([
         },
 
         onCancelClicked: function () {
-            if(this.attrs.pageid == 6) {
+            if (this.attrs.pageid == 6) {
                 $('input[name = billing]').focus();
-            }else {
+            } else {
                 $('input[name = billingrt]').focus();
             }
             this.closeLayer(layerindex);
@@ -124,11 +124,11 @@ define([
             data['password'] = '*';
             data['type'] = this.type;
             this.request.vipinfo(data, function (resp) {
-               if(resp.status == '00') {
-                   layer.msg('登录成功', optLayerSuccess);
-               } else {
-                   layer.msg(resp.msg, optLayerError);
-               }
+                if (resp.status == '00') {
+                    layer.msg('登录成功', optLayerSuccess);
+                } else {
+                    layer.msg(resp.msg, optLayerError);
+                }
             });
         },
 
@@ -181,7 +181,7 @@ define([
             var data = {};
             var tracks = ['track1', 'track2', 'track3'];
             var trackValues = [track1, track2, track3];
-            for (var i = 0;i < tracks.length;i++) {
+            for (var i = 0; i < tracks.length; i++) {
                 data[tracks[i]] = trackValues[i];
             }
             data['type'] = this.type;
@@ -237,7 +237,7 @@ define([
 
         onBackspaceClicked: function (e) {
             var str = $(this.input).val();
-            str = str.substring(0, str.length-1);
+            str = str.substring(0, str.length - 1);
             $(this.input).val(str);
         },
 

@@ -1,12 +1,11 @@
 /**
  * Created by Joey on 2016/7/22.
  */
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
-    var confirmModel=BaseModel.extend({
+    var confirmModel = BaseModel.extend({
 
-        defaults:{
-        },
+        defaults: {},
 
     });
     return confirmModel;
