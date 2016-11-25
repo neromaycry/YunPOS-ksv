@@ -12,12 +12,13 @@ define([
     '../../../../moduals/layer-ecardlogin/view',
     '../../../../moduals/layer-gatherui/view',
     '../../../../moduals/layer-binstruction/view',
+    '../../../../moduals/layer-referencenum/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerGatherUIView, LayerBInstructionView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerGatherUIView, LayerBInstructionView,LayerReferenceNumView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -416,6 +417,8 @@ define([
                     var gatherId = item.get('gather_id');
                     if (gatherId == '12' || gatherId == '13') {
                         _self.refund(gatherId, item.get('payment_bill'));
+                    } else if (gatherId == '05' || gatherId == '16') {
+                        _self.deletebankpay();
                     } else {
                         _self.deleteItem(_self.i);
                         layer.msg('删除成功', optLayerSuccess);
@@ -424,6 +427,7 @@ define([
             };
             _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
         },
+
 
         deleteItem: function (index) {
             var item = this.collection.at(index);
@@ -483,6 +487,15 @@ define([
         },
 
 
+        deletebankpay: function () {
+            var attrs = {
+                pageid:pageId,
+                callback: function () {
+                    this.deleteItem(this.i);
+                }
+            };
+            this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, pageId, '输入系统参考号', LayerReferenceNumView, attrs, {area:'300px'});
+        },
         /**
          * 整单优惠点击事件
          */

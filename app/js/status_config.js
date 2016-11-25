@@ -196,7 +196,7 @@ window.PAGE_ID = {
     'LAYER_RESTORDER': 28,
     'ALIPAY': 29,
     'WECHAT': 30,
-    'QP_ALIPAY': 31,
+    'LAYER_REFERENCE_NUM': 31,
     'QP_WECHAT': 32,
     'RT_ALIPAY': 33,
     'RT_WECHAT': 34,
