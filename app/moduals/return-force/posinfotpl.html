@@ -36,9 +36,25 @@
     <!--</div>-->
 <!--</div>-->
 
+<% function toDecimal3(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 3) {
+s += '0';
+}
+return s;
+}%>
 
-
-<div class="col-xs-2 col-md-2 cart-billing no-padding text-nowrap">件数：<%= itemamount %></div>
+<div class="col-xs-2 col-md-2 cart-billing no-padding text-nowrap">件数：<%= toDecimal3(itemamount)%></div>
 <div class="col-xs-3 col-md-3 cart-billing text-teal text-nowrap">优惠： - <%= toDecimal2(discountamount) %></div>
 <div class="col-xs-3 col-md-3 cart-billing text-red text-nowrap">退款：<%= toDecimal2(totalamount-discountamount) %></div>
 <div class="col-xs-2 col-md-2 no-padding">

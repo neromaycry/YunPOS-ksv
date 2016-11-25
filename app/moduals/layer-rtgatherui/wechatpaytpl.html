@@ -17,6 +17,10 @@ return s;
 }%>
 <div class="panel" style="border: none;margin: 0;">
     <div class="panel-body">
+        <div class="row m-b">
+            <div class="col-xs-6 col-md-6 text-right pos-textsize no-padding">退款金额：</div>
+            <div class="col-xs-6 col-md-6 text-left text-red no-padding" style="font-size: 18px">￥<%= toDecimal2(gather_money) %></div>
+        </div>
         <div class="form-group no-margining">
             <label class="sr-only" for="wechat-account">commontpl</label>
             <input type="text" id="wechat-account" name="wechat-account" class="form-control" placeholder="请输入微信退款账号" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"/>

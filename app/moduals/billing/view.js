@@ -490,7 +490,7 @@ define([
             var discount = $(this.input).val();
             var receivedsum = this.model.get('receivedsum');
             if (receivedsum != 0) {
-                layer.msg('您已选择支付方式，不能再进行整单优惠', optLayerWarning);
+                layer.msg('您已选择支付方式，不能再进行优惠', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
@@ -501,7 +501,7 @@ define([
             }
 
             if (parseFloat(discount) > this.totalamount + this.totaldiscount) {
-                layer.msg('整单优惠金额不能大于应付金额', optLayerWarning);
+                layer.msg('优惠金额不能大于应付金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
@@ -518,19 +518,19 @@ define([
             var percentage = $(this.input).val();
             var receivedsum = this.model.get('receivedsum');
             if (receivedsum != 0) {
-                layer.msg('您已选择支付方式，不能再进行整单优惠', optLayerWarning);
+                layer.msg('您已选择支付方式，不能再进行折扣', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
 
             if (percentage == '.' || (percentage.split('.').length - 1) > 0 || percentage == '' || percentage == 0) {
-                layer.msg('无效的整单优惠折扣', optLayerWarning);
+                layer.msg('无效的优惠折扣', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
 
             if (percentage > 100) {
-                layer.msg('整单优惠折扣不能大于100', optLayerWarning);
+                layer.msg('折扣百分比不能大于100', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
@@ -795,7 +795,6 @@ define([
                                 _self.deleteItem(j);
                         }
                     }
-                    ;
                 }
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});

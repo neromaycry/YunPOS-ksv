@@ -31,6 +31,7 @@ define([
         },
 
         LayerInitPage: function () {
+            console.log(this.attrs);
             var _self = this;
             this.model = new RTLayerTypeModel();
             this.collection = new RTLayerTypeCollection();
@@ -85,25 +86,35 @@ define([
          */
         onReceived: function (index) {
             var _self = this;
-            var data = {};
+            var attrs = {};
             var gatherId = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');
-            var gatherMoney = this.attrs.gather_money;
-            var gatherKind = this.attrs.gather_kind;
-            data['gather_id'] = gatherId;
-            data['gather_name'] = gatherName;
-            data['gather_money'] = gatherMoney;
-            data['gather_kind'] = gatherKind;
             this.closeLayer(layerindex);
             switch (gatherId) {
                 case '12':
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, gatherName, RTLayerGatherUIView, data, {area: '300px'});
-                    break;
                 case '13':
                     this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, gatherName, RTLayerGatherUIView, data, {area: '300px'});
                     break;
-                default :
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, gatherName, RTLayerGatherUIView, data, {area: '300px'});
+                case '16'://银行mis
+                    this.closeLayer(layerindex);
+                    attrs = {
+                        gather_id: gatherId,
+                        gather_name: gatherName,
+                        gather_money: _self.attrs.gather_money,
+                        gather_kind: _self.attrs.gather_kind,
+                        bill_no: _self.attrs.bill_no,
+                    };
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, '银行MIS支付退款', RTLayerGatherUIView, attrs, {area: '300px'});
+                    break;
+                default ://输入账号类
+                    this.closeLayer(layerindex);
+                    attrs = {
+                        gather_id: gatherId,
+                        gather_name: gatherName,
+                        gather_money: this.attrs.gather_money,
+                        gather_kind: this.attrs.gather_kind,
+                    };
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, gatherName, RTLayerGatherUIView, attrs, {area: '300px'});
 
             }
         },

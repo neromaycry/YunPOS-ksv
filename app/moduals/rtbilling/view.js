@@ -7,7 +7,7 @@ define([
     '../../../../moduals/rtbilling/collection',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
-    '../../../../moduals/layer-rtquickpay/view',
+    '../../../../moduals/layer-rtbankcard/view',
     '../../../../moduals/layer-rtgatherui/view',
     '../../../../moduals/layer-rtbilltype/view',
     '../../../../moduals/layer-ecardlogin/view',
@@ -15,7 +15,7 @@ define([
     'text!../../../../moduals/rtbilling/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/rtbilling/tpl.html'
-], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView, LayerConfirmView, RTQuickPayView, GatherUIView, RTLayerTypeView, layerECardView, numpadtpl, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView, LayerConfirmView ,LayerBankCardView, GatherUIView, RTLayerTypeView, layerECardView, numpadtpl, billinfotpl, billingdetailtpl, tpl) {
     var rtbillingView = BaseView.extend({
 
         id: "rtbillingView",
@@ -145,13 +145,16 @@ define([
         },
 
         onReceivedsum: function (data) {
-            var receivedsum = data['gather_money'];
+            var gatherMoney = data['gather_money'];
             var gatherNo = data['gather_no'];//付款账号
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
             var gatherKind = data['gather_kind'];
-            this.card_id = data['card_id'];
-            this.addToPaymentList(this.totalamount, gatherName, parseFloat(receivedsum), gatherNo, gatherId, gatherKind, this.card_id);
+            var extraArgs = undefined;
+            if (data.hasExtra) {
+                extraArgs = data.extras;
+            }
+            this.addToPaymentList(this.totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, extraArgs);
         },
 
         bindKeys: function () {
@@ -182,21 +185,19 @@ define([
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.S, function () {
-                _self.payment('01', '支票类');
+                _self.onCheckClicked();
             });
             //礼券类
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.B, function () {
-                _self.payment('02', '礼券类');
+                _self.onGiftClicked();
             });
             //银行POS
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.P, function () {
-                _self.payment('03', '银行POS');
+                _self.onPosClicked();
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Q, function () {
-                $('input[name = billingrt]').val('');
-                layer.msg('该功能正在调试中', optLayerHelp);
-                //_self.payment('05', '第三方支付');
+               _self.onThirdPayClicked();
             });
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.T, function () {
@@ -221,32 +222,51 @@ define([
          *向已付款列表中插入新的行
          * @param totalamount 总金额
          * @param gatherName 付款方式名称
-         * @param receivedsum 付款金额
-         * @param gatherAccount 付款账号
+         * @param gatherMoney 付款金额
+         * @param gatherNo 付款账号
          * @param gatherId 付款方式Id
          * @param gatherKind 付款方式类别
-         * @param cardId 一卡通付款卡号
+         * @param extraArgs 附加参数
          */
-        addToPaymentList: function (totalamount, gatherName, receivedsum, gatherAccount, gatherId, gatherKind, cardId) {
-            var temp = this.collection.findWhere({gather_id: gatherId, gather_no: gatherAccount});
+        addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, extraArgs)  {
+            if (!extraArgs) {
+                extraArgs = {};
+            }
+            var temp = this.collection.findWhere({gather_id: gatherId, gather_no: gatherNo});
             var model = new RTBillModel();
             if (temp != undefined) {
                 model = temp;
                 var gather_money = model.get('gather_money');
-                receivedsum = parseFloat(gather_money) + receivedsum;
+                gatherMoney = parseFloat(gather_money) + gatherMoney;
             }
+
             model.set({
                 fact_money: 0,
                 gather_id: gatherId,
                 gather_name: gatherName,
-                gather_money: receivedsum,
-                gather_no: gatherAccount,
+                gather_money: gatherMoney,
+                gather_no: gatherNo,
                 gather_kind: gatherKind,
-                card_id: cardId,
-                havepay_money: receivedsum,
+                havepay_money: gatherMoney,
                 payment_bill: '',
                 change_money: 0
             });
+            switch (extraArgs.extra_id) {
+                case 0:
+                    model.set({
+                        reference_number: extraArgs.reference_number
+                    });
+                    break;
+                case 1:
+                    model.set({
+                        payment_bill: extraArgs.payment_bill
+                    });
+                    break;
+                case 2:
+                    model.set({
+                        card_id: extraArgs.card_id
+                    });
+            }
             this.collection.push(model);
             var totalreceived = 0;
             var trList = this.collection.pluck('gather_money');
@@ -454,10 +474,6 @@ define([
                 layer.msg('待支付金额为零,请进行结算', optLayerWarning);
                 return;
             }
-            if (gatherId == '') {
-                layer.msg('无效的付款编码', optLayerWarning);
-                return;
-            }
             if (storage.isSet(system_config.GATHER_KEY)) {
                 var tlist = storage.get(system_config.GATHER_KEY);
                 var visibleTypes = _.where(tlist, {visible_flag: '1'});
@@ -468,6 +484,12 @@ define([
                     return;
                 }
                 var item = _.findWhere(visibleTypes, {gather_id: gatherId});
+                var data = {
+                    gather_money: unpaidamount,
+                    gather_id: gatherId,
+                    gather_name: item.gather_name,
+                    gather_kind: item.gather_kind,
+                };
                 var data = {};
                 var xfbdata = {};
                 xfbdata['pos_id'] = '002';
@@ -477,16 +499,14 @@ define([
                 data['gather_name'] = item.gather_name;
                 switch (gatherId) {
                     case '12':
+                    case'13':
                         layer.msg('该功能正在调试中', optLayerHelp);
-                        //this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
                         break;
-                    case '13':
-                        layer.msg('该功能正在调试中', optLayerHelp);
-                        //this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name,RTQuickPayView , data, {area:'300px'});
+                    case '16':
+                        this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, '银行卡退款确认', GatherUIView, data, {area: '300px'});
                         break;
                     default :
-                        data['payment_bill'] = '';
-                        this.openLayer(PAGE_ID.LAYER_RT_QUICKPAY, pageId, item.gather_name, RTQuickPayView, data, {area: '300px'});
+                        this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, item.gather_name, GatherUIView, data, {area: '300px'});
                 }
             }
             $(this.input).val('');
@@ -496,8 +516,6 @@ define([
          *点击支付大类按钮的点击事件
          */
         payment: function (gatherkind, title) {
-            var data = {};
-            data['gather_kind'] = gatherkind;
             var receivedsum = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if (unpaidamount == 0) {
@@ -516,12 +534,14 @@ define([
                 return;
             }
             if (receivedsum == '') {
-                data['gather_money'] = unpaidamount;
-            } else {
-                data['gather_money'] = receivedsum;
+                receivedsum = unpaidamount;
             }
+            var attrs = {
+                gather_kind: gatherkind,//支付类别
+                gather_money: receivedsum,//支付金额
+            };
+            this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, pageId, title, RTLayerTypeView, attrs, {area: '300px'});
             $(this.input).val('');
-            this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, pageId, title, RTLayerTypeView, data, {area: '300px'});
         },
 
         /**

@@ -4,6 +4,7 @@
 define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-rtgatherui/model',
+    '../../moduals/layer-rtbankcard/view',
     'text!../../moduals/layer-rtgatherui/contenttpl.html',
     'text!../../moduals/layer-rtgatherui/commontpl.html',
     'text!../../moduals/layer-rtgatherui/alipaytpl.html',
@@ -11,7 +12,7 @@ define([
     'text!../../moduals/layer-rtgatherui/numpadtpl.html',
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel,LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -34,9 +35,13 @@ define([
         },
 
         LayerInitPage: function () {
+            console.log(this.attrs);
             var _self = this;
             this.gatherId = this.attrs.gather_id;
             this.model = new LayerGatherUIModel();
+            this.model.set({
+                gather_money: this.attrs.gather_money
+            });
             this.switchTemplate(this.gatherId);
             this.template_content = _.template(this.template_content);
             setTimeout(function () {
@@ -55,10 +60,6 @@ define([
 
         switchTemplate: function (gatherId) {
             switch (gatherId) {
-                case '05':
-                    this.template_content = bankcardtpl;
-                    this.input = 'input[name = bk-account]';
-                    break;
                 case '12':
                     this.template_content = wechatpaytpl;
                     this.input = 'input[name = wechat-account]';
@@ -66,6 +67,9 @@ define([
                 case '13':
                     this.template_content = alipaytpl;
                     this.input = 'input[name = alipay-account]';
+                    break;
+                case '16':
+                    this.template_content = bankcardtpl;
                     break;
                 default:
                     this.template_content = commontpl;
@@ -85,30 +89,60 @@ define([
 
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
         confirm: function () {
-            var data = {};
-            data['gather_id'] = this.attrs.gather_id;
-            data['gather_money'] = this.attrs.gather_money;
-            data['gather_name'] = this.attrs.gather_name;
-            data['gather_kind'] = this.attrs.gather_kind;
-            data['payment_bill'] = this.attrs.payment_bill;
+            var attrs = {};
+            if (this.gatherId == '16') {
+                this.closeLayer(layerindex);
+                this.openLayer(PAGE_ID.LAYER_RT_BANKCARD, pageId, '银行MIS', LayerBankCardView, this.attrs, {area: '300px'});
+                return;
+            }
             var gatherNo = $(this.input).val();
             if ((gatherNo.split('.').length - 1) > 0 || gatherNo == '') {
-                layer.msg('无效的退款账号', optLayerWarning);
-                $('this.input').val('');
-                return false;
+                layer.msg('无效的支付账号', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
             switch (this.gatherId) {
-                case '12':
-                    data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum', data);
+                case '05':
+                    if(luhmCheck(gatherNo)) {
+                        attrs = {
+                            gather_id:this.attrs.gather_id,
+                            gather_name:this.attrs.gather_name,
+                            gather_money:this.attrs.gather_money,
+                            gather_kind:this.attrs.gather_kind,
+                            gather_no:gatherNo
+                        };
+                        Backbone.trigger('onReceivedsum',attrs);
+                        this.closeLayer(layerindex);
+                        $('input[name = billingrt]').focus();
+                    }else {
+                        $(this.input).val('');
+                    }
                     break;
+                case '12':
                 case '13':
-                    data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum', data);
+                    attrs = {
+                        gather_id: this.attrs.gather_id,
+                        gather_name: this.attrs.gather_name,
+                        gather_money: this.attrs.gather_money,
+                        gather_kind: this.attrs.gather_kind,
+                        gather_no: '',
+                        hasExtra: true,
+                        extras: {
+                            extra_id: 1,
+                            payment_bill: gatherNo
+                        }
+                    };
+                    Backbone.trigger('onReceivedsum', attrs);
                     break;
                 default :
-                    data['gather_no'] = gatherNo;
-                    Backbone.trigger('onReceivedsum', data);
+                    attrs = {
+                        gather_id: this.attrs.gather_id,
+                        gather_name: this.attrs.gather_name,
+                        gather_money: this.attrs.gather_money,
+                        gather_kind: this.attrs.gather_kind,
+                        gather_no: gatherNo
+                    };
+                    Backbone.trigger('onReceivedsum', attrs);
             }
             this.closeLayer(layerindex);
             $('input[name = billingrt]').focus();

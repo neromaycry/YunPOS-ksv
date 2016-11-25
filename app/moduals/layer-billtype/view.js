@@ -50,7 +50,6 @@ define([
                     item.set({
                         gather_id: gatherList[i].gather_id,
                         gather_name: gatherList[i].gather_name,
-                        gather_ui: gatherList[i].gather_ui
                     });
                     this.collection.push(item);
                 }
@@ -94,7 +93,7 @@ define([
             var gatherName = this.collection.at(index).get('gather_name');
             switch (gatherId) {//gather_ui:判断接下来打开的是哪种界面
                 case '12':
-                case'13'://第三方支付类
+                case '13'://第三方支付类
                     var xfbdata = {
                         pos_id: '002',
                         bill_no: this.attrs.bill_no

@@ -454,7 +454,8 @@ define([
 
         setBillingReturnKeys: function () {
             var effects = ['返回', '确定','结算', '删除已支付的方式', '清空支付方式列表', '向上选择', '向下选择',
-                '支票类支付', '礼券类支付', '银行卡POS支付', '第三方支付', '一卡通支付', '快捷支付', '一卡通切换会员卡登录', '一卡通切换手机号登录'];
+                '支票类支付', '礼券类支付', '银行卡POS支付', '第三方支付', '一卡通支付', '快捷支付', '一卡通切换会员卡登录',
+                '一卡通切换手机号登录'];
             var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E','X','P'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D, window.KEYS.C,
                 window.KEYS.Up, window.KEYS.Down, window.KEYS.S, window.KEYS.B, window.KEYS.P, window.KEYS.Q,

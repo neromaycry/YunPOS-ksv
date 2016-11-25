@@ -143,7 +143,7 @@ define([
             });
             //删除商品
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.D, function () {
-                _self.deleteItem();
+                _self.onDeleteClicked();
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.RETURN_FORCE, window.KEYS.F12, function () {
@@ -218,6 +218,11 @@ define([
          */
         cancelForceReturn: function () {
             var _self = this;
+            if (this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             var attrs = {
                 pageid: pageId,
                 content: '确定取消退货？',
@@ -305,16 +310,16 @@ define([
          * 单品优惠
          */
         modifyItemDiscount: function () {
-            var value = $(this.input).val();
-            var item = this.collection.at(this.i);
-            var price = item.get('price');
-            var num = item.get('num');
-            var discount = item.get('discount');
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
+            var value = $(this.input).val();
+            var item = this.collection.at(this.i);
+            var price = item.get('price');
+            var num = item.get('num');
+            var discount = item.get('discount');
             if (value == '.' || (value.split('.').length - 1) > 1 || value == '') {
                 layer.msg('无效的优惠金额', optLayerWarning);
                 $(this.input).val('');
@@ -368,6 +373,11 @@ define([
          */
         modifyItemNum: function () {
             var number = $(this.input).val();
+            if (this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             if (number == '' || number == 0 || (number.split('.').length - 1) > 1) {
                 layer.msg('无效的商品数量', optLayerWarning);
                 $(this.input).val('');
@@ -471,18 +481,13 @@ define([
             this.modifyItemDiscount();
         },
         onDeleteClicked: function () {
-            var _self = this;
-            //if(_self.isDeleteKey){
-            //    _self.deleteItem();
-            //}else{
-            var secondLoginView = new SecondLoginView({
-                pageid: window.PAGE_ID.RETURN_FORCE,
-                callback: function () {
-                    _self.deleteItem();
-                }
-            });
-            this.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
-            //}
+            var len = this.collection.length;
+            //console.log(len);
+            if (len == 0) {
+                layer.msg('没有可删除的商品', optLayerWarning);
+                return;
+            }
+            this.deleteItem();
         },
         onModifyNumClicked: function () {
             this.modifyItemNum();
