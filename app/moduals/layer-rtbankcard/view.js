@@ -49,10 +49,10 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Esc, function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BANKCARD, KEYS.Esc, function () {
                 _self.onCancelClicked();
             });
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Enter, function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BANKCARD, KEYS.Enter, function () {
                 _self.onCancelClicked();
             });
         },

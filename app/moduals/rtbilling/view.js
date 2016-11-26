@@ -736,18 +736,18 @@ define([
          *支票类付款
          */
         onCheckClicked: function () {
-            this.payment('01', '支票类');
+            this.payment('01', '支票');
             $('button[name = check]').blur();
         },
         /**
          * 礼券
          */
         onGiftClicked: function () {
-            this.payment('02', '礼券类');
+            this.payment('02', '礼券');
             $('button[name = gift-certificate]').blur();
         },
         onPosClicked: function () {
-            this.payment('03', '银行POS');
+            this.payment('03', '银行卡');
             $('button[name = pos]').blur();
         },
         /**

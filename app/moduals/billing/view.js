@@ -52,6 +52,8 @@ define([
 
         length: 0,//判断第三方支付退款是否成功
 
+        smallChange:0,//如果存在去零，则存储去零之后的钱数
+
         template_billinfo: billinfotpl,
 
         template_billingdetailtpl: billingdetailtpl,
@@ -91,10 +93,12 @@ define([
             pageId = window.PAGE_ID.BILLING;
             this.model = new BillModel();
             this.requestmodel = new BillModel();
+            this.smallChangemodel = new BillModel();//存放去零支付方式
             this.collection = new BillCollection();
             this.totalamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'totalamount');
             this.discountamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'discountamount');
             this.itemamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'itemamount');
+            this.selectQulingGranted();
             this.totalamount -= this.discountamount;//优惠金额
             this.unpaidamount = this.totalamount;//未付金额
             this.model.set({
@@ -798,6 +802,8 @@ define([
             data['bill_no'] = _self.billNumber;
             data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
             data['gather_detail'] = _self.collection.toJSON();
+            //如果存在去零，则添加一种支付方式为去零
+            data['gather_detail'].push(this.smallChangemodel.toJSON());
             //限制传到接口的小计，折扣，数量，价格数据类型必须为number，且位数为小数点后两位。
             for (var i = 0; i < data['goods_detail'].length; i++) {
                 item = data['goods_detail'][i];
@@ -866,6 +872,7 @@ define([
             this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '600px'});
             $(this.input).val('');
         },
+
         /**
          * 帮助按钮点击事件
          */
@@ -1058,6 +1065,41 @@ define([
         },
 
         /**
+         * 选择去零权限
+         */
+        selectQulingGranted: function () {
+
+            switch (window.auth_quling) {
+                //参数 0 ：不去零  1：分四舍五入到角  2：角四舍五入到元  3：去分  4：去角
+                case '1':
+                    this.smallChange = parseFloat(this.totalamount.toFixed(2) - this.totalamount.toFixed(1));
+                    this.totalamount = parseFloat(this.totalamount.toFixed(1));
+                    break;
+                case '2':
+                    this.smallChange = parseFloat(this.totalamount - Math.round(this.totalamount));
+                    this.totalamount = Math.round(this.totalamount);
+                    break;
+                case '3':
+                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount * 10) / 10 );
+                    this.totalamount = Math.floor(this.totalamount * 10) / 10;
+                    break;
+                case '4':
+                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount));
+                    this.totalamount = Math.floor(this.totalamount);
+                    break;
+            }
+            this.smallChangemodel.set({
+                gather_id:'04',
+                gather_name:'去零',
+                gather_no:'*',
+                fact_money:0,
+                havepay_money:0,
+                payment_bill:'',
+                change_money:0,
+                gather_money:this.smallChange
+            });
+        },
+        /**
          * 从接口获取小票号
          */
         getRetailNo: function () {
@@ -1106,6 +1148,7 @@ define([
             }
             $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
+
 
     });
 
