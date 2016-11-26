@@ -41,7 +41,7 @@ define([
             //'click .login-reconnecthw':'onReconnectHardwareClicked',
             'click .power-off': 'onPowerOffClicked',
             'click .lock': 'lockScreen',
-            'click .bankcheckin': 'checkIn'
+            //'click .bankcheckin': 'checkIn'
         },
 
         pageInit: function () {
@@ -253,11 +253,11 @@ define([
             router.navigate('setting', {trigger: true});
         },
 
-        checkIn: function () {
-            //toastr.info('签到');
-            layer.msg('签到', optLayerSuccess);
-            this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
-        },
+        //checkIn: function () {
+        //    //toastr.info('签到');
+        //    layer.msg('签到', optLayerSuccess);
+        //    this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
+        //},
 
         //doInitialize: function () {
         //    this.iniSettngs();
@@ -304,9 +304,9 @@ define([
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Q, function () {
                 _self.onSettingClicked();
             });
-            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.W, function () {
-                _self.checkIn();
-            });
+            //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.W, function () {
+            //    _self.checkIn();
+            //});
             //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
             //    var SOCKET_ADDR = 'ws://localhost:7110/';
             //    wsClient.close();

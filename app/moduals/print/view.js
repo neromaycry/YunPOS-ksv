@@ -210,7 +210,6 @@ define([
             $(this.input).val('');
         },
 
-
         onHelpClicked: function () {
             var attrs = {
                 page: 'PRINT_PAGE',
