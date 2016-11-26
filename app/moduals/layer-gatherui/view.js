@@ -206,19 +206,21 @@ define([
 
         /**
          * 调用支付宝付款接口,被扫支付即条码支付
-         * @param gatherUI 判断是哪种付款方式
+         * @param gatherId 判断是哪种付款方式
          * @param gatherNo 付款账号
          * @param attrData 准备传到结算页面的数据
          * @param paymentBill 祥付宝交易单号
          */
-        micropay: function (gatherId, gatherNo, data, paymentBill) {
+        micropay: function (gatherId, gatherNo, attrData, paymentBill) {
             var _self = this;
             var data = {};
+            var totalfee = attrData.gather_money;
             if(gatherId == '13') {
                 data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
                 data['totalfee'] = '0.01';
+                //data['totalfee'] = totalfee;
                 data['body'] = 'test';
                 data['subject'] = 'test';
                 data['paymethod'] = 'zfb';
@@ -229,6 +231,7 @@ define([
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
                 data['totalfee'] = '0.01';
+                //data['totalfee'] = totalfee;
                 data['body'] = 'test';
                 data['subject'] = 'test';
                 data['paymethod'] = 'wx';
@@ -240,13 +243,11 @@ define([
             resource.post(url + 'api/pay/xfb/micropay', data, function (resp) {
                 if(resp.data['flag'] == '00') {
                     loading.hide();
-                    Backbone.trigger('onReceivedsum',data);
+                    Backbone.trigger('onReceivedsum',attrData);
                     _self.closeLayer(layerindex);
                 }else {
                     loading.hide();
                     layer.msg(resp.data.msg, optLayerError);
-
-
                 }
             });
         },

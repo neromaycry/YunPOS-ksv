@@ -385,7 +385,7 @@ define([
             var confirmBill = new RTBillModel();
             if (isfromForce) {
                 var data = {};
-                data['mode'] = '02';
+                data['mode'] = '01';
                 if (storage.isSet(system_config.VIP_KEY)) {
                     data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
                     data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
@@ -541,7 +541,7 @@ define([
                 gather_kind: gatherkind,//支付类别
                 gather_money: receivedsum,//支付金额
             };
-            this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, pageId, title, RTLayerTypeView, attrs, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, PAGE_ID.BILLING_RETURN, title, RTLayerTypeView, attrs, {area: '300px'});
             $(this.input).val('');
         },
 
