@@ -196,6 +196,9 @@ define([
                     this.closeLayer(PAGE_ID.PRINT);
                     $('input[name = bill_date]').focus();
                     break;
+                case PAGE_ID.SETTING:
+                    this.closeLayer(PAGE_ID.SETTING);
+                    break;
             }
         },
 
