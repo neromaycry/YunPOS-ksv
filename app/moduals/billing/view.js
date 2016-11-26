@@ -802,8 +802,7 @@ define([
             data['bill_no'] = _self.billNumber;
             data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
             data['gather_detail'] = _self.collection.toJSON();
-            //如果存在去零，则添加一种支付方式为去零
-            data['gather_detail'].push(this.smallChangemodel.toJSON());
+            data['gather_detail'].push(this.smallChangemodel.toJSON()); //如果存在去零，则添加一种支付方式为去零
             //限制传到接口的小计，折扣，数量，价格数据类型必须为number，且位数为小数点后两位。
             for (var i = 0; i < data['goods_detail'].length; i++) {
                 item = data['goods_detail'][i];
