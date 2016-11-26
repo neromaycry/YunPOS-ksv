@@ -134,7 +134,9 @@ define([
                 if (resp.status == '00') {
                     _self.RtcartCollection.set(resp.goods_detail);
                     _self.RtPayedlistCollection.set(resp.gather_detail);
-                    console.log(resp.gather_detail);
+                    _self.model.set({
+                        bill_no:orderNo
+                    });
                     _self.calculateModel();
                 } else {
                     layer.msg(resp.msg, optLayerError);
@@ -176,6 +178,7 @@ define([
             storage.set(system_config.RETURN_KEY, 'cartlist', this.RtcartCollection.toJSON());
             storage.set(system_config.RETURN_KEY, 'paymentlist', this.RtPayedlistCollection.toJSON());
             storage.set(system_config.RETURN_KEY, 'panel', this.model.toJSON());
+            storage.set(system_config.RETURN_KEY, 'bill_no', this.model.get('bill_no'));
         },
 
         bindKeys: function () {

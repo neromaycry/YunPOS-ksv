@@ -16,7 +16,16 @@ define(['../../js/common/BaseModel'], function (BaseModel) {
                 data: data,
                 success: callback
             });
-        }
+        },
+
+        requestRetaliNo: function (data, callback) {
+            this.sendPOST({
+                url: window.API_URL.RETAIL_NO,
+                data: data,
+                success: callback
+            });
+        },
+
 
     });
     return rtbillModel;

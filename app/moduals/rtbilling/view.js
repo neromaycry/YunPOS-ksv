@@ -42,6 +42,8 @@ define([
 
         card_id: '',//一卡通界面传过来的card_id
 
+        billNumber:'',//当前这笔交易的交易号
+
         i: 0,
 
         input: 'input[name = billingrt]',
@@ -73,6 +75,7 @@ define([
             this.typeList = new RTBillCollection();
             this.handleEvents();
             this.initTemplates();
+            this.getRetailNo();
             if (isfromForce) {
                 //强制退货
                 this.totalamount = storage.get(system_config.FORCE_RETURN_KEY, 'panel', 'totalamount');
@@ -381,10 +384,11 @@ define([
          */
         doBilling: function () {
             var _self = this;
+            var item = {};
+            var data = {};
             var unpaidamount = this.model.get('unpaidamount');
             var confirmBill = new RTBillModel();
             if (isfromForce) {
-                var data = {};
                 data['mode'] = '01';
                 if (storage.isSet(system_config.VIP_KEY)) {
                     data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
@@ -396,18 +400,19 @@ define([
                     data['medium_type'] = "*";
                     data['cust_id'] = "*";
                 }
+                data['bill_no'] = this.billNumber;
                 data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
                 for (var i = 0; i < data['gather_detail'].length; i++) {
-                    data['gather_detail'][i].gather_money = -parseFloat(data['gather_detail'][i].gather_money.toFixed(2));
-                    data['gather_detail'][i].havepay_money = -parseFloat(data['gather_detail'][i].havepay_money.toFixed(2));
-                    data['gather_detail'][i].change_money = -parseFloat(data['gather_detail'][i].change_money.toFixed(2));
-                    data['gather_detail'][i].fact_money = -parseFloat(data['gather_detail'][i].fact_money.toFixed(2));
+                    item = data['gather_detail'][i];
+                    item.gather_money = -parseFloat(item.gather_money.toFixed(2));
+                    item.havepay_money = -parseFloat(item.havepay_money.toFixed(2));
                 }
                 for (var i = 0; i < data['goods_detail'].length; i++) {
-                    data['goods_detail'][i].money = -parseFloat(data['goods_detail'][i].money.toFixed(2));
-                    data['goods_detail'][i].num = -parseFloat(data['goods_detail'][i].num);
-                    data['goods_detail'][i].discount = -parseFloat(data['goods_detail'][i].discount.toFixed(2));
+                    item = data['goods_detail'][i];
+                    item.money = -parseFloat(item.money.toFixed(2));
+                    item.num = -parseFloat(item.num);
+                    item.discount = -parseFloat(item.discount.toFixed(2));
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);
@@ -425,7 +430,6 @@ define([
                 });
 
             } else {
-                var data = {};
                 data['mode'] = '02';
                 if (storage.isSet(system_config.VIP_KEY)) {
                     data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
@@ -436,17 +440,20 @@ define([
                     data['medium_type'] = "*";
                     data['cust_id'] = "*";
                 }
+                data['bill_no'] = _self.billNumber;
+                data['retreate_no'] = storage.get(system_config.RETURN_KEY, 'bill_no');
                 data['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
                 for (var i = 0; i < data['gather_detail'].length; i++) {
-                    data['gather_detail'][i].gather_money = -data['gather_detail'][i].gather_money;
-                    data['gather_detail'][i].havepay_money = -data['gather_detail'][i].havepay_money;
-                    console.log(data['gather_detail'][i]);
+                    item = data['gather_detail'][i];
+                    item.gather_money = -parseFloat(item.gather_money.toFixed(2));
+                    item.havepay_money = -parseFloat(item.havepay_money.toFixed(2));
                 }
                 for (var i = 0; i < data['goods_detail'].length; i++) {
-                    data['goods_detail'][i].money = -data['goods_detail'][i].money;
-                    data['goods_detail'][i].num = -data['goods_detail'][i].num;
-                    data['goods_detail'][i].discount = -data['goods_detail'][i].discount;
+                    item = data['goods_detail'][i];
+                    item.money = -parseFloat(item.money.toFixed(2));
+                    item.num = -parseFloat(item.num);
+                    item.discount = -parseFloat(item.discount.toFixed(2));
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);
@@ -755,6 +762,23 @@ define([
             $('input[name = billingrt]').val('');
             //this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();
+        },
+
+        /**
+         * 从接口获取小票号
+         */
+        getRetailNo: function () {
+            var _self = this;
+            var data = {};
+            data['pos_id'] = '002';
+            this.model.requestRetaliNo(data, function (resp) {
+                if (resp.status == '00') {
+                    _self.billNumber = resp.bill_no;
+                    console.log(_self.billNumber);
+                } else {
+                    layer.msg(resp.msg, optLayerWarning);
+                }
+            });
         },
 
 
