@@ -18,7 +18,8 @@ define([
             'click #bank_reprint': 'onBankRePrintCliked',
             'click #bank_daily': 'onBankDailyClicked',
             'click #bank_query': 'onBankQueryCliked',
-            'click .cancel': 'onCancelClicked'
+            'click .cancel': 'onCancelClicked',
+            'click #bankcheckin': 'checkIn'
         },
 
         LayerInitPage: function () {
@@ -45,6 +46,9 @@ define([
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_BANK_INSTRUCTION, KEYS.R, function () {
                 _self.onBankQueryCliked();
             });
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_BANK_INSTRUCTION, window.KEYS.A, function () {
+                _self.checkIn();
+            });
         },
 
         onCancelClicked: function () {
@@ -66,6 +70,12 @@ define([
             };
             console.log(JSON.stringify(data));
             this.sendWebSocketDirective([DIRECTIVES.Bank_daily], [JSON.stringify(data)], wsClient);
+        },
+
+        checkIn: function () {
+            //toastr.info('Ç©µ½');
+            layer.msg('Ç©µ½', optLayerSuccess);
+            this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
         },
 
         onBankQueryCliked: function () {
