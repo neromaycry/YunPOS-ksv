@@ -73,8 +73,8 @@ define([
         },
 
         checkIn: function () {
-            //toastr.info('Ç©µ½');
-            layer.msg('Ç©µ½', optLayerSuccess);
+            //toastr.info('ç­¾åˆ°');
+            layer.msg('ç­¾åˆ°', optLayerSuccess);
             this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
         },
 

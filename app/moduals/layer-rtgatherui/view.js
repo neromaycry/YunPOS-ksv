@@ -83,12 +83,12 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
-                _self.confirm();
+                _self.onOKClicked();
             });
         },
 
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
-        confirm: function () {
+        onOKClicked: function () {
             var attrs = {};
             if (this.gatherId == '16') {
                 this.closeLayer(layerindex);
@@ -158,10 +158,6 @@ define([
         onCancelClicked: function () {
             this.closeLayer(layerindex);
             $('input[name = billingrt]').focus();
-        },
-
-        onOKClicked: function () {
-            this.confirm();
         },
 
         onBackspaceClicked: function (e) {

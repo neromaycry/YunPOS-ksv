@@ -27,7 +27,8 @@ requirejs.config({
         'fecha': '../fecha/fecha',
         'noty': '../noty/jquery.noty.packaged',
         'koala': '../koala/jquery.koala',
-        'layer': '../layer/layer'
+        'layer': '../layer/layer',
+        'decimal': '../decimal/decimal',
     },
     shim: {
         'backbone': {
@@ -59,6 +60,9 @@ requirejs.config({
         'layer': {
             'deps': ['jquery', 'css!../layer/skin/default/layer.css'],
             'exports': 'layer'
+        },
+        'decimal': {
+            'exports': 'Decimal'
         },
         'Recwebsocket': {
             'exports': 'Recwebsocket'
@@ -117,8 +121,9 @@ requirejs([
     'fecha',
     'noty',
     'koala',
-    'layer'
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala, layer) {
+    'layer',
+    'decimal',
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala, layer, Decimal) {
 
     window.isAndroid = false;  //是否为Android设备
 
