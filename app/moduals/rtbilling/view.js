@@ -40,7 +40,11 @@ define([
 
         unpaidamount: 0,
 
+        smallChange:0,//如果存在去零，则存储去零之后的钱数
+
         card_id: '',//一卡通界面传过来的card_id
+
+        billNumber:'',//当前这笔交易的交易号
 
         i: 0,
 
@@ -69,13 +73,13 @@ define([
         pageInit: function () {
             pageId = window.PAGE_ID.BILLING_RETURN;
             this.model = new RTBillModel();
+            this.smallChangemodel = new RTBillModel();//存放去零支付方式
             this.collection = new RTBillCollection();
             this.typeList = new RTBillCollection();
-            this.handleEvents();
-            this.initTemplates();
             if (isfromForce) {
                 //强制退货
                 this.totalamount = storage.get(system_config.FORCE_RETURN_KEY, 'panel', 'totalamount');
+                this.selectQulingGranted();
                 this.discoutamount = storage.get(system_config.FORCE_RETURN_KEY, 'panel', 'discountamount');
                 this.totalamount = this.totalamount - this.discoutamount;
                 this.unpaidamount = this.totalamount;
@@ -85,6 +89,7 @@ define([
                 });
             } else {
                 this.totalamount = storage.get(system_config.RETURN_KEY, 'panel', 'totalamount');
+                this.selectQulingGranted();
                 this.unpaidamount = this.totalamount;
                 this.receivedsum = 0;
                 this.model.set({
@@ -93,6 +98,9 @@ define([
                     unpaidamount: this.unpaidamount
                 });
             }
+            this.handleEvents();
+            this.initTemplates();
+            this.getRetailNo();
         },
         initPlugins: function () {
             var _self = this;
@@ -381,11 +389,12 @@ define([
          */
         doBilling: function () {
             var _self = this;
+            var item = {};
+            var data = {};
             var unpaidamount = this.model.get('unpaidamount');
             var confirmBill = new RTBillModel();
             if (isfromForce) {
-                var data = {};
-                data['mode'] = '02';
+                data['mode'] = '01';
                 if (storage.isSet(system_config.VIP_KEY)) {
                     data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
                     data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
@@ -396,18 +405,20 @@ define([
                     data['medium_type'] = "*";
                     data['cust_id'] = "*";
                 }
+                data['bill_no'] = this.billNumber;
                 data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
+                data['gather_detail'].push(_self.smallChangemodel.toJSON());
                 for (var i = 0; i < data['gather_detail'].length; i++) {
-                    data['gather_detail'][i].gather_money = -parseFloat(data['gather_detail'][i].gather_money.toFixed(2));
-                    data['gather_detail'][i].havepay_money = -parseFloat(data['gather_detail'][i].havepay_money.toFixed(2));
-                    data['gather_detail'][i].change_money = -parseFloat(data['gather_detail'][i].change_money.toFixed(2));
-                    data['gather_detail'][i].fact_money = -parseFloat(data['gather_detail'][i].fact_money.toFixed(2));
+                    item = data['gather_detail'][i];
+                    item.gather_money = -parseFloat(item.gather_money.toFixed(2));
+                    item.havepay_money = -parseFloat(item.havepay_money.toFixed(2));
                 }
                 for (var i = 0; i < data['goods_detail'].length; i++) {
-                    data['goods_detail'][i].money = -parseFloat(data['goods_detail'][i].money.toFixed(2));
-                    data['goods_detail'][i].num = -parseFloat(data['goods_detail'][i].num);
-                    data['goods_detail'][i].discount = -parseFloat(data['goods_detail'][i].discount.toFixed(2));
+                    item = data['goods_detail'][i];
+                    item.money = -parseFloat(item.money.toFixed(2));
+                    item.num = -parseFloat(item.num);
+                    item.discount = -parseFloat(item.discount.toFixed(2));
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);
@@ -425,7 +436,6 @@ define([
                 });
 
             } else {
-                var data = {};
                 data['mode'] = '02';
                 if (storage.isSet(system_config.VIP_KEY)) {
                     data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
@@ -436,17 +446,21 @@ define([
                     data['medium_type'] = "*";
                     data['cust_id'] = "*";
                 }
+                data['bill_no'] = _self.billNumber;
+                data['retreate_no'] = storage.get(system_config.RETURN_KEY, 'bill_no');
                 data['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
+                data['gather_detail'].push(_self.smallChangemodel.toJSON());
                 for (var i = 0; i < data['gather_detail'].length; i++) {
-                    data['gather_detail'][i].gather_money = -data['gather_detail'][i].gather_money;
-                    data['gather_detail'][i].havepay_money = -data['gather_detail'][i].havepay_money;
-                    console.log(data['gather_detail'][i]);
+                    item = data['gather_detail'][i];
+                    item.gather_money = -parseFloat(item.gather_money.toFixed(2));
+                    item.havepay_money = -parseFloat(item.havepay_money.toFixed(2));
                 }
                 for (var i = 0; i < data['goods_detail'].length; i++) {
-                    data['goods_detail'][i].money = -data['goods_detail'][i].money;
-                    data['goods_detail'][i].num = -data['goods_detail'][i].num;
-                    data['goods_detail'][i].discount = -data['goods_detail'][i].discount;
+                    item = data['goods_detail'][i];
+                    item.money = -parseFloat(item.money.toFixed(2));
+                    item.num = -parseFloat(item.num);
+                    item.discount = -parseFloat(item.discount.toFixed(2));
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);
@@ -541,7 +555,7 @@ define([
                 gather_kind: gatherkind,//支付类别
                 gather_money: receivedsum,//支付金额
             };
-            this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, pageId, title, RTLayerTypeView, attrs, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, PAGE_ID.BILLING_RETURN, title, RTLayerTypeView, attrs, {area: '300px'});
             $(this.input).val('');
         },
 
@@ -729,18 +743,18 @@ define([
          *支票类付款
          */
         onCheckClicked: function () {
-            this.payment('01', '支票类');
+            this.payment('01', '支票');
             $('button[name = check]').blur();
         },
         /**
          * 礼券
          */
         onGiftClicked: function () {
-            this.payment('02', '礼券类');
+            this.payment('02', '礼券');
             $('button[name = gift-certificate]').blur();
         },
         onPosClicked: function () {
-            this.payment('03', '银行POS');
+            this.payment('03', '银行卡');
             $('button[name = pos]').blur();
         },
         /**
@@ -755,6 +769,59 @@ define([
             $('input[name = billingrt]').val('');
             //this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();
+        },
+
+        /**
+         * 从接口获取小票号
+         */
+        getRetailNo: function () {
+            var _self = this;
+            var data = {};
+            data['pos_id'] = '002';
+            this.model.requestRetaliNo(data, function (resp) {
+                if (resp.status == '00') {
+                    _self.billNumber = resp.bill_no;
+                    console.log(_self.billNumber);
+                } else {
+                    layer.msg(resp.msg, optLayerWarning);
+                }
+            });
+        },
+
+        /**
+         * 选择去零权限
+         */
+        selectQulingGranted: function () {
+            switch (window.auth_quling) {
+                //参数 0 ：不去零  1：分四舍五入到角  2：角四舍五入到元  3：去分  4：去角
+                case '1':
+                    this.smallChange = parseFloat(this.totalamount.toFixed(2) - this.totalamount.toFixed(1));
+                    this.totalamount = parseFloat(this.totalamount.toFixed(1));
+                    break;
+                case '2':
+                    this.smallChange = parseFloat(this.totalamount - Math.round(this.totalamount));
+                    this.totalamount = Math.round(this.totalamount);
+                    break;
+                case '3':
+                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount * 10) / 10 );
+                    this.totalamount = Math.floor(this.totalamount * 10) / 10;
+                    break;
+                case '4':
+                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount));
+                    this.totalamount = Math.floor(this.totalamount);
+                    break;
+            }
+            this.smallChangemodel.set({
+                gather_id:'04',
+                gather_name:'去零',
+                gather_no:'*',
+                fact_money:0,
+                havepay_money:0,
+                payment_bill:'',
+                change_money:0,
+                gather_money:this.smallChange
+            });
+            console.log(this.totalamount);
         },
 
 

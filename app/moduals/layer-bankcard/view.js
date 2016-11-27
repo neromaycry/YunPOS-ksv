@@ -28,6 +28,7 @@ define([
             this.handleEvents();
             var data = {
                 transaction_amount: '0.01',
+                //transaction_amount: this.attrs.gather_money,
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
                 pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                 bill_no: this.attrs.bill_no

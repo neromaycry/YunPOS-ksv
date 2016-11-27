@@ -52,6 +52,8 @@ define([
 
         length: 0,//判断第三方支付退款是否成功
 
+        smallChange:0,//如果存在去零，则存储去零之后的钱数
+
         template_billinfo: billinfotpl,
 
         template_billingdetailtpl: billingdetailtpl,
@@ -91,10 +93,12 @@ define([
             pageId = window.PAGE_ID.BILLING;
             this.model = new BillModel();
             this.requestmodel = new BillModel();
+            this.smallChangemodel = new BillModel();//存放去零支付方式
             this.collection = new BillCollection();
             this.totalamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'totalamount');
             this.discountamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'discountamount');
             this.itemamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'itemamount');
+            this.selectQulingGranted();
             this.totalamount -= this.discountamount;//优惠金额
             this.unpaidamount = this.totalamount;//未付金额
             this.model.set({
@@ -389,16 +393,42 @@ define([
             $(this.input).val('');
         },
 
+
         /**
-         * 帮助
+         * 清空已支付方式列表
          */
-        openHelp: function () {
+        cleanPaylist: function () {
+            var _self = this;
+            var data = {};
+            var receivedSum = this.model.get('receivedsum');
+            if (receivedSum == 0) {
+                layer.msg('尚未付款', optLayerWarning);
+                return;
+            }
             var attrs = {
-                page: 'BILLING_PAGE',
-                pageid: pageId
+                pageid: pageId,
+                content: '确定清空支付列表？',
+                callback: function () {
+                    for (var j = _self.collection.length - 1; j >= 0; j--) {
+                        var model = _self.collection.at(j);
+                        var gatherId = model.get('gather_id');
+                        switch (gatherId) {
+                            case '12':
+                            case '13':
+                                _self.refund(j, gatherId);
+                                break;
+                            case '16':
+                                _self.deletebankpay(j);
+                                break;
+                            default :
+                                _self.deleteItem(j);
+                        }
+                    }
+                }
             };
-            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
+            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
         },
+
 
         /**
          * 删除,如果存在第三方支付，则调用refund函数;如果存在一卡通支付，调用一卡通删除函数;如果存在银行卡支付，则调用银行卡删除函数。
@@ -418,9 +448,9 @@ define([
                     var item = _self.collection.at(_self.i);
                     var gatherId = item.get('gather_id');
                     if (gatherId == '12' || gatherId == '13') {
-                        _self.refund(gatherId, item.get('payment_bill'));
-                    } else if (gatherId == '05' || gatherId == '16') {
-                        _self.deletebankpay();
+                        _self.refund(gatherId);
+                    } else if (gatherId == '16') {
+                        _self.deletebankpay(_self.i);
                     } else {
                         _self.deleteItem(_self.i);
                         layer.msg('删除成功', optLayerSuccess);
@@ -428,6 +458,65 @@ define([
                 }
             };
             _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
+        },
+
+        /**
+         * 删除时调用第三方支付退款接口
+         */
+        refund: function (index, gatherId) {
+            var _self = this;
+            var data = {};
+            var item = this.collection.at(index);
+            var paymentBill = item.get('payment_bill');
+            var refundamount = item.get('gather_money');
+            if (gatherId == '12') {
+                data['orderid'] = paymentBill;
+                data['merid'] = '000201504171126553';
+                data['paymethod'] = 'wx';
+                data['refundamount'] = '0.01';
+                //data['refundamount'] = refundamount;  //当前付款金额
+            }
+            if (gatherId == '13') {
+                data['orderid'] = paymentBill;
+                data['merid'] = '000201504171126553';
+                data['paymethod'] = 'zfb';
+                data['refundamount'] = '0.01';
+                //data['refundamount'] = refundamount;  //当前付款金额
+                data['zfbtwo'] = 'zfbtwo';
+            }
+            resource.post('http://114.55.62.102:9090/api/pay/xfb/refund', data, function (resp) {
+                console.log(resp.data['flag']);
+                if (resp.data['flag'] == '00') {
+                    _self.deleteItem(index);
+                    layer.msg('删除成功', optLayerSuccess);
+                } else if (resp.data['flag'] == undefined) {
+                    layer.msg('删除失败', optLayerError);
+                } else {
+                    layer.msg(resp.data['msg'], optLayerError);
+                }
+            });
+        },
+
+        /**
+         * 撤销银行卡支付
+         */
+        deletebankpay: function (index) {
+            var _self = this;
+            var item = this.collection.at(index);
+            var refundamount = item.get('gather_money');
+            var attrs = {
+                pageid:pageId,
+                transaction_amount: 0.1,
+                //transaction_amount:refundamount,
+                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                bill_no: this.billNumber,
+                //如果输入正确的系统参考号，则在撤销的同时，在支付列表里面删除该条支付记录
+                //callback: function () {
+                //    _self.deleteItem(index);
+                //}
+            };
+            this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, pageId, '输入系统参考号', LayerReferenceNumView, attrs, {area:'300px'});
         },
 
 
@@ -488,17 +577,6 @@ define([
             this.renderBillDetail();
         },
 
-
-        deletebankpay: function () {
-            var attrs = {
-                pageid:pageId,
-                transaction_amount: 0.1,
-                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
-                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
-                bill_no: this.billNumber
-            };
-            this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, pageId, '输入系统参考号', LayerReferenceNumView, attrs, {area:'300px'});
-        },
         /**
          * 整单优惠点击事件
          */
@@ -710,6 +788,7 @@ define([
                 this.calculateDiscount();
             }
             var data = {};
+            var item = {};
             data['mode'] = '00';
             if (storage.isSet(system_config.VIP_KEY)) {
                 data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
@@ -723,19 +802,22 @@ define([
             data['bill_no'] = _self.billNumber;
             data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
             data['gather_detail'] = _self.collection.toJSON();
+            data['gather_detail'].push(this.smallChangemodel.toJSON()); //如果存在去零，则添加一种支付方式为去零
             //限制传到接口的小计，折扣，数量，价格数据类型必须为number，且位数为小数点后两位。
             for (var i = 0; i < data['goods_detail'].length; i++) {
-                data['goods_detail'][i].money = parseFloat(data['goods_detail'][i].money.toFixed(2));
-                data['goods_detail'][i].discount = parseFloat(data['goods_detail'][i].discount.toFixed(2));
-                data['goods_detail'][i].price = parseFloat(data['goods_detail'][i].price);
-                data['goods_detail'][i].num = parseFloat(data['goods_detail'][i].num);
+                item = data['goods_detail'][i];
+                item.money = parseFloat(item.money.toFixed(2));
+                item.discount = parseFloat(item.discount.toFixed(2));
+                item.price = parseFloat(item.price);
+                item.num = parseFloat(item.num);
             }
             //限制传到接口的实收金额，付款金额，找零金额，盈余金额数据类型必须为number，且位数为小数点后两位。
             for (var i = 0; i < data['gather_detail'].length; i++) {
-                data['gather_detail'][i].havepay_money = parseFloat(data['gather_detail'][i].havepay_money.toFixed(2));
-                data['gather_detail'][i].gather_money = parseFloat(data['gather_detail'][i].gather_money.toFixed(2));
-                data['gather_detail'][i].change_money = parseFloat(data['gather_detail'][i].change_money.toFixed(2));
-                data['gather_detail'][i].fact_money = parseFloat(data['gather_detail'][i].fact_money.toFixed(2));
+                item = data['gather_detail'][i];
+                item.havepay_money = parseFloat(item.havepay_money.toFixed(2));
+                item.gather_money = parseFloat(item.gather_money.toFixed(2));
+                item.change_money = parseFloat(item.change_money.toFixed(2));
+                item.fact_money = parseFloat(item.fact_money.toFixed(2));
             }
             confirmBill.trade_confirm(data, function (resp) {
                 if (resp.status == '00') {
@@ -757,96 +839,6 @@ define([
                 }
             });
         },
-        /**
-         * 清空已支付方式列表
-         */
-        cleanPaylist: function () {
-            var _self = this;
-            var data = {};
-            var receivedSum = this.model.get('receivedsum');
-            if (receivedSum == 0) {
-                layer.msg('尚未付款', optLayerWarning);
-                return;
-            }
-            var attrs = {
-                pageid: pageId,
-                content: '确定清空支付列表？',
-                callback: function () {
-                    for (var j = _self.collection.length - 1; j >= 0; j--) {
-                        var model = _self.collection.at(j);
-                        var gatherId = model.get('gather_id');
-                        switch (gatherId) {
-                            case '12':
-                                data['orderid'] = model.get('payment_bill');
-                                data['merid'] = '000201504171126553';
-                                data['paymethod'] = 'wx';
-                                data['refundamount'] = '0.01';
-                                resource.post('http://114.55.62.102:9090/api/pay/xfb/refund', data, function (resp) {
-                                    if (resp.data['flag'] == '00') {
-                                        _self.deleteItem(j);
-                                    } else if (resp.data['flag'] == undefined) {
-                                        layer.msg('微信退款失败,清空支付列表失败', optLayerError);
-                                    } else {
-                                        layer.msg(resp.data['msg'], optLayerError);
-                                    }
-                                });
-                                break;
-                            case '13':
-                                data['orderid'] = model.get('payment_bill');
-                                data['merid'] = '000201504171126553';
-                                data['paymethod'] = 'zfb';
-                                data['refundamount'] = '0.01';
-                                data['zfbtwo'] = 'zfbtwo';
-                                resource.post('http://114.55.62.102:9090/api/pay/xfb/refund', data, function (resp) {
-                                    if (resp.data['flag'] == '00') {
-                                        _self.deleteItem(j);
-                                    } else if (resp.data['flag'] == undefined) {
-                                        layer.msg('支付宝退款失败,清空支付列表失败', optLayerError);
-                                    } else {
-                                        layer.msg(resp.data['msg'], optLayerError);
-                                    }
-                                });
-                                break;
-                            default :
-                                _self.deleteItem(j);
-                        }
-                    }
-                }
-            };
-            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
-        },
-
-        /**
-         * 删除时调用第三方支付退款接口
-         */
-        refund: function (gatherId, paymentBill) {
-            var _self = this;
-            var data = {};
-            if (gatherId == '12') {
-                data['orderid'] = paymentBill;
-                data['merid'] = '000201504171126553';
-                data['paymethod'] = 'wx';
-                data['refundamount'] = '0.01';
-            } else if (gatherId == '13') {
-                data['orderid'] = paymentBill;
-                data['merid'] = '000201504171126553';
-                data['paymethod'] = 'zfb';
-                data['refundamount'] = '0.01';
-                data['zfbtwo'] = 'zfbtwo';
-            }
-            resource.post('http://114.55.62.102:9090/api/pay/xfb/refund', data, function (resp) {
-                console.log(resp.data['flag']);
-                if (resp.data['flag'] == '00') {
-                    _self.deleteItem(_self.i);
-                    layer.msg('删除成功', optLayerSuccess);
-                } else if (resp.data['flag'] == undefined) {
-                    layer.msg('删除失败', optLayerError);
-                } else {
-                    layer.msg(resp.data['msg'], optLayerError);
-                }
-            });
-        },
-
 
         /**
          * 一卡通支付
@@ -879,6 +871,7 @@ define([
             this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '600px'});
             $(this.input).val('');
         },
+
         /**
          * 帮助按钮点击事件
          */
@@ -938,6 +931,16 @@ define([
             $(this.input).val('');
         },
 
+        /**
+         * 帮助
+         */
+        openHelp: function () {
+            var attrs = {
+                page: 'BILLING_PAGE',
+                pageid: pageId
+            };
+            this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
+        },
         /**
          * 快捷支付
          */
@@ -1061,6 +1064,41 @@ define([
         },
 
         /**
+         * 选择去零权限
+         */
+        selectQulingGranted: function () {
+
+            switch (window.auth_quling) {
+                //参数 0 ：不去零  1：分四舍五入到角  2：角四舍五入到元  3：去分  4：去角
+                case '1':
+                    this.smallChange = parseFloat(this.totalamount.toFixed(2) - this.totalamount.toFixed(1));
+                    this.totalamount = parseFloat(this.totalamount.toFixed(1));
+                    break;
+                case '2':
+                    this.smallChange = parseFloat(this.totalamount - Math.round(this.totalamount));
+                    this.totalamount = Math.round(this.totalamount);
+                    break;
+                case '3':
+                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount * 10) / 10 );
+                    this.totalamount = Math.floor(this.totalamount * 10) / 10;
+                    break;
+                case '4':
+                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount));
+                    this.totalamount = Math.floor(this.totalamount);
+                    break;
+            }
+            this.smallChangemodel.set({
+                gather_id:'04',
+                gather_name:'去零',
+                gather_no:'*',
+                fact_money:0,
+                havepay_money:0,
+                payment_bill:'',
+                change_money:0,
+                gather_money:this.smallChange
+            });
+        },
+        /**
          * 从接口获取小票号
          */
         getRetailNo: function () {
@@ -1079,27 +1117,6 @@ define([
 
         onBankBackoutSuccess: function () {
             this.deleteItem(this.i);
-        },
-
-        /**
-         * 保留两位小数的方法
-         */
-        toDecimal2: function () {
-            var f = parseFloat(x);
-            if (isNaN(f)) {
-                return false;
-            }
-            var f = Math.round(x * 100) / 100;
-            var s = f.toString();
-            var rs = s.indexOf('.');
-            if (rs < 0) {
-                rs = s.length;
-                s += '.';
-            }
-            while (s.length <= rs + 2) {
-                s += '0';
-            }
-            return s;
         },
 
 
@@ -1130,6 +1147,7 @@ define([
             }
             $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
+
 
     });
 

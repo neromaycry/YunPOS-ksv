@@ -93,7 +93,7 @@ define([
             switch (gatherId) {
                 case '12':
                 case '13':
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, gatherName, RTLayerGatherUIView, data, {area: '300px'});
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT,PAGE_ID.BILLING_RETURN, gatherName, RTLayerGatherUIView, data, {area: '300px'});
                     break;
                 case '16'://银行mis
                     this.closeLayer(layerindex);
@@ -104,7 +104,7 @@ define([
                         gather_kind: _self.attrs.gather_kind,
                         bill_no: _self.attrs.bill_no,
                     };
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, '银行MIS支付退款', RTLayerGatherUIView, attrs, {area: '300px'});
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '银行MIS退款', RTLayerGatherUIView, attrs, {area: '300px'});
                     break;
                 default ://输入账号类
                     this.closeLayer(layerindex);
@@ -114,7 +114,7 @@ define([
                         gather_money: this.attrs.gather_money,
                         gather_kind: this.attrs.gather_kind,
                     };
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, gatherName, RTLayerGatherUIView, attrs, {area: '300px'});
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, gatherName, RTLayerGatherUIView, attrs, {area: '300px'});
 
             }
         },

@@ -92,7 +92,7 @@ define([
             var attrs = {};
             if (this.gatherId == '16') {
                 this.closeLayer(layerindex);
-                this.openLayer(PAGE_ID.LAYER_RT_BANKCARD, pageId, '银行MIS', LayerBankCardView, this.attrs, {area: '300px'});
+                this.openLayer(PAGE_ID.LAYER_RT_BANKCARD, PAGE_ID.BILLING_RETURN, '银行MIS', LayerBankCardView, this.attrs, {area: '300px'});
                 return;
             }
             var gatherNo = $(this.input).val();
