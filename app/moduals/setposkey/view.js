@@ -4,9 +4,9 @@
 define([
     '../../../../js/common/BaseView',
     '../../../../moduals/setposkey/model',
-    '../../../../moduals/modal-gateway/view',
+    '../../../../moduals/layer-gateway/view',
     'text!../../../../moduals/setposkey/tpl.html'
-], function (BaseView, SetPoskeyModel, GatewayView, tpl) {
+], function (BaseView, SetPoskeyModel, LayoutGatewayView, tpl) {
 
     var setPoskeyView = BaseView.extend({
 
@@ -100,8 +100,7 @@ define([
                 }, function (jqXHR, textStatus, errorThrown) {
                     console.log(textStatus);
                     console.log(errorThrown);
-                    var gatewayView = new GatewayView();
-                    _self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
+                    _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, null, {area: '400px'});
                 });
             }
         }

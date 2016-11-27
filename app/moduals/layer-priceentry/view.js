@@ -49,15 +49,18 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_PRICE_ENTRY, KEYS.Enter, function () {
-                _self.confirm();
-            });
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_PRICE_ENTRY, KEYS.Esc, function () {
+            setTimeout(function () {
+                _self.bindLayerKeyEvents(PAGE_ID.LAYER_PRICE_ENTRY, KEYS.Enter, function () {
+                    console.log('price entry ok entered');
+                    _self.onOKClicked();
+                });
+            }, 500);
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_PRICE_ENTRY, KEYS.Esc, function () {
                 _self.onCancelClicked();
             });
         },
 
-        confirm: function () {
+        onOKClicked: function () {
             var price = $(this.input).val();
             if (price == '' || parseFloat(price) == 0 || (price.split('.').length - 1) > 1 || price == '.') {
                 layer.msg('无效的单价', optLayerWarning);
@@ -94,10 +97,6 @@ define([
 
         onClearClicked: function () {
             $(this.input).val('');
-        },
-
-        onOKClicked: function () {
-            this.confirm();
         },
 
     });
