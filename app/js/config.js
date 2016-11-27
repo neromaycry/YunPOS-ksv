@@ -229,7 +229,11 @@ requirejs([
     var SOCKET_ADDR = 'ws://localhost:7110/';
     //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';
 
-    window.wsClient = new Recwebsocket(SOCKET_ADDR);
+    try {
+        window.wsClient = new Recwebsocket(SOCKET_ADDR);
+    } catch (e) {
+        console.error(e);
+    }
     window.wsClient.onopen = function (e) {
         //window.toastr.success('已与硬件建立连接');
         window.layer.msg('已与硬件建立连接', optLayerSuccess);

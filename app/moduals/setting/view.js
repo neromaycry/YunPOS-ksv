@@ -45,7 +45,7 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.SETTING, window.KEYS.Enter, function () {
-
+                //TODO: 确定按键
             });
 
             this.bindKeyEvents(window.PAGE_ID.SETTING, window.KEYS.T, function () {
