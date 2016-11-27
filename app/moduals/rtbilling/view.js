@@ -79,9 +79,9 @@ define([
             if (isfromForce) {
                 //强制退货
                 this.totalamount = storage.get(system_config.FORCE_RETURN_KEY, 'panel', 'totalamount');
-                this.selectQulingGranted();
                 this.discoutamount = storage.get(system_config.FORCE_RETURN_KEY, 'panel', 'discountamount');
                 this.totalamount = this.totalamount - this.discoutamount;
+                this.selectQulingGranted();
                 this.unpaidamount = this.totalamount;
                 this.model.set({
                     totalamount: this.totalamount,
@@ -89,7 +89,8 @@ define([
                 });
             } else {
                 this.totalamount = storage.get(system_config.RETURN_KEY, 'panel', 'totalamount');
-                this.selectQulingGranted();
+                this.discountamount = storage.get(system_config.RETURN_KEY, 'panel', 'discountamount');
+                this.totalamount -= this.discountamount;
                 this.unpaidamount = this.totalamount;
                 this.receivedsum = 0;
                 this.model.set({
@@ -408,17 +409,19 @@ define([
                 data['bill_no'] = this.billNumber;
                 data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
-                data['gather_detail'].push(_self.smallChangemodel.toJSON());
+                if(_self.smallChange != 0 ){
+                    data['gather_detail'].push(_self.smallChangemodel.toJSON())
+                };
                 for (var i = 0; i < data['gather_detail'].length; i++) {
                     item = data['gather_detail'][i];
-                    item.gather_money = -parseFloat(item.gather_money.toFixed(2));
-                    item.havepay_money = -parseFloat(item.havepay_money.toFixed(2));
+                    item.gather_money = -parseFloat(item.gather_money);
+                    item.havepay_money = -parseFloat(item.havepay_money);
                 }
                 for (var i = 0; i < data['goods_detail'].length; i++) {
                     item = data['goods_detail'][i];
-                    item.money = -parseFloat(item.money.toFixed(2));
+                    item.money = -parseFloat(item.money);
                     item.num = -parseFloat(item.num);
-                    item.discount = -parseFloat(item.discount.toFixed(2));
+                    item.discount = -parseFloat(item.discount);
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);
@@ -451,17 +454,20 @@ define([
                 data['retreate_no'] = storage.get(system_config.RETURN_KEY, 'bill_no');
                 data['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
-                data['gather_detail'].push(_self.smallChangemodel.toJSON());
+                if(_self.smallChange != 0) {//只有在去零不为零的情况下，才添加进支付列表里面
+                    data['gather_detail'].push(_self.smallChangemodel.toJSON());
+                }
+                console.log(data['gather_detail']);
                 for (var i = 0; i < data['gather_detail'].length; i++) {
                     item = data['gather_detail'][i];
-                    item.gather_money = -parseFloat(item.gather_money.toFixed(2));
-                    item.havepay_money = -parseFloat(item.havepay_money.toFixed(2));
+                    item.gather_money = -parseFloat(item.gather_money);
+                    item.havepay_money = -parseFloat(item.havepay_money);
                 }
                 for (var i = 0; i < data['goods_detail'].length; i++) {
                     item = data['goods_detail'][i];
-                    item.money = -parseFloat(item.money.toFixed(2));
+                    item.money = -parseFloat(item.money);
                     item.num = -parseFloat(item.num);
-                    item.discount = -parseFloat(item.discount.toFixed(2));
+                    item.discount = -parseFloat(item.discount);
                 }
                 confirmBill.trade_confirm(data, function (resp) {
                     console.log(resp);
