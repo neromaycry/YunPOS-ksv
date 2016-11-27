@@ -103,7 +103,6 @@ define([
                     content: '付款金额与退款金额不符，请联系管理员'
                 };
                 this.openLayer(PAGE_ID.LAYER_TIP, PAGE_ID.BILLING_RETURN, '提示', LayerTipView, attrs, {area: '500px'});
-                layer.msg('付款金额与退款金额不符，请联系管理员', optLayerWarning);
             }
         },
 
