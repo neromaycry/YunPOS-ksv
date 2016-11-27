@@ -81,7 +81,6 @@ define([
                 gather_name: this.attrs.gather_name,
                 gather_kind: this.attrs.gather_kind,
                 gather_no: resp.card_no,
-                payment_bill: '',
                 hasExtra: true,
                 extras: {
                     extra_id: 0,
@@ -95,8 +94,22 @@ define([
 
         onBankRefundSuccess: function (resp) {
             if (resp.transaction_amount == this.attrs.gather_money) {
+                var data = {
+                    gather_id: this.attrs.gather_id,
+                    gather_money: this.attrs.gather_money,
+                    gather_name: this.attrs.gather_name,
+                    gather_kind: this.attrs.gather_kind,
+                    gather_no: resp.card_no,
+                    hasExtra: true,
+                    extras: {
+                        extra_id: 0,
+                        reference_number: resp.reference_number
+                    }
+                };
                 // TODO 将相应支付方式添加至支付列表
-
+                Backbone.trigger('onReceivedsum', data);
+                this.closeLayer(layerindex);
+                $('input[name = billingrt]').focus();
             } else {
                 this.closeLayer(layerindex);
                 var attrs = {
@@ -107,6 +120,11 @@ define([
         },
 
         onCancelClicked: function () {
+            if(this.attrs.pageid == '6') {
+                $('input[name = billing]').focus();
+            } else {
+                $('input[name = billingrt]').focus();
+            }
             this.closeLayer(layerindex);
         }
 

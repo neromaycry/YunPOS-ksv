@@ -519,6 +519,7 @@ define([
                     gather_id: gatherId,
                     gather_name: item.gather_name,
                     gather_kind: item.gather_kind,
+                    bill_no:_self.billNumber
                 };
                 var data = {};
                 var xfbdata = {};
@@ -569,6 +570,7 @@ define([
             var attrs = {
                 gather_kind: gatherkind,//支付类别
                 gather_money: receivedsum,//支付金额
+                bill_no: this.billNumber//订单号（ps:银行pos和第三方支付需要订单号）
             };
             this.openLayer(PAGE_ID.LAYER_RT_BILLTYPE, PAGE_ID.BILLING_RETURN, title, RTLayerTypeView, attrs, {area: '300px'});
             $(this.input).val('');

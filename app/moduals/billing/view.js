@@ -6,7 +6,6 @@ define([
     '../../../../moduals/billing/model',
     '../../../../moduals/billing/collection',
     '../../../../moduals/layer-billtype/view',
-    '../../../../moduals/modal-billingdiscount/view',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-ecardlogin/view',
@@ -18,7 +17,7 @@ define([
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerGatherUIView, LayerBInstructionView, LayerReferenceNumView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection, LayerBillTypeView, LayerHelpView, LayerConfirm, layerECardView, LayerGatherUIView, LayerBInstructionView, LayerReferenceNumView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -336,6 +335,10 @@ define([
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
                 _self.onThirdPayClicked();
+            });
+            //第三方支付
+            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.E, function () {
+                _self.onQuickPayClicked();
             });
             //一卡通支付快捷键
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
@@ -971,6 +974,7 @@ define([
                     gather_id: gatherId,
                     gather_name: item.gather_name,
                     gather_kind: item.gather_kind,
+                    bill_no: this.billNumber
                 };
                 switch (gatherId) {
                     case '12':
