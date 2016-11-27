@@ -221,6 +221,7 @@ window.PAGE_ID = {
     'LAYER_AUTHCOMMAND': 53,
     'LAYER_AUTHCARD': 54,
     'SETTING': 55,
+    'LAYER_TIP': 56,
 };
 
 window.KEYS = {

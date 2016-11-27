@@ -3,10 +3,11 @@
  */
 define([
     '../../js/common/BaseLayerView',
+    '../../moduals/layer-tip/view',
     '../../moduals/layer-bankcard/model',
     'text!../../moduals/layer-bankcard/contenttpl.html',
     'text!../../moduals/layer-bankcard/tpl.html'
-], function (BaseLayerView, LayerBankCardModel, contenttpl, tpl) {
+], function (BaseLayerView, LayerTipView, LayerBankCardModel, contenttpl, tpl) {
 
     var layerbankcardView = BaseLayerView.extend({
 
@@ -26,25 +27,39 @@ define([
             console.log(this.attrs);
             this.model = new LayerBankCardModel();
             this.handleEvents();
-            var data = {
-                transaction_amount: '0.01',
-                //transaction_amount: this.attrs.gather_money,
-                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
-                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
-                bill_no: this.attrs.bill_no
-            };
-            //var data = {};
-            //data['transaction_amount'] = '0.01';
-            //data['cashier_no'] = '2222';
-            //data['pos_no'] = '002';
-            //data['bill_no'] = this.attrs.bill_no;
-            console.log(JSON.stringify(data));
-            this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)], wsClient);
+            var swipe_type = this.attrs.swipe_type;
+            console.log(swipe_type);
+            switch (swipe_type) {
+                case 'sale':
+                    var data = {
+                        transaction_amount: '0.01',
+                        //transaction_amount: this.attrs.gather_money,
+                        cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                        pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                        bill_no: this.attrs.bill_no
+                    };
+                    console.log(JSON.stringify(data));
+                    this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)], wsClient);
+                    break;
+                case 'refund':
+                    var data = {
+                        transaction_amount: '0.01',
+                        //transaction_amount: this.attrs.gather_money,
+                        cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                        pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                        bill_no: this.attrs.bill_no,
+                        reference_number: this.attrs.reference_number
+                    };
+                    this.sendWebSocketDirective([DIRECTIVES.Bank_refund], [JSON.stringify(data)], wsClient);
+                    break;
+            }
         },
 
         handleEvents: function () {
             Backbone.off('onBankSaleSuccess');
+            Backbone.off('onBankRefundSuccess');
             Backbone.on('onBankSaleSuccess', this.onBankSaleSuccess, this);
+            Backbone.on('onBankRefundSuccess', this.onBankRefundSuccess, this);
         },
 
 
@@ -76,6 +91,20 @@ define([
             Backbone.trigger('onReceivedsum', data);
             this.closeLayer(layerindex);
             $('input[name = billing]').focus();
+        },
+
+        onBankRefundSuccess: function (resp) {
+            if (resp.transaction_amount == this.attrs.gather_money) {
+                    // TODO 将相应支付方式添加至支付列表
+
+            } else {
+                this.closeLayer(layerindex);
+                var attrs = {
+                    content: '付款金额与退款金额不符，请联系管理员'
+                };
+                this.openLayer(PAGE_ID.LAYER_TIP, PAGE_ID.BILLING_RETURN, '提示', LayerTipView, attrs, {area: '500px'});
+                layer.msg('付款金额与退款金额不符，请联系管理员', optLayerWarning);
+            }
         },
 
         onCancelClicked: function () {

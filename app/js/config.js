@@ -274,7 +274,7 @@ requirejs([
             case DIRECTIVES.Bank_balance:
                 if (data.code == '00') {
                     window.loading.hide();
-                    window.layer.close(layerindex);
+                    Backbone.trigger('onBankRefundSuccess', data);
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
                 }

@@ -4,7 +4,7 @@
 define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-rtgatherui/model',
-    '../../moduals/layer-rtbankcard/view',
+    '../../moduals/layer-bankcard/view',
     'text!../../moduals/layer-rtgatherui/contenttpl.html',
     'text!../../moduals/layer-rtgatherui/commontpl.html',
     'text!../../moduals/layer-rtgatherui/alipaytpl.html',
@@ -92,8 +92,15 @@ define([
         onOKClicked: function () {
             var attrs = {};
             if (this.gatherId == '16') {
+                var reference_no = $(this.input).val();
+                if (reference_no == '') {
+                    layer.msg('请输入系统参考号', optLayerWarning);
+                    return;
+                }
+                this.attrs.swipe_type = 'refund';
+                this.attrs.reference_number = reference_no;
                 this.closeLayer(layerindex);
-                this.openLayer(PAGE_ID.LAYER_RT_BANKCARD, PAGE_ID.BILLING_RETURN, '银行MIS退款', LayerBankCardView, this.attrs, {area: '300px'});
+                this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING_RETURN, '银行MIS退款', LayerBankCardView, this.attrs, {area: '300px'});
                 return;
             }
             var gatherNo = $(this.input).val();

@@ -122,6 +122,7 @@ define([
             var attrs = {};
             if (this.gatherId == '16') {
                 this.closeLayer(layerindex);
+                this.attrs.swipe_type = 'sale';
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行MIS', LayerBankCardView, this.attrs, {area: '300px'});
                 return;
             }
