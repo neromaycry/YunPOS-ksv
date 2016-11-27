@@ -34,16 +34,16 @@ define([
             $(this.input).focus();
         },
 
-        onNumpadClicked: function () {
-            var isDisplay = $('.numpad').css('display') == 'none';
-            if (isDisplay) {
-                $('.numpad').css('display', 'block');
-                $('.btn-numpad').text('关闭小键盘');
-            } else {
-                $('.numpad').css('display', 'none');
-                $('.btn-numpad').text('打开小键盘');
-            }
-        },
+        //onNumpadClicked: function () {
+        //    var isDisplay = $('.numpad').css('display') == 'none';
+        //    if (isDisplay) {
+        //        $('.numpad').css('display', 'block');
+        //        $('.btn-numpad').text('关闭小键盘');
+        //    } else {
+        //        $('.numpad').css('display', 'none');
+        //        $('.btn-numpad').text('打开小键盘');
+        //    }
+        //},
 
         onNumClicked: function (e) {
             var value = $(e.currentTarget).data('num');
@@ -64,7 +64,7 @@ define([
 
         bindKeys: function () {
             var _self = this;
-            this.bindKeyEvents(window.PAGE_ID.LOCKSCREEN, window.KEYS.Enter, function () {
+            this.bindKeyEvents(PAGE_ID.LOCKSCREEN, KEYS.Enter, function () {
                 _self.onUnlockClicked();
             });
         },

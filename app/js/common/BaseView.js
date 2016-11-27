@@ -276,7 +276,7 @@ define([
                 }
             } else {
                 //toastr.warning('没有连接到硬件，请检查硬件连接');
-                layer.msg('没有连接到硬件，请检查硬件连接', optLayerError);
+                layer.msg('请检查硬件连接或检查电脑是否已启动socket程序', optLayerError);
             }
         },
 

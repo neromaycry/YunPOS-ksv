@@ -40,7 +40,8 @@ define([
             'click .doinit':'onInitClicked',
             //'click .login-reconnecthw':'onReconnectHardwareClicked',
             'click .power-off': 'onPowerOffClicked',
-            'click .lock': 'lockScreen',
+            //'click .lock': 'lockScreen',
+            'click .setting': 'onSettingClicked',
             //'click .bankcheckin': 'checkIn'
         },
 
@@ -328,9 +329,9 @@ define([
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Esc, function () {
                 _self.onPowerOffClicked();
             });
-            this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.F4, function () {
-                _self.lockScreen();
-            });
+            //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.F4, function () {
+            //    _self.lockScreen();
+            //});
         },
 
         setKeys: function () {
