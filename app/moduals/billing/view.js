@@ -18,7 +18,7 @@ define([
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerGatherUIView, LayerBInstructionView,LayerReferenceNumView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection, LayerBillTypeView, BilldiscountView, LayerHelpView, LayerConfirm, layerECardView, LayerGatherUIView, LayerBInstructionView, LayerReferenceNumView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -52,7 +52,7 @@ define([
 
         length: 0,//判断第三方支付退款是否成功
 
-        smallChange:0,//如果存在去零，则存储去零之后的钱数
+        smallChange: 0,//如果存在去零，则存储去零之后的钱数
 
         template_billinfo: billinfotpl,
 
@@ -229,8 +229,8 @@ define([
                 gather_kind: gatherKind,
                 havepay_money: havepay_money,
                 change_money: change_money,
-                payment_bill:'',
-                reference_number:''
+                payment_bill: '',
+                reference_number: ''
             });
             switch (extraArgs.extra_id) {
                 case 0:
@@ -505,7 +505,7 @@ define([
             var item = this.collection.at(index);
             var refundamount = item.get('gather_money');
             var attrs = {
-                pageid:pageId,
+                pageid: pageId,
                 transaction_amount: 0.1,
                 //transaction_amount:refundamount,
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
@@ -516,7 +516,7 @@ define([
                 //    _self.deleteItem(index);
                 //}
             };
-            this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, pageId, '输入系统参考号', LayerReferenceNumView, attrs, {area:'300px'});
+            this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, pageId, '输入系统参考号', LayerReferenceNumView, attrs, {area: '300px'});
         },
 
 
@@ -1079,7 +1079,7 @@ define([
                     this.totalamount = Math.round(this.totalamount);
                     break;
                 case '3':
-                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount * 10) / 10 );
+                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount * 10) / 10);
                     this.totalamount = Math.floor(this.totalamount * 10) / 10;
                     break;
                 case '4':
@@ -1088,14 +1088,14 @@ define([
                     break;
             }
             this.smallChangemodel.set({
-                gather_id:'04',
-                gather_name:'去零',
-                gather_no:'*',
-                fact_money:0,
-                havepay_money:0,
-                payment_bill:'',
-                change_money:0,
-                gather_money:this.smallChange
+                gather_id: '04',
+                gather_name: '去零',
+                gather_no: '*',
+                fact_money: 0,
+                havepay_money: 0,
+                payment_bill: '',
+                change_money: 0,
+                gather_money: this.smallChange
             });
         },
         /**

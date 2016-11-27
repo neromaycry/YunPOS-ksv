@@ -5,10 +5,10 @@
             <div class="col-xs-6 col-md-6 text-left text-red no-padding" style="font-size: 18px">￥<%= toDecimal2(gather_money) %></div>
         </div>
         <div class="row no-margining">
-            <div class="col-xs-6 col-md-6">
+            <div class="col-xs-12 col-md-12">
                 <div class="form-group">
                     <label class="sr-only" for="alipay-account">wechat</label>
-                    <input type="text" class="form-control" id="alipay-account" name="alipay-account" placeholder="请输入支付宝账号" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"/>
+                    <input type="text" class="form-control" id="alipay-account" name="alipay-account" placeholder="请输入或扫描支付宝账号" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"/>
                 </div>
                 <div class="panel panel-primary">
                     <div class="for-numpad">
@@ -16,9 +16,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-6 col-md-6">
-                <img class="qrcode-img" alt="第三方支付二维码"/>
-            </div>
+            <!--<div class="col-xs-6 col-md-6">-->
+                <!--<img class="qrcode-img" alt="第三方支付二维码"/>-->
+            <!--</div>-->
         </div>
     </div>
 </div>

@@ -48,6 +48,7 @@ define([
         pageInit: function () {
             var _self = this;
             pageId = window.PAGE_ID.LOGIN;
+            storage.remove(system_config.GATHER_KEY);
             //if (!storage.isSet(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY)) {
             //    storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.GATEWAY_KEY,'http://111.198.72.128:3000/v1');
             //}

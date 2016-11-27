@@ -7,13 +7,12 @@ define([
     '../../../../moduals/return-force/collection',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
-    '../../../../moduals/modal-login/view',
     '../../../../moduals/layer-priceentry/view',
     'text!../../../../moduals/return-force/posinfotpl.html',
     'text!../../../../moduals/return-force/cartlisttpl.html',
     'text!../../../../moduals/return-force/numpadtpl.html',
     'text!../../../../moduals/return-force/tpl.html',
-], function (BaseView, ReturnForceModel, ReturnForceCollection, LayerHelpView, LayerConfirmView, SecondLoginView, LayerPriceEntryView, posinfotpl, cartlisttpl, numpadtpl, tpl) {
+], function (BaseView, ReturnForceModel, ReturnForceCollection, LayerHelpView, LayerConfirmView, LayerPriceEntryView, posinfotpl, cartlisttpl, numpadtpl, tpl) {
 
     var returnForceView = BaseView.extend({
 
