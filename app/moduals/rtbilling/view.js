@@ -429,6 +429,7 @@ define([
                             storage.remove(system_config.VIP_KEY);
                         }
                         router.navigate("main", {trigger: true, replace: true});
+                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                         layer.msg("订单号：" + resp.bill_no, optLayerSuccess);
                     } else {
                         layer.msg(resp.msg, optLayerError);
@@ -471,6 +472,7 @@ define([
                             storage.remove(system_config.VIP_KEY);
                         }
                         router.navigate("main", {trigger: true, replace: true});
+                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                         layer.msg("订单号：" + resp.bill_no, optLayerSuccess);
                     } else {
                         layer.msg(resp.msg, optLayerError);
