@@ -599,7 +599,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            var rate = (1 - parseFloat(discount) / (this.totalamount + this.totaldiscount)).toFixed(2);
+            var rate = 1 - parseFloat(discount) / (this.totalamount + this.totaldiscount);
             this.selectDiscountGranted('01', rate);
         },
 
@@ -628,7 +628,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            var rate = parseFloat((percentage / 100).toFixed(2));
+            var rate = parseFloat(percentage / 100);
             this.selectDiscountGranted('02', rate);
         },
 
@@ -739,7 +739,6 @@ define([
             }
             //最后一项的折扣为
             finaldiscount = parseFloat(this.totaldiscount) - finaldiscount;
-            console.log('最后一单的折扣为：' + finaldiscount);
             var tmp = new BillModel();
             tmp.set(this.localObj[this.localObj.length - 1]);
             num = tmp.get('num');
@@ -802,22 +801,24 @@ define([
             data['bill_no'] = _self.billNumber;
             data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
             data['gather_detail'] = _self.collection.toJSON();
-            data['gather_detail'].push(this.smallChangemodel.toJSON()); //如果存在去零，则添加一种支付方式为去零
+            if(this.smallChange != 0) {
+                data['gather_detail'].push(this.smallChangemodel.toJSON()); //如果存在去零，则添加一种支付方式为去零
+            }
             //限制传到接口的小计，折扣，数量，价格数据类型必须为number，且位数为小数点后两位。
             for (var i = 0; i < data['goods_detail'].length; i++) {
                 item = data['goods_detail'][i];
-                item.money = parseFloat(item.money.toFixed(2));
-                item.discount = parseFloat(item.discount.toFixed(2));
+                item.money = parseFloat(item.money);
+                item.discount = parseFloat(item.discount);
                 item.price = parseFloat(item.price);
                 item.num = parseFloat(item.num);
             }
             //限制传到接口的实收金额，付款金额，找零金额，盈余金额数据类型必须为number，且位数为小数点后两位。
             for (var i = 0; i < data['gather_detail'].length; i++) {
                 item = data['gather_detail'][i];
-                item.havepay_money = parseFloat(item.havepay_money.toFixed(2));
-                item.gather_money = parseFloat(item.gather_money.toFixed(2));
-                item.change_money = parseFloat(item.change_money.toFixed(2));
-                item.fact_money = parseFloat(item.fact_money.toFixed(2));
+                item.havepay_money = parseFloat(item.havepay_money);
+                item.gather_money = parseFloat(item.gather_money);
+                item.change_money = parseFloat(item.change_money);
+                item.fact_money = parseFloat(item.fact_money);
             }
             confirmBill.trade_confirm(data, function (resp) {
                 if (resp.status == '00') {
