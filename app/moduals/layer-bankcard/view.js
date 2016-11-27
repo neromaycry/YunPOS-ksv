@@ -95,7 +95,7 @@ define([
 
         onBankRefundSuccess: function (resp) {
             if (resp.transaction_amount == this.attrs.gather_money) {
-                    // TODO 将相应支付方式添加至支付列表
+                // TODO 将相应支付方式添加至支付列表
 
             } else {
                 this.closeLayer(layerindex);

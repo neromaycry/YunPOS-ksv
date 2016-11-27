@@ -12,7 +12,7 @@ define([
     'text!../../moduals/layer-rtgatherui/numpadtpl.html',
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel,LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -111,18 +111,18 @@ define([
             }
             switch (this.gatherId) {
                 case '05':
-                    if(luhmCheck(gatherNo)) {
+                    if (luhmCheck(gatherNo)) {
                         attrs = {
-                            gather_id:this.attrs.gather_id,
-                            gather_name:this.attrs.gather_name,
-                            gather_money:this.attrs.gather_money,
-                            gather_kind:this.attrs.gather_kind,
-                            gather_no:gatherNo
+                            gather_id: this.attrs.gather_id,
+                            gather_name: this.attrs.gather_name,
+                            gather_money: this.attrs.gather_money,
+                            gather_kind: this.attrs.gather_kind,
+                            gather_no: gatherNo
                         };
-                        Backbone.trigger('onReceivedsum',attrs);
+                        Backbone.trigger('onReceivedsum', attrs);
                         this.closeLayer(layerindex);
                         $('input[name = billingrt]').focus();
-                    }else {
+                    } else {
                         $(this.input).val('');
                     }
                     break;
