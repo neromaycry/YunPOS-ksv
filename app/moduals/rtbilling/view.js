@@ -7,7 +7,7 @@ define([
     '../../../../moduals/rtbilling/collection',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-confirm/view',
-    '../../../../moduals/layer-rtbankcard/view',
+    '../../../../moduals/layer-bankcard/view',
     '../../../../moduals/layer-rtgatherui/view',
     '../../../../moduals/layer-rtbilltype/view',
     '../../../../moduals/layer-ecardlogin/view',
@@ -154,7 +154,7 @@ define([
         },
 
         onReceivedsum: function (data) {
-            var gatherMoney = data['gather_money'];
+            var gatherMoney = parseFloat(data['gather_money']);
             var gatherNo = data['gather_no'];//付款账号
             var gatherName = data['gather_name'];
             var gatherId = data['gather_id'];
@@ -372,17 +372,28 @@ define([
          * 清空已支付列表
          */
         cleanPaylist: function () {
-            this.receivedsum = 0;
-            this.oddchange = 0;
-            this.collection.reset();
-            this.model.set({
-                receivedsum: this.receivedsum,
-                oddchange: this.oddchange,
-                unpaidamount: this.totalamount
-            });
-            storage.remove(system_config.ONE_CARD_KEY);
-            this.renderBillDetail();
-            this.renderBillInfo();
+            for(var i = 0; i < this.collection.length;i++) {
+                var item = this.collection.at(i);
+                var gatherId = item.get('gather_id');
+                if(gatherId == '12' || gatherId == '13' || gatherId == '16') {
+                    layer.msg('不能清空支付列表', optLayerWarning);
+                    return;
+                }
+            }
+            for (var j = this.collection.length - 1; j >= 0; j--) {
+                this.deleteItem(j);
+            }
+            //this.receivedsum = 0;
+            //this.oddchange = 0;
+            //this.collection.reset();
+            //this.model.set({
+            //    receivedsum: this.receivedsum,
+            //    oddchange: this.oddchange,
+            //    unpaidamount: this.totalamount
+            //});
+            //storage.remove(system_config.ONE_CARD_KEY);
+            //this.renderBillDetail();
+            //this.renderBillInfo();
             layer.msg('清空退款方式列表成功', optLayerSuccess);
         },
         /**
@@ -454,10 +465,6 @@ define([
                 data['retreate_no'] = storage.get(system_config.RETURN_KEY, 'bill_no');
                 data['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
-                if(_self.smallChange != 0) {//只有在去零不为零的情况下，才添加进支付列表里面
-                    data['gather_detail'].push(_self.smallChangemodel.toJSON());
-                }
-                console.log(data['gather_detail']);
                 for (var i = 0; i < data['gather_detail'].length; i++) {
                     item = data['gather_detail'][i];
                     item.gather_money = -parseFloat(item.gather_money);
@@ -652,14 +659,21 @@ define([
                 pageid: pageId,
                 content: '确定删除此条支付记录？',
                 callback: function () {
-                    _self.deleteItem();
+                    var item = _self.collection.at(_self.i);
+                    var gatherId = item.get('gather_id');
+                    if(gatherId == '12' || gatherId == '13' || gatherId == '16') {
+                        layer.msg('无法删除此条支付记录');
+                    } else {
+                        _self.deleteItem(_self.i);
+                        layer.msg('删除成功', optLayerSuccess);
+                    }
                 }
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
         },
 
-        deleteItem: function () {
-            var item = this.collection.at(this.i);
+        deleteItem: function (index) {
+            var item = this.collection.at(index);
             this.collection.remove(item);
             var totalreceived = 0;
             var trlist = this.collection.pluck('gather_money');
@@ -681,7 +695,6 @@ define([
             this.i = 0;
             this.renderBillInfo();
             this.renderBillDetail();
-            layer.msg('删除成功', optLayerSuccess);
         },
 
         /**
