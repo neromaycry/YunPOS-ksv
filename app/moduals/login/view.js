@@ -5,13 +5,11 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/login/model',
     '../../../../moduals/login/collection',
-    '../../../../moduals/modal-confirm/view',
-    '../../../../moduals/modal-gateway/view',
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-gateway/view',
     'text!../../../../moduals/login/clientlogintpl.html',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, ConfirmView, GatewayView, LayerConfirmView, LayerGatewayView, clientlogintpl, tpl) {
+], function (BaseView, LoginModel, LoginCollection, LayerConfirmView, LayerGatewayView, clientlogintpl, tpl) {
 
     var loginView = BaseView.extend({
 

@@ -93,7 +93,7 @@ define([
             switch (gatherId) {
                 case '12':
                 case '13':
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT,PAGE_ID.BILLING_RETURN, gatherName, RTLayerGatherUIView, data, {area: '300px'});
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, gatherName, RTLayerGatherUIView, data, {area: '300px'});
                     break;
                 case '16'://银行mis
                     this.closeLayer(layerindex);

@@ -15,7 +15,7 @@ define([
     'text!../../../../moduals/rtbilling/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/rtbilling/tpl.html'
-], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView, LayerConfirmView ,LayerBankCardView, GatherUIView, RTLayerTypeView, layerECardView, numpadtpl, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView, LayerConfirmView, LayerBankCardView, GatherUIView, RTLayerTypeView, layerECardView, numpadtpl, billinfotpl, billingdetailtpl, tpl) {
     var rtbillingView = BaseView.extend({
 
         id: "rtbillingView",
@@ -40,11 +40,11 @@ define([
 
         unpaidamount: 0,
 
-        smallChange:0,//如果存在去零，则存储去零之后的钱数
+        smallChange: 0,//如果存在去零，则存储去零之后的钱数
 
         card_id: '',//一卡通界面传过来的card_id
 
-        billNumber:'',//当前这笔交易的交易号
+        billNumber: '',//当前这笔交易的交易号
 
         i: 0,
 
@@ -206,7 +206,7 @@ define([
             });
             //第三方支付
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Q, function () {
-               _self.onThirdPayClicked();
+                _self.onThirdPayClicked();
             });
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.T, function () {
@@ -237,7 +237,7 @@ define([
          * @param gatherKind 付款方式类别
          * @param extraArgs 附加参数
          */
-        addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, extraArgs)  {
+        addToPaymentList: function (totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, extraArgs) {
             if (!extraArgs) {
                 extraArgs = {};
             }
@@ -372,10 +372,10 @@ define([
          * 清空已支付列表
          */
         cleanPaylist: function () {
-            for(var i = 0; i < this.collection.length;i++) {
+            for (var i = 0; i < this.collection.length; i++) {
                 var item = this.collection.at(i);
                 var gatherId = item.get('gather_id');
-                if(gatherId == '12' || gatherId == '13' || gatherId == '16') {
+                if (gatherId == '12' || gatherId == '13' || gatherId == '16') {
                     layer.msg('不能清空支付列表', optLayerWarning);
                     return;
                 }
@@ -420,9 +420,10 @@ define([
                 data['bill_no'] = this.billNumber;
                 data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
-                if(_self.smallChange != 0 ){
+                if (_self.smallChange != 0) {
                     data['gather_detail'].push(_self.smallChangemodel.toJSON())
-                };
+                }
+                ;
                 for (var i = 0; i < data['gather_detail'].length; i++) {
                     item = data['gather_detail'][i];
                     item.gather_money = -parseFloat(item.gather_money);
@@ -519,7 +520,7 @@ define([
                     gather_id: gatherId,
                     gather_name: item.gather_name,
                     gather_kind: item.gather_kind,
-                    bill_no:_self.billNumber
+                    bill_no: _self.billNumber
                 };
                 var data = {};
                 var xfbdata = {};
@@ -663,7 +664,7 @@ define([
                 callback: function () {
                     var item = _self.collection.at(_self.i);
                     var gatherId = item.get('gather_id');
-                    if(gatherId == '12' || gatherId == '13' || gatherId == '16') {
+                    if (gatherId == '12' || gatherId == '13' || gatherId == '16') {
                         layer.msg('无法删除此条支付记录');
                     } else {
                         _self.deleteItem(_self.i);
@@ -826,7 +827,7 @@ define([
                     this.totalamount = Math.round(this.totalamount);
                     break;
                 case '3':
-                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount * 10) / 10 );
+                    this.smallChange = parseFloat(this.totalamount - Math.floor(this.totalamount * 10) / 10);
                     this.totalamount = Math.floor(this.totalamount * 10) / 10;
                     break;
                 case '4':
@@ -835,14 +836,14 @@ define([
                     break;
             }
             this.smallChangemodel.set({
-                gather_id:'04',
-                gather_name:'去零',
-                gather_no:'*',
-                fact_money:0,
-                havepay_money:0,
-                payment_bill:'',
-                change_money:0,
-                gather_money:this.smallChange
+                gather_id: '04',
+                gather_name: '去零',
+                gather_no: '*',
+                fact_money: 0,
+                havepay_money: 0,
+                payment_bill: '',
+                change_money: 0,
+                gather_money: this.smallChange
             });
             console.log(this.totalamount);
         },
