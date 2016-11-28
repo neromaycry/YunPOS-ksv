@@ -19,13 +19,21 @@ return s;
     <div class="panel-body">
         <div class="row m-b">
             <div class="col-xs-6 col-md-6 text-right pos-textsize no-padding">支付金额：</div>
-            <div class="col-xs-6 col-md-6 text-left text-red no-padding" style="font-size: 18px">￥<%= toDecimal2(gather_money) %></div>
+            <div class="col-xs-6 col-md-6 text-left text-red no-padding" style="font-size: 18px">￥<%=
+                toDecimal2(gather_money) %>
+            </div>
         </div>
         <div class="row no-margining">
             <div class="col-xs-12 col-md-12 button-group">
                 <div class="row">
-                    <button type="button" class="col-xs-6 col-md-6 button button-block button-highlight button-rounded button-border no-padding pos-button-textsize cancel">取消</button>
-                    <button type="button" class="col-xs-6 col-md-6 button button-block button-caution button-rounded button-border no-padding pos-button-textsize ok">确定</button>
+                    <button type="button"
+                            class="col-xs-6 col-md-6 button button-block button-highlight button-rounded button-border no-padding pos-button-textsize cancel">
+                        取消
+                    </button>
+                    <button type="button"
+                            class="col-xs-6 col-md-6 button button-block button-caution button-rounded button-border no-padding pos-button-textsize ok">
+                        确定
+                    </button>
                 </div>
             </div>
         </div>
