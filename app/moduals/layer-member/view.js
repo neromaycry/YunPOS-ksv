@@ -207,6 +207,12 @@ define([
         swipeCard: function () {
             var _self = this;
             var value = $('input[name = magcard]').val();
+            if (!value) {
+                return;
+            }
+            if (value == 'p') {
+                return;
+            }
             var data = {};
             var tracks = ['track1', 'track2', 'track3'];
             var trackValues = this.parseMagTracks(value);
