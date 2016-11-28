@@ -97,8 +97,8 @@ define([
             this.totalamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'totalamount');
             this.discountamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'discountamount');
             this.itemamount = storage.get(system_config.SALE_PAGE_KEY, 'shopinfo', 'itemamount');
-            this.selectQulingGranted();
             this.totalamount -= this.discountamount;//优惠金额
+            this.selectQulingGranted();
             this.unpaidamount = this.totalamount;//未付金额
             this.model.set({
                 totalamount: this.totalamount,
@@ -978,7 +978,7 @@ define([
                 };
                 switch (gatherId) {
                     case '12':
-                    case'13':
+                    case '13':
                         var xfbdata = {
                             pos_id: '002',
                             bill_no: this.billNumber

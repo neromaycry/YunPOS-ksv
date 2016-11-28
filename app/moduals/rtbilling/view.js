@@ -91,6 +91,7 @@ define([
                 this.totalamount = storage.get(system_config.RETURN_KEY, 'panel', 'totalamount');
                 this.discountamount = storage.get(system_config.RETURN_KEY, 'panel', 'discountamount');
                 this.totalamount -= this.discountamount;
+                this.selectQulingGranted();
                 this.unpaidamount = this.totalamount;
                 this.receivedsum = 0;
                 this.model.set({
@@ -422,8 +423,7 @@ define([
                 data['gather_detail'] = _self.collection.toJSON();
                 if (_self.smallChange != 0) {
                     data['gather_detail'].push(_self.smallChangemodel.toJSON())
-                }
-                ;
+                };
                 for (var i = 0; i < data['gather_detail'].length; i++) {
                     item = data['gather_detail'][i];
                     item.gather_money = -parseFloat(item.gather_money);
@@ -466,6 +466,9 @@ define([
                 data['retreate_no'] = storage.get(system_config.RETURN_KEY, 'bill_no');
                 data['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
+                if (_self.smallChange != 0) {
+                    data['gather_detail'].push(_self.smallChangemodel.toJSON())
+                };
                 for (var i = 0; i < data['gather_detail'].length; i++) {
                     item = data['gather_detail'][i];
                     item.gather_money = -parseFloat(item.gather_money);
