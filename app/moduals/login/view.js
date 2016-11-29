@@ -59,7 +59,7 @@ define([
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
             storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
             this.template_clientlogin = _.template(this.template_clientlogin);
-            this.checkPosLimit();
+            //this.checkPosLimit();
         },
 
         initPlugins: function () {
@@ -84,25 +84,25 @@ define([
             }
         },
 
-        checkPosLimit: function () {
-            if (window.storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT)) {
-                var pos_limit = window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT).toString();
-                console.log(pos_limit);
-                window.auth_discount = pos_limit.charAt(0); //折扣控制
-                window.auth_report = pos_limit.charAt(1);  //报表控制
-                window.auth_store = pos_limit.charAt(2);  //百货控制
-                window.auth_receipt = pos_limit.charAt(3);  //打印小票
-                window.auth_return = pos_limit.charAt(4);  //退货控制
-                window.auth_delete = pos_limit.charAt(5);  //删除控制
-                window.auth_quling = pos_limit.charAt(6);  //去零控制
-                window.auth_cashdrawer = pos_limit.charAt(7);  //打开钱箱
-                window.auth_reprint = pos_limit.charAt(8);  //复制小票
-                window.auth_manualvip = pos_limit.charAt(9);  //手输vip控制
-                window.auth_ecardswipe = pos_limit.charAt(10);  //一卡通刷卡输入口令
-            } else {
-                window.layer.msg('未获取POS机权限，请初始化获取', optLayerWarning);
-            }
-        },
+        //checkPosLimit: function () {
+        //    if (window.storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT)) {
+        //        var pos_limit = window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT).toString();
+        //        console.log(pos_limit);
+        //        window.auth_discount = pos_limit.charAt(0); //折扣控制
+        //        window.auth_report = pos_limit.charAt(1);  //报表控制
+        //        window.auth_store = pos_limit.charAt(2);  //百货控制
+        //        window.auth_receipt = pos_limit.charAt(3);  //打印小票
+        //        window.auth_return = pos_limit.charAt(4);  //退货控制
+        //        window.auth_delete = pos_limit.charAt(5);  //删除控制
+        //        window.auth_quling = pos_limit.charAt(6);  //去零控制
+        //        window.auth_cashdrawer = pos_limit.charAt(7);  //打开钱箱
+        //        window.auth_reprint = pos_limit.charAt(8);  //复制小票
+        //        window.auth_manualvip = pos_limit.charAt(9);  //手输vip控制
+        //        window.auth_ecardswipe = pos_limit.charAt(10);  //一卡通刷卡输入口令
+        //    } else {
+        //        window.layer.msg('未获取POS机权限，请初始化获取', optLayerWarning);
+        //    }
+        //},
 
         iniSettngs: function () {
             var attrs = {
