@@ -447,7 +447,7 @@ define([
                         }
                         router.navigate("main", {trigger: true, replace: true});
                         _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
-                        layer.msg("订单号：" + resp.bill_no, optLayerSuccess);
+                        layer.msg('退货成功', optLayerSuccess);
                     } else {
                         layer.msg(resp.msg, optLayerError);
                     }
@@ -493,7 +493,7 @@ define([
                         }
                         router.navigate("main", {trigger: true, replace: true});
                         _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
-                        layer.msg("订单号：" + resp.bill_no, optLayerSuccess);
+                        layer.msg('退货成功', optLayerSuccess);
                     } else {
                         layer.msg(resp.msg, optLayerError);
                     }

@@ -39,13 +39,13 @@ define([
             this.model.set({
                 receivedsum: this.attrs.gather_money
             });
+            this.collection = new LayerBillTypeCollection();
             var gatherKind = this.attrs.gather_kind;
             if (storage.isSet(system_config.GATHER_KEY)) {
-                this.collection = new LayerBillTypeCollection();
                 var tlist = storage.get(system_config.GATHER_KEY);
-                this.visibleTypes = _.where(tlist, {visible_flag: '1'});
-                var gatherList = _.where(this.visibleTypes, {gather_kind: gatherKind});
-                for (var i in gatherList) {
+                //this.visibleTypes = _.where(tlist, {visible_flag: '1'});
+                var gatherList = _.where(tlist, {gather_kind: gatherKind, visible_flag: '1'});
+                for (var i = 0, len = gatherList.length; i < len; i++) {
                     var item = new LayerBillTypeModel();
                     item.set({
                         gather_id: gatherList[i].gather_id,

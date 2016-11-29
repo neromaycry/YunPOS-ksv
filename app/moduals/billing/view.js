@@ -154,6 +154,7 @@ define([
             Backbone.off('onReceivedsum');
             //Backbone.off('onBillDiscount');
             //Backbone.on('onBillDiscount', this.onBillDiscount,this);
+            Backbone.off('onBankBackoutSuccess');
             Backbone.on('onReceivedsum', this.onReceivedsum, this);
             Backbone.on('onBankBackoutSuccess', this.onBankBackoutSuccess, this);
         },
@@ -1119,8 +1120,9 @@ define([
          */
         getRetailNo: function () {
             var _self = this;
-            var data = {};
-            data['pos_id'] = '002';
+            var data = {
+                pos_id: storage.get(system_config.POS_INFO_KEY, 'posid')
+            };
             this.model.requestRetaliNo(data, function (resp) {
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
