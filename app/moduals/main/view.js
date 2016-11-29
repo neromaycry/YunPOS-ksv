@@ -32,6 +32,7 @@ define([
         totalamount: 0,
         itemamount: 0,
         discountamount: 0,
+        percentage:1,//整单优惠折扣
         salesman: '',
         memeber: '',
         ids: ['curSaleState', 'curItem'],
@@ -66,6 +67,8 @@ define([
             'click .member': 'onMemberClicked',
             'click .main-discount': 'onDiscountClicked',
             'click .main-discountpercent': 'onDiscountPercentClicked',
+            'click .totaldiscount':'onTotalDiscount',
+            'click .totaldiscount-percentage':'onTotalDiscountPercentage',
             'click .main-delete': 'onDeleteClicked',
             'click .main-modify-num': 'onModifyItemNum',
             'click .main-cancel': 'onCleanClicked',
@@ -599,6 +602,42 @@ define([
                 $(_self.input).val('');
             });
         },
+
+        /**
+         * 整单优惠
+         */
+        onTotalDiscount: function () {
+            var totaldiscount = $(this.input).val();
+            var totalamount = this.model.get('totalamount');
+            var rate = 1 - parseFloat(totaldiscount) / totalamount;
+            console.log(rate);
+            this.calculateTotalDiscount(rate);
+            //this.evalAuth(auth_discount, '03', {discount_rate: rate}, function () {
+            //    this.calculateTotalDiscount(rate);
+            //});
+        },
+
+        /**
+         * 計算整單優惠
+         */
+        calculateTotalDiscount: function (rate) {
+            var data = {};
+            data['skucode'] = '*';
+            if (storage.isSet(system_config.VIP_KEY)) {
+                data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
+                data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
+                data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
+            } else {
+                data['cust_id'] = '*';
+                data['medium_id'] = '*';
+                data['medium_type'] = '*';
+            }
+            data['goods_detail'] = JSON.stringify(this.collection);
+            data['subtotal_preferential'] = rate;//percentage默認值為1
+            this.requestModel.sku(data, function (resp) {
+               console.log(resp);
+            });
+        },
         /**
          * 修改单品数量
          */
@@ -678,6 +717,7 @@ define([
                     data['medium_type'] = '*';
                 }
                 data['goods_detail'] = JSON.stringify(this.collection);
+                data['subtotal_preferential'] = this.percentage;//percentage默認值為1
                 this.requestModel.sku(data, function (resp) {
                     if (!$.isEmptyObject(resp)) {
                         if (resp.status == '00') {
