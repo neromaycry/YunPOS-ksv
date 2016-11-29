@@ -362,7 +362,7 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.V, function () {
-                _self.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
+               _self.onBusinessClicked();
             });
 
         },
@@ -1079,10 +1079,6 @@ define([
             $(this.input).val('');
         },
 
-        onBusinessClicked: function () {
-            this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, undefined, {area: '600px'});
-        },
-
         /**
          * 选择去零权限
          */
@@ -1172,6 +1168,15 @@ define([
             $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
+        /**
+         * 银行业务
+         */
+        onBusinessClicked: function () {
+            var attrs = {
+                pageid: pageId
+            };
+            this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, attrs, {area: '600px'});
+        },
 
     });
 
