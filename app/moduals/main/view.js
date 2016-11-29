@@ -32,7 +32,7 @@ define([
         totalamount: 0,
         itemamount: 0,
         discountamount: 0,
-        percentage:1,//整单优惠折扣
+        isTotalDiscount:false,
         salesman: '',
         memeber: '',
         ids: ['curSaleState', 'curItem'],
@@ -53,7 +53,7 @@ define([
         restOrderDelivery: {},
         deleteKey: {},
         isDeleteKey: false,
-        isDiscountPercent: false,
+        //isDiscountPercent: false,
         //input:'input[name = main]',
         events: {
             'click .numpad-ok': 'onOKClicked',
@@ -399,16 +399,14 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Q, function () {
                 _self.onSettingClicked();
             });
-            //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.O,function () {
-            //    var secondLoginView = new SecondLoginView({
-            //        pageid: window.PAGE_ID.MAIN,
-            //        callback: function () {
-            //           console.log('hehe');
-            //        }
-            //    });
-            //    _self.showModal(window.PAGE_ID.SECONDLOGIN, secondLoginView);
-            //
-            //});
+            //整单优惠
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y, function () {
+                _self.onTotalDiscount();
+            });
+            //整单折扣
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
+                _self.onTotalDiscountPercentage();
+            });
         },
         /**
          * 账户登出
@@ -533,15 +531,20 @@ define([
          */
         modifyItemDiscount: function () {
             var _self = this;
+            var item = this.collection.at(this.i);
+            var price = item.get('price');
+            var discount = $(this.input).val();
+            var num = item.get('num');
+            if(item.get('disc_subtotal') != 0) {
+                layer.msg('整单优惠后不能再进行单品优惠', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            var item = this.collection.at(this.i);
-            var price = item.get('price');
-            var discount = $(this.input).val();
-            var num = item.get('num');
             if (discount == '.' || (discount.split('.').length - 1) > 1 || discount == '') {
                 layer.msg('无效的优惠金额', optLayerWarning);
                 $(this.input).val('');
@@ -572,6 +575,14 @@ define([
         onDiscountPercentClicked: function () {
             var _self = this;
             var value = $(this.input).val();
+            var item = _self.collection.at(_self.i);
+            var price = item.get('price');
+            var num = item.get('num');
+            if(item.get('disc_subtotal') != 0) {
+                layer.msg('整单优惠后不能再进行单品优惠', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
@@ -589,14 +600,12 @@ define([
                 var discountpercent = $(_self.input).val();
                 var rate = parseFloat(discountpercent) / 100;
                 console.log(rate);
-                var item = _self.collection.at(_self.i);
-                var price = item.get('price');
-                var num = item.get('num');
                 _self.collection.at(_self.i).set({
                     discount: price * num * (1 - rate),
                     money: price * num * rate,
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
+                layer.msg('单品折扣成功!折扣百分比为：' + (rate * 10).toFixed(2) + '折', optLayerSuccess);//显示当前折扣
                 _self.calculateModel();
                 $('#li' + _self.i).addClass('cus-selected');
                 $(_self.input).val('');
@@ -607,21 +616,58 @@ define([
          * 整单优惠
          */
         onTotalDiscount: function () {
+            var _self = this;
             var totaldiscount = $(this.input).val();
             var totalamount = this.model.get('totalamount');
+            if (this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if ((totaldiscount.split('.').length - 1) > 1 ||  totaldiscount == '' || totaldiscount == '.') {
+                layer.msg('无效的整单优惠金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             var rate = 1 - parseFloat(totaldiscount) / totalamount;
+            this.evalAuth(auth_discount, '03', {discount_rate: rate}, function () {
+                $(_self.input).val('');
+                _self.calculateTotalDiscount(parseFloat(totaldiscount), '01');
+            });
+        },
+
+
+        /**
+         * 整单折扣
+         */
+        onTotalDiscountPercentage: function () {
+            var _self = this;
+            var totaldiscount = $(this.input).val();
+            var totalamount = this.model.get('totalamount');
+            if (this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if ((totaldiscount.split('.').length - 1) > 0 || totaldiscount > 100 || totaldiscount == '') {
+                layer.msg('无效的整单折扣比率', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            var rate = parseFloat(totaldiscount) / 100;
             console.log(rate);
-            this.calculateTotalDiscount(rate);
-            //this.evalAuth(auth_discount, '03', {discount_rate: rate}, function () {
-            //    this.calculateTotalDiscount(rate);
-            //});
+            this.evalAuth(auth_discount, '03', {discount_rate: rate}, function () {
+                $(_self.input).val('');
+                _self.calculateTotalDiscount(rate, '02');
+            });
         },
 
         /**
-         * 計算整單優惠
+         * 计算整单优惠
          */
-        calculateTotalDiscount: function (rate) {
+        calculateTotalDiscount: function (rate, subType) {
             var data = {};
+            var _self = this;
             data['skucode'] = '*';
             if (storage.isSet(system_config.VIP_KEY)) {
                 data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
@@ -632,10 +678,16 @@ define([
                 data['medium_id'] = '*';
                 data['medium_type'] = '*';
             }
-            data['goods_detail'] = JSON.stringify(this.collection);
-            data['subtotal_preferential'] = rate;//percentage默認值為1
+            data['goods_detail'] = this.collection.toJSON();
+            data['sub_type'] = subType;
+            data['subtotal_preferential'] = rate;
             this.requestModel.sku(data, function (resp) {
-               console.log(resp);
+                if(resp.status == '00') {
+                    _self.onAddItem(resp.goods_detail);
+                    _self.isTotalDiscount = true;
+                }else {
+                    layer.msg(resp.msg, optLayerWarning);
+                }
             });
         },
         /**
@@ -716,8 +768,8 @@ define([
                     data['medium_id'] = '*';
                     data['medium_type'] = '*';
                 }
-                data['goods_detail'] = JSON.stringify(this.collection);
-                data['subtotal_preferential'] = this.percentage;//percentage默認值為1
+                data['goods_detail'] = this.collection.toJSON()
+                data['subtotal_preferential'] = 1;//percentage默認值為1
                 this.requestModel.sku(data, function (resp) {
                     if (!$.isEmptyObject(resp)) {
                         if (resp.status == '00') {
@@ -788,6 +840,7 @@ define([
             storage.remove(system_config.VIP_KEY);
             //this.ctrlClientInfo('none', this.ids, isPacked);
             this.isInSale = false;
+            this.isTotalDiscount = false;
             //toastr.success('交易已取消');
             layer.msg('交易已取消', optLayerSuccess);
         },

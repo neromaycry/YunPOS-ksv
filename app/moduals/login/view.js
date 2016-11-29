@@ -374,15 +374,16 @@ define([
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '结算', '删除商品', '取消交易', '向上选择', '向下选择',
                 '单品优惠', '单品折扣', '原单退货', '锁屏', '开钱箱', '挂单', '解挂' , '会员登录',
-                '提大额', '收银对账', '营业员登录', '修改数量', '单品退货', '打印','银行业务',
+                '提大额', '收银对账', '营业员登录', '修改数量', '整单优惠','整单折扣','单品退货', '打印','银行业务',
                 '会员登录切换会员卡登录', '会员登录切换手机号登录'];
             var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓' ,'F1','F2', 'F3', 'F4', 'F5','F6',
-                'F7', 'F8', 'F9', 'F10', 'F11' ,'F12', 'F', 'H', 'V', 'X', 'P'];
+                'F7', 'F8', 'F9', 'F10', 'F11' ,'F12','Y','U','F', 'H', 'V', 'X', 'P'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D,
                 window.KEYS.C, window.KEYS.Up, window.KEYS.Down, window.KEYS.F1, window.KEYS.F2,
                 window.KEYS.F3, window.KEYS.F4, window.KEYS.F5, window.KEYS.F6, window.KEYS.F7,
                 window.KEYS.F8, window.KEYS.F9, window.KEYS.F10, window.KEYS.F11, window.KEYS.F12,
-                window.KEYS.F,window.KEYS.H, window.KEYS.V, window.KEYS.X, window.KEYS.P];
+                window.KEYS.Y,window.KEYS.U, window.KEYS.F,window.KEYS.H, window.KEYS.V, window.KEYS.X,
+                window.KEYS.P];
             var mainKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
@@ -460,12 +461,12 @@ define([
         setBillingKeys: function () {
             var effects = ['返回', '确定','结算', '删除已支付的方式', '清空支付方式列表', '向上选择', '向下选择',
                 '支票类支付', '礼券类支付', '银行卡POS支付', '第三方支付', '一卡通支付', '快捷支付','银行业务',
-                '整单优惠', '整单折扣', '一卡通切换会员卡登录', '一卡通切换手机号登录'];
-            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E','V', 'F1', 'F2',
+                 '一卡通切换会员卡登录', '一卡通切换手机号登录'];
+            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E','V',
             'X','P'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D, window.KEYS.C,
                 window.KEYS.Up, window.KEYS.Down, window.KEYS.S, window.KEYS.B, window.KEYS.P, window.KEYS.Q,
-                window.KEYS.O, window.KEYS.E, window.KEYS.V, window.KEYS.F1, window.KEYS.F2, window.KEYS.X, window.KEYS.P];
+                window.KEYS.O, window.KEYS.E, window.KEYS.V, window.KEYS.X, window.KEYS.P];
             var billingKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];

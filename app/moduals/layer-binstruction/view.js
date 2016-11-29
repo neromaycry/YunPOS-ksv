@@ -23,6 +23,7 @@ define([
         },
 
         LayerInitPage: function () {
+            console.log(this.attrs);
             this.model = new LayerBInstructionModel();
         },
 
