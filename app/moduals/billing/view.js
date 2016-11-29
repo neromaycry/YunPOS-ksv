@@ -485,10 +485,10 @@ define([
             if (gatherUI == '04') {
                 _.extend(data, {
                     orderid: paymentBill,
-                    outtradeno:outtradeno,
-                    paymethod:'zfb',
+                    outtradeno: outtradeno,
+                    paymethod: 'zfb',
                     refundamount: refundamount,
-                    zfbtwo:'zfbtwo'
+                    zfbtwo: 'zfbtwo'
                 });
                 //data['orderid'] = paymentBill;
                 //data['merid'] = '000201504171126553';
@@ -500,8 +500,8 @@ define([
             if (gatherUI == '05') {
                 _.extend(data, {
                     orderid: paymentBill,
-                    outtradeno:outtradeno,
-                    paymethod:'wx',
+                    outtradeno: outtradeno,
+                    paymethod: 'wx',
                     refundamount: refundamount
                 });
                 //data['orderid'] = paymentBill;

@@ -55,7 +55,7 @@ define([
         prepay: function (gatherUI) {
             console.log(this.attrs);
             var data = {
-                orderid:this.attrs.payment_bill,
+                orderid: this.attrs.payment_bill,
                 totalfee: this.attrs.gather_money,
                 body: '祥付测试',
                 subject: '祥付测试'
@@ -145,17 +145,17 @@ define([
             switch (this.gatherUI) {
                 case '01':
                     //if (luhmCheck(gatherNo)) {
-                        attrs = {
-                            gather_id: this.attrs.gather_id,
-                            gather_ui: this.attrs.gather_ui,
-                            gather_name: this.attrs.gather_name,
-                            gather_money: this.attrs.gather_money,
-                            gather_kind: this.attrs.gather_kind,
-                            gather_no: gatherNo
-                        };
-                        Backbone.trigger('onReceivedsum', attrs);
-                        this.closeLayer(layerindex);
-                        $('input[name = billing]').focus();
+                    attrs = {
+                        gather_id: this.attrs.gather_id,
+                        gather_ui: this.attrs.gather_ui,
+                        gather_name: this.attrs.gather_name,
+                        gather_money: this.attrs.gather_money,
+                        gather_kind: this.attrs.gather_kind,
+                        gather_no: gatherNo
+                    };
+                    Backbone.trigger('onReceivedsum', attrs);
+                    this.closeLayer(layerindex);
+                    $('input[name = billing]').focus();
                     //} else {
                     //    $(this.input).val('');
                     //}
@@ -232,7 +232,7 @@ define([
                 orderid: attrData.extras.payment_bill,
                 authno: gatherNo,
                 totalfee: totalfee,
-                body:'祥付测试',
+                body: '祥付测试',
                 subject: '祥付测试'
             };
             if (gatherUI == '04') {
