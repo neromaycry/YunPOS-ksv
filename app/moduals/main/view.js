@@ -531,17 +531,17 @@ define([
          */
         modifyItemDiscount: function () {
             var _self = this;
+            if (this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             var item = this.collection.at(this.i);
             var price = item.get('price');
             var discount = $(this.input).val();
             var num = item.get('num');
             if(item.get('disc_subtotal') != 0) {
                 layer.msg('整单优惠后不能再进行单品优惠', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            if (this.model.get('itemamount') == 0) {
-                layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
@@ -574,6 +574,11 @@ define([
         //折让
         onDiscountPercentClicked: function () {
             var _self = this;
+            if (this.model.get('itemamount') == 0) {
+                layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             var value = $(this.input).val();
             var item = _self.collection.at(_self.i);
             var price = item.get('price');
@@ -605,7 +610,6 @@ define([
                     money: price * num * rate,
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
-                layer.msg('单品折扣成功!折扣百分比为：' + (rate * 10).toFixed(2) + '折', optLayerSuccess);//显示当前折扣
                 _self.calculateModel();
                 $('#li' + _self.i).addClass('cus-selected');
                 $(_self.input).val('');
