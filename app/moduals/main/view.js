@@ -696,8 +696,15 @@ define([
         modifyItemNum: function () {
             var _self = this;
             var number = $(this.input).val();
+            var discountamount = this.model.get('discountamount');
             if (_self.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(discountamount != 0) {
+                layer.msg('折扣后不能修改数量，如想继续修改数量，请取消交易', optLayerWarning);
+                $(this.input).val('');
                 return;
             }
             if (number == '' || number == 0 || (number.split('.').length - 1) > 1) {
