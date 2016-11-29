@@ -378,13 +378,20 @@ define([
          */
         modifyItemNum: function () {
             var number = $(this.input).val();
+            var discountamount = this.model.get('discountamount');
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
+
             if (number == '' || number == 0 || (number.split('.').length - 1) > 1) {
                 layer.msg('无效的商品数量', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(discountamount != 0) {
+                layer.msg('折扣后不能修改数量，如想继续修改数量，请取消退货', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
