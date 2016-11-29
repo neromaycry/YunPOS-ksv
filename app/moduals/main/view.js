@@ -53,7 +53,7 @@ define([
         restOrderDelivery: {},
         deleteKey: {},
         isDeleteKey: false,
-        isDiscountPercent: false,
+        //isDiscountPercent: false,
         //input:'input[name = main]',
         events: {
             'click .numpad-ok': 'onOKClicked',
@@ -628,7 +628,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            var rate = 1 - parseFloat(totaldiscount) / totalamount;
+            var rate = parseFloat((1 - parseFloat(totaldiscount) / totalamount).toFixed(6));
             console.log(rate);
             this.evalAuth(auth_discount, '03', {discount_rate: rate}, function () {
                 $(_self.input).val('');

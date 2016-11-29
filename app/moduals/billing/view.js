@@ -806,6 +806,8 @@ define([
                 data['cust_id'] = "*";
             }
             data['bill_no'] = _self.billNumber;
+            data['retreate_no'] = '*';
+            data['retreate_reason'] = '*';
             data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
             data['gather_detail'] = _self.collection.toJSON();
             if (this.smallChange != 0) {

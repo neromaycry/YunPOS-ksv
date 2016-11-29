@@ -419,6 +419,8 @@ define([
                     data['cust_id'] = "*";
                 }
                 data['bill_no'] = this.billNumber;
+                data['retreate_no'] = '*';
+                data['retreate_reason'] = '*';
                 data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
                 if (_self.smallChange != 0) {
@@ -464,6 +466,7 @@ define([
                 }
                 data['bill_no'] = _self.billNumber;
                 data['retreate_no'] = storage.get(system_config.RETURN_KEY, 'bill_no');
+                data['retreate_reason'] = '*';
                 data['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
                 if (_self.smallChange != 0) {
