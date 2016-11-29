@@ -37,12 +37,12 @@ define([
         LayerInitPage: function () {
             console.log(this.attrs);
             var _self = this;
-            this.gatherId = this.attrs.gather_id;
+            this.gatherUI = this.attrs.gather_ui;
             this.model = new LayerGatherUIModel();
             this.model.set({
                 gather_money: this.attrs.gather_money
             });
-            this.switchTemplate(this.gatherId);
+            this.switchTemplate(this.gatherUI);
             this.template_content = _.template(this.template_content);
             this.prepay(this.gatherUI);
             setTimeout(function () {
@@ -90,17 +90,17 @@ define([
         },
 
 
-        switchTemplate: function (gatherId) {
-            switch (gatherId) {
-                case '12':
+        switchTemplate: function (gatherUI) {
+            switch (gatherUI) {
+                case '04':
                     this.template_content = wechatpaytpl;
                     this.input = 'input[name = wechat-account]';
                     break;
-                case '13':
+                case '05':
                     this.template_content = alipaytpl;
                     this.input = 'input[name = alipay-account]';
                     break;
-                case '16':
+                case '06':
                     this.template_content = bankcardtpl;
                     this.model.set({
                         gather_money: this.attrs.gather_money
@@ -125,7 +125,7 @@ define([
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
         confirm: function () {
             var attrs = {};
-            if (this.gatherId == '16') {
+            if (this.gatherUI == '06') {
                 this.closeLayer(layerindex);
                 this.attrs.swipe_type = 'sale';
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行MIS', LayerBankCardView, this.attrs, {area: '300px'});
@@ -137,27 +137,29 @@ define([
                 $(this.input).val('');
                 return;
             }
-            switch (this.gatherId) {
-                case '05':
-                    if(luhmCheck(gatherNo)) {
+            switch (this.gatherUI) {
+                case '01':
+                    //if (luhmCheck(gatherNo)) {
                         attrs = {
-                            gather_id:this.attrs.gather_id,
-                            gather_name:this.attrs.gather_name,
-                            gather_money:this.attrs.gather_money,
-                            gather_kind:this.attrs.gather_kind,
-                            gather_no:gatherNo
+                            gather_id: this.attrs.gather_id,
+                            gather_ui: this.attrs.gather_ui,
+                            gather_name: this.attrs.gather_name,
+                            gather_money: this.attrs.gather_money,
+                            gather_kind: this.attrs.gather_kind,
+                            gather_no: gatherNo
                         };
-                        Backbone.trigger('onReceivedsum',attrs);
+                        Backbone.trigger('onReceivedsum', attrs);
                         this.closeLayer(layerindex);
                         $('input[name = billing]').focus();
-                    }else {
-                        $(this.input).val('');
-                    }
+                    //} else {
+                    //    $(this.input).val('');
+                    //}
                     break;
-                case '12':
-                case '13':
+                case '04':
+                case '05':
                     attrs = {
                         gather_id: this.attrs.gather_id,
+                        gather_ui: this.attrs.gather_ui,
                         gather_name: this.attrs.gather_name,
                         gather_money: this.attrs.gather_money,
                         gather_kind: this.attrs.gather_kind,
@@ -173,6 +175,7 @@ define([
                 default :
                     attrs = {
                         gather_id: this.attrs.gather_id,
+                        gather_ui: this.attrs.gather_ui,
                         gather_name: this.attrs.gather_name,
                         gather_money: this.attrs.gather_money,
                         gather_kind: this.attrs.gather_kind,
@@ -221,7 +224,7 @@ define([
             var _self = this;
             var data = {};
             var totalfee = attrData.gather_money;
-            if(gatherId == '13') {
+            if (gatherId == '13') {
                 data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
@@ -232,7 +235,7 @@ define([
                 data['paymethod'] = 'zfb';
                 data['payway'] = 'barcode';
                 data['zfbtwo'] = 'zfbtwo';
-            }else if(gatherId == '12') {
+            } else if (gatherId == '12') {
                 data['orderid'] = paymentBill;
                 data['merid'] = '000201504171126553';
                 data['authno'] = gatherNo;
@@ -247,11 +250,11 @@ define([
             var url = 'http://127.0.0.1:5000/';
             //var url = 'http://114.55.62.102:9090';
             resource.post(url + 'api/pay/xfb/micropay', data, function (resp) {
-                if(resp.data['flag'] == '00') {
+                if (resp.data['flag'] == '00') {
                     loading.hide();
-                    Backbone.trigger('onReceivedsum',attrData);
+                    Backbone.trigger('onReceivedsum', attrData);
                     _self.closeLayer(layerindex);
-                }else {
+                } else {
                     loading.hide();
                     layer.msg(resp.data.msg, optLayerError);
                 }

@@ -160,10 +160,10 @@ define([
 
         onReceivedsum: function (data) {
             var gatherMoney = parseFloat(data['gather_money']);//number类型
-            var gatherNo = data['gather_no'];//付款账号
-            var gatherName = data['gather_name'];
-            var gatherId = data['gather_id'];
-            var gatherKind = data['gather_kind'];
+            var gatherNo = data.gather_no;//付款账号
+            var gatherName = data.gather_name;
+            var gatherId = data.gather_id;
+            var gatherKind = data.gather_kind;
             var extraArgs = undefined;
             if (data.hasExtra) {
                 extraArgs = data.extras;
