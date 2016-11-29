@@ -41,6 +41,7 @@ define([
             });
             this.collection = new LayerBillTypeCollection();
             var gatherKind = this.attrs.gather_kind;
+            console.log(gatherKind);
             if (storage.isSet(system_config.GATHER_KEY)) {
                 var tlist = storage.get(system_config.GATHER_KEY);
                 //this.visibleTypes = _.where(tlist, {visible_flag: '1'});
@@ -99,9 +100,10 @@ define([
             var gatherUI = this.collection.at(index).get('gather_ui');
             var gatherid = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');
+            console.log(gatherUI);
             switch (gatherUI) {//gather_ui:判断接下来打开的是哪种界面
-                case '03':
-                case '04'://第三方支付类
+                case '04':
+                case '05'://第三方支付类
                     var xfbdata = {
                         pos_id: storage.get(system_config.POS_INFO_KEY, 'posid'),
                         bill_no: this.attrs.bill_no

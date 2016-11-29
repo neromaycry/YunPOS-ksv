@@ -44,7 +44,7 @@ define([
             });
             this.switchTemplate(this.gatherUI);
             this.template_content = _.template(this.template_content);
-            this.prepay(this.gatherUI);
+            //this.prepay(this.gatherUI);
             setTimeout(function () {
                 _self.renderContent();
                 _self.$el.find('.for-numpad').html(_self.template_numpad);
@@ -53,12 +53,13 @@ define([
         },
 
         prepay: function (gatherUI) {
-            var data = {};
-            data['orderid'] = this.attrs.payment_bill;
-            data['merid'] = '000201504171126553';
-            data['totalfee'] = '0.01';
-            data['body'] = 'test';
-            data['subject'] = 'test';
+            console.log(this.attrs);
+            var data = {
+                orderid:this.attrs.payment_bill,
+                totalfee: this.attrs.gather_money,
+                body: '祥付测试',
+                subject: '祥付测试'
+            };
             if (gatherUI == '04') {
                 data['paymethod'] = 'zfb';
             } else if (gatherUI == '05') {
@@ -68,15 +69,19 @@ define([
             }
             resource.post('http://114.55.62.102:9090/api/pay/xfb/prepay', data, function (resp) {
                 console.log(resp);
-                if (resp) {
-                    $('.qrcode-img').attr('src', resp.data.codeurl);
-                    if (resp.data.flag == '00') {
-                        setInterval(function () {
-                            //TODO 定时请求后台接口,若返回success，则关闭模态框，并将付款方式同步至列表
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.code == '000000') {
+                        $('.qrcode-img').attr('src', resp.data.codeurl);
+                        if (resp.data.flag == '00') {
+                            setInterval(function () {
+                                //TODO 定时请求后台接口,若返回success，则关闭模态框，并将付款方式同步至列表
 
-                        }, 1000);
+                            }, 1000);
+                        } else {
+                            layer.msg(resp.data.msg, optLayerError);
+                        }
                     } else {
-                        layer.msg(resp.data.msg, optLayerError);
+                        layer.msg(resp.msg, optLayerError);
                     }
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
@@ -170,7 +175,7 @@ define([
                             payment_bill: this.attrs.payment_bill
                         }
                     };
-                    this.micropay(this.gatherId, gatherNo, attrs, this.attrs.payment_bill);
+                    this.micropay(this.gatherUI, gatherNo, attrs);
                     break;
                 default :
                     attrs = {
@@ -220,47 +225,58 @@ define([
          * @param attrData 准备传到结算页面的数据
          * @param paymentBill 祥付宝交易单号
          */
-        micropay: function (gatherId, gatherNo, attrData, paymentBill) {
+        micropay: function (gatherUI, gatherNo, attrData) {
             var _self = this;
-            var data = {};
             var totalfee = attrData.gather_money;
-            if (gatherId == '13') {
-                data['orderid'] = paymentBill;
-                data['merid'] = '000201504171126553';
-                data['authno'] = gatherNo;
-                data['totalfee'] = '0.01';
-                //data['totalfee'] = totalfee;
-                data['body'] = 'test';
-                data['subject'] = 'test';
-                data['paymethod'] = 'zfb';
-                data['payway'] = 'barcode';
-                data['zfbtwo'] = 'zfbtwo';
-            } else if (gatherId == '12') {
-                data['orderid'] = paymentBill;
-                data['merid'] = '000201504171126553';
-                data['authno'] = gatherNo;
-                data['totalfee'] = '0.01';
-                //data['totalfee'] = totalfee;
-                data['body'] = 'test';
-                data['subject'] = 'test';
-                data['paymethod'] = 'wx';
-                data['payway'] = 'barcode';
+            var data = {
+                orderid: attrData.extras.payment_bill,
+                authno: gatherNo,
+                totalfee: totalfee,
+                body:'祥付测试',
+                subject: '祥付测试'
+            };
+            if (gatherUI == '04') {
+                //data['paymethod'] = 'zfb';
+                _.extend(data, {
+                    paymethod: 'zfb'
+                });
+            } else if (gatherUI == '05') {
+                //data['paymethod'] = 'wx';
+                _.extend(data, {
+                    paymethod: 'wx'
+                });
             }
+            console.log(data);
             loading.show();
             var url = 'http://127.0.0.1:5000/';
             //var url = 'http://114.55.62.102:9090';
             resource.post(url + 'api/pay/xfb/micropay', data, function (resp) {
-                if (resp.data['flag'] == '00') {
-                    loading.hide();
-                    Backbone.trigger('onReceivedsum', attrData);
-                    _self.closeLayer(layerindex);
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.code == '000000') {
+                        if (resp.data['flag'] == '00') {
+                            loading.hide();
+                            var extra = _.extend(attrData.extras, {
+                                outtradeno: resp.data.outtradeno,
+                                gather_ui: gatherUI
+                            });
+                            Backbone.trigger('onReceivedsum', _.extend(attrData, {
+                                extras: extra
+                            }));
+                            _self.closeLayer(layerindex);
+                        } else {
+                            loading.hide();
+                            layer.msg(resp.data.msg, optLayerError);
+                        }
+                    } else {
+                        loading.hide();
+                        layer.msg(resp.msg, optLayerError);
+                    }
                 } else {
                     loading.hide();
-                    layer.msg(resp.data.msg, optLayerError);
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
             });
         },
-
 
     });
 

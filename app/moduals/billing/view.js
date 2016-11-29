@@ -160,6 +160,7 @@ define([
         },
 
         onReceivedsum: function (data) {
+            console.log(data);
             var gatherMoney = parseFloat(data['gather_money']);//number类型
             var gatherNo = data.gather_no;//付款账号
             var gatherName = data.gather_name;
@@ -240,7 +241,9 @@ define([
                     break;
                 case 1:
                     model.set({
-                        payment_bill: extraArgs.payment_bill
+                        payment_bill: extraArgs.payment_bill,
+                        outtradeno: extraArgs.outtradeno,
+                        gather_ui: extraArgs.gather_ui
                     });
                     break;
                 case 2:
@@ -363,7 +366,7 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.V, function () {
-               _self.onBusinessClicked();
+                _self.onBusinessClicked();
             });
 
         },
@@ -420,7 +423,7 @@ define([
                             switch (gatherUI) {
                                 case '04':
                                 case '05':
-                                    _self.refund(j, gatherId);
+                                    _self.refund(j, gatherUI);
                                     break;
                                 case '06':
                                     _self.deletebankpay(j);
@@ -454,8 +457,9 @@ define([
                     _self.evalAuth(auth_delete, '08', {}, function () {
                         var item = _self.collection.at(_self.i);
                         var gatherUI = item.get('gather_ui');
+                        console.log(gatherUI);
                         if (gatherUI == '04' || gatherUI == '05') {
-                            _self.refund(gatherUI);
+                            _self.refund(_self.i, gatherUI);
                         } else if (gatherUI == '06') {
                             _self.deletebankpay(_self.i);
                         } else {
@@ -471,37 +475,66 @@ define([
         /**
          * 删除时调用第三方支付退款接口
          */
-        refund: function (index, gatherId) {
+        refund: function (index, gatherUI) {
             var _self = this;
             var data = {};
             var item = this.collection.at(index);
             var paymentBill = item.get('payment_bill');
+            var outtradeno = item.get('outtradeno');
             var refundamount = item.get('gather_money');
-            if (gatherId == '12') {
-                data['orderid'] = paymentBill;
-                data['merid'] = '000201504171126553';
-                data['paymethod'] = 'wx';
-                data['refundamount'] = '0.01';
+            if (gatherUI == '04') {
+                _.extend(data, {
+                    orderid: paymentBill,
+                    outtradeno:outtradeno,
+                    paymethod:'zfb',
+                    refundamount: refundamount,
+                    zfbtwo:'zfbtwo'
+                });
+                //data['orderid'] = paymentBill;
+                //data['merid'] = '000201504171126553';
+                //data['paymethod'] = 'zfb';
+                ////data['refundamount'] = '0.01';
+                //data['refundamount'] = refundamount;  //当前付款金额
+                //data['zfbtwo'] = 'zfbtwo';
+            }
+            if (gatherUI == '05') {
+                _.extend(data, {
+                    orderid: paymentBill,
+                    outtradeno:outtradeno,
+                    paymethod:'wx',
+                    refundamount: refundamount
+                });
+                //data['orderid'] = paymentBill;
+                //data['merid'] = '000201504171126553';
+                //data['paymethod'] = 'wx';
+                ////data['refundamount'] = '0.01';
                 //data['refundamount'] = refundamount;  //当前付款金额
             }
-            if (gatherId == '13') {
-                data['orderid'] = paymentBill;
-                data['merid'] = '000201504171126553';
-                data['paymethod'] = 'zfb';
-                data['refundamount'] = '0.01';
-                //data['refundamount'] = refundamount;  //当前付款金额
-                data['zfbtwo'] = 'zfbtwo';
-            }
-            resource.post('http://114.55.62.102:9090/api/pay/xfb/refund', data, function (resp) {
-                console.log(resp.data['flag']);
-                if (resp.data['flag'] == '00') {
-                    _self.deleteItem(index);
-                    layer.msg('删除成功', optLayerSuccess);
-                } else if (resp.data['flag'] == undefined) {
-                    layer.msg('删除失败', optLayerError);
+            var url = 'http://127.0.0.1:5000/';
+            //var url = 'http://114.55.62.102:9090';
+            resource.post(url + 'api/pay/xfb/refund', data, function (resp) {
+                console.log(resp);
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.code == '000000') {
+                        if (resp.data.flag == '00') {
+                            _self.deleteItem(index);
+                            layer.msg('删除成功', optLayerSuccess);
+                        } else {
+                            layer.msg(resp.data.msg, optLayerError);
+                        }
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                    }
                 } else {
-                    layer.msg(resp.data['msg'], optLayerError);
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
+                //if (resp.data['flag'] == '00') {
+
+                //} else if (resp.data['flag'] == undefined) {
+                //    layer.msg('删除失败', optLayerError);
+                //} else {
+                //    layer.msg(resp.data['msg'], optLayerError);
+                //}
             });
         },
 
@@ -794,37 +827,45 @@ define([
             //if (this.totaldiscount != 0) {
             //    this.calculateDiscount();
             //}
-            var data = {};
+            var data = {
+                mode: '00' //销售模式,  00销售  01单品退货  02原单退货
+            };
             var item = {};
-            data['mode'] = '00';
             if (storage.isSet(system_config.VIP_KEY)) {
-                data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
-                data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
-                data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
+                _.extend(data, {
+                    medium_id: storage.get(system_config.VIP_KEY, 'medium_id'),
+                    medium_type: storage.get(system_config.VIP_KEY, 'medium_type'),
+                    cust_id: storage.get(system_config.VIP_KEY, 'cust_id')
+                });
             } else {
-                data['medium_id'] = "*";
-                data['medium_type'] = "*";
-                data['cust_id'] = "*";
+                _.extend(data, {
+                    medium_id: "*",
+                    medium_type: "*",
+                    cust_id: "*"
+                });
             }
-            data['bill_no'] = _self.billNumber;
-            data['retreate_no'] = '*';
-            data['retreate_reason'] = '*';
-            data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
-            data['gather_detail'] = _self.collection.toJSON();
+            _.extend(data, {
+                bill_no: _self.billNumber,
+                retreate_no: '*',
+                retreate_reason: '*',
+                goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
+                gather_detail: _self.collection.toJSON()
+            });
+            console.log(data);
             if (this.smallChange != 0) {
                 data['gather_detail'].push(this.smallChangemodel.toJSON()); //如果存在去零，则添加一种支付方式为去零
             }
             //限制传到接口的小计，折扣，数量，价格数据类型必须为number，且位数为小数点后两位。
-            for (var i = 0; i < data['goods_detail'].length; i++) {
-                item = data['goods_detail'][i];
+            for (var i = 0; i < data.goods_detail.length; i++) {
+                item = data.goods_detail[i];
                 item.money = parseFloat(item.money);
                 item.discount = parseFloat(item.discount);
                 item.price = parseFloat(item.price);
                 item.num = parseFloat(item.num);
             }
             //限制传到接口的实收金额，付款金额，找零金额，盈余金额数据类型必须为number，且位数为小数点后两位。
-            for (var i = 0; i < data['gather_detail'].length; i++) {
-                item = data['gather_detail'][i];
+            for (var i = 0; i < data.goods_detail.length; i++) {
+                item = data.goods_detail[i];
                 item.havepay_money = parseFloat(item.havepay_money);
                 item.gather_money = parseFloat(item.gather_money);
                 item.change_money = parseFloat(item.change_money);
@@ -882,7 +923,7 @@ define([
             var attrs = {
                 pageid: pageId,
                 receivedsum: receivedSum
-            }
+            };
             this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '600px'});
             $(this.input).val('');
         },
@@ -903,7 +944,6 @@ define([
                 router.navigate('main', {trigger: true});
             }
         },
-
 
         /**
          * 向上按钮点击事件
