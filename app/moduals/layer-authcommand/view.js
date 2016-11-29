@@ -111,7 +111,7 @@ define([
                 accredit_type: this.attrs.accredit_type
             };
             var accredit_type = this.attrs.accredit_type;
-            if (accredit_type == '01' || accredit_type == '02') {
+            if (accredit_type == '01' || accredit_type == '02' || accredit_type == '03') {
                 console.log(this.attrs.discount_rate);
                 data['discount'] = this.attrs.discount_rate;
             }
