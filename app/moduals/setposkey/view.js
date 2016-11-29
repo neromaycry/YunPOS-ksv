@@ -91,11 +91,14 @@ define([
                 this.request = new SetPoskeyModel();
                 this.request.init(data, function(resp) {
                     if(resp.status == '00') {
+                        console.log(resp);
                         router.navigate('initinfo', { trigger: true });
                         //storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY, 'poskey', value);
                         storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_KEY, value);
+                        storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT, resp.pos_limit);
                     } else {
-                        toastr.error(resp.msg);
+                        //toastr.error(resp.msg);
+                        layer.msg(resp.msg, optLayerError);
                     }
                 }, function (jqXHR, textStatus, errorThrown) {
                     console.log(textStatus);

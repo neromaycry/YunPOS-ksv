@@ -211,20 +211,26 @@ define([
                 cashierdata['type'] = '01';
                 this.cashierrequest = new CheckingModel();
                 this.cashierrequest.report(cashierdata, function (resp) {
-                    if (resp.status == '00') {
-                        _self.model.set({
-                            pos: resp.pos,
-                            name: resp.cashier,
-                            date: resp.date,
-                            money: resp.sum_money,
-                        });
-                        _self.collection.set(resp.master_detail);
-                        _self.printText = resp.printf;
-                        _self.renderCashierInfo();
-                        _self.renderCashierdetail();
+                    if (!resp) {
+                        if (resp.status == '00') {
+                            _self.model.set({
+                                pos: resp.pos,
+                                name: resp.cashier,
+                                date: resp.date,
+                                money: resp.sum_money,
+                            });
+                            _self.collection.set(resp.master_detail);
+                            _self.printText = resp.printf;
+                            _self.renderCashierInfo();
+                            _self.renderCashierdetail();
+                        } else {
+                            toastr.error(resp.msg);
+                            layer.msg(resp.msg, optLayerError);
+                        }
                     } else {
-                        toastr.error(resp.msg);
+                        layer.msg('系统错误，请联系管理员', optLayerError);
                     }
+
                 });
 
                 var posdata = {};

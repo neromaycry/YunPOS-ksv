@@ -824,22 +824,26 @@ define([
                 item.fact_money = parseFloat(item.fact_money);
             }
             confirmBill.trade_confirm(data, function (resp) {
-                if (resp.status == '00') {
-                    storage.remove(system_config.SALE_PAGE_KEY);
-                    storage.remove(system_config.ONE_CARD_KEY);
-                    if (storage.isSet(system_config.VIP_KEY)) {
-                        storage.remove(system_config.VIP_KEY);
+                if (!resp) {
+                    if (resp.status == '00') {
+                        storage.remove(system_config.SALE_PAGE_KEY);
+                        storage.remove(system_config.ONE_CARD_KEY);
+                        if (storage.isSet(system_config.VIP_KEY)) {
+                            storage.remove(system_config.VIP_KEY);
+                        }
+                        var lastbill_no = resp.bill_no;
+                        lastbill_no = lastbill_no.substr(8);
+                        storage.set(system_config.ODD_CHANGE, 'oddchange', _self.model.get('oddchange'));
+                        storage.set(system_config.ODD_CHANGE, 'lastbill_no', lastbill_no);
+                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
+                        _self.renderClientDisplay(_self.model);
+                        router.navigate("main", {trigger: true, replace: true});
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                        Backbone.trigger('onNavigateStateChanged', false);
                     }
-                    var lastbill_no = resp.bill_no;
-                    lastbill_no = lastbill_no.substr(8);
-                    storage.set(system_config.ODD_CHANGE, 'oddchange', _self.model.get('oddchange'));
-                    storage.set(system_config.ODD_CHANGE, 'lastbill_no', lastbill_no);
-                    _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
-                    _self.renderClientDisplay(_self.model);
-                    router.navigate("main", {trigger: true, replace: true});
                 } else {
-                    layer.msg(resp.msg, optLayerError);
-                    Backbone.trigger('onNavigateStateChanged', false);
+                    layer.msg('系统错误，请联系管理员', optLayerError);
                 }
             });
         },

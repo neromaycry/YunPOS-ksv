@@ -127,7 +127,8 @@ window.system_config = {
     "PRINTF": "PRINTF",
     "IS_CLIENT_SCREEN_SHOW": "IS_CLIENT_SCREEN_SHOW",
     "ODD_CHANGE": 'ODD_CHANGE_KEY',
-    "LAST_PAGE": "LAST_PAGE"
+    "LAST_PAGE": "LAST_PAGE",
+    "POS_LIMIT": ""
 };
 
 window.DIRECTIVES = {

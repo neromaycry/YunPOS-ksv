@@ -679,32 +679,36 @@ define([
                 }
                 data['goods_detail'] = JSON.stringify(this.collection);
                 this.requestModel.sku(data, function (resp) {
-                    if (resp.status == '00') {
-                        if (!_self.isInSale) {
-                            _self.isInSale = true;
-                            //_self.ctrlClientInfo('block', _self.ids, isPacked);
-                        }
-                        var temp = resp.goods_detail[resp.goods_detail.length - 1];
-                        if (temp['price_auto'] == 1) {
-                            var attrs = {
-                                pageid: pageId,
-                                originalprice: temp['price'],
-                                is_navigate: false,
-                                callback: function () {
-                                    var price = $('input[name = price]').val();
-                                    resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
-                                    resp.goods_detail[resp.goods_detail.length - 1].money = parseFloat(price);
-                                    _self.onAddItem(resp.goods_detail);
-                                    $('input[name = main]').focus();
-                                }
-                            };
-                            _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area: '300px'});
+                    if (!resp) {
+                        if (resp.status == '00') {
+                            if (!_self.isInSale) {
+                                _self.isInSale = true;
+                                //_self.ctrlClientInfo('block', _self.ids, isPacked);
+                            }
+                            var temp = resp.goods_detail[resp.goods_detail.length - 1];
+                            if (temp['price_auto'] == 1) {
+                                var attrs = {
+                                    pageid: pageId,
+                                    originalprice: temp['price'],
+                                    is_navigate: false,
+                                    callback: function () {
+                                        var price = $('input[name = price]').val();
+                                        resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
+                                        resp.goods_detail[resp.goods_detail.length - 1].money = parseFloat(price);
+                                        _self.onAddItem(resp.goods_detail);
+                                        $('input[name = main]').focus();
+                                    }
+                                };
+                                _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area: '300px'});
+                            } else {
+                                _self.onAddItem(resp.goods_detail);
+                            }
                         } else {
-                            _self.onAddItem(resp.goods_detail);
+                            //toastr.warning(resp.msg);
+                            layer.msg(resp.msg, optLayerWarning);
                         }
                     } else {
-                        //toastr.warning(resp.msg);
-                        layer.msg(resp.msg, optLayerWarning);
+                        layer.msg('系统错误，请联系管理员', optLayerWarning);
                     }
                 });
                 $(this.input).val('');
