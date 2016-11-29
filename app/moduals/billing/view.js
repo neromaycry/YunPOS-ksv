@@ -824,7 +824,7 @@ define([
                 item.fact_money = parseFloat(item.fact_money);
             }
             confirmBill.trade_confirm(data, function (resp) {
-                if ($.isEmptyObject(resp)) {
+                if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         storage.remove(system_config.SALE_PAGE_KEY);
                         storage.remove(system_config.ONE_CARD_KEY);
@@ -989,7 +989,7 @@ define([
                         };
                         //layer.msg('该功能正在调试中', optLayerHelp);
                         _self.requestmodel.xfbbillno(xfbdata, function (resp) {
-                            if ($.isEmptyObject(resp)) {
+                            if (!$.isEmptyObject(resp)) {
                                 if (resp.status == '00') {
                                     data['payment_bill'] = resp.xfb_bill;
                                     _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '600px'});
@@ -1121,7 +1121,7 @@ define([
             var data = {};
             data['pos_id'] = '002';
             this.model.requestRetaliNo(data, function (resp) {
-                if ($.isEmptyObject(resp)) {
+                if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         _self.billNumber = resp.bill_no;
                         console.log(_self.billNumber);
