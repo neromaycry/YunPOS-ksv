@@ -180,7 +180,9 @@ requirejs([
     //});
 
     //window.storage.set('pos_limit', '11111111111');
-    if (window.storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT)) {
+    var isPosLimitSet = window.storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT);
+
+    if (isPosLimitSet) {
         var pos_limit = window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT).toString();
         console.log(pos_limit);
         window.auth_discount = pos_limit.charAt(0); //折扣控制

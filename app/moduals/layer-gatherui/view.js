@@ -54,28 +54,33 @@ define([
 
         prepay: function (gatherUI) {
             var data = {};
+            data['orderid'] = this.attrs.payment_bill;
+            data['merid'] = '000201504171126553';
+            data['totalfee'] = '0.01';
+            data['body'] = 'test';
+            data['subject'] = 'test';
             if (gatherUI == '04') {
-                data['orderid'] = this.attrs.payment_bill;
-                data['merid'] = '000201504171126553';
-                data['totalfee'] = '0.01';
-                data['body'] = 'test';
-                data['subject'] = 'test';
                 data['paymethod'] = 'zfb';
-                data['payway'] = 'scancode';
-                data['zfbtwo'] = 'zfbtwo';
             } else if (gatherUI == '05') {
-                data['orderid'] = this.attrs.payment_bill;
-                data['merid'] = '000201504171126553';
-                data['totalfee'] = '0.01';
-                data['body'] = 'test';
-                data['subject'] = 'test';
                 data['paymethod'] = 'wx';
             } else {
                 return false;
             }
             resource.post('http://114.55.62.102:9090/api/pay/xfb/prepay', data, function (resp) {
                 console.log(resp);
-                $('.qrcode-img').attr('src', resp.data.codeurl);
+                if (resp) {
+                    $('.qrcode-img').attr('src', resp.data.codeurl);
+                    if (resp.data.flag == '00') {
+                        setInterval(function () {
+                            //TODO 定时请求后台接口,若返回success，则关闭模态框，并将付款方式同步至列表
+
+                        }, 1000);
+                    } else {
+                        layer.msg(resp.data.msg, optLayerError);
+                    }
+                } else {
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
+                }
             });
         },
 

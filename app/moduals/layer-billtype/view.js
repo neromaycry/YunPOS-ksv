@@ -89,13 +89,18 @@ define([
         confirm: function (index) {
             var _self = this;
             var attrs = {};
+            if (this.collection.length == 0) {
+                layer.msg('当前大类支付方式为空', optLayerError);
+                this.closeLayer(layerindex);
+                return;
+            }
             var gatherId = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');
             switch (gatherId) {//gather_ui:判断接下来打开的是哪种界面
                 case '12':
                 case '13'://第三方支付类
                     var xfbdata = {
-                        pos_id: '002',
+                        pos_id: storage.get(system_config.POS_INFO_KEY, 'posid'),
                         bill_no: this.attrs.bill_no
                     };//生成payment_bill
                     this.requestmodel.xfbbillno(xfbdata, function (resp) {
@@ -134,7 +139,6 @@ define([
                         gather_kind: this.attrs.gather_kind,
                     };
                     this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, attrs, {area: '300px'});
-
             }
         },
 

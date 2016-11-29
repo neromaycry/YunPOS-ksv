@@ -252,12 +252,16 @@ define([
             var data = {};
             data['modify_date'] = '19700101000000';
             this.requestModel.requestGatherDetail(data, function (resp) {
-                if (resp.status == '00') {
-                    storage.set(system_config.GATHER_KEY, resp.gather_detail);
-                    toastr.success('支付方式列表更新成功');
+                if ($.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        storage.set(system_config.GATHER_KEY, resp.gather_detail);
+                        toastr.success('支付方式列表更新成功');
+                    } else {
+                        //toastr.error(resp.msg);
+                        layer.msg(resp.msg, optLayerError);
+                    }
                 } else {
-                    //toastr.error(resp.msg);
-                    layer.msg(resp.msg, optLayerError);
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
                 }
             }, function (jqXHR, textStatus, errorThrown) {
                 //失败回调

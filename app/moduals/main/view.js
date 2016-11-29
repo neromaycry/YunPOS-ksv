@@ -679,7 +679,7 @@ define([
                 }
                 data['goods_detail'] = JSON.stringify(this.collection);
                 this.requestModel.sku(data, function (resp) {
-                    if (!resp) {
+                    if (!$.isEmptyObject(resp)) {
                         if (resp.status == '00') {
                             if (!_self.isInSale) {
                                 _self.isInSale = true;

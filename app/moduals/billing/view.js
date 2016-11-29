@@ -824,7 +824,7 @@ define([
                 item.fact_money = parseFloat(item.fact_money);
             }
             confirmBill.trade_confirm(data, function (resp) {
-                if (!resp) {
+                if ($.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         storage.remove(system_config.SALE_PAGE_KEY);
                         storage.remove(system_config.ONE_CARD_KEY);
@@ -987,14 +987,20 @@ define([
                             pos_id: '002',
                             bill_no: this.billNumber
                         };
-                        layer.msg('该功能正在调试中', optLayerHelp);
+                        //layer.msg('该功能正在调试中', optLayerHelp);
                         _self.requestmodel.xfbbillno(xfbdata, function (resp) {
-                            if (resp.status == '00') {
-                                data['payment_bill'] = resp.xfb_bill;
-                                _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '600px'});
+                            if ($.isEmptyObject(resp)) {
+                                if (resp.status == '00') {
+                                    data['payment_bill'] = resp.xfb_bill;
+                                    _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '600px'});
+                                } else {
+                                    //toastr.error(resp.msg);
+                                    layer.msg(resp.msg, optLayerError);
+                                }
                             } else {
-                                toastr.error(resp.msg);
+                                layer.msg('系统错误，请联系管理员', optLayerWarning);
                             }
+
                         });
                         break;
                     case '16':
@@ -1030,7 +1036,7 @@ define([
         },
 
         onThirdPayClicked: function () {
-            layer.msg('该功能正在调试中', optLayerHelp);
+            //layer.msg('该功能正在调试中', optLayerHelp);
             //$('input[name = billing]').val('');
             this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();
@@ -1115,11 +1121,15 @@ define([
             var data = {};
             data['pos_id'] = '002';
             this.model.requestRetaliNo(data, function (resp) {
-                if (resp.status == '00') {
-                    _self.billNumber = resp.bill_no;
-                    console.log(_self.billNumber);
+                if ($.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.billNumber = resp.bill_no;
+                        console.log(_self.billNumber);
+                    } else {
+                        layer.msg(resp.msg, optLayerWarning);
+                    }
                 } else {
-                    layer.msg(resp.msg, optLayerWarning);
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
                 }
             });
         },
