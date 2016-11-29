@@ -624,7 +624,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if ((totaldiscount.split('.').length - 1) > 1 || totaldiscount >= 100 || totaldiscount == '' || totaldiscount == '.') {
+            if ((totaldiscount.split('.').length - 1) > 1 ||  totaldiscount == '' || totaldiscount == '.') {
                 layer.msg('无效的整单优惠金额', optLayerWarning);
                 $(this.input).val('');
                 return;
