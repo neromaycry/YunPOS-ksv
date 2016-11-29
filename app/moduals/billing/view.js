@@ -73,8 +73,8 @@ define([
             'click .billing-help': 'onBillHelpClicked',
             'click .billing-return': 'onReturnMainClicked',
             'click .billing-delete': 'onDeleteClicked',
-            'click .totaldiscount': 'onTotalDiscountClicked',
-            'click .discountpercent': 'onDiscountPercentClicked',
+            //'click .totaldiscount': 'onTotalDiscountClicked',
+            //'click .discountpercent': 'onDiscountPercentClicked',
             'click .billing-keyup': 'onKeyUp',
             'click .billing-keydown': 'onKeyDown',
             'click .billing': 'onBillingClicked',
@@ -344,14 +344,14 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.O, function () {
                 _self.payByECard();
             });
-            //整单优惠输入实际优惠金额
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F1, function () {
-                _self.onTotalDiscountClicked();
-            });
-            //整单优惠输入折扣
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F2, function () {
-                _self.onDiscountPercentClicked();
-            });
+            ////整单优惠输入实际优惠金额
+            //this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F1, function () {
+            //    _self.onTotalDiscountClicked();
+            //});
+            ////整单优惠输入折扣
+            //this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.F2, function () {
+            //    _self.onDiscountPercentClicked();
+            //});
             //帮助
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
                 _self.openHelp();
@@ -580,182 +580,182 @@ define([
             this.renderBillDetail();
         },
 
-        /**
-         * 整单优惠点击事件
-         */
-        onTotalDiscountClicked: function () {
-            var discount = $(this.input).val();
-            var receivedsum = this.model.get('receivedsum');
-            if (receivedsum != 0) {
-                layer.msg('您已选择支付方式，不能再进行优惠', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            if (discount == '.' || (discount.split('.').length - 1) > 0 || discount == '') {
-                layer.msg('无效的优惠金额', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-
-            if (parseFloat(discount) > this.totalamount + this.totaldiscount) {
-                layer.msg('优惠金额不能大于应付金额', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            var rate = 1 - parseFloat(discount) / (this.totalamount + this.totaldiscount);
-            this.selectDiscountGranted('01', rate);
-        },
-
-
-        /**
-         *整单折扣点击事件
-         */
-        onDiscountPercentClicked: function () {
-            console.log('折扣前的总金额为：' + this.totalamount + typeof (this.totalamount));
-            var percentage = $(this.input).val();
-            var receivedsum = this.model.get('receivedsum');
-            if (receivedsum != 0) {
-                layer.msg('您已选择支付方式，不能再进行折扣', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-
-            if (percentage == '.' || (percentage.split('.').length - 1) > 0 || percentage == '' || percentage == 0) {
-                layer.msg('无效的优惠折扣', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-
-            if (percentage > 100) {
-                layer.msg('折扣百分比不能大于100', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            var rate = parseFloat(percentage / 100);
-            this.selectDiscountGranted('02', rate);
-        },
-
-        /**
-         * 选择优惠权限
-         * @param authCode
-         * @param rate
-         */
-        selectDiscountGranted: function (authCode, rate) {
-            var _self = this;
-            switch (authCode) {
-                case '01':
-                    this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
-                        _self.billTotalDiscount();
-                    });
-                    break;
-                case '02':
-                    this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
-                        _self.billPercentDiscount();
-                    });
-            }
-        },
+        ///**
+        // * 整单优惠点击事件
+        // */
+        //onTotalDiscountClicked: function () {
+        //    var discount = $(this.input).val();
+        //    var receivedsum = this.model.get('receivedsum');
+        //    if (receivedsum != 0) {
+        //        layer.msg('您已选择支付方式，不能再进行优惠', optLayerWarning);
+        //        $(this.input).val('');
+        //        return;
+        //    }
+        //    if (discount == '.' || (discount.split('.').length - 1) > 0 || discount == '') {
+        //        layer.msg('无效的优惠金额', optLayerWarning);
+        //        $(this.input).val('');
+        //        return;
+        //    }
+        //
+        //    if (parseFloat(discount) > this.totalamount + this.totaldiscount) {
+        //        layer.msg('优惠金额不能大于应付金额', optLayerWarning);
+        //        $(this.input).val('');
+        //        return;
+        //    }
+        //    var rate = 1 - parseFloat(discount) / (this.totalamount + this.totaldiscount);
+        //    this.selectDiscountGranted('01', rate);
+        //},
 
 
-        /**
-         * 整单优惠-输入实际优惠
-         */
-        billTotalDiscount: function () {
-            var discount = $(this.input).val();
-            if (this.totaldiscount != 0) {
-                //如果进行过优惠  则原支付金额为 this.totalamount + this.totaldiscout
-                this.totalamount = this.totalamount + this.totaldiscount;
-            }
-            this.totaldiscount = parseFloat(discount); //将本次优惠金额赋值给this.totaldiscount
-            this.totalamount = this.totalamount - this.totaldiscount;
-            this.unpaidamount = this.totalamount;
-            this.model.set({
-                totalamount: this.totalamount,
-                unpaidamount: this.unpaidamount,
-                totaldiscount: this.totaldiscount
-            });
-            layer.msg('整单优惠成功,优惠金额为：' + this.totaldiscount, optLayerSuccess);
-            $(this.input).val('');
-            this.renderBillInfo();
-        },
+        ///**
+        // *整单折扣点击事件
+        // */
+        //onDiscountPercentClicked: function () {
+        //    console.log('折扣前的总金额为：' + this.totalamount + typeof (this.totalamount));
+        //    var percentage = $(this.input).val();
+        //    var receivedsum = this.model.get('receivedsum');
+        //    if (receivedsum != 0) {
+        //        layer.msg('您已选择支付方式，不能再进行折扣', optLayerWarning);
+        //        $(this.input).val('');
+        //        return;
+        //    }
+        //
+        //    if (percentage == '.' || (percentage.split('.').length - 1) > 0 || percentage == '' || percentage == 0) {
+        //        layer.msg('无效的优惠折扣', optLayerWarning);
+        //        $(this.input).val('');
+        //        return;
+        //    }
+        //
+        //    if (percentage > 100) {
+        //        layer.msg('折扣百分比不能大于100', optLayerWarning);
+        //        $(this.input).val('');
+        //        return;
+        //    }
+        //    var rate = parseFloat(percentage / 100);
+        //    this.selectDiscountGranted('02', rate);
+        //},
 
-        /**
-         * 整单折扣
-         */
+        ///**
+        // * 选择优惠权限
+        // * @param authCode
+        // * @param rate
+        // */
+        //selectDiscountGranted: function (authCode, rate) {
+        //    var _self = this;
+        //    switch (authCode) {
+        //        case '01':
+        //            this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
+        //                _self.billTotalDiscount();
+        //            });
+        //            break;
+        //        case '02':
+        //            this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
+        //                _self.billPercentDiscount();
+        //            });
+        //    }
+        //},
 
-        billPercentDiscount: function () {
-            var percentage = $(this.input).val();
-            var rate = parseFloat((percentage / 100).toFixed(2));
-            if (this.totaldiscount != 0) {
-                this.totalamount = this.totalamount + this.totaldiscount;
-            }
-            this.isTotalDiscount = false;
-            this.percentage = percentage;
-            this.totaldiscount = this.totalamount * (1 - rate)
-            this.totalamount = this.totalamount * rate;
-            this.unpaidamount = parseFloat(this.totalamount.toFixed(2));
-            this.model.set({
-                totalamount: this.totalamount,
-                unpaidamount: this.unpaidamount,
-                totaldiscount: this.totaldiscount
-            });
-            layer.msg('整单优惠成功,折扣比率为：' + percentage + '折', optLayerSuccess);
-            console.log('折扣后金额' + this.totalamount + typeof (this.totalamount));
-            console.log('折扣金额' + this.totaldiscount + typeof (this.discountamount));
-            $(this.input).val('');
-            this.renderBillInfo();
-        },
 
-        /**
-         * 整单优惠平均到每个商品
-         */
-        calculateDiscount: function () {
-            var _self = this;
-            var finaldiscount = 0;//最后一项的优惠
-            var percentage = 0;//折扣百分比
-            var discount = 0;//每件商品整单优惠之后平摊到的折扣金额(不包含单品优惠)
-            var price = 0;//价格
-            var num = 0;//数量
-            this.discountcollection = new BillCollection();
-            this.localObj = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
-            if (this.isTotalDiscount) {
-                percentage = 1 - this.totaldiscount / (this.totalamount + this.totaldiscount);
-            } else {
-                percentage = this.percentage / 100;
-            }
-            console.log(percentage + '折扣比率');
-            for (var i = 0; i < this.localObj.length - 1; i++) {
-                var item = new BillModel();
-                item.set(this.localObj[i]);
-                var money = item.get('money');
-                discount = parseFloat(item.get('discount'));
-                price = item.get('price');
-                num = item.get('num');
-                var tdiscount = (1 - percentage) * money;//第i单商品的优惠
-                discount = discount + tdiscount;//第i单商品的单品优惠和整单优惠之和
-                finaldiscount = finaldiscount + tdiscount;//前n-1项总的折扣
-                console.log('第' + i + '的整单折扣' + tdiscount);
-                item.set({
-                    discount: discount,
-                    money: price * num - discount
-                });
-                _self.discountcollection.push(item);
-            }
-            //最后一项的折扣为
-            finaldiscount = parseFloat(this.totaldiscount) - finaldiscount;
-            var tmp = new BillModel();
-            tmp.set(this.localObj[this.localObj.length - 1]);
-            num = tmp.get('num');
-            price = tmp.get('price');
-            discount = parseFloat(tmp.get('discount'));
-            discount = finaldiscount + discount;
-            console.log('最后一件商品的折扣为' + discount);
-            tmp.set({
-                discount: discount,
-                money: num * price - discount
-            });
-            _self.discountcollection.push(tmp);
-            storage.set(system_config.SALE_PAGE_KEY, 'shopcart', _self.discountcollection);
-        },
+        ///**
+        // * 整单优惠-输入实际优惠
+        // */
+        //billTotalDiscount: function () {
+        //    var discount = $(this.input).val();
+        //    if (this.totaldiscount != 0) {
+        //        //如果进行过优惠  则原支付金额为 this.totalamount + this.totaldiscout
+        //        this.totalamount = this.totalamount + this.totaldiscount;
+        //    }
+        //    this.totaldiscount = parseFloat(discount); //将本次优惠金额赋值给this.totaldiscount
+        //    this.totalamount = this.totalamount - this.totaldiscount;
+        //    this.unpaidamount = this.totalamount;
+        //    this.model.set({
+        //        totalamount: this.totalamount,
+        //        unpaidamount: this.unpaidamount,
+        //        totaldiscount: this.totaldiscount
+        //    });
+        //    layer.msg('整单优惠成功,优惠金额为：' + this.totaldiscount, optLayerSuccess);
+        //    $(this.input).val('');
+        //    this.renderBillInfo();
+        //},
+
+        ///**
+        // * 整单折扣
+        // */
+        //
+        //billPercentDiscount: function () {
+        //    var percentage = $(this.input).val();
+        //    var rate = parseFloat((percentage / 100).toFixed(2));
+        //    if (this.totaldiscount != 0) {
+        //        this.totalamount = this.totalamount + this.totaldiscount;
+        //    }
+        //    this.isTotalDiscount = false;
+        //    this.percentage = percentage;
+        //    this.totaldiscount = this.totalamount * (1 - rate)
+        //    this.totalamount = this.totalamount * rate;
+        //    this.unpaidamount = parseFloat(this.totalamount.toFixed(2));
+        //    this.model.set({
+        //        totalamount: this.totalamount,
+        //        unpaidamount: this.unpaidamount,
+        //        totaldiscount: this.totaldiscount
+        //    });
+        //    layer.msg('整单优惠成功,折扣比率为：' + percentage + '折', optLayerSuccess);
+        //    console.log('折扣后金额' + this.totalamount + typeof (this.totalamount));
+        //    console.log('折扣金额' + this.totaldiscount + typeof (this.discountamount));
+        //    $(this.input).val('');
+        //    this.renderBillInfo();
+        //},
+
+        ///**
+        // * 整单优惠平均到每个商品
+        // */
+        //calculateDiscount: function () {
+        //    var _self = this;
+        //    var finaldiscount = 0;//最后一项的优惠
+        //    var percentage = 0;//折扣百分比
+        //    var discount = 0;//每件商品整单优惠之后平摊到的折扣金额(不包含单品优惠)
+        //    var price = 0;//价格
+        //    var num = 0;//数量
+        //    this.discountcollection = new BillCollection();
+        //    this.localObj = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
+        //    if (this.isTotalDiscount) {
+        //        percentage = 1 - this.totaldiscount / (this.totalamount + this.totaldiscount);
+        //    } else {
+        //        percentage = this.percentage / 100;
+        //    }
+        //    console.log(percentage + '折扣比率');
+        //    for (var i = 0; i < this.localObj.length - 1; i++) {
+        //        var item = new BillModel();
+        //        item.set(this.localObj[i]);
+        //        var money = item.get('money');
+        //        discount = parseFloat(item.get('discount'));
+        //        price = item.get('price');
+        //        num = item.get('num');
+        //        var tdiscount = (1 - percentage) * money;//第i单商品的优惠
+        //        discount = discount + tdiscount;//第i单商品的单品优惠和整单优惠之和
+        //        finaldiscount = finaldiscount + tdiscount;//前n-1项总的折扣
+        //        console.log('第' + i + '的整单折扣' + tdiscount);
+        //        item.set({
+        //            discount: discount,
+        //            money: price * num - discount
+        //        });
+        //        _self.discountcollection.push(item);
+        //    }
+        //    //最后一项的折扣为
+        //    finaldiscount = parseFloat(this.totaldiscount) - finaldiscount;
+        //    var tmp = new BillModel();
+        //    tmp.set(this.localObj[this.localObj.length - 1]);
+        //    num = tmp.get('num');
+        //    price = tmp.get('price');
+        //    discount = parseFloat(tmp.get('discount'));
+        //    discount = finaldiscount + discount;
+        //    console.log('最后一件商品的折扣为' + discount);
+        //    tmp.set({
+        //        discount: discount,
+        //        money: num * price - discount
+        //    });
+        //    _self.discountcollection.push(tmp);
+        //    storage.set(system_config.SALE_PAGE_KEY, 'shopcart', _self.discountcollection);
+        //},
 
 
         /**
@@ -786,9 +786,9 @@ define([
         billing: function () {
             var confirmBill = new BillModel();
             var _self = this;
-            if (this.totaldiscount != 0) {
-                this.calculateDiscount();
-            }
+            //if (this.totaldiscount != 0) {
+            //    this.calculateDiscount();
+            //}
             var data = {};
             var item = {};
             data['mode'] = '00';

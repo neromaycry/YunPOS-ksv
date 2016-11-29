@@ -34,14 +34,13 @@
         <div class="cart-panel panel panel-success" style="z-index: 0;position: absolute;min-width: 440px">
             <div class="panel-heading billing-color">
                 <div class="row text-center">
-                    <div class="col-xs-1 col-md-1 pos-textsize">序号</div>
-                    <div class="col-xs-3 col-md-3 pos-textsize">付款方式编号</div>
-                    <div class="col-xs-3 col-md-3 pos-textsize">付款方式名称</div>
-                    <div class="col-xs-2 col-md-2 pos-textsize">付款金额</div>
-                    <div class="col-xs-3 col-md-3 pos-textsize">付款账号</div>
+                    <div class="col-xs-2 col-md-2 pos-textsize">序号</div>
+                    <div class="col-xs-3 col-md-3 pos-textsize">货币</div>
+                    <div class="col-xs-3 col-md-3 pos-textsize">金额</div>
+                    <div class="col-xs-4 col-md-4 pos-textsize">账号</div>
                 </div>
             </div>
-            <div class="panel-body" style="padding: 0; overflow-y: hidden">
+            <div class="panel-body" style="padding: 0; overflow-y: hidden;font-size: 18px;">
                 <div class="for-billdetail" style="overflow: hidden;position: relative;"></div>
             </div>
             <div class="panel-footer text-center no-padding bg-white">
@@ -49,31 +48,22 @@
                     <div class="col-xs-12 col-md-12 button-group">
                         <div class="row">
                             <button type="button"
-                                    class="col-xs-1 col-md-1 button button-border button-primary billing-keyup pos-button-textsize">
+                                    class="col-xs-2 col-md-2 button button-border button-primary billing-keyup pos-button-textsize">
                                 ↑
                             </button>
                             <button type="button"
-                                    class="col-xs-1 col-md-1 button button-border button-primary billing-keydown pos-button-textsize">
+                                    class="col-xs-2 col-md-2 button button-border button-primary billing-keydown pos-button-textsize">
                                 ↓
                             </button>
-                            <!--<button type="button" class="col-md-2 button button-border button-primary billing-clean">清空付款方式</button>-->
-                            <button type="button"
-                                    class="col-xs-2 col-md-2 button button-border button-primary totaldiscount pos-button-textsize"
-                                    name="totaldiscount">整单优惠
-                            </button>
-                            <button type="button"
-                                    class="col-xs-2 col-md-2 button button-border button-primary discountpercent pos-button-textsize"
-                                    name="discountpercent">整单折扣
-                            </button>
-                            <!--<button type="button" class="col-xs-2 col-md-2 button button-border button-primary cancel-totaldiscount pos-button-textsize" name="cancel-totaldiscount">取消优惠</button>-->
+
                             <button type="button"
                                     class="col-xs-2 col-md-2 button button-border button-primary billing-delete pos-button-textsize">
                                 删除
                             </button>
-                            <div class="col-xs-2 col-md-2 no-padding">
+                            <div class="col-xs-3 col-md-3 no-padding">
                                 <div class="cart-billing button-highlight billing-clean">清空支付列表</div>
                             </div>
-                            <div class="col-xs-2 col-md-2 no-padding">
+                            <div class="col-xs-3 col-md-3 no-padding">
                                 <div class="cart-billing bg-red button-caution button-glow billing">结算</div>
                             </div>
 
