@@ -160,10 +160,10 @@ define([
 
         onReceivedsum: function (data) {
             var gatherMoney = parseFloat(data['gather_money']);//number类型
-            var gatherNo = data['gather_no'];//付款账号
-            var gatherName = data['gather_name'];
-            var gatherId = data['gather_id'];
-            var gatherKind = data['gather_kind'];
+            var gatherNo = data.gather_no;//付款账号
+            var gatherName = data.gather_name;
+            var gatherId = data.gather_id;
+            var gatherKind = data.gather_kind;
             var extraArgs = undefined;
             if (data.hasExtra) {
                 extraArgs = data.extras;
@@ -336,7 +336,7 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Q, function () {
                 _self.onThirdPayClicked();
             });
-            //第三方支付
+            //快捷支付
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.E, function () {
                 _self.onQuickPayClicked();
             });
@@ -412,21 +412,23 @@ define([
                 pageid: pageId,
                 content: '确定清空支付列表？',
                 callback: function () {
-                    for (var j = _self.collection.length - 1; j >= 0; j--) {
-                        var model = _self.collection.at(j);
-                        var gatherId = model.get('gather_id');
-                        switch (gatherId) {
-                            case '12':
-                            case '13':
-                                _self.refund(j, gatherId);
-                                break;
-                            case '16':
-                                _self.deletebankpay(j);
-                                break;
-                            default :
-                                _self.deleteItem(j);
+                    _self.evalAuth(auth_delete, '08', {}, function () {
+                        for (var j = _self.collection.length - 1; j >= 0; j--) {
+                            var model = _self.collection.at(j);
+                            var gatherUI = model.get('gather_ui');
+                            switch (gatherUI) {
+                                case '04':
+                                case '05':
+                                    _self.refund(j, gatherId);
+                                    break;
+                                case '06':
+                                    _self.deletebankpay(j);
+                                    break;
+                                default:
+                                    _self.deleteItem(j);
+                            }
                         }
-                    }
+                    });
                 }
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
@@ -448,16 +450,18 @@ define([
                 pageid: pageId,
                 content: '确定删除此条支付记录？',
                 callback: function () {
-                    var item = _self.collection.at(_self.i);
-                    var gatherId = item.get('gather_id');
-                    if (gatherId == '12' || gatherId == '13') {
-                        _self.refund(gatherId);
-                    } else if (gatherId == '16') {
-                        _self.deletebankpay(_self.i);
-                    } else {
-                        _self.deleteItem(_self.i);
-                        layer.msg('删除成功', optLayerSuccess);
-                    }
+                    _self.evalAuth(auth_delete, '08', {}, function () {
+                        var item = _self.collection.at(_self.i);
+                        var gatherUI = item.get('gather_ui');
+                        if (gatherUI == '04' || gatherUI == '05') {
+                            _self.refund(gatherUI);
+                        } else if (gatherUI == '06') {
+                            _self.deletebankpay(_self.i);
+                        } else {
+                            _self.deleteItem(_self.i);
+                            layer.msg('删除成功', optLayerSuccess);
+                        }
+                    });
                 }
             };
             _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
@@ -804,7 +808,7 @@ define([
             data['bill_no'] = _self.billNumber;
             data['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY, 'shopcart');
             data['gather_detail'] = _self.collection.toJSON();
-            if(this.smallChange != 0) {
+            if (this.smallChange != 0) {
                 data['gather_detail'].push(this.smallChangemodel.toJSON()); //如果存在去零，则添加一种支付方式为去零
             }
             //限制传到接口的小计，折扣，数量，价格数据类型必须为number，且位数为小数点后两位。
@@ -824,7 +828,7 @@ define([
                 item.fact_money = parseFloat(item.fact_money);
             }
             confirmBill.trade_confirm(data, function (resp) {
-                if (!resp) {
+                if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         storage.remove(system_config.SALE_PAGE_KEY);
                         storage.remove(system_config.ONE_CARD_KEY);
@@ -984,16 +988,21 @@ define([
                     case '12':
                     case '13':
                         var xfbdata = {
-                            pos_id: '002',
+                            pos_id: storage.get(system_config.POS_INFO_KEY, 'posid'),
                             bill_no: this.billNumber
                         };
-                        layer.msg('该功能正在调试中', optLayerHelp);
+                        //layer.msg('该功能正在调试中', optLayerHelp);
                         _self.requestmodel.xfbbillno(xfbdata, function (resp) {
-                            if (resp.status == '00') {
-                                data['payment_bill'] = resp.xfb_bill;
-                                _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '600px'});
+                            if (!$.isEmptyObject(resp)) {
+                                if (resp.status == '00') {
+                                    data['payment_bill'] = resp.xfb_bill;
+                                    _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '600px'});
+                                } else {
+                                    //toastr.error(resp.msg);
+                                    layer.msg(resp.msg, optLayerError);
+                                }
                             } else {
-                                toastr.error(resp.msg);
+                                layer.msg('系统错误，请联系管理员', optLayerWarning);
                             }
                         });
                         break;
@@ -1030,7 +1039,7 @@ define([
         },
 
         onThirdPayClicked: function () {
-            layer.msg('该功能正在调试中', optLayerHelp);
+            //layer.msg('该功能正在调试中', optLayerHelp);
             //$('input[name = billing]').val('');
             this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();
@@ -1115,11 +1124,15 @@ define([
             var data = {};
             data['pos_id'] = '002';
             this.model.requestRetaliNo(data, function (resp) {
-                if (resp.status == '00') {
-                    _self.billNumber = resp.bill_no;
-                    console.log(_self.billNumber);
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.billNumber = resp.bill_no;
+                        console.log(_self.billNumber);
+                    } else {
+                        layer.msg(resp.msg, optLayerWarning);
+                    }
                 } else {
-                    layer.msg(resp.msg, optLayerWarning);
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
                 }
             });
         },

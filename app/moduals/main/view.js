@@ -770,7 +770,7 @@ define([
                 data['goods_detail'] = this.collection.toJSON()
                 data['subtotal_preferential'] = 1;//percentage默認值為1
                 this.requestModel.sku(data, function (resp) {
-                    //if (!resp) {
+                    if (!$.isEmptyObject(resp)) {
                         if (resp.status == '00') {
                             if (!_self.isInSale) {
                                 _self.isInSale = true;
@@ -798,9 +798,9 @@ define([
                             //toastr.warning(resp.msg);
                             layer.msg(resp.msg, optLayerWarning);
                         }
-                    //} else {
-                    //    layer.msg('系统错误，请联系管理员', optLayerWarning);
-                    //}
+                    } else {
+                        layer.msg('系统错误，请联系管理员', optLayerWarning);
+                    }
                 });
                 $(this.input).val('');
                 this.i = 0;

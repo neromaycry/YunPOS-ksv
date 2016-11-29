@@ -50,6 +50,7 @@ define([
                     item.set({
                         gather_id: gatherList[i].gather_id,
                         gather_name: gatherList[i].gather_name,
+                        gather_ui: gatherList[i].gather_ui
                     });
                     this.collection.push(item);
                 }
@@ -87,22 +88,30 @@ define([
          * Enter和确定
          */
         confirm: function (index) {
+            console.log(this.collection.toJSON());
             var _self = this;
             var attrs = {};
-            var gatherId = this.collection.at(index).get('gather_id');
+            if (this.collection.length == 0) {
+                layer.msg('当前大类支付方式为空', optLayerError);
+                this.closeLayer(layerindex);
+                return;
+            }
+            var gatherUI = this.collection.at(index).get('gather_ui');
+            var gatherid = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');
-            switch (gatherId) {//gather_ui:判断接下来打开的是哪种界面
-                case '12':
-                case '13'://第三方支付类
+            switch (gatherUI) {//gather_ui:判断接下来打开的是哪种界面
+                case '03':
+                case '04'://第三方支付类
                     var xfbdata = {
-                        pos_id: '002',
+                        pos_id: storage.get(system_config.POS_INFO_KEY, 'posid'),
                         bill_no: this.attrs.bill_no
                     };//生成payment_bill
                     this.requestmodel.xfbbillno(xfbdata, function (resp) {
                         if (resp.status == '00') {
                             _self.closeLayer(layerindex);
                             attrs = {
-                                gather_id: gatherId,
+                                gather_id: gatherid,
+                                gather_ui: gatherUI,
                                 gather_name: gatherName,
                                 gather_money: _self.attrs.gather_money,
                                 gather_kind: _self.attrs.gather_kind,
@@ -114,10 +123,11 @@ define([
                         }
                     });
                     break;
-                case '16'://银行mis
+                case '06'://银行mis
                     this.closeLayer(layerindex);
                     attrs = {
-                        gather_id: gatherId,
+                        gather_id: gatherid,
+                        gather_ui: gatherUI,
                         gather_name: gatherName,
                         gather_money: _self.attrs.gather_money,
                         gather_kind: _self.attrs.gather_kind,
@@ -128,13 +138,13 @@ define([
                 default ://输入账号类
                     this.closeLayer(layerindex);
                     attrs = {
-                        gather_id: gatherId,
+                        gather_id: gatherid,
+                        gather_ui: gatherUI,
                         gather_name: gatherName,
                         gather_money: this.attrs.gather_money,
                         gather_kind: this.attrs.gather_kind,
                     };
                     this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, PAGE_ID.BILLING, gatherName, layerGatherUIView, attrs, {area: '300px'});
-
             }
         },
 

@@ -211,7 +211,7 @@ define([
                 cashierdata['type'] = '01';
                 this.cashierrequest = new CheckingModel();
                 this.cashierrequest.report(cashierdata, function (resp) {
-                    if (!resp) {
+                    if (!$.isEmptyObject(resp)) {
                         if (resp.status == '00') {
                             _self.model.set({
                                 pos: resp.pos,
@@ -238,25 +238,30 @@ define([
                 posdata['type'] = '02';
                 this.posrequest = new CheckingModel();
                 this.posrequest.report(posdata, function (resp) {
-                    if (resp.status == '00') {
-                        _self.model.set({
-                            pos: resp.pos,
-                            name: resp.cashier,
-                            date: resp.date,
-                            money: resp.sum_money,
-                            sale_num: resp.sale_num,//销售
-                            sale_money: resp.sale_money,//销售金额
-                            refund_num: resp.refund_num,//退货次数
-                            refund_money: resp.refund_money,//退货金额
-                            sub_num: resp.sub_num,//小计次数
-                            sub_money: resp.sub_money//小计金额
-                        });
-                        _self.collection.set(resp.master_detail);
-                        _self.printText = resp.printf;
-                        _self.renderPosInfo();
-                        _self.renderPosDetail();
+                    if ($.isEmptyObject(resp)) {
+                        if (resp.status == '00') {
+                            _self.model.set({
+                                pos: resp.pos,
+                                name: resp.cashier,
+                                date: resp.date,
+                                money: resp.sum_money,
+                                sale_num: resp.sale_num,//销售
+                                sale_money: resp.sale_money,//销售金额
+                                refund_num: resp.refund_num,//退货次数
+                                refund_money: resp.refund_money,//退货金额
+                                sub_num: resp.sub_num,//小计次数
+                                sub_money: resp.sub_money//小计金额
+                            });
+                            _self.collection.set(resp.master_detail);
+                            _self.printText = resp.printf;
+                            _self.renderPosInfo();
+                            _self.renderPosDetail();
+                        } else {
+                            //toastr.error(resp.msg);
+                            layer.msg(resp.msg, optLayerError);
+                        }
                     } else {
-                        toastr.error(resp.msg);
+                        layer.msg('系统错误，请联系管理员', optLayerError);
                     }
                 });
             }
