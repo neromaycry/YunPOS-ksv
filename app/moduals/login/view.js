@@ -35,7 +35,7 @@ define([
             'click .btn-clear': 'onClearClicked',
             'click input[name = username]': 'focusInputUser',
             'click input[name = password]': 'focusInputPasswd',
-            'click .doinit':'onInitClicked',
+            'click .doinit': 'onInitClicked',
             //'click .login-reconnecthw':'onReconnectHardwareClicked',
             'click .power-off': 'onPowerOffClicked',
             //'click .lock': 'lockScreen',
@@ -57,6 +57,7 @@ define([
             //var gatherDetail = [{"gather_kind":"05","valid_flag":"1","change_flag":"0","gather_type":"00","number_flag":"0","gather_id":"30","gather_name":"支付宝","gather_flag":"1","modify_date":"2016-11-29 09:57:36","gather_ui":"04","score_flag":"1","visible_flag":"1"},{"gather_kind":"05","valid_flag":"1","change_flag":"0","gather_type":"00","number_flag":"0","gather_id":"31","gather_name":"微信","gather_flag":"1","modify_date":"2016-11-29 21:55:01","gather_ui":"05","score_flag":"1","visible_flag":"1"},{"gather_kind":"00","valid_flag":"1","change_flag":"1","gather_type":"00","number_flag":"0","gather_id":"00","gather_name":"现金","gather_flag":"1","modify_date":"2016-11-29 23:16:44","gather_ui":"00","score_flag":"0","visible_flag":"1"},{"gather_kind":"00","valid_flag":"1","change_flag":"0","gather_type":"03","number_flag":"1","gather_id":"03","gather_name":"支付宝","gather_flag":"0","modify_date":"2016-11-29 23:15:28","gather_ui":"04","score_flag":"0","visible_flag":"1"},{"gather_kind":"00","valid_flag":"1","change_flag":"0","gather_type":"00","number_flag":"0","gather_id":"04","gather_name":"去零","gather_flag":"1","modify_date":"2016-11-29 23:16:28","gather_ui":"00","score_flag":"0","visible_flag":"0"},{"gather_kind":"00","valid_flag":"1","change_flag":"0","gather_type":"02","number_flag":"0","gather_id":"10","gather_name":"银行mis","gather_flag":"1","modify_date":"2016-11-29 23:17:08","gather_ui":"06","score_flag":"1","visible_flag":"1"},{"gather_kind":"00","valid_flag":"1","change_flag":"0","gather_type":"02","number_flag":"1","gather_id":"11","gather_name":"银行POS","gather_flag":"1","modify_date":"2016-11-29 23:17:38","gather_ui":"01","score_flag":"1","visible_flag":"1"},{"gather_kind":"01","valid_flag":"1","change_flag":"0","gather_type":"00","number_flag":"1","gather_id":"20","gather_name":"支票","gather_flag":"1","modify_date":"2016-11-29 23:19:06","gather_ui":"00","score_flag":"1","visible_flag":"1"}]
             //storage.set(system_config.GATHER_KEY, gatherDetail);
             this.getGatherDetail();
+            this.getPosLimit();
             this.handleEvents();
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
             storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
@@ -85,26 +86,6 @@ define([
                 return this;
             }
         },
-
-        //checkPosLimit: function () {
-        //    if (window.storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT)) {
-        //        var pos_limit = window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT).toString();
-        //        console.log(pos_limit);
-        //        window.auth_discount = pos_limit.charAt(0); //折扣控制
-        //        window.auth_report = pos_limit.charAt(1);  //报表控制
-        //        window.auth_store = pos_limit.charAt(2);  //百货控制
-        //        window.auth_receipt = pos_limit.charAt(3);  //打印小票
-        //        window.auth_return = pos_limit.charAt(4);  //退货控制
-        //        window.auth_delete = pos_limit.charAt(5);  //删除控制
-        //        window.auth_quling = pos_limit.charAt(6);  //去零控制
-        //        window.auth_cashdrawer = pos_limit.charAt(7);  //打开钱箱
-        //        window.auth_reprint = pos_limit.charAt(8);  //复制小票
-        //        window.auth_manualvip = pos_limit.charAt(9);  //手输vip控制
-        //        window.auth_ecardswipe = pos_limit.charAt(10);  //一卡通刷卡输入口令
-        //    } else {
-        //        window.layer.msg('未获取POS机权限，请初始化获取', optLayerWarning);
-        //    }
-        //},
 
         iniSettngs: function () {
             var attrs = {
@@ -275,6 +256,32 @@ define([
             });
         },
 
+        getPosLimit: function () {
+            var posKey = storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, 'pos_key');
+            this.model.requestPosLimit({poskey: posKey}, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status === '00') {
+                        var pos_limit = resp.pos_limit;
+                        window.auth_discount = pos_limit.charAt(0); //折扣控制
+                        window.auth_report = pos_limit.charAt(1);  //报表控制
+                        window.auth_store = pos_limit.charAt(2);  //百货控制
+                        window.auth_receipt = pos_limit.charAt(3);  //打印小票
+                        window.auth_return = pos_limit.charAt(4);  //退货控制
+                        window.auth_delete = pos_limit.charAt(5);  //删除控制
+                        window.auth_quling = pos_limit.charAt(6);  //去零控制
+                        window.auth_cashdrawer = pos_limit.charAt(7);  //打开钱箱
+                        window.auth_reprint = pos_limit.charAt(8);  //复制小票
+                        window.auth_manualvip = pos_limit.charAt(9);  //手输vip控制
+                        window.auth_ecardswipe = pos_limit.charAt(10);  //一卡通刷卡输入口令
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                    }
+                } else {
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
+                }
+            });
+        },
+
         onSettingClicked: function () {
             storage.set(system_config.LAST_PAGE, pageId);
             router.navigate('setting', {trigger: true});
@@ -375,16 +382,16 @@ define([
 
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '结算', '删除商品', '取消交易', '向上选择', '向下选择',
-                '单品优惠', '单品折扣', '原单退货', '锁屏', '开钱箱', '挂单', '解挂' , '会员登录',
-                '提大额', '收银对账', '营业员登录', '修改数量', '整单优惠','整单折扣','单品退货', '打印','银行业务',
+                '单品优惠', '单品折扣', '原单退货', '锁屏', '开钱箱', '挂单', '解挂', '会员登录',
+                '提大额', '收银对账', '营业员登录', '修改数量', '整单优惠', '整单折扣', '单品退货', '打印', '银行业务',
                 '会员登录切换会员卡登录', '会员登录切换手机号登录'];
-            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓' ,'F1','F2', 'F3', 'F4', 'F5','F6',
-                'F7', 'F8', 'F9', 'F10', 'F11' ,'F12','Y','U','F', 'H', 'V', 'X', 'P'];
+            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
+                'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Y', 'U', 'F', 'H', 'V', 'X', 'P'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D,
                 window.KEYS.C, window.KEYS.Up, window.KEYS.Down, window.KEYS.F1, window.KEYS.F2,
                 window.KEYS.F3, window.KEYS.F4, window.KEYS.F5, window.KEYS.F6, window.KEYS.F7,
                 window.KEYS.F8, window.KEYS.F9, window.KEYS.F10, window.KEYS.F11, window.KEYS.F12,
-                window.KEYS.Y,window.KEYS.U, window.KEYS.F,window.KEYS.H, window.KEYS.V, window.KEYS.X,
+                window.KEYS.Y, window.KEYS.U, window.KEYS.F, window.KEYS.H, window.KEYS.V, window.KEYS.X,
                 window.KEYS.P];
             var mainKeys = [];
             for (var i = 0; i < effects.length; i++) {
@@ -445,8 +452,8 @@ define([
         },
 
         setReturnWholeKeys: function () {
-            var effects = ['返回', '确定', '结算', '取消退货','向上选择', '向下选择',];
-            var keys = ['ESC', 'ENTER', 'Space', 'C','↑', '↓'];
+            var effects = ['返回', '确定', '结算', '取消退货', '向上选择', '向下选择',];
+            var keys = ['ESC', 'ENTER', 'Space', 'C', '↑', '↓'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Space, window.KEYS.B, window.KEYS.C, window.KEYS.Up,
                 window.KEYS.Down];
             var returnWholeKeys = [];
@@ -461,11 +468,11 @@ define([
         },
 
         setBillingKeys: function () {
-            var effects = ['返回', '确定','结算', '删除已支付的方式', '清空支付方式列表', '向上选择', '向下选择',
-                '支票类支付', '礼券类支付', '银行卡POS支付', '第三方支付', '一卡通支付', '快捷支付','银行业务',
-                 '一卡通切换会员卡登录', '一卡通切换手机号登录'];
-            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E','V',
-            'X','P'];
+            var effects = ['返回', '确定', '结算', '删除已支付的方式', '清空支付方式列表', '向上选择', '向下选择',
+                '支票类支付', '礼券类支付', '银行卡POS支付', '第三方支付', '一卡通支付', '快捷支付', '银行业务',
+                '一卡通切换会员卡登录', '一卡通切换手机号登录'];
+            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E', 'V',
+                'X', 'P'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D, window.KEYS.C,
                 window.KEYS.Up, window.KEYS.Down, window.KEYS.S, window.KEYS.B, window.KEYS.P, window.KEYS.Q,
                 window.KEYS.O, window.KEYS.E, window.KEYS.V, window.KEYS.X, window.KEYS.P];
@@ -481,13 +488,13 @@ define([
         },
 
         setBillingReturnKeys: function () {
-            var effects = ['返回', '确定','结算', '删除已支付的方式', '清空支付方式列表', '向上选择', '向下选择',
+            var effects = ['返回', '确定', '结算', '删除已支付的方式', '清空支付方式列表', '向上选择', '向下选择',
                 '支票类支付', '礼券类支付', '银行卡POS支付', '第三方支付', '一卡通支付', '快捷支付', '一卡通切换会员卡登录',
                 '一卡通切换手机号登录'];
-            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E','X','P'];
+            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E', 'X', 'P'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D, window.KEYS.C,
                 window.KEYS.Up, window.KEYS.Down, window.KEYS.S, window.KEYS.B, window.KEYS.P, window.KEYS.Q,
-                window.KEYS.O, window.KEYS.E,window.KEYS.X, window.KEYS.P];
+                window.KEYS.O, window.KEYS.E, window.KEYS.X, window.KEYS.P];
             var billingreturnKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];

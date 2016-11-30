@@ -181,7 +181,7 @@ requirejs([
 
     //window.storage.set('pos_limit', '11111111111');
     var isPosLimitSet = window.storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT);
-
+    //
     if (isPosLimitSet) {
         var pos_limit = window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT).toString();
         console.log(pos_limit);
@@ -196,9 +196,10 @@ requirejs([
         window.auth_reprint = pos_limit.charAt(8);  //复制小票
         window.auth_manualvip = pos_limit.charAt(9);  //手输vip控制
         window.auth_ecardswipe = pos_limit.charAt(10);  //一卡通刷卡输入口令
-    } else {
-        window.layer.msg('未获取POS机权限，请初始化获取', optLayerWarning);
     }
+    //else {
+    //    window.layer.msg('未获取POS机权限，请初始化获取', optLayerWarning);
+    //}
 
     if (window.isPacked) {
         window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显

@@ -55,6 +55,14 @@ define(['../../js/common/BaseModel'], function (BaseModel) {
                 success: callback1,
                 error: callback2
             });
+        },
+
+        requestPosLimit: function (data, callback) {
+            this.sendPOST({
+                url: window.API_URL.INIT,
+                data: data,
+                success: callback
+            });
         }
 
     });
