@@ -511,7 +511,7 @@ define([
                 //data['refundamount'] = refundamount;  //当前付款金额
             }
             //var url = 'http://127.0.0.1:5000/';
-            var url = 'http://114.55.62.102:9090';
+            var url = 'http://121.42.166.147:9090/';
             resource.post(url + 'api/pay/xfb/refund', data, function (resp) {
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {

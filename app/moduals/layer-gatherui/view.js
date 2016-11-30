@@ -68,7 +68,7 @@ define([
                 return false;
             }
             var url = 'http://127.0.0.1:5000/';
-            //var url = 'http://114.55.62.102:9090';
+            //var url = 'http://121.42.166.147:9090/';
             resource.post(url + 'api/pay/xfb/prepay', data, function (resp) {
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {
@@ -251,7 +251,7 @@ define([
             console.log(data);
             loading.show();
             //var url = 'http://127.0.0.1:5000/';
-            var url = 'http://114.55.62.102:9090';
+            var url = 'http://121.42.166.147:9090/';
             resource.post(url + 'api/pay/xfb/micropay', data, function (resp) {
                 if (!$.isEmptyObject(resp)) {
                     if (resp.code == '000000') {
