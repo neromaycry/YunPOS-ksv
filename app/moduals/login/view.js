@@ -262,6 +262,7 @@ define([
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status === '00') {
                         var pos_limit = resp.pos_limit;
+                        storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT, pos_limit);
                         window.auth_discount = pos_limit.charAt(0); //折扣控制
                         window.auth_report = pos_limit.charAt(1);  //报表控制
                         window.auth_store = pos_limit.charAt(2);  //百货控制

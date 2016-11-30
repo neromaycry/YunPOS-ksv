@@ -231,7 +231,9 @@ define([
                 havepay_money: havepay_money,
                 change_money: change_money,
                 payment_bill: '',
-                reference_number: ''
+                reference_number: '',
+                outtradeno: '',
+                bank_json: {}
             });
             switch (extraArgs.extra_id) {
                 case 0:
