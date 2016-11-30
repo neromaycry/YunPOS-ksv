@@ -87,6 +87,11 @@ define([
         onReceived: function (index) {
             var _self = this;
             var attrs = {};
+            if (this.collection.length == 0) {
+                layer.msg('当前大类支付方式为空', optLayerError);
+                this.closeLayer(layerindex);
+                return;
+            }
             var gatherUI = this.collection.at(index).get('gather_ui');
             var gatherId = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');

@@ -100,12 +100,12 @@ define([
         switchTemplate: function (gatherUI) {
             switch (gatherUI) {
                 case '04':
-                    this.template_content = wechatpaytpl;
-                    this.input = 'input[name = wechat-account]';
-                    break;
-                case '05':
                     this.template_content = alipaytpl;
                     this.input = 'input[name = alipay-account]';
+                    break;
+                case '05':
+                    this.template_content = wechatpaytpl;
+                    this.input = 'input[name = wechat-account]';
                     break;
                 case '06':
                     this.template_content = bankcardtpl;

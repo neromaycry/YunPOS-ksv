@@ -801,9 +801,9 @@ define([
         },
 
         onThirdPayClicked: function () {
-            layer.msg('该功能正在调试中', optLayerHelp);
+            //layer.msg('该功能正在调试中', optLayerHelp);
             $('input[name = billingrt]').val('');
-            //this.payment('05', '第三方支付');
+            this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();
         },
 
