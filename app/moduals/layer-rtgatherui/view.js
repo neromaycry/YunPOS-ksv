@@ -5,6 +5,7 @@ define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-rtgatherui/model',
     '../../moduals/layer-bankcard/view',
+    '../../moduals/layer-orderid/view',
     'text!../../moduals/layer-rtgatherui/contenttpl.html',
     'text!../../moduals/layer-rtgatherui/commontpl.html',
     'text!../../moduals/layer-rtgatherui/alipaytpl.html',
@@ -12,7 +13,7 @@ define([
     'text!../../moduals/layer-rtgatherui/numpadtpl.html',
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, LayerOrderIdView,  contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -60,14 +61,16 @@ define([
 
         switchTemplate: function (gatherUI) {
             switch (gatherUI) {
+                    //
+                    //this.template_content = alipaytpl;
+                    //this.input = 'input[name = alipay-account]';
+                    //break;
+                    //
+                    //this.template_content = wechatpaytpl;
+                    //this.input = 'input[name = wechat-account]';
+                    //break;
                 case '04':
-                    this.template_content = alipaytpl;
-                    this.input = 'input[name = alipay-account]';
-                    break;
                 case '05':
-                    this.template_content = wechatpaytpl;
-                    this.input = 'input[name = wechat-account]';
-                    break;
                 case '06':
                     this.template_content = bankcardtpl;
                     this.input = 'input[name = reference-num]';
@@ -103,58 +106,39 @@ define([
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING_RETURN, '银行MIS退款', LayerBankCardView, this.attrs, {area: '300px'});
                 return;
             }
+            if(this.gatherUI == '04' || this.gatherUI == '05') {
+                var reference_no = $(this.input).val();
+                if (reference_no == '') {
+                    layer.msg('请输入系统参考号', optLayerWarning);
+                    return;
+                }
+                attrs = {
+                    gather_id: this.attrs.gather_id,
+                    gather_name: this.attrs.gather_name,
+                    gather_money: this.attrs.gather_money,
+                    gather_kind: this.attrs.gather_kind,
+
+                };
+                this.closeLayer(layerindex);
+                this.openLayer(PAGE_ID.LAYER_ORDER_ID, PAGE_ID.BILLING_RETURN, '输入第三方支付流水号', LayerOrderIdView, attrs, {area:'300px'});
+                return;
+            }
             var gatherNo = $(this.input).val();
             if ((gatherNo.split('.').length - 1) > 0 || gatherNo == '') {
                 layer.msg('无效的支付账号', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            switch (this.gatherUI) {
-                case '01':
-                    //if (luhmCheck(gatherNo)) {
-                        attrs = {
-                            gather_id: this.attrs.gather_id,
-                            gather_name: this.attrs.gather_name,
-                            gather_money: this.attrs.gather_money,
-                            gather_kind: this.attrs.gather_kind,
-                            gather_no: gatherNo
-                        };
-                        Backbone.trigger('onReceivedsum', attrs);
-                        this.closeLayer(layerindex);
-                        $('input[name = billingrt]').focus();
-                    //} else {
-                    //    $(this.input).val('');
-                    //}
-                    break;
-                case '04':
-                case '05':
-                    attrs = {
-                        gather_id: this.attrs.gather_id,
-                        gather_name: this.attrs.gather_name,
-                        gather_money: this.attrs.gather_money,
-                        gather_kind: this.attrs.gather_kind,
-                        gather_no: '',
-                        hasExtra: true,
-                        extras: {
-                            extra_id: 1,
-                            payment_bill: gatherNo
-                        }
-                    };
-                    Backbone.trigger('onReceivedsum', attrs);
-                    break;
-                default :
-                    attrs = {
-                        gather_id: this.attrs.gather_id,
-                        gather_name: this.attrs.gather_name,
-                        gather_money: this.attrs.gather_money,
-                        gather_kind: this.attrs.gather_kind,
-                        gather_no: gatherNo
-                    };
-                    Backbone.trigger('onReceivedsum', attrs);
-                    this.closeLayer(layerindex);
-                    $('input[name = billingrt]').focus();
-            }
-
+            attrs = {
+                gather_id: this.attrs.gather_id,
+                gather_name: this.attrs.gather_name,
+                gather_money: this.attrs.gather_money,
+                gather_kind: this.attrs.gather_kind,
+                gather_no: gatherNo
+            };
+            Backbone.trigger('onReceivedsum', attrs);
+            this.closeLayer(layerindex);
+            $('input[name = billingrt]').focus();
         },
 
         onNumClicked: function (e) {

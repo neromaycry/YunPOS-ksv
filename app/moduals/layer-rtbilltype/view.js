@@ -44,7 +44,8 @@ define([
                     var item = new RTLayerTypeModel();
                     item.set({
                         gather_id: gatherList[i].gather_id,
-                        gather_name: gatherList[i].gather_name
+                        gather_name: gatherList[i].gather_name,
+                        gather_ui:gatherList[i].gather_ui
                     });
                     this.collection.push(item);
                 }
@@ -99,7 +100,14 @@ define([
             switch (gatherUI) {
                 case '04':
                 case '05':
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, gatherName, RTLayerGatherUIView, data, {area: '300px'});
+                    attrs = {
+                        gather_id:gatherId,
+                        gather_name:gatherName,
+                        gather_ui:gatherUI,
+                        gather_money:_self.attrs.gather_money,
+                        gather_kind:_self.attrs.gather_kind
+                    };
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入系统参考号', RTLayerGatherUIView, attrs, {area: '300px'});
                     break;
                 case '06'://银行mis
                     this.closeLayer(layerindex);

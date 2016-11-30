@@ -198,7 +198,7 @@ window.PAGE_ID = {
     'ALIPAY': 29,
     'WECHAT': 30,
     'LAYER_REFERENCE_NUM': 31,
-    'QP_WECHAT': 32,
+    'LAYER_ORDER_ID': 32,
     'RT_ALIPAY': 33,
     'RT_WECHAT': 34,
     'LAYER_RT_BANKCARD': 35,

@@ -565,6 +565,7 @@ define([
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
                 _self.calculateModel();
+                layer.msg('单品优惠成功!优惠金额：' + discount + '元', optLayerSuccess);
                 $('#li' + _self.i).addClass('cus-selected');
                 $(_self.input).val('');
             });
@@ -611,6 +612,7 @@ define([
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
                 _self.calculateModel();
+                layer.msg('单品折扣成功!折扣比率：' + (rate * 10).toFixed(1) + '折', optLayerSuccess);
                 $('#li' + _self.i).addClass('cus-selected');
                 $(_self.input).val('');
             });
@@ -689,6 +691,11 @@ define([
                 if(resp.status == '00') {
                     _self.onAddItem(resp.goods_detail);
                     _self.isTotalDiscount = true;
+                    if(subType == '01') {
+                        layer.msg('整单优惠成功!优惠金额：' + rate + '元', optLayerSuccess);
+                    }else {
+                        layer.msg('整单折扣成功!折扣比率：' + (rate * 10).toFixed(1) + '折', optLayerSuccess);
+                    }
                 }else {
                     layer.msg(resp.msg, optLayerWarning);
                 }
