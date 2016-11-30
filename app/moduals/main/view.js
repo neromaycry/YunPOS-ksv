@@ -391,11 +391,11 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F4, function () {
                 _self.lockScreen();
             });
-
+            //银行页面
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.V, function () {
                 _self.onBusinessClicked();
             });
-
+            //设置页面
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Q, function () {
                 _self.onSettingClicked();
             });
