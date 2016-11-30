@@ -30,7 +30,7 @@ define([
         pageInit: function () {
             pageId = window.PAGE_ID.SETPOSKEY;
             if (!storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY)) {
-                storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY, 'http://111.198.72.128:3000/v1');
+                storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY, 'http://127.0.0.1:3000/v1');
             }
         },
 

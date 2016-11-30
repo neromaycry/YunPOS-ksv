@@ -130,6 +130,12 @@ define([
                     layer.msg('请输入第三方支付流水号', optLayerWarning);
                     return;
                 }
+                loading.show();
+                var url = 'http://127.0.0.1:5000/';
+                //var url = 'http://121.42.166.147:9090/';
+                resource.post(url + 'api/pay/xfb/refund', data, function (resp) {
+
+                });
                 attrs = {
                     gather_id: this.attrs.gather_id,
                     gather_name: this.attrs.gather_name,
