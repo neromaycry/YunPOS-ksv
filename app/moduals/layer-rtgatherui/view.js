@@ -5,15 +5,13 @@ define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-rtgatherui/model',
     '../../moduals/layer-bankcard/view',
-    '../../moduals/layer-orderid/view',
     'text!../../moduals/layer-rtgatherui/contenttpl.html',
     'text!../../moduals/layer-rtgatherui/commontpl.html',
-    'text!../../moduals/layer-rtgatherui/alipaytpl.html',
-    'text!../../moduals/layer-rtgatherui/wechatpaytpl.html',
+    'text!../../moduals/layer-rtgatherui/thirdpay.html',
     'text!../../moduals/layer-rtgatherui/numpadtpl.html',
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, LayerOrderIdView,  contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView ,  contenttpl, commontpl, thirdpaytpl, numpadtpl, bankcardtpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -61,16 +59,11 @@ define([
 
         switchTemplate: function (gatherUI) {
             switch (gatherUI) {
-                    //
-                    //this.template_content = alipaytpl;
-                    //this.input = 'input[name = alipay-account]';
-                    //break;
-                    //
-                    //this.template_content = wechatpaytpl;
-                    //this.input = 'input[name = wechat-account]';
-                    //break;
                 case '04':
                 case '05':
+                    this.template_content = thirdpaytpl;
+                    this.input = 'input[name = reference-num]';
+                    break;
                 case '06':
                     this.template_content = bankcardtpl;
                     this.input = 'input[name = reference-num]';
@@ -88,6 +81,26 @@ define([
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
                 _self.onOKClicked();
+            });
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Up, function () {
+                var isUserFocused = $('input[name = reference-num]').is(':focus');
+                if (isUserFocused) {
+                    $('input[name = payment-bill]').focus();
+                    _self.input = 'input[name = payment-bill]';
+                } else {
+                    $('input[name = reference-num]').focus();
+                    _self.input = 'input[name = reference-num]';
+                }
+            });
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Down, function () {
+                var isUserFocused = $('input[name = reference-num]').is(':focus');
+                if (isUserFocused) {
+                    $('input[name = payment-bill]').focus();
+                    _self.input = 'input[name = payment-bill]';
+                } else {
+                    $('input[name = reference-num]').focus();
+                    _self.input = 'input[name = reference-num]';
+                }
             });
         },
 
@@ -107,9 +120,14 @@ define([
                 return;
             }
             if(this.gatherUI == '04' || this.gatherUI == '05') {
-                var reference_no = $(this.input).val();
+                var reference_no = $('input[name = reference-num]').val();
+                var payment_bill = $('input[name = payment-bill]').val();
                 if (reference_no == '') {
                     layer.msg('请输入系统参考号', optLayerWarning);
+                    return;
+                }
+                if(payment_bill == '') {
+                    layer.msg('请输入第三方支付流水号', optLayerWarning);
                     return;
                 }
                 attrs = {
@@ -120,7 +138,6 @@ define([
 
                 };
                 this.closeLayer(layerindex);
-                this.openLayer(PAGE_ID.LAYER_ORDER_ID, PAGE_ID.BILLING_RETURN, '输入第三方支付流水号', LayerOrderIdView, attrs, {area:'300px'});
                 return;
             }
             var gatherNo = $(this.input).val();
