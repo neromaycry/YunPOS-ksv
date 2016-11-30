@@ -6,7 +6,7 @@ define([
     '../../../../moduals/setposkey/model',
     '../../../../moduals/layer-gateway/view',
     'text!../../../../moduals/setposkey/tpl.html'
-], function (BaseView, SetPoskeyModel, LayoutGatewayView, tpl) {
+], function (BaseView, SetPoskeyModel, LayerGatewayView, tpl) {
 
     var setPoskeyView = BaseView.extend({
 
