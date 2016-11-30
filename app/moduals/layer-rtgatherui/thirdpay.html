@@ -1,0 +1,24 @@
+
+<div class="panel" style="border: none;margin: 0;">
+    <div class="panel-body">
+        <div class="row m-b">
+            <div class="col-xs-6 col-md-6 text-right pos-textsize no-padding">退款金额：</div>
+            <div class="col-xs-6 col-md-6 text-left text-red no-padding" style="font-size: 18px">￥<%= toDecimal2(gather_money) %></div>
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="reference-num">commontpl</label>
+            <input type="text" id="reference-num" name="reference-num" class="form-control" placeholder="请输入系统参考号" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"/>
+        </div>
+        <div class="form-group no-margining">
+            <label class="sr-only" for="payment-bill">commontpl</label>
+            <input type="text" id="payment-bill" name="payment-bill" class="form-control" placeholder="请输入第三方支付流水号" onkeypress="return myNumberic(event)" onkeyup="return ValidateFloat($(this),value)"/>
+        </div>
+    </div>
+</div>
+<div class="panel panel-primary left-margin" style="margin-right: 15px">
+    <div class="for-numpad">
+
+    </div>
+</div>
+
+
