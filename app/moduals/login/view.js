@@ -252,7 +252,7 @@ define([
                 console.log(errorThrown);
                 //var gatewayView = new GatewayView();
                 //_self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
-                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, null, {area: '400px'});
+                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, null, {area: '500px'});
             });
         },
 

@@ -65,6 +65,7 @@ define([
             var ip = 'http://' + $(this.input).val() + ':3000/v1';
             storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY, ip);
             this.closeLayer(layerindex);
+            layer.msg('设置成功', optLayerSuccess);
             Backbone.trigger('getGatherDetail');
         },
 

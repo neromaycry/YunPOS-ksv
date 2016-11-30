@@ -73,7 +73,7 @@ define([
                     $('input[name = gateway]').val(gateway);
                 }
             };
-            this.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, attrs, {area: '400px'});
+            this.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, attrs, {area: '500px'});
         },
 
         onBackClicked: function () {

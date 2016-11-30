@@ -230,7 +230,6 @@ define([
                     } else {
                         layer.msg('系统错误，请联系管理员', optLayerError);
                     }
-
                 });
 
                 var posdata = {};
@@ -238,7 +237,7 @@ define([
                 posdata['type'] = '02';
                 this.posrequest = new CheckingModel();
                 this.posrequest.report(posdata, function (resp) {
-                    if ($.isEmptyObject(resp)) {
+                    if (!$.isEmptyObject(resp)) {
                         if (resp.status == '00') {
                             _self.model.set({
                                 pos: resp.pos,
