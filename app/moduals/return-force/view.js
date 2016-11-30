@@ -314,6 +314,7 @@ define([
                 $(this.input).val('');
                 return;
             }
+            var _self = this;
             var value = $(this.input).val();
             var item = this.collection.at(this.i);
             var price = item.get('price');
@@ -330,12 +331,15 @@ define([
                 return;
             }
 
-            this.collection.at(this.i).set({
-                discount: parseFloat(value),
-                money: price * num - value
+            var rate = 1 - parseFloat(value) / (price * num); //discount_rate类型为decimal
+            this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
+                _self.collection.at(_self.i).set({
+                    discount: parseFloat(value),
+                    money: price * num - value
+                });
+                _self.calculateModel();
+                $('#li' + _self.i).addClass('cus-selected');
             });
-            this.calculateModel();
-            $('#li' + this.i).addClass('cus-selected');
             $(this.input).val('');
         },
 
@@ -353,32 +357,41 @@ define([
                 $(this.input).val('');
                 return;
             }
+            var _self = this;
             var rate = parseFloat(discountpercent) / 100;
-            console.log(rate);
             var item = this.collection.at(this.i);
             var price = item.get('price');
             var num = item.get('num');
-            this.collection.at(this.i).set({
-                discount: price * num * (1 - rate),
-                money: price * num * rate
+            console.log(rate);
+            this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
+                _self.collection.at(_self.i).set({
+                    discount: price * num * (1 - rate),
+                    money: price * num * rate
+                });
+                _self.calculateModel();
+                $('#li' + _self.i).addClass('cus-selected');
+                $(_self.input).val('');
             });
-            this.calculateModel();
-            $('#li' + this.i).addClass('cus-selected');
-
-            $(this.input).val('');
         },
         /**
          * 修改数量
          */
         modifyItemNum: function () {
             var number = $(this.input).val();
+            var discountamount = this.model.get('discountamount');
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
+
             if (number == '' || number == 0 || (number.split('.').length - 1) > 1) {
                 layer.msg('无效的商品数量', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(discountamount != 0) {
+                layer.msg('折扣后不能修改数量，如想继续修改数量，请取消退货', optLayerWarning);
                 $(this.input).val('');
                 return;
             }

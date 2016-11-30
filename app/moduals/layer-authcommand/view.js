@@ -172,9 +172,11 @@ define([
                     break;
                 case window.PAGE_ID.BILLING_RETURN:
                     this.closeLayer(PAGE_ID.BILLING_RETURN);
+                    $('input[name = billingrt]').focus();
                     break;
                 case window.PAGE_ID.RETURN_FORCE:
                     this.closeLayer(PAGE_ID.RETURN_FORCE);
+                    $('input[name = sku_id]').focus();
                     break;
                 case window.PAGE_ID.CHECKING:
                     this.closeLayer(PAGE_ID.CHECKING);

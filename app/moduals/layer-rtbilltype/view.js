@@ -87,19 +87,21 @@ define([
         onReceived: function (index) {
             var _self = this;
             var attrs = {};
+            var gatherUI = this.collection.at(index).get('gather_ui');
             var gatherId = this.collection.at(index).get('gather_id');
             var gatherName = this.collection.at(index).get('gather_name');
             this.closeLayer(layerindex);
-            switch (gatherId) {
-                case '12':
-                case '13':
+            switch (gatherUI) {
+                case '04':
+                case '05':
                     this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, gatherName, RTLayerGatherUIView, data, {area: '300px'});
                     break;
-                case '16'://银行mis
+                case '06'://银行mis
                     this.closeLayer(layerindex);
                     attrs = {
                         gather_id: gatherId,
                         gather_name: gatherName,
+                        gather_ui: gatherUI,
                         gather_money: _self.attrs.gather_money,
                         gather_kind: _self.attrs.gather_kind,
                         bill_no: _self.attrs.bill_no,
@@ -110,6 +112,7 @@ define([
                     this.closeLayer(layerindex);
                     attrs = {
                         gather_id: gatherId,
+                        gather_ui: gatherUI,
                         gather_name: gatherName,
                         gather_money: this.attrs.gather_money,
                         gather_kind: this.attrs.gather_kind,

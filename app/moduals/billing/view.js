@@ -1020,16 +1020,19 @@ define([
                     return;
                 }
                 var item = _.findWhere(visibleTypes, {gather_id: gatherId});
+                console.log(item);
+                var gatherUI = item.gather_ui;
                 var data = {
                     gather_money: unpaidamount,
                     gather_id: gatherId,
                     gather_name: item.gather_name,
                     gather_kind: item.gather_kind,
+                    gather_ui:gatherUI,
                     bill_no: this.billNumber
                 };
-                switch (gatherId) {
-                    case '12':
-                    case '13':
+                switch (gatherUI) {
+                    case '04':
+                    case '05':
                         var xfbdata = {
                             pos_id: storage.get(system_config.POS_INFO_KEY, 'posid'),
                             bill_no: this.billNumber
@@ -1049,7 +1052,7 @@ define([
                             }
                         });
                         break;
-                    case '16':
+                    case '06':
                         this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, '银行卡支付确认', LayerGatherUIView, data, {area: '300px'});
                         break;
                     default :

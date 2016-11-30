@@ -37,12 +37,12 @@ define([
         LayerInitPage: function () {
             console.log(this.attrs);
             var _self = this;
-            this.gatherId = this.attrs.gather_id;
+            this.gatherUI = this.attrs.gather_ui;
             this.model = new LayerGatherUIModel();
             this.model.set({
                 gather_money: this.attrs.gather_money
             });
-            this.switchTemplate(this.gatherId);
+            this.switchTemplate(this.gatherUI);
             this.template_content = _.template(this.template_content);
             setTimeout(function () {
                 _self.renderContent();
@@ -58,17 +58,17 @@ define([
         },
 
 
-        switchTemplate: function (gatherId) {
-            switch (gatherId) {
-                case '12':
-                    this.template_content = wechatpaytpl;
-                    this.input = 'input[name = wechat-account]';
-                    break;
-                case '13':
+        switchTemplate: function (gatherUI) {
+            switch (gatherUI) {
+                case '04':
                     this.template_content = alipaytpl;
                     this.input = 'input[name = alipay-account]';
                     break;
-                case '16':
+                case '05':
+                    this.template_content = wechatpaytpl;
+                    this.input = 'input[name = wechat-account]';
+                    break;
+                case '06':
                     this.template_content = bankcardtpl;
                     this.input = 'input[name = reference-num]';
                     break;
@@ -91,7 +91,7 @@ define([
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
         onOKClicked: function () {
             var attrs = {};
-            if (this.gatherId == '16') {
+            if (this.gatherUI == '06') {
                 var reference_no = $(this.input).val();
                 if (reference_no == '') {
                     layer.msg('请输入系统参考号', optLayerWarning);
@@ -109,9 +109,9 @@ define([
                 $(this.input).val('');
                 return;
             }
-            switch (this.gatherId) {
-                case '05':
-                    if (luhmCheck(gatherNo)) {
+            switch (this.gatherUI) {
+                case '01':
+                    //if (luhmCheck(gatherNo)) {
                         attrs = {
                             gather_id: this.attrs.gather_id,
                             gather_name: this.attrs.gather_name,
@@ -122,12 +122,12 @@ define([
                         Backbone.trigger('onReceivedsum', attrs);
                         this.closeLayer(layerindex);
                         $('input[name = billingrt]').focus();
-                    } else {
-                        $(this.input).val('');
-                    }
+                    //} else {
+                    //    $(this.input).val('');
+                    //}
                     break;
-                case '12':
-                case '13':
+                case '04':
+                case '05':
                     attrs = {
                         gather_id: this.attrs.gather_id,
                         gather_name: this.attrs.gather_name,
@@ -151,9 +151,10 @@ define([
                         gather_no: gatherNo
                     };
                     Backbone.trigger('onReceivedsum', attrs);
+                    this.closeLayer(layerindex);
+                    $('input[name = billingrt]').focus();
             }
-            this.closeLayer(layerindex);
-            $('input[name = billingrt]').focus();
+
         },
 
         onNumClicked: function (e) {

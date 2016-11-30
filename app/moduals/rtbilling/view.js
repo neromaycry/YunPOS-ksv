@@ -505,6 +505,8 @@ define([
          */
         QuickPay: function () {
             var _self = this;
+            var xfbdata = {};
+            var attrs = {};
             var gatherId = $(this.input).val();
             var unpaidamount = this.model.get('unpaidamount');
             if (unpaidamount == 0) {
@@ -521,30 +523,34 @@ define([
                     return;
                 }
                 var item = _.findWhere(visibleTypes, {gather_id: gatherId});
-                var data = {
-                    gather_money: unpaidamount,
-                    gather_id: gatherId,
-                    gather_name: item.gather_name,
-                    gather_kind: item.gather_kind,
-                    bill_no: _self.billNumber
-                };
-                var data = {};
-                var xfbdata = {};
+                var gatherUI = item.gather_ui;
                 xfbdata['pos_id'] = '002';
                 xfbdata['bill_no'] = _self.billNumber;
-                data['gather_money'] = unpaidamount;
-                data['gather_id'] = gatherId;
-                data['gather_name'] = item.gather_name;
-                switch (gatherId) {
-                    case '12':
-                    case'13':
+                switch (gatherUI) {
+                    case '04':
+                    case '05':
                         layer.msg('该功能正在调试中', optLayerHelp);
                         break;
-                    case '16':
-                        this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, '银行卡退款确认', GatherUIView, data, {area: '300px'});
+                    case '06':
+                        attrs = {
+                            gather_id: gatherId,
+                            gather_name: item.gather_name,
+                            gather_ui: gatherUI,
+                            gather_money: unpaidamount,
+                            gather_kind: item.gather_kind,
+                            bill_no: _self.billNumber,
+                        };
+                        this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, '银行卡退款确认', GatherUIView, attrs, {area: '300px'});
                         break;
                     default :
-                        this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, item.gather_name, GatherUIView, data, {area: '300px'});
+                        attrs = {
+                            gather_id: gatherId,
+                            gather_ui: gatherUI,
+                            gather_name:  item.gather_name,
+                            gather_money: unpaidamount,
+                            gather_kind: item.gather_kind,
+                        };
+                        this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, item.gather_name, GatherUIView, attrs, {area: '300px'});
                 }
             }
             $(this.input).val('');
