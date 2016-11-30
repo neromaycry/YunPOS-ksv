@@ -1045,7 +1045,9 @@ define([
          * 收银对账按钮点击事件
          */
         onCheckingClicked: function () {
-            router.navigate('checking', {trigger: true});
+            this.evalAuth(auth_report, '04', {}, function () {
+                router.navigate('checking', {trigger: true});
+            });
         },
         /**
          * 退出按钮点击事件
