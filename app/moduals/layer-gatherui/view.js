@@ -264,6 +264,7 @@ define([
                             Backbone.trigger('onReceivedsum', _.extend(attrData, {
                                 extras: extra
                             }));
+                            layer.msg(resp.data.msg, optLayerSuccess);
                             _self.closeLayer(layerindex);
                         } else {
                             loading.hide();

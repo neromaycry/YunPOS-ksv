@@ -161,7 +161,7 @@ define([
 
         onReceivedsum: function (data) {
             console.log(data);
-            var gatherMoney = parseFloat(data['gather_money']);//number类型
+            var gatherMoney = parseFloat(data.gather_money);//number类型
             var gatherNo = data.gather_no;//付款账号
             var gatherName = data.gather_name;
             var gatherId = data.gather_id;

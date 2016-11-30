@@ -106,6 +106,7 @@ define([
 
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
         onOKClicked: function () {
+            var _self = this;
             var attrs = {};
             if (this.gatherUI == '06') {
                 var reference_no = $(this.input).val();
@@ -123,27 +124,66 @@ define([
                 var reference_no = $('input[name = reference-num]').val();
                 var payment_bill = $('input[name = payment-bill]').val();
                 if (reference_no == '') {
-                    layer.msg('请输入系统参考号', optLayerWarning);
+                    layer.msg('请输入参考号', optLayerWarning);
                     return;
                 }
                 if(payment_bill == '') {
                     layer.msg('请输入第三方支付流水号', optLayerWarning);
                     return;
                 }
+                var data = {
+                    orderid: reference_no,
+                    outtradeno: payment_bill,
+                    refundamount: this.attrs.gather_money
+                };
+                if (this.gatherUI == '04') {
+                    _.extend(data, {
+                        paymethod: 'zfb',
+                        zfbtwo: 'zfbtwo'
+                    });
+                }
+                if (this.gatherUI == '05') {
+                    _.extend(data, {
+                        paymethod: 'wx'
+                    });
+                }
                 loading.show();
                 var url = 'http://127.0.0.1:5000/';
                 //var url = 'http://121.42.166.147:9090/';
                 resource.post(url + 'api/pay/xfb/refund', data, function (resp) {
+                    loading.hide();
+                    console.log(resp);
+                    if (!$.isEmptyObject(resp)) {
+                        if (resp.code == '000000') {
+                            if (resp.data.flag == '00') {
+                                var extra = _.extend(_self.attrs.extras, {
+                                    outtradeno: resp.data.outtradeno,
+                                    gather_ui: _self.gatherUI
+                                });
+                                Backbone.trigger('onRTReceivedsum', _.extend(_self.attrs, {
+                                    gather_no: '第三方支付账户',
+                                    extras: extra
+                                }));
+                                layer.msg(resp.data.msg, optLayerSuccess);
+                                _self.closeLayer(layerindex);
+                            } else {
+                                layer.msg(resp.data.msg, optLayerError);
+                            }
 
+                        } else {
+                            layer.msg(resp.msg, optLayerError);
+                        }
+                    } else {
+                        layer.msg('服务器错误，请联系管理员', optLayerError);
+                    }
                 });
                 attrs = {
                     gather_id: this.attrs.gather_id,
                     gather_name: this.attrs.gather_name,
                     gather_money: this.attrs.gather_money,
                     gather_kind: this.attrs.gather_kind,
-
                 };
-                this.closeLayer(layerindex);
+
                 return;
             }
             var gatherNo = $(this.input).val();
@@ -159,7 +199,7 @@ define([
                 gather_kind: this.attrs.gather_kind,
                 gather_no: gatherNo
             };
-            Backbone.trigger('onReceivedsum', attrs);
+            Backbone.trigger('onRTReceivedsum', attrs);
             this.closeLayer(layerindex);
             $('input[name = billingrt]').focus();
         },
@@ -185,6 +225,10 @@ define([
         onClearClicked: function () {
             $(this.input).val('');
         },
+
+        refund: function (gatherUI, gatherNo, attrData) {
+
+        }
 
     });
 

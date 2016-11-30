@@ -150,16 +150,16 @@ define([
         },
 
         handleEvents: function () {
-            Backbone.off('onReceivedsum');
-            Backbone.on('onReceivedsum', this.onReceivedsum, this);
+            Backbone.off('onRTReceivedsum');
+            Backbone.on('onRTReceivedsum', this.onRTReceivedsum, this);
         },
 
-        onReceivedsum: function (data) {
-            var gatherMoney = parseFloat(data['gather_money']);
-            var gatherNo = data['gather_no'];//付款账号
-            var gatherName = data['gather_name'];
-            var gatherId = data['gather_id'];
-            var gatherKind = data['gather_kind'];
+        onRTReceivedsum: function (data) {
+            var gatherMoney = parseFloat(data.gather_money);//number类型
+            var gatherNo = data.gather_no;//付款账号
+            var gatherName = data.gather_name;
+            var gatherId = data.gather_id;
+            var gatherKind = data.gather_kind;
             var extraArgs = undefined;
             if (data.hasExtra) {
                 extraArgs = data.extras;
@@ -259,7 +259,10 @@ define([
                 gather_kind: gatherKind,
                 havepay_money: gatherMoney,
                 payment_bill: '',
-                change_money: 0
+                change_money: 0,
+                reference_number: '',
+                outtradeno: '',
+                bank_json: {}
             });
             switch (extraArgs.extra_id) {
                 case 0:
@@ -269,7 +272,9 @@ define([
                     break;
                 case 1:
                     model.set({
-                        payment_bill: extraArgs.payment_bill
+                        payment_bill: extraArgs.payment_bill,
+                        outtradeno: extraArgs.outtradeno,
+                        gather_ui: extraArgs.gather_ui
                     });
                     break;
                 case 2:
@@ -802,7 +807,6 @@ define([
 
         onThirdPayClicked: function () {
             //layer.msg('该功能正在调试中', optLayerHelp);
-            $('input[name = billingrt]').val('');
             this.payment('05', '第三方支付');
             //$('button[name = third-pay]').blur();
         },
