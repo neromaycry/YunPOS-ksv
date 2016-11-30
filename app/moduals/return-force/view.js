@@ -493,13 +493,16 @@ define([
             this.modifyItemDiscount();
         },
         onDeleteClicked: function () {
+            var _self = this;
             var len = this.collection.length;
             //console.log(len);
             if (len == 0) {
                 layer.msg('没有可删除的商品', optLayerWarning);
                 return;
             }
-            this.deleteItem();
+            this.evalAuth(auth_delete, '08', {}, function () {
+                _self.deleteItem();
+            });
         },
         onModifyNumClicked: function () {
             this.modifyItemNum();

@@ -31,6 +31,8 @@ define([
             'click .ok': 'onOKClicked',
             'click .btn-backspace': 'onBackspaceClicked',
             'click .btn-clear': 'onClearClicked',
+            'click input[name = reference-num]': 'focusInputReference',
+            'click input[name = payment-bill]': 'focusInputPaymentBill',
         },
 
         LayerInitPage: function () {
@@ -80,7 +82,13 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
-                _self.onOKClicked();
+                var isUserFocused = $('input[name = reference-num]').is(':focus');
+                if (isUserFocused) {
+                    $('input[name = payment-bill]').focus();
+                    _self.input = 'input[name = payment-bill]';
+                } else {
+                    _self.onOKClicked();
+                }
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Up, function () {
                 var isUserFocused = $('input[name = reference-num]').is(':focus');
@@ -225,6 +233,15 @@ define([
         onClearClicked: function () {
             $(this.input).val('');
         },
+
+        focusInputReference: function () {
+            this.input = 'input[name = reference-num]';
+        },
+
+        focusInputPaymentBill: function () {
+            this.input = 'input[name = payment-bill]';
+        },
+
 
         refund: function (gatherUI, gatherNo, attrData) {
 
