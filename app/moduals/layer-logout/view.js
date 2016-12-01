@@ -15,10 +15,55 @@ define([
 
         input: 'input[name = logout_passwd]',
 
+        events: {
+            'click .cancel': 'onCancelClicked',
+            'click .btn-numpad': 'onNumpadClicked',
+            'click .ok': 'onOKClicked',
+            'click .btn-num': 'onNumClicked',
+            'click .btn-backspace': 'onBackspaceClicked',
+            'click .btn-clear': 'onClearClicked',
+        },
+
         LayerInitPage: function () {
             this.model = new LayerLogoutModel();
         },
 
+        onNumpadClicked: function () {
+            var isDisplay = $('.numpad').css('display') == 'none';
+            if (isDisplay) {
+                $('.numpad').css('display', 'block');
+                $('.btn-numpad').text('关闭小键盘');
+            } else {
+                $('.numpad').css('display', 'none');
+                $('.btn-numpad').text('打开小键盘');
+            }
+        },
+
+        onOKClicked: function () {
+            this.doLogout();
+        },
+
+        onCancelClicked: function () {
+            this.closeLayer(layerindex);
+            $('input[name = main]').focus();
+        },
+
+        onNumClicked: function (e) {
+            var value = $(e.currentTarget).data('num');
+            var str = $(this.input).val();
+            str += value;
+            $(this.input).val(str);
+        },
+
+        onBackspaceClicked: function () {
+            var str = $(this.input).val();
+            str = str.substring(0, str.length - 1);
+            $(this.input).val(str);
+        },
+
+        onClearClicked: function () {
+            $(this.input).val('');
+        },
 
         bindLayerKeys: function () {
             var _self = this;
@@ -52,7 +97,6 @@ define([
             //    return;
             //}
             if (password == '') {
-                //toastr.warning('请输入密码');
                 layer.msg('请输入密码', optLayerWarning);
                 return;
             }
@@ -67,11 +111,9 @@ define([
                         _self.closeLayer(layerindex);
                         router.navigate('login', {trigger: true});
                     } else {
-                        //toastr.error(response.msg);
                         layer.msg(response.msg, optLayerError);
                     }
                 } else {
-                    //toastr.error(response.msg);
                     layer.msg(response.msg, optLayerError);
                 }
             });
