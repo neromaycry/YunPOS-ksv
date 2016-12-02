@@ -212,7 +212,7 @@ define([
                 console.log(errorThrown);
                 //var gatewayView = new GatewayView();
                 //_self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
-                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, null, {area: '400px'});
+                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: 'input[name = username]'}, {area: '400px'});
             });
             var loginDate = new Date();
             if (storage.isSet(system_config.LOGIN_DATE)) {
@@ -249,7 +249,7 @@ define([
                 console.log(errorThrown);
                 //var gatewayView = new GatewayView();
                 //_self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
-                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, null, {area: '500px'});
+                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: 'input[name = username]'}, {area: '500px'});
             });
         },
 

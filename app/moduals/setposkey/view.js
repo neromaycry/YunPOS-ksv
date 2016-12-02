@@ -107,7 +107,7 @@ define([
                 }, function (jqXHR, textStatus, errorThrown) {
                     console.log(textStatus);
                     console.log(errorThrown);
-                    _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, null, {area: '500px'});
+                    _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: _self.input}, {area: '500px'});
                 });
             }
         }
