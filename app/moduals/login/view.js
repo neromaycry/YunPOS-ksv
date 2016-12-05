@@ -7,9 +7,10 @@ define([
     '../../../../moduals/login/collection',
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-gateway/view',
+    '../../../../moduals/layer-settingauth/view',
     'text!../../../../moduals/login/clientlogintpl.html',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, LayerConfirmView, LayerGatewayView, clientlogintpl, tpl) {
+], function (BaseView, LoginModel, LoginCollection, LayerConfirmView, LayerGatewayView, LayerSettingAuthView, clientlogintpl, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -281,8 +282,15 @@ define([
         },
 
         onSettingClicked: function () {
-            storage.set(system_config.LAST_PAGE, pageId);
-            router.navigate('setting', {trigger: true});
+            var attrs = {
+                pageid: pageId,
+                is_navigate: false,
+                callback: function () {
+                    storage.set(system_config.LAST_PAGE, pageId);
+                    router.navigate('setting', {trigger: true});
+                }
+            };
+            this.openLayer(PAGE_ID.LAYER_SETTINGAUTH, pageId, '设置验证', LayerSettingAuthView, attrs, {area: '300px'});
         },
 
         //checkIn: function () {
@@ -381,15 +389,14 @@ define([
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '结算', '删除商品', '取消交易', '向上选择', '向下选择',
                 '单品优惠', '单品折扣', '原单退货', '锁屏', '开钱箱', '挂单', '解挂', '会员登录',
-                '提大额', '收银对账', '营业员登录', '修改数量', '整单优惠', '整单折扣', '单品退货', '打印', '银行业务',
-                '设置'];
+                '提大额', '收银对账', '营业员登录', '修改数量', '整单优惠', '整单折扣', '单品退货', '打印', '银行业务'];
             var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
-                'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Y', 'U', 'F', 'H', 'V', 'Q'];
+                'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Y', 'U', 'F', 'H', 'V'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D,
                 window.KEYS.C, window.KEYS.Up, window.KEYS.Down, window.KEYS.F1, window.KEYS.F2,
                 window.KEYS.F3, window.KEYS.F4, window.KEYS.F5, window.KEYS.F6, window.KEYS.F7,
                 window.KEYS.F8, window.KEYS.F9, window.KEYS.F10, window.KEYS.F11, window.KEYS.F12,
-                window.KEYS.Y, window.KEYS.U, window.KEYS.F, window.KEYS.H, window.KEYS.V, window.KEYS.Q];
+                window.KEYS.Y, window.KEYS.U, window.KEYS.F, window.KEYS.H, window.KEYS.V];
             var mainKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];

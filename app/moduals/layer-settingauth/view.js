@@ -3,17 +3,17 @@
  */
 define([
     '../../js/common/BaseLayerView',
-    '../../moduals/layer-authcommand/model',
-    'text!../../moduals/layer-authcommand/tpl.html',
-], function (BaseLayerView, LayerAuthCommandModel, tpl) {
+    '../../moduals/layer-settingauth/model',
+    'text!../../moduals/layer-settingauth/tpl.html',
+], function (BaseLayerView, SettingAuthModel, tpl) {
 
-    var layerAuthCommandView = BaseLayerView.extend({
+    var settingAuthView = BaseLayerView.extend({
 
-        id: "layerAuthCommandView",
+        id: "settingAuthView",
 
         template: tpl,
 
-        input: 'input[name = authcommand_user]',
+        input: 'input[name = setting_user]',
 
         events: {
             'click .cancel': 'onCancelClicked',
@@ -21,49 +21,49 @@ define([
             'click .btn-num': 'onNumClicked',
             'click .btn-backspace': 'onBackspaceClicked',
             'click .btn-clear': 'onClearClicked',
-            'click input[name = authcommand_user]': 'focusInputUser',
-            'click input[name = authcommand]': 'focusInputPasswd',
+            'click input[name = setting_user]': 'focusInputUser',
+            'click input[name = settingauth]': 'focusInputPasswd',
         },
 
         LayerInitPage: function () {
             var _self = this;
-            this.model = new LayerAuthCommandModel();
+            this.model = new SettingAuthModel();
         },
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_AUTHCOMMAND, KEYS.Enter, function () {
-                var isUserFocused = $('input[name = authcommand_user]').is(':focus');
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_SETTINGAUTH, KEYS.Enter, function () {
+                var isUserFocused = $('input[name = setting_user]').is(':focus');
                 if (isUserFocused) {
-                    $('input[name = authcommand]').focus();
-                    _self.input = 'input[name = authcommand]';
+                    $('input[name = settingauth]').focus();
+                    _self.input = 'input[name = settingauth]';
                 } else {
                     _self.onOKClicked();
                 }
             });
 
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_AUTHCOMMAND, KEYS.Up, function () {
-                var isUserFocused = $('input[name = authcommand_user]').is(':focus');
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_SETTINGAUTH, KEYS.Up, function () {
+                var isUserFocused = $('input[name = setting_user]').is(':focus');
                 if (isUserFocused) {
                     $('input[name = authcommand]').focus();
-                    _self.input = 'input[name = authcommand]';
+                    _self.input = 'input[name = settingauth]';
                 } else {
-                    $('input[name = authcommand_user]').focus();
-                    _self.input = 'input[name = authcommand_user]';
+                    $('input[name = setting_user]').focus();
+                    _self.input = 'input[name = setting_user]';
                 }
             });
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_AUTHCOMMAND, KEYS.Down, function () {
-                var isUserFocused = $('input[name = authcommand_user]').is(':focus');
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_SETTINGAUTH, KEYS.Down, function () {
+                var isUserFocused = $('input[name = setting_user]').is(':focus');
                 if (isUserFocused) {
                     $('input[name = authcommand]').focus();
-                    _self.input = 'input[name = authcommand]';
+                    _self.input = 'input[name = settingauth]';
                 } else {
-                    $('input[name = authcommand_user]').focus();
-                    _self.input = 'input[name = authcommand_user]';
+                    $('input[name = setting_user]').focus();
+                    _self.input = 'input[name = setting_user]';
                 }
             });
 
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_AUTHCOMMAND, KEYS.Esc, function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_SETTINGAUTH, KEYS.Esc, function () {
                 _self.onCancelClicked();
             });
         },
@@ -95,48 +95,60 @@ define([
 
         onOKClicked: function () {
             var _self = this;
-            var authUser = $('input[name = authcommand_user]').val();
-            var authcommand = $('input[name = authcommand]').val();
+            var authUser = $('input[name = setting_user]').val();
+            var authPasswd = $('input[name = settingauth]').val();
             if (authUser == '') {
-                layer.msg('请输入用户名', optLayerWarning);
+                layer.msg('请输入管理员用户名', optLayerWarning);
                 return;
             }
-            if (authcommand == '') {
-                layer.msg('请输入口令', optLayerWarning);
+            if (authPasswd == '') {
+                layer.msg('请输入管理员口令', optLayerWarning);
                 return;
             }
-            var data = {
-                user_id: authUser,
-                user_password: $.md5(authcommand),
-                accredit_type: this.attrs.accredit_type
-            };
-            var accredit_type = this.attrs.accredit_type;
-            if (accredit_type == '01' || accredit_type == '02' || accredit_type == '03') {
-                console.log(this.attrs.discount_rate);
-                data['discount'] = this.attrs.discount_rate;
-            }
-            this.model.authAccess(data, function (resp) {
-                if (resp.status == '00') {
-                    console.log(resp);
-                    storage.set(system_config.LOGIN_USER_KEY, 'manager_id', authUser);
-                    if (_self.attrs.is_navigate) {
-                        _self.confirmCloseLayer(_self.attrs.navigate_page);
-                    } else {
-                        _self.confirmCloseLayer(_self.attrs.pageid);
-                    }
-                    _self.attrs.callback();
+            if (authUser == '111' && authPasswd == '111') {
+                if (_self.attrs.is_navigate) {
+                    _self.confirmCloseLayer(_self.attrs.navigate_page);
                 } else {
-                    layer.msg(resp.msg, optLayerError);
+                    _self.confirmCloseLayer(_self.attrs.pageid);
                 }
-            });
+                _self.attrs.callback();
+            } else {
+                layer.msg('管理员验证失败，请重新输入', optLayerError);
+                $('input[name = setting_user]').val('');
+                $('input[name = settingauth]').val('')
+            }
+            //var data = {
+            //    user_id: authUser,
+            //    user_password: $.md5(authPasswd),
+            //    accredit_type: this.attrs.accredit_type
+            //};
+            //var accredit_type = this.attrs.accredit_type;
+            //if (accredit_type == '01' || accredit_type == '02' || accredit_type == '03') {
+            //    console.log(this.attrs.discount_rate);
+            //    data['discount'] = this.attrs.discount_rate;
+            //}
+            //this.model.authAccess(data, function (resp) {
+            //    if (resp.status == '00') {
+            //        console.log(resp);
+            //        storage.set(system_config.LOGIN_USER_KEY, 'manager_id', authUser);
+            //        if (_self.attrs.is_navigate) {
+            //            _self.confirmCloseLayer(_self.attrs.navigate_page);
+            //        } else {
+            //            _self.confirmCloseLayer(_self.attrs.pageid);
+            //        }
+            //        _self.attrs.callback();
+            //    } else {
+            //        layer.msg(resp.msg, optLayerError);
+            //    }
+            //});
         },
 
         focusInputUser: function () {
-            this.input = 'input[name = authcommand_user]';
+            this.input = 'input[name = setting_user]';
         },
 
         focusInputPasswd: function () {
-            this.input = 'input[name = authcommand]';
+            this.input = 'input[name = settingauth]';
         },
 
         closeLayer: function (id) {
@@ -186,5 +198,5 @@ define([
 
     });
 
-    return layerAuthCommandView;
+    return settingAuthView;
 });

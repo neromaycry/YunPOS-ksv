@@ -122,7 +122,7 @@ define([
         },
 
         onCancelClicked: function () {
-            if (this.attrs.pageid == '6') {
+            if (this.attrs.pageid == PAGE_ID.BILLING) {
                 $('input[name = billing]').focus();
             } else {
                 $('input[name = billingrt]').focus();
