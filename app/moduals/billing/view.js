@@ -238,6 +238,7 @@ define([
             switch (extraArgs.extra_id) {
                 case 0:
                     model.set({
+                        gather_ui: extraArgs.gather_ui,
                         reference_number: extraArgs.reference_number
                     });
                     break;
