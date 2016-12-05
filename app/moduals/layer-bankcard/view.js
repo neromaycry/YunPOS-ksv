@@ -32,8 +32,8 @@ define([
             switch (swipe_type) {
                 case 'sale':
                     var data = {
-                        transaction_amount: '0.01',
-                        //transaction_amount: this.attrs.gather_money,
+                        //transaction_amount: '0.01',
+                        transaction_amount: this.attrs.gather_money,
                         cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
                         pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                         bill_no: this.attrs.bill_no
@@ -43,8 +43,8 @@ define([
                     break;
                 case 'refund':
                     var data = {
-                        transaction_amount: '0.01',
-                        //transaction_amount: this.attrs.gather_money,
+                        //transaction_amount: '0.01',
+                        transaction_amount: this.attrs.gather_money,
                         cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
                         pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                         bill_no: this.attrs.bill_no,
@@ -84,6 +84,7 @@ define([
                 hasExtra: true,
                 extras: {
                     extra_id: 0,
+                    gather_ui: this.attrs.gather_ui,
                     reference_number: resp.reference_number
                 }
             };
@@ -103,11 +104,12 @@ define([
                     hasExtra: true,
                     extras: {
                         extra_id: 0,
+                        gather_ui: this.attrs.gather_ui,
                         reference_number: resp.reference_number
                     }
                 };
                 // TODO 将相应支付方式添加至支付列表
-                Backbone.trigger('onReceivedsum', data);
+                Backbone.trigger('onRTReceivedsum', data);
                 this.closeLayer(layerindex);
                 $('input[name = billingrt]').focus();
             } else {
