@@ -223,7 +223,7 @@ define([
             console.log('oddchange:' + oddchange);
             var panelheading = $('.panel-heading').height();  //面板heading高度
             var panelfooter = $('.panel-footer').height();  //面板footer高度
-            var cart = dh - nav * 2 - panelheading * 2 - panelfooter;
+            var cart = dh - nav * 3 - panelheading * 2 - panelfooter;
             var leftWidth = $('.main-left').width();
             var cartWidth = dw - leftWidth - 45;
             $('.cart-panel').width(cartWidth);  // 设置购物车面板的宽度

@@ -2,6 +2,11 @@ div {
     font-family: Microsoft YaHei;
 }
 
+body .navbar-custom {
+    background:#337AB7;
+    border-radius: 0px;
+}
+
 div .billing-color {
     background-color: #26a69a;
 }

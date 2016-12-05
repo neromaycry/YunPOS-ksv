@@ -258,6 +258,17 @@ window.resource = {
 
         $.ajax(setting);
     },
+    "asyncPost": function (url, data, callback) {
+        var _data = $.extend(true, window.resource._base_params(), data);
+        var setting = $.extend(true, window.resource.opts, {
+            "url": url,
+            "type": "POST",
+            "data": JSON.stringify(_data),
+            "success": callback
+        });
+
+        $.ajax(setting);
+    },
     "put": function (url, data, callback) {
         var _data = $.extend(true, window.resource._base_params(), data);
         var setting = $.extend(true, window.resource.opts, {

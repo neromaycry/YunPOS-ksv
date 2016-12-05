@@ -520,7 +520,7 @@ define([
                     if (resp.code == '000000') {
                         if (resp.data.flag == '00') {
                             _self.deleteItem(index);
-                            layer.msg('删除成功', optLayerSuccess);
+                            layer.msg(resp.data.msg, optLayerSuccess);
                         } else {
                             layer.msg(resp.data.msg, optLayerError);
                         }
