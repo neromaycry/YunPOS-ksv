@@ -190,7 +190,7 @@ define([
                 this.renderClientWelcome(isPacked);
                 isFromLogin = false;
             }
-            this.buttonSelected();
+            //this.buttonSelected();
             this.$el.find('.for-numpad').html(this.template_numpad);
             $('.marquee').marquee({
                 duration: 15000,
@@ -513,7 +513,7 @@ define([
                 this.collection.reset();
                 this.renderPosInfo();
                 this.renderCartList();
-                this.buttonSelected();
+                //this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
                 //toastr.success('挂单号：' + orderNum);
                 layer.msg('挂单号：' + orderNum, optLayerSuccess);
@@ -831,7 +831,7 @@ define([
             this.renderClientCart(this.collection, isPacked);
             this.insertSerial();
             this.calculateModel();
-            this.buttonSelected();
+            //this.buttonSelected();
         },
         clearCart: function () {
             this.collection.reset();
@@ -849,7 +849,7 @@ define([
             this.salesmanModel.set({
                 salesman: '营业员登录'
             });
-            this.buttonSelected();
+            //this.buttonSelected();
             this.renderPosInfo();
             this.renderCartList();
             this.renderMinfo();
@@ -905,7 +905,7 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
-            this.buttonSelected();
+            //this.buttonSelected();
             this.renderPosInfo();
         },
         ///**
