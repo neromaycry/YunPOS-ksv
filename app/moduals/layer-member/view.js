@@ -139,21 +139,22 @@ define([
             $(this.input).val('');
         },
 
-        onOKClicked: function (type) {
-            switch (type) {
+        onOKClicked: function () {
+            switch (this.type) {
                 case '01':
                     console.log('会员卡登录');
                     toastr.warning('请刷卡');
                     break;
                 case '03':
                     console.log('手机号登陆');
-                    var isUserFocused = $('input[name = phone]').is(':focus');
-                    if (isUserFocused) {
-                        $('input[name = passwd]').focus();
-                        this.input = 'input[name = passwd]';
-                    } else {
-                        this.inputPhoneNum();
-                    }
+                    this.inputPhoneNum();
+                    //var isUserFocused = $('input[name = phone]').is(':focus');
+                    //if (isUserFocused) {
+                    //    $('input[name = passwd]').focus();
+                    //    this.input = 'input[name = passwd]';
+                    //} else {
+                    //    this.inputPhoneNum();
+                    //}
                     break;
             }
         },
