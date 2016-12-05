@@ -165,6 +165,7 @@ define([
                         if (resp.code == '000000') {
                             if (resp.data.flag == '00') {
                                 var extra = _.extend(_self.attrs.extras, {
+                                    extra_id: 1,
                                     outtradeno: resp.data.outtradeno,
                                     gather_ui: _self.gatherUI
                                 });
