@@ -267,6 +267,7 @@ define([
             switch (extraArgs.extra_id) {
                 case 0:
                     model.set({
+                        gather_ui: extraArgs.gather_ui,
                         reference_number: extraArgs.reference_number
                     });
                     break;
@@ -303,6 +304,8 @@ define([
                 unpaidamount: this.unpaidamount,
                 oddchange: this.oddchange
             });
+            console.log(this.collection);
+            console.log('this is data');
             this.renderBillInfo();
             this.renderBillDetail();
         },
@@ -380,8 +383,8 @@ define([
         cleanPaylist: function () {
             for (var i = 0; i < this.collection.length; i++) {
                 var item = this.collection.at(i);
-                var gatherId = item.get('gather_id');
-                if (gatherId == '12' || gatherId == '13' || gatherId == '16') {
+                var gatherUI = item.get('gather_ui');
+                if (gatherUI == '04' || gatherUI == '05' || gatherUI == '06') {
                     layer.msg('不能清空支付列表', optLayerWarning);
                     return;
                 }
@@ -389,17 +392,6 @@ define([
             for (var j = this.collection.length - 1; j >= 0; j--) {
                 this.deleteItem(j);
             }
-            //this.receivedsum = 0;
-            //this.oddchange = 0;
-            //this.collection.reset();
-            //this.model.set({
-            //    receivedsum: this.receivedsum,
-            //    oddchange: this.oddchange,
-            //    unpaidamount: this.totalamount
-            //});
-            //storage.remove(system_config.ONE_CARD_KEY);
-            //this.renderBillDetail();
-            //this.renderBillInfo();
             layer.msg('清空退款方式列表成功', optLayerSuccess);
         },
         /**
@@ -534,7 +526,15 @@ define([
                 switch (gatherUI) {
                     case '04':
                     case '05':
-                        layer.msg('该功能正在调试中', optLayerHelp);
+                        attrs = {
+                            gather_id: gatherId,
+                            gather_name: item.gather_name,
+                            gather_ui: gatherUI,
+                            gather_money: unpaidamount,
+                            gather_kind: item.gather_kind,
+                            bill_no: _self.billNumber,
+                        };
+                        this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, pageId, '第三方支付退款', GatherUIView, attrs, {area: '300px'});
                         break;
                     case '06':
                         attrs = {
@@ -636,7 +636,12 @@ define([
         },
 
         onReturnClicked: function () {
-            if (isfromForce) {
+            var len = this.collection.length;
+            if(len != 0) {
+                layer.msg('请先清空支付列表', optLayerWarning);
+                return;
+            }
+           if (isfromForce) {
                 router.navigate('returnforce', {trigger: true});
             } else {
                 router.navigate('returnwhole', {trigger: true});
@@ -680,8 +685,8 @@ define([
                 content: '确定删除此条支付记录？',
                 callback: function () {
                     var item = _self.collection.at(_self.i);
-                    var gatherId = item.get('gather_id');
-                    if (gatherId == '12' || gatherId == '13' || gatherId == '16') {
+                    var gatherUI = item.get('gather_ui');
+                    if (gatherUI == '04' || gatherUI == '05' || gatherUI == '06') {
                         layer.msg('无法删除此条支付记录');
                     } else {
                         _self.deleteItem(_self.i);
