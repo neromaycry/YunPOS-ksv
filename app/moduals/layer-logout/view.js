@@ -109,6 +109,9 @@ define([
                 if (!$.isEmptyObject(response)) {
                     if (response.status == "00") {
                         _self.closeLayer(layerindex);
+                        storage.remove(system_config.VIP_KEY);
+                        storage.remove(ystem_config.SALE_PAGE_KEY);
+                        storage.remove(ystem_config.SALE_PAGE_KEY, 'salesman');
                         router.navigate('login', {trigger: true});
                     } else {
                         layer.msg(response.msg, optLayerError);

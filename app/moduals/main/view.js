@@ -85,7 +85,7 @@ define([
             'click .cashdrawer': 'openCashDrawer',
             'click .lock': 'lockScreen',
             'click .bank-business': 'onBusinessClicked',
-            'click .setting': 'onSettingClicked'
+            //'click .setting': 'onSettingClicked'  //设置
             //'click .btn-floatpad':'onFloatPadClicked'
         },
         pageInit: function () {
@@ -396,9 +396,9 @@ define([
                 _self.onBusinessClicked();
             });
             //设置页面
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Q, function () {
-                _self.onSettingClicked();
-            });
+            //this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Q, function () {
+            //    _self.onSettingClicked();
+            //});
             //整单优惠
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Y, function () {
                 _self.onTotalDiscount();
@@ -841,7 +841,7 @@ define([
                 discountamount: 0
             });
             this.memberModel.set({
-                member: '未登录',
+                name: '未登录',
                 score_balance: 0,
                 account_balance: 0,
                 account_enddate: '未登录，请查询'
