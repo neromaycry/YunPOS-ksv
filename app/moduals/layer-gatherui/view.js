@@ -26,6 +26,8 @@ define([
 
         gatherUI: '',
 
+        tradeStateTimer: null,
+
         events: {
             'click .cancel': 'onCancelClicked',
             'click .btn-num': 'onNumClicked',
@@ -68,8 +70,8 @@ define([
             } else {
                 return false;
             }
-            //var url = 'http://127.0.0.1:5000/';
-            var url = 'http://121.42.166.147:9090/';
+            var url = 'http://127.0.0.1:5000/';
+            //var url = 'http://121.42.166.147:9090/';
             resource.asyncPost(url + 'api/pay/xfb/prepay', data, function (resp) {
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {
@@ -77,7 +79,7 @@ define([
                         $('.qrcode-img').attr('src', resp.data.codeurl);
                         if (resp.data.flag == '00') {
                             var respData = resp.data;
-                            var tradeStateTimer = setInterval(function () {
+                            _self.tradeStateTimer = setInterval(function () {
                                 //TODO 定时请求后台接口,若返回success，则关闭模态框，并将付款方式同步至列表
                                 var url = 'http://121.42.166.147:9090/';
                                 var data = {
@@ -112,7 +114,7 @@ define([
                                                 extras: extra
                                             }));
                                             layer.msg(resp.msg, optLayerSuccess);
-                                            clearInterval(tradeStateTimer);
+                                            clearInterval(_self.tradeStateTimer);
                                             _self.closeLayer(layerindex);
                                             $('input[name = billing]').focus();
                                         }
@@ -221,6 +223,9 @@ define([
                         }
                     };
                     this.micropay(this.gatherUI, gatherNo, attrs);
+                    if (this.tradeStateTimer) {
+                        clearInterval(this.tradeStateTimer);
+                    }
                     break;
                 default :
                     attrs = {
@@ -247,6 +252,9 @@ define([
         onCancelClicked: function () {
             this.closeLayer(layerindex);
             $('input[name = billing]').focus();
+            if (this.tradeStateTimer) {
+                clearInterval(this.tradeStateTimer);
+            }
         },
 
         onOKClicked: function () {
