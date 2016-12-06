@@ -70,10 +70,6 @@ define([
             $(this.input).focus();
             this.setKeys();
             this.renderClientDisplay(isPacked);
-            //$('.login-print').on('click', function () {
-            //    console.log('print');
-            //    window.wsClient.send('PRNT_ 打印sdfajsdklfjaldsjfadf');
-            //});
         },
 
         handleEvents: function () {
@@ -134,14 +130,6 @@ define([
         },
 
         onPowerOffClicked: function () {
-            //var confirmView = new ConfirmView({
-            //    pageid: window.PAGE_ID.LOGIN, //当前打开confirm模态框的页面id
-            //    callback: function () { //点击确认键的回调
-            //        wsClient.send(DIRECTIVES.ShutDown);
-            //    },
-            //    content:'确定关机？' //confirm模态框的提示内容
-            //});
-            //this.showModal(window.PAGE_ID.CONFIRM, confirmView);
             var _self = this;
             var attrs = {
                 pageid: pageId,
@@ -211,8 +199,6 @@ define([
                 //失败回调
                 console.log(textStatus);
                 console.log(errorThrown);
-                //var gatewayView = new GatewayView();
-                //_self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
                 _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: 'input[name = username]'}, {area: '400px'});
             });
             var loginDate = new Date();
@@ -248,8 +234,6 @@ define([
                 //失败回调
                 console.log(textStatus);
                 console.log(errorThrown);
-                //var gatewayView = new GatewayView();
-                //_self.showModal(window.PAGE_ID.MODAL_GATEWAY, gatewayView);
                 _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: 'input[name = username]'}, {area: '500px'});
             });
         },
@@ -292,12 +276,6 @@ define([
             };
             this.openLayer(PAGE_ID.LAYER_SETTINGAUTH, pageId, '设置验证', LayerSettingAuthView, attrs, {area: '300px'});
         },
-
-        //checkIn: function () {
-        //    //toastr.info('签到');
-        //    layer.msg('签到', optLayerSuccess);
-        //    this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
-        //},
 
         //doInitialize: function () {
         //    this.iniSettngs();
@@ -344,26 +322,6 @@ define([
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Q, function () {
                 _self.onSettingClicked();
             });
-            //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.W, function () {
-            //    _self.checkIn();
-            //});
-            //this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.L, function () {
-            //    var SOCKET_ADDR = 'ws://localhost:7110/';
-            //    wsClient.close();
-            //    wsClient = new WebSocket(SOCKET_ADDR);
-            //    wsClient.onopen = function (e) {
-            //        window.toastr.success('已与硬件建立连接');
-            //    };
-            //    wsClient.onmessage = function (e) {
-            //        console.log(e);
-            //    };
-            //    wsClient.onclose = function (e) {
-            //        window.toastr.warning('与硬件连接断开');
-            //    };
-            //    wsClient.onerror = function (e) {
-            //        window.toastr.warning('与硬件连接出现问题，请检查硬件');
-            //    };
-            //});
 
             this.bindKeyEvents(window.PAGE_ID.LOGIN, window.KEYS.Esc, function () {
                 _self.onPowerOffClicked();
