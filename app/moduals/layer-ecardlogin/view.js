@@ -4,7 +4,7 @@
 define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-ecardlogin/model',
-    '../../moduals/modal-ecardpay/view',
+    '../../moduals/layer-ecardpay/view',
     'text!../../moduals/layer-ecardlogin/phonetpl.html',
     'text!../../moduals/layer-ecardlogin/magcardtpl.html',
     'text!../../moduals/layer-ecardlogin/tpl.html',
@@ -69,7 +69,7 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function () {
-                _self.doLogin(_self.type);
+                _self.doLogin();
             });
 
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.X, function () {
@@ -89,7 +89,8 @@ define([
             this.closeLayer(layerindex);
         },
 
-        doLogin: function (type) {
+        doLogin: function () {
+            this.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, null, {area:'900px'});
             //switch (type) {
             //    case '01':
             //        console.log('会员卡登录');
