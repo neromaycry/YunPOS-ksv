@@ -856,6 +856,7 @@ define([
                     this.totalamount = Math.floor(this.totalamount);
                     break;
             }
+            this.smallChange = parseFloat(this.smallChange.toFixed(2));
             this.smallChangemodel.set({
                 gather_id: '04',
                 gather_name: '去零',
@@ -864,9 +865,10 @@ define([
                 havepay_money: 0,
                 payment_bill: '',
                 change_money: 0,
-                gather_money: this.smallChange
+                bank_json: {},
+                gather_money: this.smallChange,
+                outtradeno:'',
             });
-            console.log(this.totalamount);
         },
 
 
