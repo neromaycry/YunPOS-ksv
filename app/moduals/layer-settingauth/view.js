@@ -114,6 +114,8 @@ define([
                 _self.attrs.callback();
             } else {
                 layer.msg('管理员验证失败，请重新输入', optLayerError);
+                this.input = 'input[name = setting_user]';
+                $(this.input).focus();
                 $('input[name = setting_user]').val('');
                 $('input[name = settingauth]').val('')
             }

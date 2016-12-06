@@ -50,7 +50,11 @@ body .top-margin-15 {
 }
 
 body .no-padding {
-    padding: 0px;
+    padding: 0;
+}
+
+body .no-left-padding {
+    padding-left: 0;
 }
 
 body .no-border-radius {

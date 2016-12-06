@@ -127,6 +127,10 @@ define([
                     _self.attrs.callback();
                 } else {
                     layer.msg(resp.msg, optLayerError);
+                    this.input = 'input[name = authcommand_user]';
+                    $(this.input).focus();
+                    $('input[name = authcommand_user]').val('');
+                    $('input[name = authcommand]').val('');
                 }
             });
         },
