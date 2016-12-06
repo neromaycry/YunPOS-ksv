@@ -90,20 +90,20 @@ define([
         },
 
         doLogin: function (type) {
-            switch (type) {
-                case '01':
-                    console.log('会员卡登录');
-                    toastr.warning('请刷卡');
-                    break;
-                case '03':
-                    console.log('手机号登陆');
-                    this.inputPhoneNum();
-                    break;
-            }
+            //switch (type) {
+            //    case '01':
+            //        console.log('会员卡登录');
+            //        toastr.warning('请刷卡');
+            //        break;
+            //    case '03':
+            //        console.log('手机号登陆');
+            //        this.inputPhoneNum();
+            //        break;
+            //}
         },
 
         onOkClicked: function () {
-            this.doLogin(this.type);
+            //this.doLogin(this.type);
         },
         inputPhoneNum: function () {
             var _self = this;
