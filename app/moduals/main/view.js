@@ -86,7 +86,6 @@ define([
             'click .lock': 'lockScreen',
             'click .bank-business': 'onBusinessClicked',
             //'click .setting': 'onSettingClicked'  //设置
-            //'click .btn-floatpad':'onFloatPadClicked'
         },
         pageInit: function () {
             var _self = this;

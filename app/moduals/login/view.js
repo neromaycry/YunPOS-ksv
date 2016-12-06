@@ -41,7 +41,6 @@ define([
             'click .power-off': 'onPowerOffClicked',
             //'click .lock': 'lockScreen',
             'click .setting': 'onSettingClicked',
-            //'click .bankcheckin': 'checkIn'
         },
 
         pageInit: function () {
