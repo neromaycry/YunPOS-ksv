@@ -33,7 +33,7 @@ define([
         totalamount: 0,
         itemamount: 0,
         discountamount: 0,
-        isTotalDiscount:false,
+        isTotalDiscount: false,
         salesman: '',
         memeber: '',
         ids: ['curSaleState', 'curItem'],
@@ -68,8 +68,8 @@ define([
             'click .member': 'onMemberClicked',
             'click .main-discount': 'onDiscountClicked',
             'click .main-discountpercent': 'onDiscountPercentClicked',
-            'click .totaldiscount':'onTotalDiscount',
-            'click .totaldiscount-percentage':'onTotalDiscountPercentage',
+            'click .totaldiscount': 'onTotalDiscount',
+            'click .totaldiscount-percentage': 'onTotalDiscountPercentage',
             'click .main-delete': 'onDeleteClicked',
             'click .main-modify-num': 'onModifyItemNum',
             'click .main-cancel': 'onCleanClicked',
@@ -544,7 +544,7 @@ define([
             var price = item.get('price');
             var discount = $(this.input).val();
             var num = item.get('num');
-            if(item.get('disc_subtotal') != 0) {
+            if (item.get('disc_subtotal') != 0) {
                 layer.msg('整单优惠后不能再进行单品优惠', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -588,7 +588,7 @@ define([
             var item = _self.collection.at(_self.i);
             var price = item.get('price');
             var num = item.get('num');
-            if(item.get('disc_subtotal') != 0) {
+            if (item.get('disc_subtotal') != 0) {
                 layer.msg('整单优惠后不能再进行单品优惠', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -634,7 +634,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if ((totaldiscount.split('.').length - 1) > 1 ||  totaldiscount == '' || totaldiscount == '.') {
+            if ((totaldiscount.split('.').length - 1) > 1 || totaldiscount == '' || totaldiscount == '.') {
                 layer.msg('无效的整单优惠金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -692,15 +692,15 @@ define([
             data['sub_type'] = subType;
             data['subtotal_preferential'] = rate;
             this.requestModel.sku(data, function (resp) {
-                if(resp.status == '00') {
+                if (resp.status == '00') {
                     _self.onAddItem(resp.goods_detail);
                     _self.isTotalDiscount = true;
-                    if(subType == '01') {
+                    if (subType == '01') {
                         layer.msg('整单优惠成功!优惠金额：' + rate + '元', optLayerSuccess);
-                    }else {
+                    } else {
                         layer.msg('整单折扣成功!折扣比率：' + (rate * 10).toFixed(1) + '折', optLayerSuccess);
                     }
-                }else {
+                } else {
                     layer.msg(resp.msg, optLayerWarning);
                 }
             });
@@ -717,7 +717,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if(discountamount != 0) {
+            if (discountamount != 0) {
                 layer.msg('折扣后不能修改数量，如想继续修改数量，请取消交易', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -787,7 +787,8 @@ define([
             this.requestModel.relateWorker(data, function (resp) {
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
-                        _self.getGoods();
+                        resp = _.extend(resp, {skucode: skucode});
+                        _self.getGoods(resp);
                     } else if (resp.status == '99') {
                         _self.openLayerWorker();
                     } else {
@@ -839,8 +840,10 @@ define([
                                 is_navigate: false,
                                 callback: function () {
                                     var price = $('input[name = price]').val();
-                                    resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
-                                    resp.goods_detail[resp.goods_detail.length - 1].money = parseFloat(price);
+                                    var len = resp.goods_detail.length;
+                                    resp.goods_detail[len - 1].price = parseFloat(price);
+                                    resp.goods_detail[len - 1].money = parseFloat(price);
+                                    resp.goods_detail[len - 1].worker_id1 = respData.user_id;
                                     _self.onAddItem(resp.goods_detail);
                                     $('input[name = main]').focus();
                                 }
@@ -889,7 +892,7 @@ define([
             this.renderPosInfo();
             this.renderCartList();
             this.renderMinfo();
-            this.renderSalesman();
+            //this.renderSalesman();
             storage.remove(system_config.SALE_PAGE_KEY);
             storage.remove(system_config.VIP_KEY);
             //this.ctrlClientInfo('none', this.ids, isPacked);
