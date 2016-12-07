@@ -797,7 +797,6 @@ define([
                 } else {
                     layer.msg('系统错误，请联系管理员', optLayerError);
                 }
-                console.log(resp);
             });
         },
 
@@ -853,7 +852,6 @@ define([
                             _self.onAddItem(resp.goods_detail);
                         }
                     } else {
-                        //toastr.warning(resp.msg);
                         layer.msg(resp.msg, optLayerWarning);
                     }
                 } else {

@@ -87,7 +87,7 @@ define([
                 } else {
                     layer.msg('系统错误，请联系管理员', optLayerWarning);
                 }
-
+                $('input[name = main]').focus();
             });
         },
 
