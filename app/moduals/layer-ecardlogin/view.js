@@ -90,7 +90,7 @@ define([
         },
 
         doLogin: function () {
-            this.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, null, {area:'900px'});
+            this.inputPhoneNum();
             //switch (type) {
             //    case '01':
             //        console.log('会员卡登录');
@@ -126,7 +126,15 @@ define([
             data['type'] = this.type;
             this.request.vipinfo(data, function (resp) {
                 if (resp.status == '00') {
-                    layer.msg('登录成功', optLayerSuccess);
+                    //layer.msg('登录成功', optLayerSuccess);
+                    var attrs = {
+                        'card_id':phoneNum,
+                        'cust_id':resp.cust_id,
+                        'goods_detail':storage.get(system_config.SALE_PAGE_KEY,'shopcart'),
+                        'gather_detail':storage.get(system_config.GATHER_KEY)
+                    };
+                    _self.closeLayer(layerindex);
+                    _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area:'900px'});
                 } else {
                     layer.msg(resp.msg, optLayerError);
                 }

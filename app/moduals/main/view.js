@@ -882,9 +882,9 @@ define([
                 account_balance: 0,
                 account_enddate: '未登录，请查询'
             });
-            this.salesmanModel.set({
-                salesman: '营业员登录'
-            });
+            //this.salesmanModel.set({
+            //    salesman: '营业员登录'
+            //});
             //this.buttonSelected();
             this.renderPosInfo();
             this.renderCartList();
