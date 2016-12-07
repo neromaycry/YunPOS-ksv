@@ -14,6 +14,7 @@ define([
     '../../../../moduals/layer-restorder/view',
     '../../../../moduals/layer-withdraw/view',
     '../../../../moduals/layer-binstruction/view',
+    '../../../../moduals/layer-worker/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/minfotpl.html',
@@ -24,7 +25,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, LayerPriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerBInstructionView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, LayerPriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerBInstructionView, LayerWorkerView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -277,21 +278,25 @@ define([
         },
         handleEvents: function () {
             // 注册backbone事件
-            Backbone.off('SalesmanAdd');
+            //Backbone.off('SalesmanAdd');
             Backbone.off('onMemberSigned');
             Backbone.off('onReleaseOrder');
+            Backbone.off('getGoods');
+            Backbone.off('openLayerWorker');
             //Backbone.off('reBindEvent');
-            Backbone.on('SalesmanAdd', this.SalesmanAdd, this);
+            //Backbone.on('SalesmanAdd', this.SalesmanAdd, this);
+            Backbone.on('getGoods', this.getGoods, this);
+            Backbone.on('openLayerWorker', this.openLayerWorker, this);
             Backbone.on('onMemberSigned', this.onMemberSigned, this);
             Backbone.on('onReleaseOrder', this.onReleaseOrder, this);
         },
-        SalesmanAdd: function (result) {
-            storage.set(system_config.SALE_PAGE_KEY, 'salesman', result);
-            this.salesmanModel.set({
-                salesman: result
-            });
-            this.renderSalesman();
-        },
+        //SalesmanAdd: function (result) {
+        //    storage.set(system_config.SALE_PAGE_KEY, 'salesman', result);
+        //    this.salesmanModel.set({
+        //        salesman: result
+        //    });
+        //    this.renderSalesman();
+        //},
         onReleaseOrder: function (data) {
             this.collection = new HomeCollection();
             for (var i in data) {
@@ -769,61 +774,93 @@ define([
          */
         addItem: function () {
             var _self = this;
-            var search = $(this.input).val();
-            if (search == '') {
-                //toastr.warning('商品编码不能为空');
+            var skucode = $(this.input).val();
+            if (skucode == '') {
                 layer.msg('商品编码不能为空', optLayerWarning);
-            } else {
-                var data = {};
-                data['skucode'] = search;
-                if (storage.isSet(system_config.VIP_KEY)) {
-                    data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
-                    data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
-                    data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
+                return;
+            }
+            var data = {
+                user_id: '',
+                skucode: skucode,
+                goods_detail: this.collection.toJSON()
+            };
+            this.requestModel.relateWorker(data, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.getGoods();
+                    } else if (resp.status == '99') {
+                        _self.openLayerWorker();
+                    } else {
+                        layer.msg(resp.msg, optLayerWarning);
+                    }
                 } else {
-                    data['cust_id'] = '*';
-                    data['medium_id'] = '*';
-                    data['medium_type'] = '*';
+                    layer.msg('系统错误，请联系管理员', optLayerError);
                 }
-                data['goods_detail'] = this.collection.toJSON()
-                data['subtotal_preferential'] = 1;//percentage默認值為1
-                this.requestModel.sku(data, function (resp) {
-                    if (!$.isEmptyObject(resp)) {
-                        if (resp.status == '00') {
-                            if (!_self.isInSale) {
-                                _self.isInSale = true;
-                                //_self.ctrlClientInfo('block', _self.ids, isPacked);
-                            }
-                            var temp = resp.goods_detail[resp.goods_detail.length - 1];
-                            if (temp['price_auto'] == 1) {
-                                var attrs = {
-                                    pageid: pageId,
-                                    originalprice: temp['price'],
-                                    is_navigate: false,
-                                    callback: function () {
-                                        var price = $('input[name = price]').val();
-                                        resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
-                                        resp.goods_detail[resp.goods_detail.length - 1].money = parseFloat(price);
-                                        _self.onAddItem(resp.goods_detail);
-                                        $('input[name = main]').focus();
-                                    }
-                                };
-                                _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area: '300px'});
-                            } else {
-                                _self.onAddItem(resp.goods_detail);
-                            }
+                console.log(resp);
+            });
+        },
+
+        openLayerWorker: function (data) {
+            var attrs = {
+                skucode: $(this.input).val(),
+                goods_detail: this.collection.toJSON()
+            };
+            this.openLayer(PAGE_ID.LAYER_WORKER, pageId, '关联营业员', LayerWorkerView, attrs, {area: '300px'});
+        },
+
+        getGoods: function (respData) {
+            console.log(respData);
+            var _self = this;
+            var data = {};
+            data['skucode'] = respData.skucode;
+            if (storage.isSet(system_config.VIP_KEY)) {
+                data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
+                data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
+                data['medium_type'] = storage.get(system_config.VIP_KEY, 'medium_type');
+            } else {
+                data['cust_id'] = '*';
+                data['medium_id'] = '*';
+                data['medium_type'] = '*';
+            }
+            data['goods_detail'] = this.collection.toJSON();
+            data['subtotal_preferential'] = 1;//percentage默認值為1
+            this.requestModel.sku(data, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        if (!_self.isInSale) {
+                            _self.isInSale = true;
+                            //_self.ctrlClientInfo('block', _self.ids, isPacked);
+                        }
+                        var temp = resp.goods_detail[resp.goods_detail.length - 1];
+                        if (temp['price_auto'] == 1) {
+                            var attrs = {
+                                pageid: pageId,
+                                originalprice: temp['price'],
+                                is_navigate: false,
+                                callback: function () {
+                                    var price = $('input[name = price]').val();
+                                    resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
+                                    resp.goods_detail[resp.goods_detail.length - 1].money = parseFloat(price);
+                                    _self.onAddItem(resp.goods_detail);
+                                    $('input[name = main]').focus();
+                                }
+                            };
+                            _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area: '300px'});
                         } else {
-                            //toastr.warning(resp.msg);
-                            layer.msg(resp.msg, optLayerWarning);
+                            _self.onAddItem(resp.goods_detail);
                         }
                     } else {
-                        layer.msg('系统错误，请联系管理员', optLayerWarning);
+                        //toastr.warning(resp.msg);
+                        layer.msg(resp.msg, optLayerWarning);
                     }
-                });
-                $(this.input).val('');
-                this.i = 0;
-            }
+                } else {
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
+                }
+            });
+            $(this.input).val('');
+            this.i = 0;
         },
+
         onAddItem: function (JSONData) {
             this.collection.set(JSONData, {merge: false});
             //this.updateClientCurItem(this.collection, isPacked);

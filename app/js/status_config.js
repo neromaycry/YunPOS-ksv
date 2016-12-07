@@ -93,6 +93,7 @@ window.API_URL = {
     "PRINT": "/print",
     "RETAIL_NO": "/retailno",
     "XFB_BILL_NO": "/xfbbillno",
+    "WORKER":"/worker"
 };
 
 // 系统参数设置
@@ -224,6 +225,7 @@ window.PAGE_ID = {
     'SETTING': 55,
     'LAYER_TIP': 56,
     'LAYER_SETTINGAUTH': 57,
+    'LAYER_WORKER': 58,
 };
 
 window.KEYS = {

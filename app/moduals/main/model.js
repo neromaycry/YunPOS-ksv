@@ -29,7 +29,15 @@ define(['../../js/common/BaseModel'],function(BaseModel){
                 data:data,
                 success:callback
             })
+        },
+        relateWorker: function (data, callback) {
+            this.sendPOST({
+                url: window.API_URL.WORKER,
+                data: data,
+                success: callback
+            });
         }
+
     });
     return homeModel;
 });
