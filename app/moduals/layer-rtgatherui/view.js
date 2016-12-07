@@ -8,18 +8,15 @@ define([
     'text!../../moduals/layer-rtgatherui/contenttpl.html',
     'text!../../moduals/layer-rtgatherui/commontpl.html',
     'text!../../moduals/layer-rtgatherui/thirdpay.html',
-    'text!../../moduals/layer-rtgatherui/numpadtpl.html',
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView ,  contenttpl, commontpl, thirdpaytpl, numpadtpl, bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView ,  contenttpl, commontpl, thirdpaytpl, bankcardtpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
         id: "layerGatherUIView",
 
         template: tpl,
-
-        template_numpad: numpadtpl,
 
         template_bankcard: bankcardtpl,
 
@@ -47,7 +44,6 @@ define([
             this.template_content = _.template(this.template_content);
             setTimeout(function () {
                 _self.renderContent();
-                _self.$el.find('.for-numpad').html(_self.template_numpad);
             }, 100);
 
         },
@@ -55,6 +51,19 @@ define([
 
         renderContent: function () {
             this.$el.find('.gatherui-content').html(this.template_content(this.model.toJSON()));
+              $('.cbtn').mousedown(function () {
+                  console.log('baselayer mousedown');
+                  $(this).addClass('clicked');
+              });
+            $('.cbtn').mouseup(function () {
+                $(this).removeClass('clicked');
+            });
+            $('.cbtn').on('touchstart', function (e) {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').on('touchend', function (e) {
+                $(this).removeClass('clicked');
+            });
             return this;
         },
 

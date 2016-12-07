@@ -9,18 +9,15 @@ define([
     'text!../../moduals/layer-gatherui/commontpl.html',
     'text!../../moduals/layer-gatherui/alipaytpl.html',
     'text!../../moduals/layer-gatherui/wechatpaytpl.html',
-    'text!../../moduals/layer-gatherui/numpadtpl.html',
     'text!../../moduals/layer-gatherui/bankcardtpl.html',
     'text!../../moduals/layer-gatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, numpadtpl, bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, contenttpl, commontpl, alipaytpl, wechatpaytpl, bankcardtpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
         id: "layerGatherUIView",
 
         template: tpl,
-
-        template_numpad: numpadtpl,
 
         template_bankcard: bankcardtpl,
 
@@ -49,7 +46,6 @@ define([
             this.prepay(this.gatherUI);
             setTimeout(function () {
                 _self.renderContent();
-                _self.$el.find('.for-numpad').html(_self.template_numpad);
             }, 100);
 
         },
@@ -138,6 +134,19 @@ define([
 
         renderContent: function () {
             this.$el.find('.gatherui-content').html(this.template_content(this.model.toJSON()));
+            $('.cbtn').mousedown(function () {
+                console.log('baselayer mousedown');
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').mouseup(function () {
+                $(this).removeClass('clicked');
+            });
+            $('.cbtn').on('touchstart', function (e) {
+                $(this).addClass('clicked');
+            });
+            $('.cbtn').on('touchend', function (e) {
+                $(this).removeClass('clicked');
+            });
             return this;
         },
 
