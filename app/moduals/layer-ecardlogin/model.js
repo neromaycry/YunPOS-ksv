@@ -7,7 +7,7 @@ define(['../../js/common/BaseModel'], function (BaseModel) {
 
         defaults: {},
 
-        vipinfo: function (data, callback) {
+        getVipInfo: function (data, callback) {
             this.sendPOST({
                 url: window.API_URL.VIPINFO,
                 data: data,

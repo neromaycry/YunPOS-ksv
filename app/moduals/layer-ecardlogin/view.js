@@ -19,7 +19,7 @@ define([
 
         type: '03',
 
-        input: 'input[name = magcard]',
+        input: 'input[name = ecard]',
 
         events: {
             'click .cancel': 'onCancelClicked',
@@ -27,8 +27,17 @@ define([
 
         LayerInitPage: function () {
             console.log(this.attrs);
+            var _self = this;
             this.model = new LayerECardModel();
             this.request = new LayerECardModel();
+            setTimeout(function () {
+                $('input[name = ecard]').koala({
+                    delay: 2000,
+                    keyup: function (event) {
+                        _self.swipeCard();
+                    }
+                });
+            }, 100);
         },
 
         bindLayerKeys: function () {
@@ -37,7 +46,7 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function () {
-                _self.onOkClicked();
+                _self.onCancelClicked();
             });
         },
 
@@ -50,29 +59,28 @@ define([
             this.closeLayer(layerindex);
         },
 
-
         onOkClicked: function () {
             var _self = this;
-            var cardId = $('input[name = magcard]').val();
+            var cardId = $('input[name = ecard]').val();
             var data = {};
             data['mobile'] = cardId;
             data['password'] = '*';
             data['type'] = this.type;
-            this.request.vipinfo(data, function (resp) {
+            this.request.getVipInfo(data, function (resp) {
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         var attrs = {
-                            pageid:PAGE_ID.BILLING,
-                            card_id:cardId,
-                            cust_id:resp.cust_id,
-                            unpaidamount:_self.attrs.unpaidamount,
-                            gather_money:_self.attrs.gather_money,
-                            goods_detail:storage.get(system_config.SALE_PAGE_KEY,'shopcart'),
-                            gather_detail:_self.attrs.gather_detail,
-                            account_type_code:resp.account_type_code
+                            pageid: PAGE_ID.BILLING,
+                            card_id: cardId,
+                            cust_id: resp.cust_id,
+                            unpaidamount: _self.attrs.unpaidamount,
+                            gather_money: _self.attrs.gather_money,
+                            goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
+                            gather_detail: _self.attrs.gather_detail,
+                            account_type_code: resp.account_type_code
                         };
                         _self.closeLayer(layerindex);
-                        _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area:'900px'});
+                        _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '900px'});
                     } else {
                         layer.msg(resp.msg, optLayerError);
                     }
@@ -87,64 +95,40 @@ define([
          */
         swipeCard: function () {
             var _self = this;
-            var value = $('input[name = magcard]').val();
-            if (value == '') {
-                //toastr.info('请刷卡');
-                layer.msg(resp.msg, optLayerWarning);
+            var value = $('input[name = ecard]').val();
+            if (!value) {
                 return;
             }
-            console.log('value:' + value);
-            //var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
-            var index1, index2, track1, track2, track3;
-            //var value = '%768000001 383837934874352?;768000001?;383837934874352?';
-            var str = value.charAt(0);
-            console.log(str);
-            if (str == '%') {
-                index1 = value.indexOf('?');
-                track1 = value.substring(1, index1);
-                value = value.substring(index1 + 1);
-                str = value.charAt(0);
-                console.log('track1 str:' + str);
-            } else {
-                track1 = '*';
-            }
-            //var re = new RegExp(';', 'g');
-            //var arr = value.match(re);
-            //var len = arr.length;
-            //console.log(len);
-            if (str == ';') {
-                index2 = value.indexOf('?');
-                track2 = value.substring(1, index2);
-                value = value.substring(index2 + 1);
-                str = value.charAt(0);
-                console.log('track2 str:' + str);
-            } else {
-                track2 = '*';
-            }
-            if (str == ';') {
-                track3 = value.substring(1, value.length - 1);
-            } else {
-                track3 = '*'
-            }
-
-            console.log('track1:' + track1 + ',track2:' + track2 + ',track3:' + track3);
             var data = {};
             var tracks = ['track1', 'track2', 'track3'];
-            var trackValues = [track1, track2, track3];
+            var trackValues = this.parseMagTracks(value);
             for (var i = 0; i < tracks.length; i++) {
                 data[tracks[i]] = trackValues[i];
             }
-            data['type'] = this.type;
-            this.requestModel.getMemberInfo(data, function (resp) {
-                //console.log(resp);
-                if (resp.status == '00') {
-                    _self.closeLayer(layerindex);
-                    //layer.msg('会员登录成功', optLayerSuccess);
-                    //$('input[name = main]').focus();
-                    //Backbone.trigger('onMemberSigned', resp);
+            data['type'] = '01';
+            this.request.getVipInfo(data, function (resp) {
+                console.log(resp);
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        var attrs = {
+                            pageid: PAGE_ID.BILLING,
+                            card_id: trackValues[2],
+                            cust_id: resp.cust_id,
+                            unpaidamount: _self.attrs.unpaidamount,
+                            gather_money: _self.attrs.gather_money,
+                            goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
+                            gather_detail: _self.attrs.gather_detail,
+                            account_type_code: resp.account_type_code
+                        };
+                        _self.closeLayer(layerindex);
+                        _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '900px'});
+                    } else {
+                        $('input[name = ecard]').val('');
+                        layer.msg(resp.msg, optLayerWarning);
+                    }
                 } else {
-                    //toastr.error(resp.msg);
-                    layer.msg(resp.msg, optLayerError);
+                    $('input[name = ecard]').val('');
+                    layer.msg('系统错误，请联系管理员', optLayerError);
                 }
             });
         }
