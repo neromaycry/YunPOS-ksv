@@ -493,12 +493,6 @@ define([
                     refundamount: refundamount,
                     zfbtwo: 'zfbtwo'
                 });
-                //data['orderid'] = paymentBill;
-                //data['merid'] = '000201504171126553';
-                //data['paymethod'] = 'zfb';
-                ////data['refundamount'] = '0.01';
-                //data['refundamount'] = refundamount;  //当前付款金额
-                //data['zfbtwo'] = 'zfbtwo';
             }
             if (gatherUI == '05') {
                 _.extend(data, {
@@ -507,11 +501,6 @@ define([
                     paymethod: 'wx',
                     refundamount: refundamount
                 });
-                //data['orderid'] = paymentBill;
-                //data['merid'] = '000201504171126553';
-                //data['paymethod'] = 'wx';
-                ////data['refundamount'] = '0.01';
-                //data['refundamount'] = refundamount;  //当前付款金额
             }
             loading.show();
             var url = 'http://127.0.0.1:5000/';
@@ -533,13 +522,6 @@ define([
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
-                //if (resp.data['flag'] == '00') {
-
-                //} else if (resp.data['flag'] == undefined) {
-                //    layer.msg('删除失败', optLayerError);
-                //} else {
-                //    layer.msg(resp.data['msg'], optLayerError);
-                //}
             });
         },
 
@@ -552,8 +534,8 @@ define([
             var refundamount = item.get('gather_money');
             var attrs = {
                 pageid: pageId,
-                transaction_amount: 0.1,
-                //transaction_amount:refundamount,
+                //transaction_amount: 0.1,
+                transaction_amount:refundamount,
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
                 pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                 bill_no: this.billNumber,
@@ -1233,7 +1215,6 @@ define([
         },
 
     });
-
 
     return billingView;
 });
