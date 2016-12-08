@@ -60,15 +60,15 @@ define([
             data['type'] = this.type;
             this.request.vipinfo(data, function (resp) {
                 if (resp.status == '00') {
-                    //layer.msg('登录成功', optLayerSuccess);
                     var attrs = {
                         pageid:PAGE_ID.BILLING,
                         card_id:cardId,
                         cust_id:resp.cust_id,
                         unpaidamount:_self.attrs.unpaidamount,
-                        receivedsum:_self.attrs.receivedsum,
+                        gather_money:_self.attrs.gather_money,
                         goods_detail:storage.get(system_config.SALE_PAGE_KEY,'shopcart'),
-                        gather_detail:storage.get(system_config.GATHER_KEY)
+                        gather_detail:_self.attrs.gather_detail,
+                        account_type_code:resp.account_type_code
                     };
                     _self.closeLayer(layerindex);
                     _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area:'900px'});

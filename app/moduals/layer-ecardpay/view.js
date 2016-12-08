@@ -40,7 +40,7 @@ define([
             this.initTemplates();
             var card_id = this.attrs['card_id'];
             this.unpaidamount = this.attrs['unpaidamount'];
-            this.receivedsum = this.attrs['receivedsum'];
+            this.receivedsum = this.attrs['gather_money'];
             this.request = new ECardPayModel();
             this.model = new ECardPayModel();
             this.collection = new ECardPayCollection();
@@ -52,26 +52,19 @@ define([
                 cust_id:this.attrs.cust_id,
                 gather_detail:this.attrs.gather_detail,
                 goods_detail:this.attrs.goods_detail,
-                account_type_code:'01'
+                account_type_code:this.attrs.account_type_code
             };
-            if(storage.isSet(system_config.ONE_CARD_KEY,card_id)) {
-                _self.collection.set(storage.get(system_config.ONE_CARD_KEY,card_id));
-            } else {
-                this.request.account(data,function(resp) {
-                    if(resp.status == '00'){
-                        _self.collection.set(resp.gather_detial);
-                        console.log(_self.collection);
-                        storage.set(system_config.ONE_CARD_KEY,card_id,'detail',_self.collection.toJSON());
-                    } else {
-                        toastr.error(resp.msg);
-                    }
-                });
-            }
-
-            setTimeout(function () {
-               _self.renderEcardDetail();
-                $('input[name = ecard_receivedsum]').val(_self.receivedsum);
-            }, 100);
+            this.request.account(data,function(resp) {
+                if(resp.status == '00'){
+                    _self.collection.push(resp.gather_detial);
+                    setTimeout(function () {
+                        _self.renderEcardDetail();
+                        $('input[name = ecard_receivedsum]').val(_self.receivedsum);
+                    }, 100);
+                } else {
+                    toastr.error(resp.msg);
+                }
+            });
 
         },
 
