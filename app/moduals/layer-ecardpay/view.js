@@ -106,7 +106,6 @@ define([
          * enter和确定点击事件
          */
         doPay:function (index){
-            alert(index);
             var _self = this;
             var receivedsum = $(this.input).val();
             var card_id = this.attrs['card_id'];
