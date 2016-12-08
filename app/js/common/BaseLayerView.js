@@ -20,6 +20,7 @@ define([
         initialize: function (attrs) {
             //var _self = this;
             console.log('modal:' + this.id);
+            this.undelegateEvents();
             //$(document).unbind('keyup');
             //$(document).unbind('keydown');
             isModal = true;
@@ -34,6 +35,7 @@ define([
                 this.$el.html(this.template);
                 this.template = _.template(this.template);
             }
+            this.delegateEvents();
             this.LayerInitPage();
             this.bindLayerKeys();
             //setTimeout(function () {

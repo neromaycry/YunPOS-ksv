@@ -88,15 +88,15 @@ define([
                                     contentType: "application/json",
                                     dataType: "json",
                                     data: JSON.stringify(data),
-                                    success: function (resp) {
-                                        if (resp.status == '00') {
+                                    success: function (resp2) {
+                                        if (resp2.status == '00') {
                                             var attrs = {
                                                 gather_id: _self.attrs.gather_id,
                                                 gather_ui: _self.attrs.gather_ui,
                                                 gather_name: _self.attrs.gather_name,
                                                 gather_money: _self.attrs.gather_money,
                                                 gather_kind: _self.attrs.gather_kind,
-                                                gather_no: '第三方支付账户',
+                                                gather_no: resp.data.outtradeno,
                                                 hasExtra: true,
                                                 extras: {
                                                     extra_id: 1,
@@ -107,10 +107,11 @@ define([
                                                 outtradeno: respData.outtradeno,
                                                 gather_ui: gatherUI
                                             });
+                                            console.log('gather ui trigger');
                                             Backbone.trigger('onReceivedsum', _.extend(attrs, {
                                                 extras: extra
                                             }));
-                                            layer.msg(resp.msg, optLayerSuccess);
+                                            layer.msg(resp2.msg, optLayerSuccess);
                                             clearInterval(_self.tradeStateTimer);
                                             _self.closeLayer(layerindex);
                                             $('input[name = billing]').focus();
