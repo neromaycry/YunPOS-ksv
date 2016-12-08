@@ -223,7 +223,6 @@ define([
                         storage.set(system_config.GATHER_KEY, resp.gather_detail);
                         layer.msg('已更新支付方式配置', _.extend(optLayerSuccess, {offset: '80px'}));
                     } else {
-                        //toastr.error(resp.msg);
                         layer.msg(resp.msg, optLayerError);
                     }
                 } else {

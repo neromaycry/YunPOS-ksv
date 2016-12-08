@@ -513,10 +513,12 @@ define([
                 ////data['refundamount'] = '0.01';
                 //data['refundamount'] = refundamount;  //当前付款金额
             }
-            //var url = 'http://127.0.0.1:5000/';
-            var url = 'http://121.42.166.147:9090/';
+            loading.show();
+            var url = 'http://127.0.0.1:5000/';
+            //var url = 'http://121.42.166.147:9090/';
             resource.post(url + 'api/pay/xfb/refund', data, function (resp) {
                 console.log(resp);
+                loading.hide();
                 if (!$.isEmptyObject(resp)) {
                     if (resp.code == '000000') {
                         if (resp.data.flag == '00') {

@@ -43,9 +43,10 @@ define([
             });
             this.switchTemplate(this.gatherUI);
             this.template_content = _.template(this.template_content);
-            this.prepay(this.gatherUI);
+
             setTimeout(function () {
                 _self.renderContent();
+                _self.prepay(_self.gatherUI);
             }, 100);
 
         },

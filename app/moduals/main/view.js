@@ -779,25 +779,33 @@ define([
                 layer.msg('商品编码不能为空', optLayerWarning);
                 return;
             }
-            var data = {
-                user_id: '',
-                skucode: skucode,
-                goods_detail: this.collection.toJSON()
-            };
-            this.requestModel.relateWorker(data, function (resp) {
-                if (!$.isEmptyObject(resp)) {
-                    if (resp.status == '00') {
-                        resp = _.extend(resp, {skucode: skucode});
-                        _self.getGoods(resp);
-                    } else if (resp.status == '99') {
-                        _self.openLayerWorker();
+            if (auth_store == 1) {
+                var data = {
+                    user_id: '',
+                    skucode: skucode,
+                    goods_detail: this.collection.toJSON()
+                };
+                this.requestModel.relateWorker(data, function (resp) {
+                    if (!$.isEmptyObject(resp)) {
+                        if (resp.status == '00') {
+                            resp = _.extend(resp, {skucode: skucode});
+                            _self.getGoods(resp);
+                        } else if (resp.status == '99') {
+                            _self.openLayerWorker();
+                        } else {
+                            layer.msg(resp.msg, optLayerWarning);
+                        }
                     } else {
-                        layer.msg(resp.msg, optLayerWarning);
+                        layer.msg('系统错误，请联系管理员', optLayerError);
                     }
-                } else {
-                    layer.msg('系统错误，请联系管理员', optLayerError);
-                }
-            });
+                });
+            } else {
+                var data = {
+                    user_id: '',
+                    skucode: skucode
+                };
+                this.getGoods(data);
+            }
         },
 
         openLayerWorker: function (data) {
