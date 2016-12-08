@@ -5,10 +5,9 @@ define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-ecardlogin/model',
     '../../moduals/layer-ecardpay/view',
-    'text!../../moduals/layer-ecardlogin/phonetpl.html',
     'text!../../moduals/layer-ecardlogin/magcardtpl.html',
     'text!../../moduals/layer-ecardlogin/tpl.html',
-], function (BaseLayerView, LayerECardModel, LayerECardpayView, phonetpl, magcardtpl, tpl) {
+], function (BaseLayerView, LayerECardModel, LayerECardpayView, magcardtpl, tpl) {
 
     var layerECardView = BaseLayerView.extend({
 
@@ -16,51 +15,20 @@ define([
 
         template: tpl,
 
-        template_phone: phonetpl,
-
         template_magcard: magcardtpl,
 
         type: '03',
 
-        input: 'input[name = phone]',
+        input: 'input[name = magcard]',
 
         events: {
             'click .cancel': 'onCancelClicked',
-            'click .ok': 'onOkClicked',
-            'click .btn-num': 'onNumClicked',
-            'click .btn-backspace': 'onBackspaceClicked',
-            'click .btn-clear': 'onClearClicked',
-            'click [data-index]': 'onLoginListClicked',
-
         },
 
         LayerInitPage: function () {
-            var _self = this;
-            this.initTemplates();
+            console.log(this.attrs);
             this.model = new LayerECardModel();
-            setTimeout(function () {
-                _self.renderByType(_self.type);
-            }, 100);
             this.request = new LayerECardModel();
-        },
-
-        initTemplates: function () {
-            this.template_phone = _.template(this.template_phone);
-            this.template_magcard = _.template(this.template_magcard);
-        },
-
-        renderByType: function (type) {
-            console.log(type);
-            switch (type) {
-                case '01':
-                    this.$el.find('.for-member-login').html(this.template_magcard(this.model.toJSON()));
-                    return this;
-                    break;
-                case '03':
-                    this.$el.find('.for-member-login').html(this.template_phone(this.model.toJSON()));
-                    return this;
-                    break;
-            }
         },
 
         bindLayerKeys: function () {
@@ -69,14 +37,7 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function () {
-                _self.doLogin();
-            });
-
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.X, function () {
-                _self.changeTemplate(1);
-            });
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.P, function () {
-                _self.changeTemplate(3);
+                _self.onOkClicked();
             });
         },
 
@@ -89,50 +50,45 @@ define([
             this.closeLayer(layerindex);
         },
 
-        doLogin: function () {
-            this.inputPhoneNum();
-            //switch (type) {
-            //    case '01':
-            //        console.log('会员卡登录');
-            //        toastr.warning('请刷卡');
-            //        break;
-            //    case '03':
-            //        console.log('手机号登陆');
-            //        this.inputPhoneNum();
-            //        break;
-            //}
-        },
 
         onOkClicked: function () {
-            //this.doLogin(this.type);
-        },
-        inputPhoneNum: function () {
             var _self = this;
-            var phoneNum = $('input[name = phone]').val();
-            if (phoneNum == '') {
-                //toastr.error('手机号不能为空');
-                layer.msg('手机号不能为空', optLayerError);
-                return;
-            }
-            if (!(/^1[34578]\d{9}$/.test(phoneNum))) {
-                //toastr.error('手机号输入错误，请重填');
-                layer.msg('手机号输入错误，请重填', optLayerError);
-                $('input[name = phonenum]').val('');
-                return;
-            }
+            var cardId = $('input[name = magcard]').val();
             var data = {};
-            data['mobile'] = phoneNum;
+            data['mobile'] = cardId;
             data['password'] = '*';
             data['type'] = this.type;
             this.request.vipinfo(data, function (resp) {
                 if (resp.status == '00') {
                     //layer.msg('登录成功', optLayerSuccess);
                     var attrs = {
-                        'card_id':phoneNum,
-                        'cust_id':resp.cust_id,
-                        'goods_detail':storage.get(system_config.SALE_PAGE_KEY,'shopcart'),
-                        'gather_detail':storage.get(system_config.GATHER_KEY)
+                        pageid:PAGE_ID.BILLING,
+                        card_id:cardId,
+                        cust_id:resp.cust_id,
+                        unpaidamount:_self.attrs.unpaidamount,
+                        receivedsum:_self.attrs.receivedsum,
+                        goods_detail:storage.get(system_config.SALE_PAGE_KEY,'shopcart'),
+                        gather_detail:storage.get(system_config.GATHER_KEY)
                     };
+                    var gather_detail = [
+                        {
+                            'gather_id':'03',
+                            'gather_money':300.24,
+                            'gather_name':'礼券A',
+                            'gather_no':'00001',
+                            'gather_validity':'2017-12-08 10:10:10'
+
+                        }, {
+
+                            'gather_id':'06',
+                            'gather_money':100.10,
+                            'gather_name':'电子礼券',
+                            'gather_no':'00003',
+                            'gather_validity':'2017-12-08 10:10:10'
+
+                        }
+                    ];
+                    storage.set(system_config.ONE_CARD_KEY, cardId, gather_detail);
                     _self.closeLayer(layerindex);
                     _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area:'900px'});
                 } else {
@@ -206,99 +162,7 @@ define([
                     layer.msg(resp.msg, optLayerError);
                 }
             });
-        },
-
-        onLoginListClicked: function (e) {
-            var index = $(e.currentTarget).data('index');
-            console.log(index);
-            this.changeTemplate(index);
-        },
-
-        changeTemplate: function (index) {
-            var _self = this;
-            switch (index) {
-                case 1:
-                    this.type = '01';
-                    this.input = 'input[name = magcard]';
-                    this.renderByType(this.type);
-                    $('input[name = magcard]').koala({
-                        delay: 2000,
-                        keyup: function (event) {
-                            _self.swipeCard();
-                        }
-                    });
-                    break;
-                case 3:
-                    this.type = '03';
-                    this.input = 'input[name = phone]';
-                    this.renderByType(this.type);
-                    break;
-            }
-            $(this.input).focus();
-        },
-
-        onNumClicked: function (e) {
-            var value = $(e.currentTarget).data('num');
-            var str = $(this.input).val();
-            str += value;
-            $(this.input).val(str);
-        },
-
-        onBackspaceClicked: function (e) {
-            var str = $(this.input).val();
-            str = str.substring(0, str.length - 1);
-            $(this.input).val(str);
-        },
-
-        onClearClicked: function () {
-            $(this.input).val('');
-        },
-
-        ///**
-        // * 确认事件
-        // */
-        //doLogin:function() {
-        //    var _self = this;
-        //    var isUserFocused = $('input[name = medium_id]').is(':focus');
-        //    if(isUserFocused){
-        //        $('input[name = medium_password]').focus();
-        //    } else {
-        //        var cardid = $('input[name = medium_id]').val();
-        //        var password = $('input[name = medium_password]').val();
-        //        if(cardid == '' || password == ''){
-        //            toastr.warning('会员卡号或者密码不能为空');
-        //        }
-        //        if(cardid != '' && password != ''){
-        //            var data = {};
-        //            data['cardid'] = cardid;
-        //            data['password'] = password;
-        //            data['type'] = '00';
-        //            _self.request.vipinfo(data,function(resp) {
-        //                if(resp.status == '00'){
-        //                    var dataAccount = {};
-        //                    dataAccount['unpaidamount'] = _self.attrs.unpaidamount;
-        //                    dataAccount['receivedsum'] = _self.attrs.receivedsum;
-        //                    dataAccount['card_id'] = cardid;
-        //                    dataAccount['cust_id'] = resp.cust_id;
-        //                    dataAccount['goods_detail'] = storage.get(system_config.SALE_PAGE_KEY,'shopcart');
-        //                    dataAccount['gather_detail'] = storage.get(system_config.GATHER_KEY);
-        //                    $('.modal-backdrop').remove();
-        //                    _self.hideModal(window.PAGE_ID.BILLING);
-        //                    this.ecardpayview = new EcardpayView(dataAccount);
-        //                    _self.showModal(window.PAGE_ID.ONECARD_PAY,_self.ecardpayview);
-        //
-        //                }else{
-        //                    toastr.error(resp.msg);
-        //                }
-        //            });
-        //
-        //            $('input[name = medium_id]').val("");
-        //            $('input[name = medium_password]').val("");
-        //        }
-        //    }
-        //},
-
-
+        }
     });
 
     return layerECardView;

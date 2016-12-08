@@ -821,14 +821,19 @@ define([
          */
         getRetailNo: function () {
             var _self = this;
-            var data = {};
-            data['pos_id'] = '002';
+            var data = {
+                pos_id: storage.get(system_config.POS_INFO_KEY, 'posid')
+            };
             this.model.requestRetaliNo(data, function (resp) {
-                if (resp.status == '00') {
-                    _self.billNumber = resp.bill_no;
-                    console.log(_self.billNumber);
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.billNumber = resp.bill_no;
+                        console.log(_self.billNumber + 'this is billNumber');
+                    } else {
+                        layer.msg(resp.msg, optLayerWarning);
+                    }
                 } else {
-                    layer.msg(resp.msg, optLayerWarning);
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
                 }
             });
         },

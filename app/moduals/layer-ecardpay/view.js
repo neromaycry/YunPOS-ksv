@@ -41,10 +41,6 @@ define([
             var card_id = this.attrs['card_id'];
             this.unpaidamount = this.attrs['unpaidamount'];
             this.receivedsum = this.attrs['receivedsum'];
-            var data = {};
-            data['cust_id'] = this.attrs['cust_id'];
-            data['gather_detail'] = this.attrs['gather_detail'];
-            data['goods_detail'] = this.attrs['goods_detail'];
             this.request = new ECardPayModel();
             this.model = new ECardPayModel();
             this.collection = new ECardPayCollection();
@@ -52,24 +48,33 @@ define([
                 unpaidamount:this.unpaidamount,
                 receivedsum:this.receivedsum
             });
-            //this.render();
-            if(storage.isSet(system_config.ONE_CARD_KEY,card_id)){
-                _self.collection.set(storage.get(system_config.ONE_CARD_KEY,card_id,'detail'));
-            }else{
+            var data = {
+                cust_id:this.attrs.cust_id,
+                gather_detail:this.attrs.gather_detail,
+                goods_detail:this.attrs.goods_detail
+            };
+            if(storage.isSet(system_config.ONE_CARD_KEY,card_id)) {
+                _self.collection.set(storage.get(system_config.ONE_CARD_KEY,card_id));
+            } else {
                 this.request.account(data,function(resp) {
                     if(resp.status == '00'){
                         _self.collection.set(resp.gather_detial);
                         console.log(_self.collection);
                         storage.set(system_config.ONE_CARD_KEY,card_id,'detail',_self.collection.toJSON());
-                    }else {
+                    } else {
                         toastr.error(resp.msg);
                     }
-                    _self.renderEcardDetail();
                 });
             }
-            this.renderEcardDetail();
+
+            setTimeout(function () {
+               _self.renderEcardDetail();
+                $('input[name = ecard_receivedsum]').val(_self.receivedsum);
+            }, 100);
 
         },
+
+
         initTemplates: function () {
             this.template_ecarddetail = _.template(this.template_ecarddetail);
         },
@@ -102,47 +107,45 @@ define([
          */
         doPay:function (index){
             var _self = this;
-            var receivedsum = $('#ecard_receivedsum').val();
-            var card_id = _self.attrs['card_id'];
-            if(index == -1){
-                //初始时设置i=-1,如果i=-1则为选中任何支付方式
-                toastr.warning('请选择支付方式');
-            }else if(index == undefined){
-                toastr.warning('请选择支付方式');
-            }else {
-                var item = _self.collection.at(index);
-                console.log(item);
-                var gather_money = parseFloat(item.get('gather_money'));
-                if (receivedsum == '') {
-                    toastr.warning('输入金额不能为空');
-                } else if (receivedsum == 0) {
-                    toastr.warning('输入金额不能为零');
-                } else if((receivedsum.split('.').length-1)){
-                    toastr.warning('请输入有效的金额');
-                }else if(receivedsum > _self.unpaidamount){
-                    toastr.warning('输入金额不能大于待支付金额');
-                }else if(receivedsum > gather_money){
-                    toastr.warning('输入金额不能大于卡内余额');
-                }else if(_self.model.get('receivedsum') != receivedsum){
-                    toastr.warning('请重新选择支付方式');
-                }else{
-                    item.set({
-                        gather_money:_self.model.get('gather_money')
-                    });
-                    _self.collection.at(index).set(item.toJSON());
-                    var data = {};
-                    data['gather_id'] = _self.model.get('gather_id');
-                    data['gather_name'] = _self.model.get('gather_name');
-                    data['receivedsum'] = _self.model.get('receivedsum');
-                    data['gather_no'] = _self.model.get('gather_no');
-                    data['gather_kind'] = '06';
-                    data['card_id'] = _self.attrs['card_id'];
-                    Backbone.trigger('onReceivedsum',data);
-                    storage.set(system_config.ONE_CARD_KEY,card_id,'detail',_self.collection);
-                    _self.hideModal(window.PAGE_ID.BILLING);
-                    $('input[name = billing]').focus();
-                }
+            var receivedsum = $(this.input).val();
+            var card_id = this.attrs['card_id'];
+            if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length-1) > 1 || receivedsum == '.') {
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
             }
+            if(index == -1 || index == undefined) {
+                //初始时设置i=-1,如果i=-1则为选中任何支付方式
+                layer.msg('请选择支付方式', optLayerWarning);
+                return;
+            }
+            var item = _self.collection.at(index);
+            var gatherMoney = parseFloat(item.get('gather_money'));
+            if(receivedsum > gatherMoney + parseFloat(receivedsum)){
+                layer.msg('支付金额不能大于卡内余额', optLayerWarning);
+                return;
+            }
+            if(this.model.get('receivedsum') != receivedsum){
+                layer.msg('请重新选择支付方式', optLayerWarning);
+                return;
+            }
+            item.set({
+                gather_money:_self.model.get('gather_money')
+            });
+            this.collection.at(index).set(item.toJSON());
+            var data = {
+                gather_id:this.model.get('gather_id'),
+                gather_name:this.model.get('gather_name'),
+                gather_money:this.model.get('receivedsum'),
+                gather_no:this.model.get('gather_no'),
+                gather_kind:'04',
+                card_id:this.attrs.card_id
+            };
+            Backbone.trigger('onReceivedsum',data);
+            storage.set(system_config.ONE_CARD_KEY,card_id,_self.collection);
+            this.closeLayer(layerindex);
+            $('input[name = billing]').focus();
+
         },
 
         /**
@@ -151,9 +154,16 @@ define([
 
         scrollUp:function(){
             var receivedsum = $('#ecard_receivedsum').val();
-            if(receivedsum == ''){
-                toastr.warning('请先输入支付金额');
-            }else if(this.i > 0){
+            if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 || receivedsum == '.') {
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum > this.unpaidamount){
+                layer.msg('支付金额不能大于待支付金额', optLayerWarning);
+                return;
+            }
+            if(this.i > 0){
                 this.i--;
                 this.choiceCard(this.i);
                 $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
@@ -164,28 +174,34 @@ define([
          * 方向下
          */
         scrollDown:function(){
-            var receivedsum = $('#ecard_receivedsum').val();
-            if(receivedsum == ''){
-                toastr.warning('请先输入支付金额');
-            }else if(this.i < this.collection.length - 1){
-                this.i++;
-                this.choiceCard(this.i);
-                $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-                }
+            var receivedsum = $(this.input).val();
+            if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 ||receivedsum == '.') {
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum > this.unpaidamount){
+                layer.msg('支付金额不能大于待支付金额', optLayerWarning);
+                return;
+            }
+            if (this.i < this.collection.length - 1) {
+                    this.i++;
+                    this.choiceCard(this.i);
+                    $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+               }
             },
         /**
          * 选择支付的方式
          */
         choiceCard:function(index){
-            var receivedsum = $('#ecard_receivedsum').val();
-            var card_id = this.attrs['card_id'];
-            this.collection.set(storage.get(system_config.ONE_CARD_KEY,card_id,'detail'));
+            var receivedsum = $(this.input).val();
             var item = this.collection.at(index);
-            var gather_money = parseFloat(item.get('gather_money'));
-            gather_money = gather_money - receivedsum;
-            gather_money = gather_money.toFixed(2);
+            var cardId = this.attrs.card_id;
+            this.collection.set(storage.get(system_config.ONE_CARD_KEY,cardId));
+            var gatherMoney = parseFloat(item.get('gather_money'));
+            gatherMoney = gatherMoney - receivedsum;
             item.set({
-                gather_money: gather_money
+                gather_money: gatherMoney
             });
             this.collection.at(index).set(item.toJSON());
             this.model.set({
@@ -193,12 +209,36 @@ define([
                 gather_name:item.get('gather_name'),
                 gather_no:item.get('gather_no'),
                 receivedsum:parseFloat(receivedsum),
-                gather_money:gather_money
+                gather_money:gatherMoney
             });
             this.renderEcardDetail();
         },
+
+        onAccountClicked: function (e) {
+            var index = $(e.currentTarget).data('index');
+            var receivedsum = $(this.input).val();
+            if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 || receivedsum == '.') {
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum > this.unpaidamount){
+                layer.msg('支付金额不能大于待支付金额', optLayerWarning);
+                return;
+            }
+            if (index < this.collection.length - 1) {
+                this.choiceCard(index);
+                $('#li' + index).addClass('cus-selected').siblings().removeClass('cus-selected');
+            }
+        },
+
         onCancelClicked: function () {
             this.closeLayer(layerindex);
+            if (this.attrs.pageid == 6) {
+                $('input[name = billing]').focus();
+            } else {
+                $('input[name = billingrt]').focus();
+            }
         },
 
         onOkClicked: function () {
@@ -221,19 +261,6 @@ define([
 
         onClearClicked: function () {
             $(this.input).val('');
-        },
-
-        onKeyUpClicked:function (){
-            this.scrollUp();
-        },
-
-        onKeyDownClicked:function (){
-            this.scrollDown();
-        },
-        onAccountClicked: function (e) {
-            var index = $(e.currentTarget).data('index');
-            this.choiceCard(index);
-            $('#li' + index).addClass('cus-selected').siblings().removeClass('cus-selected');
         }
     });
 

@@ -1,14 +1,19 @@
 <div class="panel panel-primary" style="border: none;margin: 0;">
     <!--<div class="panel-heading pos-textsize">-->
-        <!--<div class="row">-->
-            <!--<div class="col-xs-3 col-md-3">待支付金额：<%= toDecimal2(unpaidamount) %></div>-->
-            <!--<div class="col-xs-3 col-md-3">支付金额：<%= toDecimal2(receivedsum) %></div>-->
-        <!--</div>-->
+
     <!--</div>-->
     <div class="panel-body">
+
+        <div class="row no-margining" style="margin-bottom: 15px;">
+            <div class="col-xs-3 col-md-3  text-right pos-textsize no-padding">支付金额：</div>
+            <div class="col-xs-3 col-md-3 text-left text-red no-padding" style="font-size: 18px">￥<%= toDecimal2(receivedsum) %></div>
+            <div class="col-xs-3 col-md-3  text-right pos-textsize no-padding">待支付金额：</div>
+            <div class="col-xs-3 col-md-3 text-left text-teal no-padding"  style="font-size: 18px">￥<%= toDecimal2(unpaidamount) %></div>
+        </div>
         <div class="row">
             <div class="col-xs-4 col-md-4">
                 <div class="form-group">
+                    <label class="sr-only" for="ecard_receivedsum"></label>
                     <input type="text" id="ecard_receivedsum"  name="ecard_receivedsum" class="form-control"  onkeypress="return myNumberic(event)"  onkeyup="return ValidateFloat($(this),value)" placeholder="请输入支付金额"/>
                 </div>
                 <div class="panel panel-primary" >
