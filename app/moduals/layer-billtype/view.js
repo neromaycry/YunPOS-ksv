@@ -157,6 +157,7 @@ define([
             if (this.i < this.collection.length - 1) {
                 this.i++;
             }
+            this.index =  this.i;
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
@@ -166,7 +167,7 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
-
+            this.index =  this.i;
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
@@ -192,6 +193,7 @@ define([
 
         onBillTypeClicked: function (e) {
             this.index = $(e.currentTarget).data('index');
+            this.i = this.index;
             $(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
         }
 

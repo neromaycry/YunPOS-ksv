@@ -264,34 +264,36 @@ define([
                 data['medium_id'] = '*';
                 data['medium_type'] = '*';
             }
-            data['goods_detail'] = JSON.stringify(_self.collection);
+            data['goods_detail'] = this.collection.toJSON();
             this.requestModel.sku(data, function (resp) {
-                if (resp.status == '00') {
-                    var temp = resp.goods_detail[resp.goods_detail.length - 1];
-                    if (temp['price_auto'] == 1) {
-                        var attrs = {
-                            pageid: pageId,
-
-                            originalprice: temp['price'],
-
-                            callback: function () {
-                                var price = $('input[name = price]').val();
-                                resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
-                                resp.goods_detail[resp.goods_detail.length - 1].money = parseFloat(price);
-                                _self.onAddItem(resp.goods_detail);
-                                $('input[name = sku_id]').focus();
-                            }
-                        };
-                        _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area: '300px'});
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        var temp = resp.goods_detail[resp.goods_detail.length - 1];
+                        if (temp['price_auto'] == 1) {
+                            var attrs = {
+                                pageid: pageId,
+                                originalprice: temp['price'],
+                                callback: function () {
+                                    var price = $('input[name = price]').val();
+                                    resp.goods_detail[resp.goods_detail.length - 1].price = parseFloat(price);
+                                    resp.goods_detail[resp.goods_detail.length - 1].money = parseFloat(price);
+                                    _self.onAddItem(resp.goods_detail);
+                                    $('input[name = sku_id]').focus();
+                                }
+                            };
+                            _self.openLayer(PAGE_ID.LAYER_PRICE_ENTRY, pageId, '单价录入', LayerPriceEntryView, attrs, {area: '300px'});
+                        } else {
+                            _self.onAddItem(resp.goods_detail);
+                        }
                     } else {
-                        _self.onAddItem(resp.goods_detail);
+                        layer.msg(resp.msg, optLayerError);
                     }
                 } else {
-                    layer.msg(resp.msg, optLayerError);
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
                 }
             });
             $(this.input).val('');
-            _self.i = 0;
+            this.i = 0;
         },
         /**
          * 结算

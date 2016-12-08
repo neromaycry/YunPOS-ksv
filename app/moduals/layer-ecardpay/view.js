@@ -54,15 +54,20 @@ define([
                 goods_detail:this.attrs.goods_detail,
                 account_type_code:this.attrs.account_type_code
             };
+
             this.request.account(data,function(resp) {
-                if(resp.status == '00'){
-                    _self.collection.push(resp.gather_detial);
-                    setTimeout(function () {
-                        _self.renderEcardDetail();
-                        $('input[name = ecard_receivedsum]').val(_self.receivedsum);
-                    }, 100);
+                if (!$.isEmptyObject(resp)) {
+                    if(resp.status == '00'){
+                        _self.collection.push(resp.gather_detial);
+                        setTimeout(function () {
+                            _self.renderEcardDetail();
+                            $('input[name = ecard_receivedsum]').val(_self.receivedsum);
+                        }, 100);
+                    } else {
+                        toastr.error(resp.msg);
+                    }
                 } else {
-                    toastr.error(resp.msg);
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
                 }
             });
 
