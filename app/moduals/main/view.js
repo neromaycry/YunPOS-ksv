@@ -102,6 +102,7 @@ define([
             this.collection = new HomeCollection();  //当前view的collection
             //this.logincollection = new HomeCollection();
             this.requestModel = new HomeModel();  //网络请求的model
+
             this.model.set({
                 totalamount: this.totalamount,
                 itemamount: this.itemamount,
@@ -145,16 +146,16 @@ define([
                 this.oddchangeModel.set({
                     oddchange: storage.get(system_config.ODD_CHANGE, 'oddchange')
                 });
-                this.memberModel.set({
-                    lastbill_no: storage.get(system_config.ODD_CHANGE, 'lastbill_no')
-                });
+                //this.memberModel.set({
+                //    lastbill_no: storage.get(system_config.ODD_CHANGE, 'lastbill_no')
+                //});
             } else {
                 this.oddchangeModel.set({
                     oddchange: 0
                 });
-                this.oddchangeModel.set({
-                    lastbill_no: '无订单'
-                });
+                //this.oddchangeModel.set({
+                //    lastbill_no: '无订单'
+                //});
             }
             if (!this.marqueeModel.get('notification_content')) {
                 this.marqueeModel.set({
@@ -172,13 +173,8 @@ define([
             this.handleEvents();
         },
         initPlugins: function () {
-            //var _self = this;
+            var _self = this;
             $(this.input).focus();
-            //$(this.input).blur(function () {
-            //    console.log('blur');
-            //    console.log(_self.input);
-            //    $(_self.input).focus();
-            //});
             $('.for-cartlist').perfectScrollbar();  // 定制滚动条外观
             this.renderPosInfo();
             //this.renderSalesman();
@@ -199,6 +195,20 @@ define([
                 pauseOnHover: true
             });
             this.addClickedState();
+            this.requestModel.getRetailNo({pos_id: storage.get(system_config.POS_INFO_KEY, 'posid')}, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.memberModel.set({
+                            retail_no: resp.retail_no
+                        });
+                        _self.renderMinfo();
+                    } else {
+                        layer.msg(resp.msg, optLayerWarning);
+                    }
+                } else {
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
+                }
+            });
         },
         initTemplates: function () {
             this.template_posinfo = _.template(this.template_posinfo);
