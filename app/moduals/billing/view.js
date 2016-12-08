@@ -912,7 +912,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) > 0) {
+            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) > 1) {
                 layer.msg('无效的支付金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -927,9 +927,10 @@ define([
             }
             var attrs = {
                 pageid: pageId,
-                receivedsum: receivedSum
+                receivedsum: receivedSum,
+                unpaidamount:unpaidamount
             };
-            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '600px'});
+            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '300px'});
             $(this.input).val('');
         },
 

@@ -8,7 +8,7 @@ return s;
         <div class="row">
             <div class="col-xs-2 col-md-2"><%= e.gather_id %></div>
             <div class="col-xs-2 col-md-2"><%= e.gather_no %></div>
-            <div class="col-xs-2 col-md-2"><%= e.gather_money %></div>
+            <div class="col-xs-2 col-md-2"><%= toDecimal2(e.gather_money) %></div>
             <div class="col-xs-3 col-md-3"><%= e.gather_name %></div>
             <div class="col-xs-3 col-md-3"><%= subStr(e.gather_validity) %></div>
         </div>
