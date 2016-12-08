@@ -115,9 +115,6 @@ define([
                                             _self.closeLayer(layerindex);
                                             $('input[name = billing]').focus();
                                         }
-                                        //else {
-                                        //    layer.msg(resp.msg, optLayerError);
-                                        //}
                                     }
                                 });
                             }, 1000);
@@ -299,12 +296,10 @@ define([
                 subject: '祥付测试'
             };
             if (gatherUI == '04') {
-                //data['paymethod'] = 'zfb';
                 _.extend(data, {
                     paymethod: 'zfb'
                 });
             } else if (gatherUI == '05') {
-                //data['paymethod'] = 'wx';
                 _.extend(data, {
                     paymethod: 'wx'
                 });

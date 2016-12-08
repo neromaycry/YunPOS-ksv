@@ -473,7 +473,6 @@ define([
         releaseOrder: function () {
             var itemamount = this.model.get('itemamount');
             if (itemamount != 0) {
-                //toastr.warning('购物车内有商品，不能执行解挂操作');
                 layer.msg('购物车内有商品，不能执行解挂操作', optLayerWarning);
             } else {
                 this.openLayer(PAGE_ID.LAYER_RESTORDER, pageId, '订单解挂', LayerRestOrderView, undefined, {area: '300px'});
@@ -485,7 +484,6 @@ define([
         restOrder: function () {
             var itemamount = this.model.get('itemamount');
             if (itemamount == 0) {
-                //toastr.warning('当前购物车内无商品，无法执行挂单操作');
                 layer.msg('当前购物车内无商品，无法执行挂单操作', optLayerWarning);
             } else {
                 //var orderNum = new Date().getTime();
@@ -519,7 +517,6 @@ define([
                 this.renderCartList();
                 //this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
-                //toastr.success('挂单号：' + orderNum);
                 layer.msg('挂单号：' + orderNum, optLayerSuccess);
                 var time = this.getCurrentFormatDate();
                 var printText = '\n\n\n\n';
@@ -599,7 +596,6 @@ define([
                 return;
             }
             if ((value.split('.').length - 1) > 0 || value >= 100 || value == '') {
-                //toastr.warning('请输入有效的折扣比率');
                 layer.msg('无效的折扣比率', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -904,7 +900,6 @@ define([
             //this.ctrlClientInfo('none', this.ids, isPacked);
             this.isInSale = false;
             this.isTotalDiscount = false;
-            //toastr.success('交易已取消');
             layer.msg('交易已取消', optLayerSuccess);
         },
         /**
@@ -992,7 +987,6 @@ define([
          * 会员登录按钮点击事件
          */
         onMemberClicked: function () {
-            //router.navigate('member',{trigger:true});
             this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, undefined, {area: '800px'});
         },
         /**
@@ -1049,8 +1043,6 @@ define([
                 _self.clearCart();
             });
         },
-
-
         /**
          * 向上选择点击事件
          */
@@ -1091,8 +1083,6 @@ define([
                 router.navigate('returnforce', {trigger: true});
             });
         },
-
-
         /**
          * 收银对账按钮点击事件
          */
@@ -1155,16 +1145,6 @@ define([
                 clientDom.getElementById("itemPrice").innerHTML = toDecimal2(model.price);
             }
         },
-        //onFloatPadClicked: function () {
-        //    var isDisplay = $('.float-numpad').css('display') == 'none';
-        //    if (isDisplay) {
-        //        $('.float-numpad').css('display','block');
-        //        $('.btn-floatpad').text('关闭小键盘')
-        //    } else {
-        //        $('.float-numpad').css('display','none');
-        //        $('.btn-floatpad').text('开启小键盘')
-        //    }
-        //},
         /**
          * 挂单，解挂按钮选择
          */

@@ -175,12 +175,10 @@ define([
                 passwd = '*';
             }
             if (phoneNum == '') {
-                //toastr.error('手机号不能为空');
                 layer.msg('手机号不能为空', optLayerError);
                 return;
             }
             if (!(/^1[34578]\d{9}$/.test(phoneNum))) {
-                //toastr.error('手机号输入错误，请重填');
                 layer.msg('手机号输入错误，请重填', optLayerError);
                 $('input[name = phonenum]').val('');
                 return;
@@ -196,7 +194,6 @@ define([
                     $('input[name = main]').focus();
                     Backbone.trigger('onMemberSigned', resp);
                 } else {
-                    //toastr.error(resp.msg);
                     layer.msg(resp.msg, optLayerError);
                 }
             });
@@ -222,14 +219,12 @@ define([
             }
             data['type'] = this.type;
             this.model.getMemberInfo(data, function (resp) {
-                //console.log(resp);
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
                     layer.msg('会员登录成功', optLayerSuccess);
                     $('input[name = main]').focus();
                     Backbone.trigger('onMemberSigned', resp);
                 } else {
-                    //toastr.error(resp.msg);
                     $(_self.input).val('');
                     layer.msg(resp.msg, optLayerError);
                 }
