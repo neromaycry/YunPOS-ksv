@@ -708,7 +708,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) > 1 || ) {
+            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) > 1) {
                 layer.msg('无效的支付金额', optLayerWarning);
                 $(this.input).val('');
                 return;
