@@ -70,25 +70,6 @@ define([
                         goods_detail:storage.get(system_config.SALE_PAGE_KEY,'shopcart'),
                         gather_detail:storage.get(system_config.GATHER_KEY)
                     };
-                    var gather_detail = [
-                        {
-                            'gather_id':'03',
-                            'gather_money':300.24,
-                            'gather_name':'礼券A',
-                            'gather_no':'00001',
-                            'gather_validity':'2017-12-08 10:10:10'
-
-                        }, {
-
-                            'gather_id':'06',
-                            'gather_money':100.10,
-                            'gather_name':'电子礼券',
-                            'gather_no':'00003',
-                            'gather_validity':'2017-12-08 10:10:10'
-
-                        }
-                    ];
-                    storage.set(system_config.ONE_CARD_KEY, cardId, gather_detail);
                     _self.closeLayer(layerindex);
                     _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area:'900px'});
                 } else {

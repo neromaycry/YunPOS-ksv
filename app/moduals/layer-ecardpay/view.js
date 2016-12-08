@@ -51,7 +51,8 @@ define([
             var data = {
                 cust_id:this.attrs.cust_id,
                 gather_detail:this.attrs.gather_detail,
-                goods_detail:this.attrs.goods_detail
+                goods_detail:this.attrs.goods_detail,
+                account_type_code:'01'
             };
             if(storage.isSet(system_config.ONE_CARD_KEY,card_id)) {
                 _self.collection.set(storage.get(system_config.ONE_CARD_KEY,card_id));
@@ -93,7 +94,7 @@ define([
             });
 
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_PAY, KEYS.Enter, function() {
-               _self.doPay(_self.i);
+               _self.onOkClicked();
             });
         },
 
@@ -106,7 +107,6 @@ define([
          * enter和确定点击事件
          */
         doPay:function (index){
-            var _self = this;
             var receivedsum = $(this.input).val();
             var card_id = this.attrs['card_id'];
             if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length-1) > 1 || receivedsum == '.') {
@@ -119,7 +119,7 @@ define([
                 layer.msg('请选择支付方式', optLayerWarning);
                 return;
             }
-            var item = _self.collection.at(index);
+            var item = this.collection.at(index);
             var gatherMoney = parseFloat(item.get('gather_money'));
             if(receivedsum > gatherMoney + parseFloat(receivedsum)){
                 layer.msg('支付金额不能大于卡内余额', optLayerWarning);
@@ -130,7 +130,7 @@ define([
                 return;
             }
             item.set({
-                gather_money:_self.model.get('gather_money')
+                gather_money:this.model.get('gather_money')
             });
             this.collection.at(index).set(item.toJSON());
             var data = {
@@ -142,7 +142,7 @@ define([
                 card_id:this.attrs.card_id
             };
             Backbone.trigger('onReceivedsum',data);
-            storage.set(system_config.ONE_CARD_KEY,card_id,_self.collection);
+            storage.set(system_config.ONE_CARD_KEY,card_id,this.collection);
             this.closeLayer(layerindex);
             $('input[name = billing]').focus();
 
@@ -153,7 +153,7 @@ define([
          */
 
         scrollUp:function(){
-            var receivedsum = $('#ecard_receivedsum').val();
+            var receivedsum = $(this.input).val();
             if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 || receivedsum == '.') {
                 layer.msg('无效的支付金额', optLayerWarning);
                 $(this.input).val('');
@@ -185,11 +185,33 @@ define([
                 return;
             }
             if (this.i < this.collection.length - 1) {
-                    this.i++;
-                    this.choiceCard(this.i);
-                    $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                this.i++;
+                this.choiceCard(this.i);
+                $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                }
             },
+
+
+        onAccountClicked: function (e) {
+            var index = $(e.currentTarget).data('index');
+            var receivedsum = $(this.input).val();
+            if(this.i == index) {
+                layer.msg('已选择该支付方式', optLayerWarning);
+                return;
+            }
+            this.i = index;
+            if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 || receivedsum == '.') {
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(receivedsum > this.unpaidamount){
+                layer.msg('支付金额不能大于待支付金额', optLayerWarning);
+                return;
+            }
+            this.choiceCard(index);
+            $('#li' + index).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
         /**
          * 选择支付的方式
          */
@@ -214,24 +236,6 @@ define([
             this.renderEcardDetail();
         },
 
-        onAccountClicked: function (e) {
-            var index = $(e.currentTarget).data('index');
-            var receivedsum = $(this.input).val();
-            if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 || receivedsum == '.') {
-                layer.msg('无效的支付金额', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            if(receivedsum > this.unpaidamount){
-                layer.msg('支付金额不能大于待支付金额', optLayerWarning);
-                return;
-            }
-            if (index < this.collection.length - 1) {
-                this.choiceCard(index);
-                $('#li' + index).addClass('cus-selected').siblings().removeClass('cus-selected');
-            }
-        },
-
         onCancelClicked: function () {
             this.closeLayer(layerindex);
             if (this.attrs.pageid == 6) {
@@ -242,8 +246,7 @@ define([
         },
 
         onOkClicked: function () {
-            var index = $('.cus-selected').data('index');
-            this.doPay(index);
+            this.doPay(this.i);
         },
 
         onNumClicked: function (e) {
