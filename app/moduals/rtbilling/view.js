@@ -435,18 +435,21 @@ define([
                     item.discount = -parseFloat(item.discount);
                 }
                 confirmBill.trade_confirm(data, function (resp) {
-                    console.log(resp);
-                    if (resp.status == '00') {
-                        console.log(resp.bill_no);
-                        storage.remove(system_config.FORCE_RETURN_KEY);
-                        if (storage.isSet(system_config.VIP_KEY)) {
-                            storage.remove(system_config.VIP_KEY);
+                    if (!$.isEmptyObject(resp)) {
+                        if (resp.status == '00') {
+                            console.log(resp.bill_no);
+                            storage.remove(system_config.FORCE_RETURN_KEY);
+                            if (storage.isSet(system_config.VIP_KEY)) {
+                                storage.remove(system_config.VIP_KEY);
+                            }
+                            router.navigate("main", {trigger: true, replace: true});
+                            _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
+                            layer.msg('退货成功', optLayerSuccess);
+                        } else {
+                            layer.msg(resp.msg, optLayerError);
                         }
-                        router.navigate("main", {trigger: true, replace: true});
-                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
-                        layer.msg('退货成功', optLayerSuccess);
                     } else {
-                        layer.msg(resp.msg, optLayerError);
+                        layer.msg('系统错误，请联系管理员', optLayerWarning);
                     }
                 });
 
@@ -481,18 +484,21 @@ define([
                     item.discount = -parseFloat(item.discount);
                 }
                 confirmBill.trade_confirm(data, function (resp) {
-                    console.log(resp);
-                    if (resp.status == '00') {
-                        console.log(resp.bill_no);
-                        storage.remove(system_config.RETURN_KEY);
-                        if (storage.isSet(system_config.VIP_KEY)) {
-                            storage.remove(system_config.VIP_KEY);
+                    if (!$.isEmptyObject(resp)) {
+                        if (resp.status == '00') {
+                            console.log(resp.bill_no);
+                            storage.remove(system_config.RETURN_KEY);
+                            if (storage.isSet(system_config.VIP_KEY)) {
+                                storage.remove(system_config.VIP_KEY);
+                            }
+                            router.navigate("main", {trigger: true, replace: true});
+                            _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
+                            layer.msg('退货成功', optLayerSuccess);
+                        } else {
+                            layer.msg(resp.msg, optLayerError);
                         }
-                        router.navigate("main", {trigger: true, replace: true});
-                        _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
-                        layer.msg('退货成功', optLayerSuccess);
                     } else {
-                        layer.msg(resp.msg, optLayerError);
+                        layer.msg('系统错误，请联系管理员', optLayerWarning);
                     }
                 });
             }
@@ -606,7 +612,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if (receivedSum == '.' || parseFloat(receivedSum) == 0) {
+            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) >　1) {
                 layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -621,10 +627,8 @@ define([
             } else {
                 data['gather_money'] = receivedSum;
             }
-
             data['unpaidamount'] = unpaidamount;
-            data['isfromForce'] = isfromForce;
-            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area: '600px'});
+            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area: '300px'});
             $(this.input).val('');
         },
 
@@ -828,7 +832,7 @@ define([
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         _self.billNumber = resp.bill_no;
-                        console.log(_self.billNumber + 'this is billNumber');
+                        console.log(_self.billNumber);
                     } else {
                         layer.msg(resp.msg, optLayerWarning);
                     }

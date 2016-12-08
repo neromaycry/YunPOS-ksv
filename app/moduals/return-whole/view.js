@@ -127,19 +127,24 @@ define([
                 layer.msg('请输入订单号', optLayerWarning);
                 return;
             }
-            var data = {};
-            data['day'] = '';
-            data['bill_no'] = orderNo;
+            var data = {
+                day:'',
+                bill_no:orderNo
+            };
             this.requestModel.getOrderInfo(data, function (resp) {
-                if (resp.status == '00') {
-                    _self.RtcartCollection.set(resp.goods_detail);
-                    _self.RtPayedlistCollection.set(resp.gather_detail);
-                    _self.model.set({
-                        bill_no:orderNo
-                    });
-                    _self.calculateModel();
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.RtcartCollection.set(resp.goods_detail);
+                        _self.RtPayedlistCollection.set(resp.gather_detail);
+                        _self.model.set({
+                            bill_no:orderNo
+                        });
+                        _self.calculateModel();
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                    }
                 } else {
-                    layer.msg(resp.msg, optLayerError);
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
                 }
             });
         },
