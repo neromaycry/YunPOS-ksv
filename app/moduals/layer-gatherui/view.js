@@ -67,8 +67,8 @@ define([
             } else {
                 return false;
             }
-            var url = 'http://127.0.0.1:5000/';
-            //var url = 'http://121.42.166.147:9090/';
+            //var url = 'http://127.0.0.1:5000/';
+            var url = 'http://121.42.166.147:9090/';
             resource.asyncPost(url + 'api/pay/xfb/prepay', data, function (resp) {
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {
