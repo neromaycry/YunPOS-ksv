@@ -5,9 +5,10 @@ define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-ecardlogin/model',
     '../../moduals/layer-ecardpay/view',
+    '../../moduals/layer-rtecardpay/view',
     'text!../../moduals/layer-ecardlogin/magcardtpl.html',
     'text!../../moduals/layer-ecardlogin/tpl.html',
-], function (BaseLayerView, LayerECardModel, LayerECardpayView, magcardtpl, tpl) {
+], function (BaseLayerView, LayerECardModel, LayerECardpayView, RTLayerECardPayView, magcardtpl, tpl) {
 
     var layerECardView = BaseLayerView.extend({
 
@@ -46,7 +47,7 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function () {
-                _self.onCancelClicked();
+                _self.onOkClicked();
             });
         },
 
@@ -80,7 +81,12 @@ define([
                             account_type_code: resp.account_type_code
                         };
                         _self.closeLayer(layerindex);
-                        _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '900px'});
+                        if(_self.attrs.pageid == 6) {
+                            _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '900px'});
+                        } else {
+                            _self.openLayer(PAGE_ID.RT_LAYER_ECARD_PAY, PAGE_ID.BILLING_RETURN, '一卡通支付', RTLayerECardPayView, attrs, {area: '900px'});
+                        }
+
                     } else {
                         layer.msg(resp.msg, optLayerError);
                     }

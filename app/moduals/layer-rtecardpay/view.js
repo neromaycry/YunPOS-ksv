@@ -93,7 +93,7 @@ define([
             });
 
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_PAY, KEYS.Enter, function() {
-               _self.onOkClicked();
+                _self.onOkClicked();
             });
         },
 
@@ -191,8 +191,8 @@ define([
                 this.i++;
                 this.choiceCard(this.i);
                 $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-               }
-            },
+            }
+        },
 
 
         onAccountClicked: function (e) {
@@ -241,7 +241,11 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
-            $('input[name = billing]').focus();
+            if (this.attrs.pageid == 6) {
+                $('input[name = billing]').focus();
+            } else {
+                $('input[name = billingrt]').focus();
+            }
         },
 
         onOkClicked: function () {

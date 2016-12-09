@@ -73,8 +73,6 @@ define([
             'click .billing-help': 'onBillHelpClicked',
             'click .billing-return': 'onReturnMainClicked',
             'click .billing-delete': 'onDeleteClicked',
-            //'click .totaldiscount': 'onTotalDiscountClicked',
-            //'click .discountpercent': 'onDiscountPercentClicked',
             'click .billing-keyup': 'onKeyUp',
             'click .billing-keydown': 'onKeyDown',
             'click .billing': 'onBillingClicked',
