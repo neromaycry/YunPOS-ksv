@@ -5,9 +5,10 @@ define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-ecardlogin/model',
     '../../moduals/layer-ecardpay/view',
+    '../../moduals/layer-rtecardpay/view',
     'text!../../moduals/layer-ecardlogin/magcardtpl.html',
     'text!../../moduals/layer-ecardlogin/tpl.html',
-], function (BaseLayerView, LayerECardModel, LayerECardpayView, magcardtpl, tpl) {
+], function (BaseLayerView, LayerECardModel, LayerECardpayView, RTLayerECardPayView, magcardtpl, tpl) {
 
     var layerECardView = BaseLayerView.extend({
 
