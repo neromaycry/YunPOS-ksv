@@ -54,9 +54,8 @@ define([
             //storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.POS_KEY,'1');
             this.requestModel = new LoginModel();
             this.model = new LoginModel();
-            var gatherDetail = [{"gather_kind":"05","valid_flag":"1","change_flag":"0","gather_type":"00","number_flag":"0","gather_id":"30","gather_name":"支付宝","gather_flag":"1","modify_date":"2016-11-29 09:57:36","gather_ui":"04","score_flag":"1","visible_flag":"1"},{"gather_kind":"05","valid_flag":"1","change_flag":"0","gather_type":"00","number_flag":"0","gather_id":"31","gather_name":"微信","gather_flag":"1","modify_date":"2016-11-29 21:55:01","gather_ui":"05","score_flag":"1","visible_flag":"1"},{"gather_kind":"00","valid_flag":"1","change_flag":"1","gather_type":"00","number_flag":"0","gather_id":"00","gather_name":"现金","gather_flag":"1","modify_date":"2016-11-29 23:16:44","gather_ui":"00","score_flag":"0","visible_flag":"1"},{"gather_kind":"00","valid_flag":"1","change_flag":"0","gather_type":"03","number_flag":"1","gather_id":"03","gather_name":"支付宝","gather_flag":"0","modify_date":"2016-11-29 23:15:28","gather_ui":"04","score_flag":"0","visible_flag":"1"},{"gather_kind":"00","valid_flag":"1","change_flag":"0","gather_type":"00","number_flag":"0","gather_id":"04","gather_name":"去零","gather_flag":"1","modify_date":"2016-11-29 23:16:28","gather_ui":"00","score_flag":"0","visible_flag":"0"},{"gather_kind":"00","valid_flag":"1","change_flag":"0","gather_type":"02","number_flag":"0","gather_id":"10","gather_name":"银行mis","gather_flag":"1","modify_date":"2016-11-29 23:17:08","gather_ui":"06","score_flag":"1","visible_flag":"1"},{"gather_kind":"00","valid_flag":"1","change_flag":"0","gather_type":"02","number_flag":"1","gather_id":"11","gather_name":"银行POS","gather_flag":"1","modify_date":"2016-11-29 23:17:38","gather_ui":"01","score_flag":"1","visible_flag":"1"},{"gather_kind":"01","valid_flag":"1","change_flag":"0","gather_type":"00","number_flag":"1","gather_id":"20","gather_name":"支票","gather_flag":"1","modify_date":"2016-11-29 23:19:06","gather_ui":"00","score_flag":"1","visible_flag":"1"}]
-            storage.set(system_config.GATHER_KEY, gatherDetail);
-            //this.getGatherDetail();
+            //this.getGatherDetailLocally();
+            this.getGatherDetail();
             this.getPosLimit();
             this.handleEvents();
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
@@ -90,7 +89,7 @@ define([
                 is_navigate: false,
                 callback: function () {
                     storage.removeAll();
-                    window.location.reload();
+                    router.navigate('setposkey', {trigger: true, replace: true});
                 }
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
@@ -509,6 +508,115 @@ define([
                 printKeys.push(printKey);
                 storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'SETTING_PAGE', printKeys);
             }
+        },
+
+        getGatherDetailLocally: function () {
+            var gatherDetail = [{
+                "gather_kind": "05",
+                "valid_flag": "1",
+                "change_flag": "0",
+                "gather_type": "00",
+                "number_flag": "0",
+                "gather_id": "30",
+                "gather_name": "支付宝",
+                "gather_flag": "1",
+                "modify_date": "2016-11-29 09:57:36",
+                "gather_ui": "04",
+                "score_flag": "1",
+                "visible_flag": "1"
+            }, {
+                "gather_kind": "05",
+                "valid_flag": "1",
+                "change_flag": "0",
+                "gather_type": "00",
+                "number_flag": "0",
+                "gather_id": "31",
+                "gather_name": "微信",
+                "gather_flag": "1",
+                "modify_date": "2016-11-29 21:55:01",
+                "gather_ui": "05",
+                "score_flag": "1",
+                "visible_flag": "1"
+            }, {
+                "gather_kind": "00",
+                "valid_flag": "1",
+                "change_flag": "1",
+                "gather_type": "00",
+                "number_flag": "0",
+                "gather_id": "00",
+                "gather_name": "现金",
+                "gather_flag": "1",
+                "modify_date": "2016-11-29 23:16:44",
+                "gather_ui": "00",
+                "score_flag": "0",
+                "visible_flag": "1"
+            }, {
+                "gather_kind": "00",
+                "valid_flag": "1",
+                "change_flag": "0",
+                "gather_type": "03",
+                "number_flag": "1",
+                "gather_id": "03",
+                "gather_name": "支付宝",
+                "gather_flag": "0",
+                "modify_date": "2016-11-29 23:15:28",
+                "gather_ui": "04",
+                "score_flag": "0",
+                "visible_flag": "1"
+            }, {
+                "gather_kind": "00",
+                "valid_flag": "1",
+                "change_flag": "0",
+                "gather_type": "00",
+                "number_flag": "0",
+                "gather_id": "04",
+                "gather_name": "去零",
+                "gather_flag": "1",
+                "modify_date": "2016-11-29 23:16:28",
+                "gather_ui": "00",
+                "score_flag": "0",
+                "visible_flag": "0"
+            }, {
+                "gather_kind": "00",
+                "valid_flag": "1",
+                "change_flag": "0",
+                "gather_type": "02",
+                "number_flag": "0",
+                "gather_id": "10",
+                "gather_name": "银行mis",
+                "gather_flag": "1",
+                "modify_date": "2016-11-29 23:17:08",
+                "gather_ui": "06",
+                "score_flag": "1",
+                "visible_flag": "1"
+            }, {
+                "gather_kind": "00",
+                "valid_flag": "1",
+                "change_flag": "0",
+                "gather_type": "02",
+                "number_flag": "1",
+                "gather_id": "11",
+                "gather_name": "银行POS",
+                "gather_flag": "1",
+                "modify_date": "2016-11-29 23:17:38",
+                "gather_ui": "01",
+                "score_flag": "1",
+                "visible_flag": "1"
+            }, {
+                "gather_kind": "01",
+                "valid_flag": "1",
+                "change_flag": "0",
+                "gather_type": "00",
+                "number_flag": "1",
+                "gather_id": "20",
+                "gather_name": "支票",
+                "gather_flag": "1",
+                "modify_date": "2016-11-29 23:19:06",
+                "gather_ui": "00",
+                "score_flag": "1",
+                "visible_flag": "1"
+            }];
+            storage.set(system_config.GATHER_KEY, gatherDetail);
         }
 
     });
