@@ -122,6 +122,10 @@ define([
             var gatherMoney = parseFloat(item.get('gather_money'));
             if(receivedsum > gatherMoney + parseFloat(receivedsum)){
                 layer.msg('支付金额不能大于卡内余额', optLayerWarning);
+                this.collection.set(storage.get(system_config.ONE_CARD_KEY,cardId));
+                this.i = -1;
+                $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+                this.renderEcardDetail();
                 return;
             }
             if(this.model.get('receivedsum') != receivedsum){
