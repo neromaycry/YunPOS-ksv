@@ -52,7 +52,7 @@ define([
         },
 
         onCancelClicked: function () {
-            if (this.attrs.pageid == PAGE_ID.BILLING) {
+            if (this.attrs.pageid == 6) {
                 $('input[name = billing]').focus();
             } else {
                 $('input[name = billingrt]').focus();
@@ -112,7 +112,7 @@ define([
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         var attrs = {
-                            pageid: PAGE_ID.BILLING,
+                            pageid: pageId,
                             card_id: trackValues[2],
                             cust_id: resp.cust_id,
                             unpaidamount: _self.attrs.unpaidamount,

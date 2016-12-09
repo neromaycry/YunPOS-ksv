@@ -604,7 +604,6 @@ define([
          * 一卡通支付
          */
         payByECard: function () {
-            var data = {};
             var unpaidamount = this.model.get('unpaidamount');
             var receivedSum = $(this.input).val();
             if (unpaidamount == 0) {
@@ -623,12 +622,21 @@ define([
                 return;
             }
             if (receivedSum == '') {
-                data['gather_money'] = unpaidamount;
-            } else {
-                data['gather_money'] = receivedSum;
+                receivedSum = unpaidamount;
             }
-            data['unpaidamount'] = unpaidamount;
-            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, data, {area: '300px'});
+            var attrs = {
+                pageid:PAGE_ID.BILLING_RETURN,
+                gather_detail:this.collection,
+                gather_money:receivedSum,
+                unpaidamount:unpaidamount,
+            };
+
+            if(isfromForce) {
+                attrs['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
+            } else {
+                attrs['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
+            }
+            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '300px'});
             $(this.input).val('');
         },
 
