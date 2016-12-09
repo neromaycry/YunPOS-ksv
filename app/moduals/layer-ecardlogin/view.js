@@ -47,7 +47,7 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function () {
-                _self.onOkClicked();
+                _self.onCancelClicked();
             });
         },
 

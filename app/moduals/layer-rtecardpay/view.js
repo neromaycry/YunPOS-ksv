@@ -3,10 +3,10 @@
  */
 define([
     '../../js/common/BaseLayerView',
-    '../../moduals/layer-ecardpay/model',
-    '../../moduals/layer-ecardpay/collection',
-    'text!../../moduals/layer-ecardpay/tpl.html',
-    'text!../../moduals/layer-ecardpay/ecarddetailtpl.html'
+    '../../moduals/layer-rtecardpay/model',
+    '../../moduals/layer-rtecardpay/collection',
+    'text!../../moduals/layer-rtecardpay/tpl.html',
+    'text!../../moduals/layer-rtecardpay/ecarddetailtpl.html'
 ], function (BaseLayerView, ECardPayModel, ECardPayCollection, tpl, ecarddetailtpl) {
 
     var ecardpayView = BaseLayerView.extend({
@@ -82,17 +82,17 @@ define([
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_PAY, KEYS.Esc , function () {
+            this.bindLayerKeyEvents(window.PAGE_ID.RT_LAYER_ECARD_PAY, KEYS.Esc , function () {
                 _self.onCancelClicked();
             });
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_PAY, KEYS.Down, function() {
+            this.bindLayerKeyEvents(window.PAGE_ID.RT_LAYER_ECARD_PAY, KEYS.Down, function() {
                 _self.scrollDown();
             });
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_PAY, KEYS.Up, function() {
+            this.bindLayerKeyEvents(window.PAGE_ID.RT_LAYER_ECARD_PAY, KEYS.Up, function() {
                 _self.scrollUp();
             });
 
-            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_PAY, KEYS.Enter, function() {
+            this.bindLayerKeyEvents(window.PAGE_ID.RT_LAYER_ECARD_PAY, KEYS.Enter, function() {
                 _self.onOkClicked();
             });
         },
@@ -109,23 +109,19 @@ define([
             var receivedsum = $(this.input).val();
             var cardId = this.attrs['card_id'];
             if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length-1) > 1 || receivedsum == '.') {
-                layer.msg('无效的支付金额', optLayerWarning);
+                layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(index == -1 || index == undefined) {
-                //初始时设置i=-1,如果i=-1则为选中任何支付方式
-                layer.msg('请选择支付方式', optLayerWarning);
+                //初始时设置i=-1,如果i=-1则为选中任何退款方式
+                layer.msg('请选择退款方式', optLayerWarning);
                 return;
             }
             var item = this.collection.at(index);
             var gatherMoney = parseFloat(item.get('gather_money'));
-            if(receivedsum > gatherMoney + parseFloat(receivedsum)){
-                layer.msg('支付金额不能大于卡内余额', optLayerWarning);
-                return;
-            }
             if(this.model.get('receivedsum') != receivedsum){
-                layer.msg('请重新选择支付方式', optLayerWarning);
+                layer.msg('请重新选择退款方式', optLayerWarning);
                 this.collection.set(storage.get(system_config.ONE_CARD_KEY,cardId));
                 this.i = -1;
                 $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
@@ -144,10 +140,10 @@ define([
                 gather_kind:'04',
                 card_id:this.attrs.card_id
             };
-            Backbone.trigger('onReceivedsum',data);
+            Backbone.trigger('onRTReceivedsum',data);
             storage.remove(system_config.ONE_CARD_KEY);
             this.closeLayer(layerindex);
-            $('input[name = billing]').focus();
+            $('input[name = billingrt]').focus();
 
         },
 
@@ -158,12 +154,12 @@ define([
         scrollUp:function(){
             var receivedsum = $(this.input).val();
             if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 || receivedsum == '.') {
-                layer.msg('无效的支付金额', optLayerWarning);
+                layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(receivedsum > this.unpaidamount){
-                layer.msg('支付金额不能大于待支付金额', optLayerWarning);
+                layer.msg('退款金额不能大于待退款金额', optLayerWarning);
                 return;
             }
             if(this.i > 0){
@@ -179,12 +175,12 @@ define([
         scrollDown:function(){
             var receivedsum = $(this.input).val();
             if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 ||receivedsum == '.') {
-                layer.msg('无效的支付金额', optLayerWarning);
+                layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(receivedsum > this.unpaidamount){
-                layer.msg('支付金额不能大于待支付金额', optLayerWarning);
+                layer.msg('退款金额不能大于待退款金额', optLayerWarning);
                 return;
             }
             if (this.i < this.collection.length - 1) {
@@ -199,16 +195,16 @@ define([
             var index = $(e.currentTarget).data('index');
             var receivedsum = $(this.input).val();
             if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 || receivedsum == '.') {
-                layer.msg('无效的支付金额', optLayerWarning);
+                layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
             if(receivedsum > this.unpaidamount){
-                layer.msg('支付金额不能大于待支付金额', optLayerWarning);
+                layer.msg('退款金额不能大于待退款金额', optLayerWarning);
                 return;
             }
             if(this.i == index) {
-                layer.msg('已选择该支付方式', optLayerWarning);
+                layer.msg('已选择该退款方式', optLayerWarning);
                 return;
             }
             this.i = index;
@@ -216,7 +212,7 @@ define([
             $('#li' + index).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
-         * 选择支付的方式
+         * 选择退款的方式
          */
         choiceCard:function(index){
             var receivedsum = $(this.input).val();
@@ -224,7 +220,7 @@ define([
             var cardId = this.attrs.card_id;
             this.collection.set(storage.get(system_config.ONE_CARD_KEY,cardId));
             var gatherMoney = parseFloat(item.get('gather_money'));
-            gatherMoney = gatherMoney - receivedsum;
+            gatherMoney = parseFloat(gatherMoney) + parseFloat(receivedsum);
             item.set({
                 gather_money: gatherMoney
             });
@@ -241,11 +237,7 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
-            if (this.attrs.pageid == 6) {
-                $('input[name = billing]').focus();
-            } else {
-                $('input[name = billingrt]').focus();
-            }
+            $('input[name = billingrt]').focus();
         },
 
         onOkClicked: function () {
