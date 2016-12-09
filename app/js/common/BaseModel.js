@@ -29,6 +29,7 @@ define(['backbone'], function (Backbone) {
                 type: "POST",
                 contentType: "application/json",
                 dataType: "json",
+                timeout : 10000,
                 beforeSend: function () {
                     window.loading.show();
                 },

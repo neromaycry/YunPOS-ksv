@@ -31,6 +31,7 @@ define([
             pageId = window.PAGE_ID.SETPOSKEY;
             if (!storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY)) {
                 storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY, 'http://127.0.0.1:3000/v1');
+                //storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.GATEWAY_KEY, 'http://111.198.72.128:3000/v1');
             }
         },
 
@@ -84,7 +85,7 @@ define([
             var _self = this;
             var value = $('input[name = poskey]').val();
             if (value == '') {
-                toastr.warning('请输入有效的授权key');
+                layer.msg('请输入有效的授权key', optLayerError);
             } else {
                 var data = {};
                 data['poskey'] = value;
@@ -98,7 +99,6 @@ define([
                             storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_KEY, value);
                             //storage.set(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT, resp.pos_limit);
                         } else {
-                            //toastr.error(resp.msg);
                             layer.msg(resp.msg, optLayerError);
                         }
                     } else {

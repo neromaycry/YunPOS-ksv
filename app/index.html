@@ -7,7 +7,15 @@
     <link rel="stylesheet" href="./css/buttons.css">
     <link rel="stylesheet" href="./css/default.css">
     <link href="./js/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
+    <script>
+        window.requireNode = window.require;
+        window.require = undefined;
+    </script>
+    <!-- script -->
+    <script src="./js/status_config.js"></script>
+    <script src="./js/tplscripts.js"></script>
+    <script src="./js/lib/require.js"></script>
+    <script src="./js/config.js"></script>
 </head>
 <body>
 
@@ -18,19 +26,8 @@
 <!--</div>-->
 
 <!-- .modal -->
-<div class="modal fade" data-backdrop="static"></div>
+<!--<div class="modal fade" data-backdrop="static"></div>-->
 
-
-
-<!-- script -->
-<script>
-    window.requireNode = window.require;
-    window.require = undefined;
-</script>
-<script src="./js/status_config.js"></script>
-<script src="./js/tplscripts.js"></script>
-<script src="./js/lib/require.js"></script>
-<script src="./js/config.js"></script>
 
 </body>
 </html>
