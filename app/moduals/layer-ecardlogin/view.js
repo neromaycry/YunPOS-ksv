@@ -71,12 +71,12 @@ define([
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         var attrs = {
-                            pageid: PAGE_ID.BILLING,
+                            pageid: pageId,
                             card_id: cardId,
                             cust_id: resp.cust_id,
                             unpaidamount: _self.attrs.unpaidamount,
                             gather_money: _self.attrs.gather_money,
-                            goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
+                            goods_detail: _self.attrs.goods_detail,
                             gather_detail: _self.attrs.gather_detail,
                             account_type_code: resp.account_type_code
                         };
@@ -117,7 +117,7 @@ define([
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         var attrs = {
-                            pageid: PAGE_ID.BILLING,
+                            pageid: pageId,
                             card_id: trackValues[2],
                             cust_id: resp.cust_id,
                             unpaidamount: _self.attrs.unpaidamount,

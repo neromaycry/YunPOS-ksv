@@ -723,7 +723,8 @@ define([
                 pageid: pageId,
                 gather_money: receivedSum,
                 unpaidamount:unpaidamount,
-                gather_detail:this.collection
+                gather_detail:this.collection,
+                goods_detail:storage.get(system_config.SALE_PAGE_KEY, 'shopcart')
             };
             this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', LayerECardView, attrs, {area: '300px'});
             $(this.input).val('');
