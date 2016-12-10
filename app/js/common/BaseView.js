@@ -155,10 +155,10 @@ define([
         openLayer: function (LayerId, mainId, title, View, attrs, options) {
             var _self = this;
             options = _.extend({
-                title: title,
-                closeBtn: 0,
+                title: title,  //  layer的标题
+                closeBtn: 0,  //  关闭按钮是否显示
                 type: 1,
-                offset: '150px',
+                offset: '150px',  // 和页面顶部的距离
                 content: '<div class="for-layer">' + '</div>',
                 success: function (layero, index) {
                     pageId = LayerId;
@@ -379,9 +379,7 @@ define([
                 $(this).removeClass('ok-clicked');
             });
             $(document).mouseup(function () {
-                console.log(_self.input);
                 if (!isModal) {
-                    console.log('mouse up');
                     $(_self.input).focus();
                 }
             });
@@ -450,7 +448,6 @@ define([
 
         render: function () {
             var _self = this;
-            console.log('render');
             var _data = this.collection || this.model;
             var dataset = _data ? _data.toJSON() : {};
             this.$el.html(this.template(dataset));

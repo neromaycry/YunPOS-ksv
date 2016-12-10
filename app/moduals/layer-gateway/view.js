@@ -67,7 +67,9 @@ define([
             this.closeLayer(layerindex);
             $(this.attrs.input).focus();
             layer.msg('设置成功', optLayerSuccess);
-            Backbone.trigger('getGatherDetail');
+            if (this.attrs.is_login) {
+                Backbone.trigger('getGatherDetail');
+            }
         },
 
     });

@@ -229,7 +229,7 @@ define([
                 //失败回调
                 console.log(textStatus);
                 console.log(errorThrown);
-                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: 'input[name = username]'}, {area: '500px'});
+                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: 'input[name = username]', is_login: true}, {area: '500px'});
             });
         },
 

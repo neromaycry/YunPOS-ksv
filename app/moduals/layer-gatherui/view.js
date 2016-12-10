@@ -25,6 +25,8 @@ define([
 
         tradeStateTimer: null,
 
+        isClosed:false,
+
         events: {
             'click .cancel': 'onCancelClicked',
             'click .btn-num': 'onNumClicked',
@@ -73,50 +75,50 @@ define([
                     if (resp.code == '000000') {
                         $('.qrcode-img').attr('src', resp.data.codeurl);
                         if (resp.data.flag == '00') {
-                            var respData = resp.data;
-                            _self.tradeStateTimer = setInterval(function () {
-                                //TODO 定时请求后台接口,若返回success，则关闭模态框，并将付款方式同步至列表
-                                var url = 'http://121.42.166.147:9090/';
-                                var data = {
-                                    outtradeno: resp.data.outtradeno
-                                };
-                                console.log(data);
-                                $.ajax(url + 'gettradestate', {
-                                    type: "POST",
-                                    contentType: "application/json",
-                                    dataType: "json",
-                                    data: JSON.stringify(data),
-                                    success: function (resp2) {
-                                        if (resp2.status == '00') {
-                                            var attrs = {
-                                                gather_id: _self.attrs.gather_id,
-                                                gather_ui: _self.attrs.gather_ui,
-                                                gather_name: _self.attrs.gather_name,
-                                                gather_money: _self.attrs.gather_money,
-                                                gather_kind: _self.attrs.gather_kind,
-                                                gather_no: resp.data.outtradeno,
-                                                hasExtra: true,
-                                                extras: {
-                                                    extra_id: 1,
-                                                    payment_bill: _self.attrs.payment_bill
-                                                }
-                                            };
-                                            var extra = _.extend(attrs.extras, {
-                                                outtradeno: respData.outtradeno,
-                                                gather_ui: gatherUI
-                                            });
-                                            console.log('gather ui trigger');
-                                            Backbone.trigger('onReceivedsum', _.extend(attrs, {
-                                                extras: extra
-                                            }));
-                                            layer.msg(resp2.msg, optLayerSuccess);
-                                            clearInterval(_self.tradeStateTimer);
-                                            _self.closeLayer(layerindex);
-                                            $('input[name = billing]').focus();
-                                        }
-                                    }
-                                });
-                            }, 1000);
+                            _self.getTradeState(resp.data, gatherUI);
+                            //_self.tradeStateTimer = setInterval(function () {
+                            //    //TODO 定时请求后台接口,若返回success，则关闭模态框，并将付款方式同步至列表
+                            //    var url = 'http://121.42.166.147:9090/';
+                            //    var data = {
+                            //        outtradeno: resp.data.outtradeno
+                            //    };
+                            //    console.log(data);
+                            //    $.ajax(url + 'gettradestate', {
+                            //        type: "POST",
+                            //        contentType: "application/json",
+                            //        dataType: "json",
+                            //        data: JSON.stringify(data),
+                            //        success: function (resp2) {
+                            //            if (resp2.status == '00') {
+                            //                var attrs = {
+                            //                    gather_id: _self.attrs.gather_id,
+                            //                    gather_ui: _self.attrs.gather_ui,
+                            //                    gather_name: _self.attrs.gather_name,
+                            //                    gather_money: _self.attrs.gather_money,
+                            //                    gather_kind: _self.attrs.gather_kind,
+                            //                    gather_no: resp.data.outtradeno,
+                            //                    hasExtra: true,
+                            //                    extras: {
+                            //                        extra_id: 1,
+                            //                        payment_bill: _self.attrs.payment_bill
+                            //                    }
+                            //                };
+                            //                var extra = _.extend(attrs.extras, {
+                            //                    outtradeno: respData.outtradeno,
+                            //                    gather_ui: gatherUI
+                            //                });
+                            //                console.log('gather ui trigger');
+                            //                Backbone.trigger('onReceivedsum', _.extend(attrs, {
+                            //                    extras: extra
+                            //                }));
+                            //                layer.msg(resp2.msg, optLayerSuccess);
+                            //                clearInterval(_self.tradeStateTimer);
+                            //                _self.closeLayer(layerindex);
+                            //                $('input[name = billing]').focus();
+                            //            }
+                            //        }
+                            //    });
+                            //}, 1000);
                         } else {
                             layer.msg(resp.data.msg, optLayerError);
                         }
@@ -125,6 +127,56 @@ define([
                     }
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
+                }
+            });
+        },
+
+        getTradeState: function (respData, gatherUI) {
+            if (this.isClosed) {
+                return
+            }
+            var _self = this;
+            var url = 'http://121.42.166.147:9090/';
+            var data = {
+                outtradeno: respData.outtradeno
+            };
+            console.log(data);
+            $.ajax(url + 'gettradestate', {
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (resp2) {
+                    if (resp2.status == '00') {
+                        _self.isClosed = true;
+                        var attrs = {
+                            gather_id: _self.attrs.gather_id,
+                            gather_ui: _self.attrs.gather_ui,
+                            gather_name: _self.attrs.gather_name,
+                            gather_money: _self.attrs.gather_money,
+                            gather_kind: _self.attrs.gather_kind,
+                            gather_no: respData.outtradeno,
+                            hasExtra: true,
+                            extras: {
+                                extra_id: 1,
+                                payment_bill: _self.attrs.payment_bill
+                            }
+                        };
+                        var extra = _.extend(attrs.extras, {
+                            outtradeno: respData.outtradeno,
+                            gather_ui: gatherUI
+                        });
+                        console.log('gather ui trigger');
+                        Backbone.trigger('onReceivedsum', _.extend(attrs, {
+                            extras: extra
+                        }));
+                        layer.msg(resp2.msg, optLayerSuccess);
+                        clearInterval(_self.tradeStateTimer);
+                        _self.closeLayer(layerindex);
+                        $('input[name = billing]').focus();
+                    } else {
+                        _self.getTradeState(respData, gatherUI);
+                    }
                 }
             });
         },
@@ -229,6 +281,7 @@ define([
                     };
                     this.micropay(this.gatherUI, gatherNo, attrs);
                     if (this.tradeStateTimer) {
+                        console.log('clearinterval');
                         clearInterval(this.tradeStateTimer);
                     }
                     break;
@@ -257,9 +310,10 @@ define([
         onCancelClicked: function () {
             this.closeLayer(layerindex);
             $('input[name = billing]').focus();
-            if (this.tradeStateTimer) {
-                clearInterval(this.tradeStateTimer);
-            }
+            this.isClosed = true;
+            //if (this.tradeStateTimer) {
+            //    clearInterval(this.tradeStateTimer);
+            //}
         },
 
         onOKClicked: function () {

@@ -251,6 +251,7 @@ window.resource = {
         var setting = $.extend(true, window.resource.opts, {
             "url": url,
             "type": "POST",
+            "timeout":10000,
             "data": JSON.stringify(_data),
             "async":false,
             "success": callback
@@ -263,6 +264,7 @@ window.resource = {
         var setting = $.extend(true, window.resource.opts, {
             "url": url,
             "type": "POST",
+            "timeout":10000,
             "data": JSON.stringify(_data),
             "success": callback
         });
