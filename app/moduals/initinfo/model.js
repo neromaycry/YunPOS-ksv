@@ -5,7 +5,7 @@ define(['../../js/common/BaseModel'],function(BaseModel){
         defaults:{
             posid:'',
             merchantno:'',
-            shopname:'',
+            shopid:'',
             merchantname:''
         },
         init:function(data,callback){
