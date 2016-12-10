@@ -197,9 +197,9 @@ define([
             }
             switch (this.gatherUI) {
                 case '01':
-                    if(this.attrs.gather_kind == '03' && !luhmCheck(gatherNo)) {
-                        return;
-                    }
+                    //if(this.attrs.gather_kind == '03' && !luhmCheck(gatherNo)) {
+                    //    return;
+                    //}
                     attrs = {
                         gather_id: this.attrs.gather_id,
                         gather_ui: this.attrs.gather_ui,
