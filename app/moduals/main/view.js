@@ -92,7 +92,6 @@ define([
             var _self = this;
             pageId = window.PAGE_ID.MAIN;
             this.input = 'input[name = main]';
-            //console.log(pageId);
             var user = storage.get(system_config.LOGIN_USER_KEY);  // 从本地取出登录用户属性
             this.model = new HomeModel();  // 当前view的model
             this.oddchangeModel = new HomeModel();
@@ -102,7 +101,6 @@ define([
             this.collection = new HomeCollection();  //当前view的collection
             //this.logincollection = new HomeCollection();
             this.requestModel = new HomeModel();  //网络请求的model
-
             this.model.set({
                 totalamount: this.totalamount,
                 itemamount: this.itemamount,
@@ -230,7 +228,6 @@ define([
             var nav = $('.navbar').height();  // 导航栏高度
             //var marquee = $('.marquee-panel').height();
             var oddchange = $('.oddchange-panel').height();
-            console.log('oddchange:' + oddchange);
             var panelheading = $('.panel-heading').height();  //面板heading高度
             var panelfooter = $('.panel-footer').height();  //面板footer高度
             var cart = dh - nav * 3 - panelheading * 2 - panelfooter;
@@ -269,7 +266,6 @@ define([
         },
         renderClientCart: function (collection, isPacked) {
             if (isPacked) {
-                console.log(collection);
                 var len = collection.length;
                 var model = collection.at(len - 1);
                 $(clientDom).find('.client-display').html(this.template_clientdisplay(model.toJSON()));
@@ -293,7 +289,6 @@ define([
             Backbone.off('onReleaseOrder');
             Backbone.off('getGoods');
             Backbone.off('openLayerWorker');
-            //Backbone.off('reBindEvent');
             //Backbone.on('SalesmanAdd', this.SalesmanAdd, this);
             Backbone.on('getGoods', this.getGoods, this);
             Backbone.on('openLayerWorker', this.openLayerWorker, this);
@@ -433,12 +428,9 @@ define([
          * 结算
          */
         doBilling: function () {
-            //console.log(_self.model.get('itemamount'));
             if (this.model.get('itemamount') == 0) {
-                //toastr.warning('购物车内无商品',{positionClass: 'toast-top-center'});
                 layer.msg('购物车内无商品', optLayerWarning);
             } else {
-                console.log(this.i);
                 //storage.set(system_config.SALE_PAGE_KEY, 'i', this.i);
                 router.navigate('billing', {trigger: true});
             }
@@ -458,7 +450,6 @@ define([
             }
             if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
                 this.n++;
-                //alert(_self.n);
                 $('.for-cartlist').scrollTop(this.listheight * this.n);
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
@@ -472,7 +463,6 @@ define([
             }
             if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
-                //alert(_self.n);
                 $('.for-cartlist').scrollTop(this.listheight * this.n);
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
@@ -507,7 +497,6 @@ define([
                     orderNumFromStorage++;
                     orderNumFromStorage = orderNumFromStorage.toString();
                 }
-                console.log(orderNumFromStorage);
                 storage.set(system_config.RESTORDER_NUM, orderNumFromStorage);
                 if (storage.isSet(system_config.RESTORDER_KEY)) {
                     var pre = storage.get(system_config.RESTORDER_KEY);
@@ -611,11 +600,9 @@ define([
                 return;
             }
             var rate = parseFloat((value / 100).toFixed(2));//discount_rate类型为decimal
-            console.log(rate);
             this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
                 var discountpercent = $(_self.input).val();
                 var rate = parseFloat(discountpercent) / 100;
-                console.log(rate);
                 _self.collection.at(_self.i).set({
                     discount: price * num * (1 - rate),
                     money: price * num * rate,
@@ -671,7 +658,6 @@ define([
                 return;
             }
             var rate = parseFloat(totaldiscount) / 100;
-            console.log(rate);
             this.evalAuth(auth_discount, '03', {discount_rate: rate}, function () {
                 $(_self.input).val('');
                 _self.calculateTotalDiscount(rate, '02');
@@ -740,7 +726,6 @@ define([
                 num: parseFloat(number),
                 money: price * number - discount
             });
-            console.log(_self.collection);
             _self.totalamount = 0;
             _self.itemamount = 0;
             _self.discountamount = 0;
@@ -755,7 +740,6 @@ define([
             }
             _self.calculateModel();
             $(this.input).val('');
-            //console.log(_self.i);
             $('#li' + _self.i).addClass('cus-selected');
         },
         /**
@@ -823,7 +807,6 @@ define([
         },
 
         getGoods: function (respData) {
-            console.log(respData);
             var _self = this;
             var data = {};
             data['skucode'] = respData.skucode;
@@ -1011,7 +994,6 @@ define([
         onDeleteClicked: function () {
             var _self = this;
             var len = this.collection.length;
-            //console.log(len);
             if (len == 0) {
                 layer.msg('没有可删除的商品', optLayerWarning);
                 return;
@@ -1146,7 +1128,6 @@ define([
                 var len = collection.length;
                 var model = collection.at(len - 1).toJSON();
                 var $clientDom = $(clientDom);
-                console.log($(clientDom).find('#itemName'));
                 this.renderClientCart();
                 clientDom.getElementById("itemName").innerHTML = model.goods_name;
                 clientDom.getElementById("itemSpec").innerHTML = model.spec;
@@ -1210,7 +1191,6 @@ define([
         },
 
         onMemberSigned: function (resp) {
-            console.log(resp);
             this.memberModel.set({
                 name: resp.name,
                 score_balance: resp.score_balance,
