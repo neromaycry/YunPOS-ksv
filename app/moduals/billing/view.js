@@ -827,7 +827,18 @@ define([
                     gather_ui:gatherUI,
                     bill_no: this.billNumber
                 };
+
                 switch (gatherUI) {
+                    case '03' :
+                        var attrs = {
+                            pageid: pageId,
+                            gather_money: unpaidamount,
+                            unpaidamount:unpaidamount,
+                            gather_detail:this.collection,
+                            goods_detail:storage.get(system_config.SALE_PAGE_KEY, 'shopcart')
+                        };
+                        this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', LayerECardView, attrs, {area: '300px'});
+                        break;
                     case '04':
                     case '05':
                         var xfbdata = {
@@ -854,6 +865,7 @@ define([
                         break;
                     default :
                         this.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '300px'});
+                        break;
                 }
             }
 

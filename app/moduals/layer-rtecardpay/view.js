@@ -36,6 +36,7 @@ define([
 
         LayerInitPage: function () {
             console.log(this.attrs);
+            console.log('**************');
             var _self = this;
             this.initTemplates();
             var cardId = this.attrs['card_id'];

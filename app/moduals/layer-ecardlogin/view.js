@@ -47,49 +47,53 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function () {
-                _self.onCancelClicked();
+                _self.onOkClicked();
             });
         },
 
         onCancelClicked: function () {
+            this.closeLayer(layerindex);
             if (this.attrs.pageid == 6) {
                 $('input[name = billing]').focus();
             } else {
                 $('input[name = billingrt]').focus();
             }
-            this.closeLayer(layerindex);
         },
 
-        //onOkClicked: function () {
-        //    var _self = this;
-        //    var cardId = $('input[name = ecard]').val();
-        //    var data = {};
-        //    data['mobile'] = cardId;
-        //    data['password'] = '*';
-        //    data['type'] = this.type;
-        //    this.request.getVipInfo(data, function (resp) {
-        //        if (!$.isEmptyObject(resp)) {
-        //            if (resp.status == '00') {
-        //                var attrs = {
-        //                    pageid: PAGE_ID.BILLING,
-        //                    card_id: cardId,
-        //                    cust_id: resp.cust_id,
-        //                    unpaidamount: _self.attrs.unpaidamount,
-        //                    gather_money: _self.attrs.gather_money,
-        //                    goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
-        //                    gather_detail: _self.attrs.gather_detail,
-        //                    account_type_code: resp.account_type_code
-        //                };
-        //                _self.closeLayer(layerindex);
-        //                _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '900px'});
-        //            } else {
-        //                layer.msg(resp.msg, optLayerError);
-        //            }
-        //        } else {
-        //            layer.msg('系统错误，请联系管理员', optLayerWarning);
-        //        }
-        //    });
-        //},
+        onOkClicked: function () {
+            var _self = this;
+            var cardId = $('input[name = ecard]').val();
+            var data = {};
+            data['mobile'] = cardId;
+            data['password'] = '*';
+            data['type'] = this.type;
+            this.request.getVipInfo(data, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        var attrs = {
+                            pageid: _self.attrs.pageid,
+                            card_id: cardId,
+                            cust_id: resp.cust_id,
+                            unpaidamount: _self.attrs.unpaidamount,
+                            gather_money: _self.attrs.gather_money,
+                            goods_detail: _self.attrs.goods_detail,
+                            gather_detail: _self.attrs.gather_detail,
+                            account_type_code: resp.account_type_code
+                        };
+                        _self.closeLayer(layerindex);
+                        if(_self.attrs.pageid == 6) {
+                            _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '900px'});
+                        }else {
+                            _self.openLayer(PAGE_ID.RT_LAYER_ECARD_PAY, PAGE_ID.BILLING_RETURN, '一卡通退款', RTLayerECardPayView, attrs, {area: '900px'});
+                        }
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                    }
+                } else {
+                    layer.msg('系统错误，请联系管理员', optLayerWarning);
+                }
+            });
+        },
 
         /**
          * 刷卡输入
@@ -112,17 +116,21 @@ define([
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         var attrs = {
-                            pageid: pageId,
+                            pageid: _self.attrs.pageid,
                             card_id: trackValues[2],
                             cust_id: resp.cust_id,
                             unpaidamount: _self.attrs.unpaidamount,
                             gather_money: _self.attrs.gather_money,
-                            goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
+                            goods_detail: _self.attrs.goods_detail,
                             gather_detail: _self.attrs.gather_detail,
                             account_type_code: resp.account_type_code
                         };
                         _self.closeLayer(layerindex);
-                        _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '900px'});
+                        if(_self.attrs.pageid == 6) {
+                            _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '900px'});
+                        }else {
+                            _self.openLayer(PAGE_ID.RT_LAYER_ECARD_PAY, PAGE_ID.BILLING_RETURN, '一卡通退款', RTLayerECardPayView, attrs, {area: '900px'});
+                        }
                     } else {
                         $('input[name = ecard]').val('');
                         layer.msg(resp.msg, optLayerWarning);

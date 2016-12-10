@@ -530,6 +530,20 @@ define([
                 xfbdata['pos_id'] = '002';
                 xfbdata['bill_no'] = _self.billNumber;
                 switch (gatherUI) {
+                    case '03':
+                        attrs = {
+                            pageid:pageId,
+                            gather_detail:this.collection,
+                            gather_money:unpaidamount,
+                            unpaidamount:unpaidamount,
+                        };
+                        if(isfromForce) {
+                            attrs['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
+                        } else {
+                            attrs['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
+                        }
+                        this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '300px'});
+                        break;
                     case '04':
                     case '05':
                         attrs = {
