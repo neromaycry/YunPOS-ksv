@@ -184,7 +184,6 @@ requirejs([
     //
     if (isPosLimitSet) {
         var pos_limit = window.storage.get(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT).toString();
-        console.log(pos_limit);
         window.auth_discount = pos_limit.charAt(0); //折扣控制
         window.auth_report = pos_limit.charAt(1);  //报表控制
         window.auth_store = pos_limit.charAt(2);  //百货控制
@@ -218,7 +217,7 @@ requirejs([
                 window.clientDom = window.clientScreen.window.document;
                 var clientH = $(window.clientDom).height();
                 var clientW = $(window.clientDom).width();
-                console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
+                //console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
                 $(window.clientDom).find('img').height(clientH - 150);
                 $(window.clientDom).find('img').css('width', '100%');
             });
@@ -244,7 +243,6 @@ requirejs([
         console.error(e);
     }
     window.wsClient.onopen = function (e) {
-        //window.toastr.success('已与硬件建立连接');
         window.layer.msg('已与硬件建立连接', optLayerSuccess);
     };
     window.wsClient.onmessage = function (e) {
@@ -317,11 +315,9 @@ requirejs([
         }
     };
     window.wsClient.onclose = function (e) {
-        //window.toastr.warning('与硬件连接断开');
         window.layer.msg('与硬件断开，请检查硬件', optLayerError);
     };
     window.wsClient.onerror = function (e) {
-        //window.toastr.warning('与硬件连接出现问题，请检查硬件');
         console.log(e);
     };
 

@@ -294,7 +294,6 @@ define([
         },
         renderClientDisplay: function (model, isPacked) {
             if (isPacked) {
-                console.log(model);
                 $(clientDom).find('.client-display').html(this.template_clientbillingtpl(model.toJSON()));
                 return this;
             }
@@ -450,7 +449,6 @@ define([
                     _self.evalAuth(auth_delete, '08', {}, function () {
                         var item = _self.collection.at(_self.i);
                         var gatherUI = item.get('gather_ui');
-                        console.log(gatherUI);
                         if (gatherUI == '04' || gatherUI == '05') {
                             _self.refund(_self.i, gatherUI);
                         } else if (gatherUI == '06') {
@@ -519,7 +517,6 @@ define([
          * 撤销银行卡支付
          */
         deletebankpay: function (index) {
-            var _self = this;
             var item = this.collection.at(index);
             var refundamount = item.get('gather_money');
             var attrs = {
@@ -589,7 +586,6 @@ define([
                 unpaidamount: this.unpaidamount,
                 oddchange: this.oddchange
             });
-            console.log(this.collection);
             this.i = 0;
             this.renderBillInfo();
             this.renderBillDetail();
@@ -822,7 +818,6 @@ define([
                     return;
                 }
                 var item = _.findWhere(visibleTypes, {gather_id: gatherId});
-                console.log(item);
                 var gatherUI = item.gather_ui;
                 var data = {
                     gather_money: unpaidamount,
@@ -975,7 +970,6 @@ define([
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
                         _self.billNumber = resp.bill_no;
-                        console.log(_self.billNumber);
                     } else {
                         layer.msg(resp.msg, optLayerWarning);
                     }

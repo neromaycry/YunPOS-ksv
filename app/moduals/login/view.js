@@ -162,12 +162,10 @@ define([
             var username = $('input[name = username]').val();
             var password = $('input[name = password]').val();
             if (username == '') {
-                //toastr.warning('请输入用户名');
                 layer.msg('请输入用户名', optLayerWarning);
                 return;
             }
             if (password == '') {
-                //toastr.warning('请输入密码');
                 layer.msg('请输入密码', optLayerWarning);
                 return;
             }
@@ -276,14 +274,6 @@ define([
 
         //doInitialize: function () {
         //    this.iniSettngs();
-        //},
-
-        //encodeUTF8: function (str) {
-        //    var newStr = '';
-        //    for (var i = 0; i < str.length; i++) {
-        //        newStr += '\\u' + str.charCodeAt(i).toString(16);
-        //    }
-        //    return newStr;
         //},
 
         bindKeys: function () {
