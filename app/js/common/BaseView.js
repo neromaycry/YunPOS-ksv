@@ -28,12 +28,16 @@ define([
 
         n: 0,//
 
+        /**
+         * Backbone的view的初始化函数
+         * @param attrs view生成时传入参数
+         */
         initialize: function (attrs) {
             var _self = this;
-            console.log(">>> " + this.id);
-            this.undelegateEvents();
-            $(document).off('keydown');
-            $(document).off('mouseup');
+            console.log(">>> " + this.id);  //打印当前view的id
+            this.undelegateEvents();   // 解绑backbone事件，防止view再次生成时事件重复绑定的问题
+            $(document).off('keydown');  //解绑键盘keydown事件
+            $(document).off('mouseup');  //解绑鼠标mouseup事件
             //$(document).unbind('keydown');
             this.$el.empty().off();
             if (attrs) {
@@ -43,6 +47,7 @@ define([
                 this.collection = new Backbone.Collection.extend({model: this.model});
             }
             if (this.template) {
+                // 加载默认模板
                 this.$el.html(this.template);
                 this.template = _.template(this.template);
             }
@@ -77,6 +82,9 @@ define([
 
         },
 
+        /**
+         * view生成时加载页面的方法
+         */
         pageInit: function () {
         },
 
@@ -276,7 +284,6 @@ define([
                     websocket.send(directive);
                 }
             } else {
-                //toastr.warning('没有连接到硬件，请检查硬件连接');
                 layer.msg('请检查硬件连接或检查电脑是否已启动socket程序', optLayerError);
             }
         },
