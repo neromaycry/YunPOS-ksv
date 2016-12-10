@@ -197,7 +197,9 @@ define([
             }
             switch (this.gatherUI) {
                 case '01':
-                    //if (luhmCheck(gatherNo)) {
+                    if(this.attrs.gather_kind == '03' && !luhmCheck(gatherNo)) {
+                        return;
+                    }
                     attrs = {
                         gather_id: this.attrs.gather_id,
                         gather_ui: this.attrs.gather_ui,
@@ -209,9 +211,6 @@ define([
                     Backbone.trigger('onReceivedsum', attrs);
                     this.closeLayer(layerindex);
                     $('input[name = billing]').focus();
-                    //} else {
-                    //    $(this.input).val('');
-                    //}
                     break;
                 case '04':
                 case '05':

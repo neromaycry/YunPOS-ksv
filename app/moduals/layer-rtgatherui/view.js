@@ -210,6 +210,9 @@ define([
                 $(this.input).val('');
                 return;
             }
+            if(this.attrs.gather_kind == '03' && !luhmCheck(gatherNo)) {
+                return;
+            }
             attrs = {
                 gather_id: this.attrs.gather_id,
                 gather_name: this.attrs.gather_name,
