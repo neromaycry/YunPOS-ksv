@@ -188,10 +188,10 @@ define([
                         });
                         isFromLogin = true;
                     } else {
-                        layer.msg(response.msg, optLayerError)
+                        layer.msg(response.msg, optLayerError);
                     }
                 } else {
-                    layer.msg(response.msg, optLayerError)
+                    layer.msg(response.msg, optLayerError);
                 }
             }, function (jqXHR, textStatus, errorThrown) {
                 //失败回调
@@ -411,7 +411,7 @@ define([
         },
 
         setReturnWholeKeys: function () {
-            var effects = ['返回', '确定', '结算', '取消退货', '向上选择', '向下选择',];
+            var effects = ['返回', '确定', '结算', '取消退货', '向上选择', '向下选择'];
             var keys = ['ESC', 'ENTER', 'Space', 'C', '↑', '↓'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Space, window.KEYS.B, window.KEYS.C, window.KEYS.Up,
                 window.KEYS.Down];

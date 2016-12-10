@@ -135,7 +135,7 @@ define([
                     name: '未登录',
                     score_balance: 0,
                     account_balance: 0,
-                    account_enddate: '未登录，请查询'
+                    //account_enddate: '未登录，请查询'
                 });
             }
             if (storage.isSet(system_config.LOGIN_USER_KEY)) {
@@ -1215,7 +1215,7 @@ define([
                 name: resp.name,
                 score_balance: resp.score_balance,
                 account_balance: resp.account_balance,
-                account_enddate: resp.account_enddate
+                //account_enddate: resp.account_enddate
             });
             storage.set(system_config.VIP_KEY, resp);
             this.renderMinfo();
