@@ -335,6 +335,18 @@ div .bg-darkblue {
     color: #FFF;
 }
 
+.client-qrcode-container {
+    width: 100%;
+    position: absolute;
+    z-index: 9999;
+}
+.client-qrcode {
+    position: relative;
+    clear: both;
+    display: none;
+    margin:50px auto;
+}
+
 .navbar-nav > li > a:hover,.navbar-nav > li > a:focus{
     color:#74898a!important;
 }

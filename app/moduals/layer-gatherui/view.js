@@ -74,6 +74,10 @@ define([
                 if (!$.isEmptyObject(resp)) {
                     if (resp.code == '000000') {
                         $('.qrcode-img').attr('src', resp.data.codeurl);
+                        if (isPacked) {
+                            $(clientDom).find('.client-qrcode').css('display', 'block');
+                            $(clientDom).find('.client-qrcode').attr('src', resp.data.codeurl);
+                        }
                         if (resp.data.flag == '00') {
                             _self.getTradeState(resp.data, gatherUI);
                             //_self.tradeStateTimer = setInterval(function () {

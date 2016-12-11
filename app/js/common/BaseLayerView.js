@@ -113,6 +113,11 @@ define([
             });
         },
 
+        /**
+         * 解析磁条卡磁轨
+         * @param value
+         * @returns {*[]}
+         */
         parseMagTracks: function (value) {
             //var value = ';6222620910021970482=2412220905914925?996222620910021970482=1561560500050006021013000000010000024120===0914925905;';
             var index1, index2, track1, track2, track3;

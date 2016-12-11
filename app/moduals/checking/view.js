@@ -3,12 +3,13 @@ define([
     '../../../../moduals/checking/model',
     '../../../../moduals/checking/collection',
     '../../../../moduals/layer-help/view',
+    '../../../../moduals/layer-paytable/view',
     'text!../../../../moduals/checking/cashierinfotpl.html',
     'text!../../../../moduals/checking/posdetailtpl.html',
     'text!../../../../moduals/checking/posinfotpl.html',
     'text!../../../../moduals/checking/cashierdetailtpl.html',
     'text!../../../../moduals/checking/tpl.html',
-], function (BaseView, CheckingModel, CheckingCollection, LayerHelpView, cashierinfotpl, posdetailtpl, posinfotpl, casherdetailtpl, tpl) {
+], function (BaseView, CheckingModel, CheckingCollection, LayerHelpView, LayerPayTableView, cashierinfotpl, posdetailtpl, posinfotpl, casherdetailtpl, tpl) {
 
     var checkingView = BaseView.extend({
 
@@ -45,7 +46,8 @@ define([
             'click .keydown': 'onKeyDownClicked',
             'click #report': 'onReportClicked',
             'click #daily-report': 'onDailyReportClicked',
-            'click .print': 'onPrintClicked'
+            'click .print': 'onPrintClicked',
+            'click .pay-table': 'onPayTableClicked'
         },
 
         pageInit: function () {
@@ -112,6 +114,10 @@ define([
                 } else {
                     _self.onPrintClicked();
                 }
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Q, function () {
+                _self.onPayTableClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Down, function () {
@@ -204,7 +210,7 @@ define([
             var _self = this;
             //console.log(date);
             if (date == '') {
-                toastr.warning('输入的收银对账日期不能为空');
+                layer.msg('输入的收银对账日期不能为空', optLayerWarning);
             } else {
                 var cashierdata = {};
                 cashierdata['date'] = date;
@@ -224,7 +230,6 @@ define([
                             _self.renderCashierInfo();
                             _self.renderCashierdetail();
                         } else {
-                            toastr.error(resp.msg);
                             layer.msg(resp.msg, optLayerError);
                         }
                     } else {
@@ -256,7 +261,6 @@ define([
                             _self.renderPosInfo();
                             _self.renderPosDetail();
                         } else {
-                            //toastr.error(resp.msg);
                             layer.msg(resp.msg, optLayerError);
                         }
                     } else {
@@ -317,10 +321,15 @@ define([
 
         onPrintClicked: function () {
             if (this.printText == '') {
-                toastr.warning('请先查询收银报表数据')
+                layer.msg('请先查询收银报表数据', optLayerWarning);
             } else {
                 this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [this.printText], wsClient);
             }
+        },
+
+        onPayTableClicked: function () {
+            var attrs = {};
+            this.openLayer(PAGE_ID.LAYER_PAYTABLE, pageId, '收银员缴款单', LayerPayTableView, attrs, {area: '800px'});
         }
 
     });

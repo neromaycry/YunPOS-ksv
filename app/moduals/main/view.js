@@ -1013,11 +1013,11 @@ define([
          */
         onCleanClicked: function () {
             var _self = this;
-            if (this.model.get('itemamount') == 0) {
-                layer.msg('当前购物车内无商品', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
+            //if (this.model.get('itemamount') == 0) {
+            //    layer.msg('当前购物车内无商品', optLayerWarning);
+            //    $(this.input).val('');
+            //    return;
+            //}
             var attrs = {
                 pageid: pageId,
                 content: '确定取消交易？',

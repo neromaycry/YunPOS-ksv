@@ -226,6 +226,7 @@ window.PAGE_ID = {
     'LAYER_TIP': 56,
     'LAYER_SETTINGAUTH': 57,
     'LAYER_WORKER': 58,
+    'LAYER_PAYTABLE': 59,
 };
 
 window.KEYS = {
