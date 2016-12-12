@@ -65,7 +65,10 @@ define([
         },
 
         initPlugins: function () {
-            $(this.input).focus();
+            var _self = this;
+            setTimeout(function () {
+                $(_self.input).focus();
+            }, 500);
             this.setKeys();
             this.renderClientDisplay(isPacked);
         },

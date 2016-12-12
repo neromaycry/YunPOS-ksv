@@ -26,6 +26,7 @@ define([
         LayerInitPage: function () {
             var _self = this;
             this.model = new LayerWithdrawModel();
+            this.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer], [''], wsClient);
         },
 
         bindLayerKeys: function () {
@@ -79,7 +80,7 @@ define([
             printText += '        收款员：' + userName + '\n\n';
             printText += '        提取金额：' + toDecimal2(money) + ' 元\n\n\n\n';
             printText += '    提款人签字：\n\n\n\n\n\n\n\n';
-            this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT, DIRECTIVES.OpenCashDrawer], [printText, ''], wsClient);
+            this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [printText], wsClient);
             this.closeLayer(layerindex);
             $('input[name = main]').focus();
         },
