@@ -75,6 +75,12 @@ define([
 
         onBankSaleSuccess: function (resp) {
             console.log(resp);
+            var len = resp.card_no.length;
+            console.log(len);
+            if (len > 30) {
+                layer.msg('card_no超过30位，请检查websocket程序', optLayerError);
+                return;
+            }
             var data = {
                 gather_id: this.attrs.gather_id,
                 gather_money: this.attrs.gather_money,
@@ -94,6 +100,12 @@ define([
         },
 
         onBankRefundSuccess: function (resp) {
+            var len = resp.card_no.length;
+            console.log(len);
+            if (len > 30) {
+                layer.msg('card_no超过30位，请检查websocket程序', optLayerError);
+                return;
+            }
             if (resp.transaction_amount == this.attrs.gather_money) {
                 var data = {
                     gather_id: this.attrs.gather_id,
