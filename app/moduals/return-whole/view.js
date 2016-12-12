@@ -135,8 +135,10 @@ define([
                 layer.msg('请输入订单号', optLayerWarning);
                 return;
             }
+            var day = new Date().getTime();
+            day = fecha.format(day, 'YYYYMMDD');
             var data = {
-                day:'',
+                day:day,
                 bill_no:orderNo
             };
             this.requestModel.getOrderInfo(data, function (resp) {
@@ -266,7 +268,7 @@ define([
 
         /**
          * 修改单品数量
-         * old_num:数量, ref_num:已退数量, new_num:未退数量
+         * num:当前退货数量, ref_num:已退数量, new_num:未退数量
          */
         modifyItemNum: function () {
             var _self = this;
@@ -291,8 +293,7 @@ define([
                 return;
             }
             item.set({
-                num:newNum,
-                old_num: parseFloat(number),
+                num: parseFloat(number),
                 money: price * number - discount
             });
 
@@ -330,13 +331,13 @@ define([
             this.itemamount = 0;
             this.discountamount = 0;
             var priceList = this.RtcartCollection.pluck('price');
-            var oldNum = this.RtcartCollection.pluck('old_num');//显示的是当前退货的数量
+            var itemNum = this.RtcartCollection.pluck('num');//显示的是当前退货的数量
             //var newNum = this.RtcartCollection.pluck('new_num');//显示的是未退金额，所以itemNum为new_num
             var discounts = this.RtcartCollection.pluck('discount');
             for (var i = 0; i < this.RtcartCollection.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
-                this.totalamount += priceList[i] * oldNum[i];
-                this.itemamount += oldNum[i];
+                this.totalamount += priceList[i] * itemNum[i];
+                this.itemamount += itemNum[i];
                 this.discountamount += discounts[i];
             }
             this.model.set({

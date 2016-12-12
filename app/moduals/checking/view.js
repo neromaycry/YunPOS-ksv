@@ -116,7 +116,7 @@ define([
                 }
             });
 
-            this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Q, function () {
+            this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.G, function () {
                 _self.onPayTableClicked();
             });
 
