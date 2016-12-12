@@ -123,8 +123,13 @@ define([
         requestOrder: function () {
             var _self = this;
             var orderNo = $(this.input).val();
+            var len  = this.RtcartCollection.length;
             if (orderNo == '') {
                 layer.msg('请输入订单号', optLayerWarning);
+                return;
+            }
+            if(len != 0) {
+                layer.msg('当前购物车不为空，请先取消退货再查询新的订单', optLayerWarning);
                 return;
             }
             var data = {
@@ -260,7 +265,8 @@ define([
             //_self.renderRtPayedlist();
             layer.msg('取消退货成功', optLayerSuccess);
             storage.remove(system_config.RETURN_KEY);
-            $('input[name = whole_return_order]').focus();
+            router.navigate('main', {trigger:true});
+            //$('input[name = whole_return_order]').focus();
         },
 
         scrollDown: function () {
