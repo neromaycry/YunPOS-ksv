@@ -401,10 +401,10 @@ define([
         },
 
         setReturnWholeKeys: function () {
-            var effects = ['返回', '确定', '结算', '取消退货', '向上选择', '向下选择'];
-            var keys = ['ESC', 'ENTER', 'Space', 'C', '↑', '↓'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Space, window.KEYS.B, window.KEYS.C, window.KEYS.Up,
-                window.KEYS.Down];
+            var effects = ['返回', '确定', '结算','删除商品', '取消退货', '向上选择', '向下选择', '修改数量'];
+            var keys = ['ESC', 'ENTER', 'Space','D', 'C', '↑', '↓','F12'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Space, window.KEYS.B,  window.KEYS.D, window.KEYS.C, window.KEYS.Up,
+                window.KEYS.Down, window.KEYS.F12 ];
             var returnWholeKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
