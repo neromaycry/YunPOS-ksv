@@ -481,6 +481,9 @@ define([
                     item = data['goods_detail'][i];
                     item.money = -parseFloat(item.money);
                     item.num = -parseFloat(item.num);
+                    item.old_num = -parseFloat(item.old_num);
+                    item.new_num = -parseFloat(item.new_num);
+                    item.ref_num = -parseFloat(item.ref_num);
                     item.discount = -parseFloat(item.discount);
                 }
                 confirmBill.trade_confirm(data, function (resp) {
