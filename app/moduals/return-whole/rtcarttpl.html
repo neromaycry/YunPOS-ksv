@@ -92,10 +92,10 @@ return text;
                     <div class="col-xs-3 col-md-3 text-left" style="color:#757575"><%= e.barcode%></div>
                     <div class="col-xs-3 col-md-3 text-left" style="display: block;word-break: keep-all;white-space: nowrap;overflow:hidden;text-overflow: ellipsis"><%= e.goods_name%></div>
                     <div class="col-xs-3 col-md-3 text-left">单价：<%= toDecimal2(e.price) %></div>
-                    <div class="col-xs-3 col-md-3 text-center" style="color:#f36c60;font-size:17px;"><%= toDecimal2(e.old_num * e.price - e.discount) %></div>
+                    <div class="col-xs-3 col-md-3 text-center" style="color:#f36c60;font-size:17px;"><%= toDecimal2(e.num * e.price - e.discount) %></div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-3 col-md-3 text-left">数量：<%= toDecimal3(e.old_num) %></div>
+                    <div class="col-xs-3 col-md-3 text-left">数量：<%= toDecimal3(e.num) %></div>
                     <div class="col-xs-3 col-md-3 text-left">已退：<%= toDecimal3(e.ref_num)%></div>
                     <div class="col-xs-3 col-md-3 text-left">未退：<%= toDecimal3(e.new_num)%></div>
                     <div class="col-xs-3 col-md-3" style="color: #4db6ac;">优惠：- <%= toDecimal2(e.discount) %></div>

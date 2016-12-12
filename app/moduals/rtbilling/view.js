@@ -421,8 +421,8 @@ define([
                 data['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
                 if (_self.smallChange != 0) {
-                    data['gather_detail'].push(_self.smallChangemodel.toJSON())
-                };
+                    data['gather_detail'].push(_self.smallChangemodel.toJSON());
+                }
                 for (var i = 0; i < data['gather_detail'].length; i++) {
                     item = data['gather_detail'][i];
                     item.gather_money = -parseFloat(item.gather_money);
@@ -470,8 +470,8 @@ define([
                 data['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                 data['gather_detail'] = _self.collection.toJSON();
                 if (_self.smallChange != 0) {
-                    data['gather_detail'].push(_self.smallChangemodel.toJSON())
-                };
+                    data['gather_detail'].push(_self.smallChangemodel.toJSON());
+                }
                 for (var i = 0; i < data['gather_detail'].length; i++) {
                     item = data['gather_detail'][i];
                     item.gather_money = -parseFloat(item.gather_money);
@@ -481,7 +481,6 @@ define([
                     item = data['goods_detail'][i];
                     item.money = -parseFloat(item.money);
                     item.num = -parseFloat(item.num);
-                    item.old_num = -parseFloat(item.old_num);
                     item.new_num = -parseFloat(item.new_num);
                     item.ref_num = -parseFloat(item.ref_num);
                     item.discount = -parseFloat(item.discount);

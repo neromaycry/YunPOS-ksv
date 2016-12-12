@@ -1060,15 +1060,13 @@ define([
             this.releaseOrder();
         },
         /**
-         * 整单退货按钮点击事件
+         * 原单退货按钮点击事件
          */
         onReturnWholeClicked: function () {
-            this.evalAuth(auth_return, '06', {}, function () {
-                router.navigate('returnwhole', {trigger: true});
-            });
+            router.navigate('returnwhole', {trigger: true});
         },
         /**
-         * 强制退货按钮点击事件
+         * 单品退货按钮点击事件
          */
         onReturnForceClicked: function () {
             this.evalAuth(auth_return, '05', {}, function () {
