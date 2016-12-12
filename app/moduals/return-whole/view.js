@@ -49,7 +49,10 @@ define([
             'click .rt-billing': 'onBillingClicked',
             'click .rt-return': 'onBackClicked',
             'click .rt-help': 'onHelpClicked',
-            'click .rt-cancel': 'onCancelClicked'
+            'click .rt-cancel': 'onCancelClicked',
+            'click .rt-delete':'onDeleteClicked',
+            'click .rt-keyup':'onKeyUpClicked',
+            'click .rt-keydown':'onKeyDownClicked'
         },
 
         pageInit: function () {
@@ -153,43 +156,6 @@ define([
                 }
             });
         },
-        calculateModel: function () {
-            console.log(this.RtcartCollection);
-            for (var i = 0; i < this.RtcartCollection.length; i++) {
-                var item = this.RtcartCollection.at(i);
-                var money = item.get('money');
-                var num = item.get('num');
-                var discount = item.get('discount');
-                item.set({
-                    money: money,
-                    num: num,
-                    discount: discount
-                });
-            }
-            console.log(this.RtcartCollection);
-            this.totalamount = 0;
-            var priceList = this.RtcartCollection.pluck('price');
-            var itemNum = this.RtcartCollection.pluck('num');
-            var discounts = this.RtcartCollection.pluck('discount');
-            for (var i = 0; i < this.RtcartCollection.length; i++) {
-                discounts[i] = parseFloat(discounts[i]);
-                this.totalamount += priceList[i] * itemNum[i];
-                this.itemamount += itemNum[i];
-                this.discountamount += discounts[i];
-            }
-            this.model.set({
-                totalamount: this.totalamount,
-                itemamount: this.itemamount,
-                discountamount: this.discountamount
-            });
-            this.renderRtcart();
-            this.renderRtInfo();
-            //this.renderRtPayedlist();
-            storage.set(system_config.RETURN_KEY, 'cartlist', this.RtcartCollection.toJSON());
-            storage.set(system_config.RETURN_KEY, 'paymentlist', this.RtPayedlistCollection.toJSON());
-            storage.set(system_config.RETURN_KEY, 'panel', this.model.toJSON());
-            storage.set(system_config.RETURN_KEY, 'bill_no', this.model.get('bill_no'));
-        },
 
         bindKeys: function () {
             var _self = this;
@@ -213,6 +179,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function () {
                 _self.onCancelClicked();
             });
+            //删除
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.D, function () {
+                _self.onDeleteClicked();
+            });
             //确定
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
                 if ($(this.input).val() == '') {
@@ -223,12 +193,42 @@ define([
                 $(_self.input).val('');
             });
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Down, function () {
-                _self.scrollDown();
+                _self.onKeyDownClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Up, function () {
-                _self.scrollUp();
+                _self.onKeyUpClicked();
             });
+        },
+
+
+        onDeleteClicked: function () {
+            var _self = this;
+            var attrs = {
+                pageid: pageId,
+                content: '确定删除该商品？',
+                callback: function () {
+                    _self.deleteItem();
+                }
+            };
+            _self.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
+
+        },
+        /**
+         * 单品删除
+         */
+        deleteItem: function () {
+            try {
+                if ($('li').hasClass('cus-selected')) {
+                    var item = this.RtcartCollection.at(this.i);
+                    this.RtcartCollection.remove(item);
+                    this.i = 0;
+                    this.calculateModel();
+                }
+                layer.msg('删除成功', optLayerSuccess);
+            } catch (e) {
+                layer.msg(e.name + ":" + e.message, optLayerError);
+            }
         },
 
 
@@ -269,28 +269,63 @@ define([
             //$('input[name = whole_return_order]').focus();
         },
 
-        scrollDown: function () {
-            console.log(this.i);
-            if (this.i < this.RtcartCollection.length - 1) {
-                this.i++;
+
+        calculateModel: function () {
+            //for (var i = 0; i < this.RtcartCollection.length; i++) {
+            //    var item = this.RtcartCollection.at(i);
+            //    var money = item.get('money');
+            //    var num = item.get('num');
+            //    var discount = item.get('discount');
+            //    item.set({
+            //        money: money,
+            //        num: num,
+            //        discount: discount
+            //    });
+            //}
+            this.totalamount = 0;
+            this.itemamount = 0;
+            this.discountamount = 0;
+            var priceList = this.RtcartCollection.pluck('price');
+            var itemNum = this.RtcartCollection.pluck('num');
+            var discounts = this.RtcartCollection.pluck('discount');
+            for (var i = 0; i < this.RtcartCollection.length; i++) {
+                discounts[i] = parseFloat(discounts[i]);
+                this.totalamount += priceList[i] * itemNum[i];
+                this.itemamount += itemNum[i];
+                this.discountamount += discounts[i];
             }
-            if (this.i % this.listnum == 0 && this.n < parseInt(this.RtcartCollection.length / this.listnum)) {
-                this.n++;
+            this.model.set({
+                totalamount: this.totalamount,
+                itemamount: this.itemamount,
+                discountamount: this.discountamount
+            });
+            this.renderRtcart();
+            this.renderRtInfo();
+            //this.renderRtPayedlist();
+            storage.set(system_config.RETURN_KEY, 'cartlist', this.RtcartCollection.toJSON());
+            storage.set(system_config.RETURN_KEY, 'paymentlist', this.RtPayedlistCollection.toJSON());
+            storage.set(system_config.RETURN_KEY, 'panel', this.model.toJSON());
+            storage.set(system_config.RETURN_KEY, 'bill_no', this.model.get('bill_no'));
+        },
+
+        onKeyUpClicked: function () {
+            if (this.i > 0) {
+                this.i--;
+            }
+            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
+                this.n--;
                 //alert(_self.n);
                 $('.rtcart-content').scrollTop(this.listheight * this.n);
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
-        /**
-         * 购物车光标向上
-         */
-        scrollUp: function () {
-            if (this.i > 0) {
-                this.i--;
+        onKeyDownClicked:function () {
+            if (this.i < this.RtcartCollection.length - 1) {
+                this.i++;
             }
-            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
-                this.n--;
+            if (this.i % this.listnum == 0 && this.n < parseInt(this.RtcartCollection.length / this.listnum)) {
+                this.n++;
                 //alert(_self.n);
                 $('.rtcart-content').scrollTop(this.listheight * this.n);
             }
