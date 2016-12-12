@@ -76,6 +76,8 @@ define([
                         $('.qrcode-img').attr('src', resp.data.codeurl);
                         if (isPacked) {
                             $(clientDom).find('.client-qrcode').css('display', 'block');
+                            $(clientDom).find('.client-qrcode').css('height', '300px');
+                            $(clientDom).find('.client-qrcode').css('width', '300px');
                             $(clientDom).find('.client-qrcode').attr('src', resp.data.codeurl);
                         }
                         if (resp.data.flag == '00') {
@@ -175,7 +177,10 @@ define([
                             extras: extra
                         }));
                         layer.msg(resp2.msg, optLayerSuccess);
-                        clearInterval(_self.tradeStateTimer);
+                        //clearInterval(_self.tradeStateTimer);
+                        if (isPacked) {
+                            $(clientDom).find('.client-qrcode').css('display', 'none');
+                        }
                         _self.closeLayer(layerindex);
                         $('input[name = billing]').focus();
                     } else {
@@ -284,10 +289,13 @@ define([
                         }
                     };
                     this.micropay(this.gatherUI, gatherNo, attrs);
-                    if (this.tradeStateTimer) {
-                        console.log('clearinterval');
-                        clearInterval(this.tradeStateTimer);
+                    if (isPacked) {
+                        $(clientDom).find('.client-qrcode').css('display', 'none');
                     }
+                    //if (this.tradeStateTimer) {
+                    //    console.log('clearinterval');
+                    //    clearInterval(this.tradeStateTimer);
+                    //}
                     break;
                 default :
                     attrs = {
@@ -315,6 +323,9 @@ define([
             this.closeLayer(layerindex);
             $('input[name = billing]').focus();
             this.isClosed = true;
+            if (isPacked) {
+                $(clientDom).find('.client-qrcode').css('display', 'none');
+            }
             //if (this.tradeStateTimer) {
             //    clearInterval(this.tradeStateTimer);
             //}
