@@ -704,7 +704,7 @@ define([
             var _self = this;
             var number = $(this.input).val();
             var discountamount = this.model.get('discountamount');
-            if (_self.model.get('itemamount') == 0) {
+            if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -719,28 +719,28 @@ define([
                 $(this.input).val('');
                 return;
             }
-            var item = _self.collection.at(_self.i);
+            var item = this.collection.at(this.i);
             var discount = item.get('discount');
             var price = item.get('price');
             item.set({
                 num: parseFloat(number),
                 money: price * number - discount
             });
-            _self.totalamount = 0;
-            _self.itemamount = 0;
-            _self.discountamount = 0;
-            var priceList = _self.collection.pluck('price');
-            var discounts = _self.collection.pluck('discount');
-            var itemNum = _self.collection.pluck('num');
+            this.totalamount = 0;
+            this.itemamount = 0;
+            this.discountamount = 0;
+            var priceList = this.collection.pluck('price');
+            var discounts = this.collection.pluck('discount');
+            var itemNum = this.collection.pluck('num');
             for (var i = 0; i < priceList.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
-                _self.totalamount += priceList[i] * itemNum[i];
-                _self.itemamount += itemNum[i];
-                _self.discountamount += discounts[i] * itemNum[i];
+                this.totalamount += priceList[i] * itemNum[i];
+                this.itemamount += itemNum[i];
+                this.discountamount += discounts[i] * itemNum[i];
             }
-            _self.calculateModel();
+            this.calculateModel();
             $(this.input).val('');
-            $('#li' + _self.i).addClass('cus-selected');
+            $('#li' + this.i).addClass('cus-selected');
         },
         /**
          * 单品删除

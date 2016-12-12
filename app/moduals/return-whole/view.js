@@ -45,14 +45,14 @@ define([
             'click .btn-num': 'onNumClicked',
             'click .btn-backspace': 'onBackspaceClicked',
             'click .btn-clear': 'onClearClicked',
-            'click .cancel': 'onCancelClicked',
             'click .rt-billing': 'onBillingClicked',
             'click .rt-return': 'onBackClicked',
             'click .rt-help': 'onHelpClicked',
             'click .rt-cancel': 'onCancelClicked',
             'click .rt-delete':'onDeleteClicked',
             'click .rt-keyup':'onKeyUpClicked',
-            'click .rt-keydown':'onKeyDownClicked'
+            'click .rt-keydown':'onKeyDownClicked',
+            'click .modify-num':'modifyItemNum'
         },
 
         pageInit: function () {
@@ -102,7 +102,7 @@ define([
             $('.cart-panel').width(cartWidth);
             $('.rtcart-content').height(payedlist);
             this.listheight = payedlist;//购物车列表的高度
-            this.listnum = 10;//设置商品列表中的条目数
+            this.listnum = 6;//设置商品列表中的条目数
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
         },
 
@@ -127,12 +127,12 @@ define([
             var _self = this;
             var orderNo = $(this.input).val();
             var len  = this.RtcartCollection.length;
-            if (orderNo == '') {
-                layer.msg('请输入订单号', optLayerWarning);
-                return;
-            }
             if(len != 0) {
                 layer.msg('当前购物车不为空，请先取消退货再查询新的订单', optLayerWarning);
+                return;
+            }
+            if (orderNo == '') {
+                layer.msg('请输入订单号', optLayerWarning);
                 return;
             }
             var data = {
@@ -164,16 +164,11 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Esc, function () {
-                router.navigate('main', {trigger: true});
+                _self.onBackClicked();
             });
+
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Space, function () {
-                var itemamount = _self.model.get('itemamount');
-                if (itemamount == 0) {
-                    layer.msg('请输入订单号', optLayerWarning);
-                } else {
-                    isfromForce = false;
-                    router.navigate('billingreturn', {trigger: true});
-                }
+               _self.onBillingClicked();
             });
             //取消整单退货
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.C, function () {
@@ -185,12 +180,11 @@ define([
             });
             //确定
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Enter, function () {
-                if ($(this.input).val() == '') {
-                    layer.msg('订单编号不能为空', optLayerWarning);
-                    return;
-                }
-                _self.requestOrder();
-                $(_self.input).val('');
+               _self.onOKClicked();
+            });
+            //修改数量
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.F12, function () {
+                _self.modifyItemNum();
             });
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Down, function () {
                 _self.onKeyDownClicked();
@@ -270,6 +264,56 @@ define([
         },
 
 
+        /**
+         * 修改单品数量
+         * old_num:数量, ref_num:已退数量, new_num:未退数量
+         */
+        modifyItemNum: function () {
+            var _self = this;
+            var number = $(this.input).val();
+            if (number == '' || number == 0 || (number.split('.').length - 1) > 1) {
+                layer.msg('无效的商品数量', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            var item = this.RtcartCollection.at(this.i);
+            var discount = item.get('discount');
+            var price = item.get('price');
+            var newNum = item.get('new_num');//代表未退数量，number不能大于未退数量
+            if(discount != 0) {
+                layer.msg('折扣后商品不能修改数量', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if(number > newNum) {
+                layer.msg('修改数量不能大于未退数量', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            item.set({
+                num:newNum,
+                old_num: parseFloat(number),
+                money: price * number - discount
+            });
+
+            //this.totalamount = 0;
+            //this.itemamount = 0;
+            //this.discountamount = 0;
+            //var priceList = this.RtcartCollection.pluck('price');
+            //var discounts = this.RtcartCollection.pluck('discount');
+            //var itemNum = this.RtcartCollection.pluck('old_num');
+            //for (var i = 0; i < priceList.length; i++) {
+            //    discounts[i] = parseFloat(discounts[i]);
+            //    this.totalamount += priceList[i] * itemNum[i];
+            //    this.itemamount += itemNum[i];
+            //    this.discountamount += discounts[i] * itemNum[i];
+            //}
+            this.calculateModel();
+            $(this.input).val('');
+            $('#li' + this.i).addClass('cus-selected');
+        },
+
+
         calculateModel: function () {
             //for (var i = 0; i < this.RtcartCollection.length; i++) {
             //    var item = this.RtcartCollection.at(i);
@@ -286,17 +330,18 @@ define([
             this.itemamount = 0;
             this.discountamount = 0;
             var priceList = this.RtcartCollection.pluck('price');
-            var itemNum = this.RtcartCollection.pluck('num');
+            var oldNum = this.RtcartCollection.pluck('old_num');//显示的是当前退货的数量
+            //var newNum = this.RtcartCollection.pluck('new_num');//显示的是未退金额，所以itemNum为new_num
             var discounts = this.RtcartCollection.pluck('discount');
             for (var i = 0; i < this.RtcartCollection.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
-                this.totalamount += priceList[i] * itemNum[i];
-                this.itemamount += itemNum[i];
+                this.totalamount += priceList[i] * oldNum[i];
+                this.itemamount += oldNum[i];
                 this.discountamount += discounts[i];
             }
             this.model.set({
                 totalamount: this.totalamount,
-                itemamount: this.itemamount,
+                itemamount: this.itemamount,//退款商品的数量
                 discountamount: this.discountamount
             });
             this.renderRtcart();
@@ -334,6 +379,7 @@ define([
 
         onBackClicked: function () {
             router.navigate('main', {trigger: true});
+            storage.remove(system_config.RETURN_KEY);
         },
 
 
