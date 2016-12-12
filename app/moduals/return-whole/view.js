@@ -394,11 +394,14 @@ define([
         },
 
         onOKClicked: function () {
+            var _self = this;
             if ($(this.input).val() == '') {
                 layer.msg('订单编号不能为空', optLayerWarning);
                 return;
             }
-            this.requestOrder();
+            this.evalAuth(auth_return, '06', {}, function () {
+                _self.requestOrder();
+            });
             $(this.input).val("");
         },
 
