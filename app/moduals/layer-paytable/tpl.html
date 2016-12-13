@@ -1,1 +1,104 @@
-<div>缴款表加入中</div>
+<div class="panel panel-primary" style="border: none;margin: 0;">
+    <div class="panel-body no-padding">
+        <div class="row no-margining" style="margin-top: 15px;margin-bottom: 15px;">
+            <div class="col-xs-6 col-md-6 text-right pos-textsize no-padding">合计：</div>
+            <div class="sum">
+
+            </div>
+        </div>
+        <div class="row no-margining" style="margin-top: 15px;">
+            <div class="col-xs-5 col-md-5">
+                <div class="form-group">
+                    <label class="sr-only" for="paytable_num">wechat</label>
+                    <input type="text" class="form-control" id="paytable_num" name="paytable-num"
+                           placeholder="请输入数量或金额" onkeypress="return myNumberic(event)"
+                           onkeyup="return ValidateFloat($(this),value)"/>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="row no-margining text-center">
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="7">7</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="8">8</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="9">9</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-backspace panel-group border-bottom">←</div>
+                        </div>
+                    </div>
+                    <div class="row no-margining text-center">
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="4">4</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="5">5</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="6">6</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-clear panel-group border-bottom">C</div>
+                        </div>
+                    </div>
+                    <div class="row no-margining text-center">
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="1">1</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="2">2</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="3">3</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn numpad-ok border-bottom bg-highlight cancel">取消</div>
+                        </div>
+                    </div>
+                    <div class="row no-margining text-center">
+                        <div class="col-xs-6 col-md-6 no-padding">
+                            <div class="cbtn btn-num panel-group border-right" data-num="0">0</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn btn-num panel-group border-right" data-num=".">.</div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 no-padding">
+                            <div class="cbtn numpad-ok ok bg-red">确定</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-7 col-md-7">
+                <div class="panel text-center">
+                    <div class="panel panel-primary no-margining">
+                        <div class="panel-heading pos-textsize">
+                            <div class="row">
+                                <div class="col-md-4 col-xs-4 text-center">货币</div>
+                                <div class="col-md-4 col-xs-4">数量</div>
+                                <div class="col-md-4 col-xs-4">金额</div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body no-padding"  style="padding: 0; overflow-y: hidden">
+                           <div class="gather-detail" style="overflow: hidden;position:relative;">
+
+                           </div>
+                        </div>
+                        <div class="panel-footer no-padding bg-white">
+                            <div class="row text-center no-margining">
+                                <div class="col-xs-12 col-md-12 button-group">
+                                    <div class="row">
+                                        <button type="button" class="col-xs-6 col-md-6 button button-border button-primary pos-button-textsize keyup">↑</button>
+                                        <button type="button" class="col-xs-6 col-md-6 button button-border button-primary pos-button-textsize keydown">↓</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
