@@ -62,7 +62,6 @@ define([
             Backbone.on('onBankRefundSuccess', this.onBankRefundSuccess, this);
         },
 
-
         bindLayerKeys: function () {
             var _self = this;
             this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Esc, function () {
