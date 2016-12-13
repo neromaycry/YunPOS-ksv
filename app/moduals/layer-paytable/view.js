@@ -221,6 +221,7 @@ define([
                     return;
                 }
                 temp.set({
+                    num:parseFloat(val),
                     sum:parseFloat(val)
                 });
             }
