@@ -457,7 +457,7 @@ define([
 
         setCheckingKeys: function () {
             var effects = ['返回', '确定', '向上选择', '向下选择',
-                '切换收银员日结报表', '切换收款机报表', '缴费表'];
+                '收银员日结报表', '收款机报表', '缴费表'];
             var keys = ['ESC', 'ENTER', '↑', '↓', '←', '→', 'G'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down,
                 window.KEYS.Left, window.KEYS.Right, window.KEYS.G];

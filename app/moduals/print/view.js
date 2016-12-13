@@ -144,7 +144,7 @@ define([
          */
         onReprintClicked: function () {
             if (this.print_content == '') {
-                toastr.warning('请先查询要打印的小票');
+                layer.msg('请先查询要打印的小票', optLayerWarning);
             } else {
                 var str = this.print_content;
                 this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [str], wsClient);
@@ -177,7 +177,7 @@ define([
                         _self.renderCartlist();
                         _self.renderPaymentlist();
                     } else {
-                        toastr.error(resp.msg);
+                        layer.msg(resp.msg, optLayerError);
                     }
                 });
                 $('input[name = bill_no]').val('');
