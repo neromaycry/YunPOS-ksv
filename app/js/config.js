@@ -334,7 +334,7 @@ requirejs([
                     window.layer.msg(data.msg + ',请滴声后再试', optLayerWarning);
                 }
                 setTimeout(function () {
-                    window.wsClient.send(window.DIRECTIVES.IC_CARD_AUTO_READ);
+                    wsClient.send(DIRECTIVES.IC_CARD_AUTO_READ);
                 }, 3000);
                 break;
         }

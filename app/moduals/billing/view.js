@@ -1070,7 +1070,7 @@ define([
                 goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
                 callback: function (attr) {
                     setTimeout(function () {
-                        _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, pageId, '一卡通支付', LayerECardpayView, attr, {area: '900px'});
+                        _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, pageId, '一卡通支付', LayerECardpayView, attr, {area: '1000px'});
                     }, 300);
                 }
             };

@@ -79,7 +79,7 @@ define([
                 this.confirmHideLayer(this.attrs.pageid);
                 layer.msg('会员登录成功', optLayerSuccess);
             } else {
-                layer.msg('this.response为空', optLayerWarning);
+                layer.msg('正在加载会员信息，请稍等...', optLayerWarning);
             }
         },
 

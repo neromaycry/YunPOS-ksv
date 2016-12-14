@@ -419,10 +419,6 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
                 _self.onTotalDiscountPercentage();
             });
-
-            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
-                _self.layerICLogin();
-            });
         },
         /**
          * 账户登出

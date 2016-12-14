@@ -945,7 +945,7 @@ define([
                 goods_detail: goods_detail,
                 callback: function (attr) {
                     setTimeout(function () {
-                        _self.openLayer(PAGE_ID.RT_LAYER_ECARD_PAY, pageId, '一卡通退款', LayerRTEcardPayView, attr, {area: '900px'});
+                        _self.openLayer(PAGE_ID.RT_LAYER_ECARD_PAY, pageId, '一卡通退款', LayerRTEcardPayView, attr, {area: '1000px'});
                     }, 300);
                 }
             };
