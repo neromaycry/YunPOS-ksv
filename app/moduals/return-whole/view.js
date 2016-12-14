@@ -7,12 +7,13 @@ define([
     '../../../../moduals/return-whole/collection',
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-help/view',
+    '../../../../moduals/layer-icmember/view',
     'text!../../../../moduals/return-whole/returninfotpl.html',
     'text!../../../../moduals/return-whole/rtcarttpl.html',
     'text!../../../../moduals/return-whole/rtpayedlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, returninfotpl, rtcarttpl, rtpayedlisttpl, numpadtpl, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, LayerICMemberView, returninfotpl, rtcarttpl, rtpayedlisttpl, numpadtpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -82,12 +83,18 @@ define([
             this.$el.find('.for-numpad').html(this.template_numpad);
             $('#li' + this.i).addClass('cus-selected');
             //this.renderRtPayedlist();
+            this.handleEvents();
         },
 
         initTemplates: function () {
             this.template_returninfo = _.template(this.template_returninfo);
             this.template_rtcart = _.template(this.template_rtcart);
             //this.template_rtpayedlist = _.template(this.template_rtpayedlist);
+        },
+
+        handleEvents: function () {
+            Backbone.off('onRtWholeMemberLogin');
+            Backbone.on('onRtWholeMemberLogin', this.onRtWholeMemberLogin, this);
         },
 
         initLayoutHeight: function () {
@@ -430,6 +437,18 @@ define([
             };
             this.openLayer(PAGE_ID.LAYER_HELP, pageId, '帮助', LayerHelpView, attrs, {area: '600px'});
         },
+
+        onRtWholeMemberLogin: function (resp) {
+            var attrs = {
+                pageid: pageId,
+                card_no: resp.cardno,
+                callback: function (data) {
+                    storage.set(system_config.VIP_KEY, data);
+                    layer.msg('会员登录成功', optLayerSuccess);
+                }
+            };
+            this.openLayer(PAGE_ID.LAYER_ICMEMBER, pageId, '会员IC卡登录', LayerICMemberView, attrs, {area: '600px'});
+        }
 
     });
 

@@ -11,11 +11,13 @@ define([
     '../../../../moduals/layer-rtgatherui/view',
     '../../../../moduals/layer-rtbilltype/view',
     '../../../../moduals/layer-ecardlogin/view',
+    '../../../../moduals/layer-icmember/view',
+    '../../../../moduals/layer-rtecardpay/view',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/rtbilling/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/rtbilling/tpl.html'
-], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView, LayerConfirmView, LayerBankCardView, GatherUIView, RTLayerTypeView, layerECardView, numpadtpl, billinfotpl, billingdetailtpl, tpl) {
+], function (BaseView, RTBillModel, RTBillCollection, LayerHelpView, LayerConfirmView, LayerBankCardView, GatherUIView, RTLayerTypeView, layerECardView, LayerICMemberView, LayerRTEcardPayView, numpadtpl, billinfotpl, billingdetailtpl, tpl) {
     var rtbillingView = BaseView.extend({
 
         id: "rtbillingView",
@@ -151,7 +153,9 @@ define([
 
         handleEvents: function () {
             Backbone.off('onRTReceivedsum');
+            Backbone.off('onRtBillICEcardPay');
             Backbone.on('onRTReceivedsum', this.onRTReceivedsum, this);
+            Backbone.on('onRtBillICEcardPay', this.onRtBillICEcardPay, this);
         },
 
         onRTReceivedsum: function (data) {
@@ -534,12 +538,12 @@ define([
                 switch (gatherUI) {
                     case '03':
                         attrs = {
-                            pageid:pageId,
-                            gather_detail:this.collection,
-                            gather_money:unpaidamount,
-                            unpaidamount:unpaidamount,
+                            pageid: pageId,
+                            gather_detail: this.collection,
+                            gather_money: unpaidamount,
+                            unpaidamount: unpaidamount,
                         };
-                        if(isfromForce) {
+                        if (isfromForce) {
                             attrs['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
                         } else {
                             attrs['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
@@ -573,7 +577,7 @@ define([
                         attrs = {
                             gather_id: gatherId,
                             gather_ui: gatherUI,
-                            gather_name:  item.gather_name,
+                            gather_name: item.gather_name,
                             gather_money: unpaidamount,
                             gather_kind: item.gather_kind,
                         };
@@ -627,7 +631,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) >　1) {
+            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) > 1) {
                 layer.msg('无效的退款金额', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -641,13 +645,13 @@ define([
                 receivedSum = unpaidamount;
             }
             var attrs = {
-                pageid:PAGE_ID.BILLING_RETURN,
-                gather_detail:this.collection,
-                gather_money:receivedSum,
-                unpaidamount:unpaidamount,
+                pageid: PAGE_ID.BILLING_RETURN,
+                gather_detail: this.collection,
+                gather_money: receivedSum,
+                unpaidamount: unpaidamount,
             };
 
-            if(isfromForce) {
+            if (isfromForce) {
                 attrs['goods_detail'] = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
             } else {
                 attrs['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
@@ -665,11 +669,11 @@ define([
 
         onReturnClicked: function () {
             var len = this.collection.length;
-            if(len != 0) {
+            if (len != 0) {
                 layer.msg('请先清空支付列表', optLayerWarning);
                 return;
             }
-           if (isfromForce) {
+            if (isfromForce) {
                 router.navigate('returnforce', {trigger: true});
             } else {
                 router.navigate('returnwhole', {trigger: true});
@@ -900,9 +904,54 @@ define([
                 change_money: 0,
                 bank_json: {},
                 gather_money: this.smallChange,
-                outtradeno:'',
+                outtradeno: '',
             });
         },
+
+        onRtBillICEcardPay: function (resp) {
+            var _self = this;
+            var unpaidamount = this.model.get('unpaidamount');
+            var receivedSum = $(this.input).val();
+            if (unpaidamount == 0) {
+                layer.msg('待退款金额为零,请进行退款', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) > 1) {
+                layer.msg('无效的退款金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if (receivedSum > unpaidamount) {
+                layer.msg('不设找零', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if (receivedSum == '') {
+                receivedSum = unpaidamount;
+            }
+            if (isfromForce) {
+                var goods_detail = storage.get(system_config.FORCE_RETURN_KEY, 'cartlist');
+            } else {
+                var goods_detail = storage.get(system_config.RETURN_KEY, 'cartlist');
+            }
+            var attrs = {
+                pageid: pageId,
+                card_no: resp.cardno,
+                isEcardpay: true,
+                gather_detail: this.collection.toJSON(),
+                gather_money: receivedSum,
+                unpaidamount: unpaidamount,
+                goods_detail: goods_detail,
+                callback: function (attr) {
+                    setTimeout(function () {
+                        _self.openLayer(PAGE_ID.RT_LAYER_ECARD_PAY, pageId, '一卡通退款', LayerRTEcardPayView, attr, {area: '900px'});
+                    }, 300);
+                }
+            };
+            this.openLayer(PAGE_ID.LAYER_ICMEMBER, pageId, '一卡通IC卡登录', LayerICMemberView, attrs, {area: '600px'});
+
+        }
 
 
     });

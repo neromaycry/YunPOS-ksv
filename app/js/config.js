@@ -323,6 +323,12 @@ requirejs([
                         case PAGE_ID.BILLING:
                             Backbone.trigger('onBillICEcardPay', data);
                             break;
+                        case PAGE_ID.RETURN_WHOLE:
+                            Backbone.trigger('onRtWholeMemberLogin', data);
+                            break;
+                        case PAGE_ID.BILLING_RETURN:
+                            Backbone.trigger('onRtBillICEcardPay', data);
+                            break;
                     }
                 } else {
                     window.layer.msg(data.msg + ',请滴声后再试', optLayerWarning);
