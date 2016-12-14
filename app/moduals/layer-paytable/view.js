@@ -39,7 +39,8 @@ define([
             'click .btn-backspace': 'onBackspaceClicked',
             'click .btn-clear': 'onClearClicked',
             'click .keyup':'onKeyUpClicked',
-            'click .keydown':'onKeyDownClicked'
+            'click .keydown':'onKeyDownClicked',
+            'click .print-paytable': 'onPrintClicked'
         },
 
         LayerInitPage: function () {
@@ -231,6 +232,7 @@ define([
         },
 
         onPrintClicked: function () {
+            console.log(this.collection.toJSON());
             layer.msg('缴款单已打印', optLayerSuccess);
             this.closeLayer(layerindex)
         }

@@ -155,58 +155,42 @@ define([
 
         /**
          * 关闭layer的通用方法
-         * @param index 当前layer的index， 一般都传入layerindex这个window变量
          * 注意：如果layer所处页面中存在input，则需要在关闭时手动将焦点赋到input框上 $('input的selector').focus(),
          * 否则会出现失去焦点的bug
          */
-        closeLayer: function (id) {
+        closeLayer: function () {
             console.log('close layer');
-            pageId = id;
             layer.close(layerindex);
         },
 
         confirmHideLayer: function (pageid) {
             console.log('confirmHideLayer');
             switch (pageid) {
-                case window.PAGE_ID.LOGIN:
-                    this.closeLayer(window.PAGE_ID.LOGIN);
-                    //$('input[name = username]').focus();
-                    break;
-                case window.PAGE_ID.SETDNS:
-                    this.closeLayer(window.PAGE_ID.SETDNS);
-                    break;
                 case window.PAGE_ID.MAIN:
-                    this.closeLayer(window.PAGE_ID.MAIN);
                     $('input[name = main]').focus();
                     break;
                 case window.PAGE_ID.RETURN_WHOLE:
-                    this.closeLayer(window.PAGE_ID.RETURN_WHOLE);
                     $('input[name = whole_return_order]').focus();
                     break;
                 case window.PAGE_ID.BILLING:
-                    this.closeLayer(window.PAGE_ID.BILLING);
                     $('input[name = billing]').focus();
                     break;
                 case window.PAGE_ID.BILLING_RETURN:
-                    this.closeLayer(window.PAGE_ID.BILLING_RETURN);
                     $('input[name = billingrt]').focus();
                     break;
                 case window.PAGE_ID.RETURN_FORCE:
-                    this.closeLayer(window.PAGE_ID.RETURN_FORCE);
                     $('input[name = sku_id]').focus();
                     break;
                 case window.PAGE_ID.CHECKING:
-                    this.closeLayer(window.PAGE_ID.CHECKING);
                     $('input[name = checking_date]').focus();
                     break;
                 case PAGE_ID.PRINT:
-                    this.closeLayer(PAGE_ID.PRINT);
                     $('input[name = bill_date]').focus();
                     break;
-                case PAGE_ID.SETTING:
-                    this.closeLayer(PAGE_ID.SETTING);
+                default:
                     break;
             }
+            this.closeLayer();
         },
 
         /**

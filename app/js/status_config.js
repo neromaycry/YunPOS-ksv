@@ -144,7 +144,8 @@ window.DIRECTIVES = {
     'Bank_reprint': 'bank_reprint_', //银行卡 重印最后一笔
     'Bank_signin': 'bank_signin_',  // 银行卡 签到
     'Bank_daily': 'bank_daily_',  //银行卡 日结
-    'Bank_query': 'bank_query_'  // 银行卡 查询流水
+    'Bank_query': 'bank_query_',  // 银行卡 查询流水
+    'IC_CARD_AUTO_READ': 'ic_card_auto_read_'
 };
 
 /**
@@ -227,6 +228,7 @@ window.PAGE_ID = {
     'LAYER_SETTINGAUTH': 57,
     'LAYER_WORKER': 58,
     'LAYER_PAYTABLE': 59,
+    'LAYER_ICMEMBER': 60,
 };
 
 window.KEYS = {

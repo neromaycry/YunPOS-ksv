@@ -15,6 +15,7 @@ define([
     '../../../../moduals/layer-withdraw/view',
     '../../../../moduals/layer-binstruction/view',
     '../../../../moduals/layer-worker/view',
+    '../../../../moduals/layer-icmember/view',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/minfotpl.html',
@@ -25,7 +26,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, LayerPriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerBInstructionView, LayerWorkerView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, LayerPriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerBInstructionView, LayerWorkerView, LayerICMemberView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -289,11 +290,13 @@ define([
             Backbone.off('onReleaseOrder');
             Backbone.off('getGoods');
             Backbone.off('openLayerWorker');
+            Backbone.off('onMainICMemberLogin');
             //Backbone.on('SalesmanAdd', this.SalesmanAdd, this);
             Backbone.on('getGoods', this.getGoods, this);
             Backbone.on('openLayerWorker', this.openLayerWorker, this);
             Backbone.on('onMemberSigned', this.onMemberSigned, this);
             Backbone.on('onReleaseOrder', this.onReleaseOrder, this);
+            Backbone.on('onMainICMemberLogin', this.onMainICMemberLogin, this);
         },
         //SalesmanAdd: function (result) {
         //    storage.set(system_config.SALE_PAGE_KEY, 'salesman', result);
@@ -415,6 +418,10 @@ define([
             //整单折扣
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
                 _self.onTotalDiscountPercentage();
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.A, function () {
+                _self.layerICLogin();
             });
         },
         /**
@@ -1212,6 +1219,18 @@ define([
             $('.salesman-panel').on('touchend', function (e) {
                 $(this).removeClass('clicked');
             });
+        },
+
+        onMainICMemberLogin: function (resp) {
+            var _self = this;
+            var attrs = {
+                pageid: pageId,
+                card_no: resp.cardno,
+                callback: function (data) {
+                    _self.onMemberSigned(data);
+                }
+            };
+            this.openLayer(PAGE_ID.LAYER_ICMEMBER, pageId, '会员IC卡登录', LayerICMemberView, attrs, {area: '600px'});
         }
 
 

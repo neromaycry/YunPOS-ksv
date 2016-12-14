@@ -244,6 +244,7 @@ requirejs([
     }
     window.wsClient.onopen = function (e) {
         window.layer.msg('已与硬件建立连接', optLayerSuccess);
+        wsClient.send(DIRECTIVES.IC_CARD_AUTO_READ);
     };
     window.wsClient.onmessage = function (e) {
         var data = $.parseJSON(e.data);
@@ -311,6 +312,24 @@ requirejs([
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
                 }
+                break;
+            case DIRECTIVES.IC_CARD_AUTO_READ:
+                if (data.status == '00') {
+                    console.log(window.pageId);
+                    switch (window.pageId) {
+                        case PAGE_ID.MAIN:
+                            Backbone.trigger('onMainICMemberLogin', data);
+                            break;
+                        case PAGE_ID.BILLING:
+                            Backbone.trigger('onBillICEcardPay', data);
+                            break;
+                    }
+                } else {
+                    window.layer.msg(data.msg + ',请滴声后再试', optLayerWarning);
+                }
+                setTimeout(function () {
+                    window.wsClient.send(window.DIRECTIVES.IC_CARD_AUTO_READ);
+                }, 3000);
                 break;
         }
     };

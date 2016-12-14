@@ -61,6 +61,7 @@ define([
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
             storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
             this.template_clientlogin = _.template(this.template_clientlogin);
+
             //this.checkPosLimit();
         },
 
@@ -71,6 +72,7 @@ define([
             }, 500);
             this.setKeys();
             this.renderClientDisplay(isPacked);
+
         },
 
         handleEvents: function () {

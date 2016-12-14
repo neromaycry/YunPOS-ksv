@@ -12,12 +12,14 @@ define([
     '../../../../moduals/layer-gatherui/view',
     '../../../../moduals/layer-binstruction/view',
     '../../../../moduals/layer-referencenum/view',
+    '../../../../moduals/layer-icmember/view',
+    '../../../../moduals/layer-ecardpay/view',
     'text!../../../../moduals/billing/billinfotpl.html',
     'text!../../../../moduals/billing/billingdetailtpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/billing/clientbillingtpl.html',
     'text!../../../../moduals/billing/tpl.html'
-], function (BaseView, BillModel, BillCollection, LayerBillTypeView, LayerHelpView, LayerConfirm, LayerECardView,LayerGatherUIView, LayerBInstructionView, LayerReferenceNumView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
+], function (BaseView, BillModel, BillCollection, LayerBillTypeView, LayerHelpView, LayerConfirm, LayerECardView, LayerGatherUIView, LayerBInstructionView, LayerReferenceNumView, LayerICMemberView, LayerECardpayView, billinfotpl, billingdetailtpl, numpadtpl, clientbillingtpl, tpl) {
 
     var billingView = BaseView.extend({
 
@@ -150,11 +152,13 @@ define([
 
         handleEvents: function () {
             Backbone.off('onReceivedsum');
+            Backbone.off('onBillICEcardPay');
             //Backbone.off('onBillDiscount');
             //Backbone.on('onBillDiscount', this.onBillDiscount,this);
             Backbone.off('onBankBackoutSuccess');
             Backbone.on('onReceivedsum', this.onReceivedsum, this);
             Backbone.on('onBankBackoutSuccess', this.onBankBackoutSuccess, this);
+            Backbone.on('onBillICEcardPay', this.onBillICEcardPay, this);
         },
 
         onReceivedsum: function (data) {
@@ -522,7 +526,7 @@ define([
             var attrs = {
                 pageid: pageId,
                 //transaction_amount: 0.1,
-                transaction_amount:refundamount,
+                transaction_amount: refundamount,
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
                 pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                 bill_no: this.billNumber,
@@ -718,9 +722,9 @@ define([
             var attrs = {
                 pageid: pageId,
                 gather_money: receivedSum,
-                unpaidamount:unpaidamount,
-                gather_detail:this.collection,
-                goods_detail:storage.get(system_config.SALE_PAGE_KEY, 'shopcart')
+                unpaidamount: unpaidamount,
+                gather_detail: this.collection,
+                goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart')
             };
             this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', LayerECardView, attrs, {area: '300px'});
             $(this.input).val('');
@@ -824,7 +828,7 @@ define([
                     gather_id: gatherId,
                     gather_name: item.gather_name,
                     gather_kind: item.gather_kind,
-                    gather_ui:gatherUI,
+                    gather_ui: gatherUI,
                     bill_no: this.billNumber
                 };
 
@@ -833,9 +837,9 @@ define([
                         var attrs = {
                             pageid: pageId,
                             gather_money: unpaidamount,
-                            unpaidamount:unpaidamount,
-                            gather_detail:this.collection,
-                            goods_detail:storage.get(system_config.SALE_PAGE_KEY, 'shopcart')
+                            unpaidamount: unpaidamount,
+                            gather_detail: this.collection,
+                            goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart')
                         };
                         this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', LayerECardView, attrs, {area: '300px'});
                         break;
@@ -967,7 +971,7 @@ define([
                 change_money: 0,
                 bank_json: {},
                 gather_money: this.smallChange,
-                outtradeno:'',
+                outtradeno: '',
             });
         },
         /**
@@ -1033,6 +1037,45 @@ define([
             };
             this.openLayer(PAGE_ID.LAYER_BANK_INSTRUCTION, pageId, '银行业务', LayerBInstructionView, attrs, {area: '600px'});
         },
+
+        onBillICEcardPay: function (resp) {
+            var _self = this;
+            var unpaidamount = this.model.get('unpaidamount');
+            var receivedSum = $(this.input).val();
+            if (unpaidamount == 0) {
+                layer.msg('待支付金额为零，请进行结算', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if (receivedSum == '.' || parseFloat(receivedSum) == 0 || (receivedSum.split('.').length - 1) > 1) {
+                layer.msg('无效的支付金额', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if (receivedSum == '') {
+                receivedSum = unpaidamount
+            }
+            if (receivedSum > unpaidamount) {
+                layer.msg('不设找零', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            var attrs = {
+                pageid: pageId,
+                isEcardpay: true,
+                card_no: resp.cardno,
+                gather_money: receivedSum,
+                unpaidamount: unpaidamount,
+                gather_detail: this.collection.toJSON(),
+                goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
+                callback: function (attr) {
+                    setTimeout(function () {
+                        _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, pageId, '一卡通支付', LayerECardpayView, attr, {area: '900px'});
+                    }, 300);
+                }
+            };
+            this.openLayer(PAGE_ID.LAYER_ICMEMBER, pageId, '一卡通IC卡登录', LayerICMemberView, attrs, {area: '600px'});
+        }
 
     });
 
