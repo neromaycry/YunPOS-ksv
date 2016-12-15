@@ -69,9 +69,16 @@ define([
                 layer.msg('请输入提款金额', optLayerWarning);
                 return;
             }
-            var pos = '收款机(2341)';
+            var pos = storage.get(system_config.POS_INFO_KEY, 'posid');
             var userName = storage.get(system_config.LOGIN_USER_KEY, 'user_name');
             var currentTime = this.getCurrentFormatDate();
+            var data = {
+                posid: pos,
+                time: currentTime,
+                userid: userName,
+                money: money
+            };
+            console.log(JSON.stringify(data));
             console.log(currentTime);
             var printText = '\n\n\n\n';
             printText += '            长宇测试\n\n';

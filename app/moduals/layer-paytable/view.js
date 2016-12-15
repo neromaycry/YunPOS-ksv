@@ -8,7 +8,7 @@ define([
     'text!../../moduals/layer-paytable/gatherdetailtpl.html',
     'text!../../moduals/layer-paytable/sumtpl.html',
     'text!../../moduals/layer-paytable/tpl.html'
-], function (BaseLayerView, LayerPaytableModel, LayerPaytableCollection, gatherdetailtpl, sumtpl,  tpl) {
+], function (BaseLayerView, LayerPaytableModel, LayerPaytableCollection, gatherdetailtpl, sumtpl, tpl) {
 
     var layerPaytableView = BaseLayerView.extend({
 
@@ -16,19 +16,19 @@ define([
 
         template: tpl,
 
-        template_gatherdetail:gatherdetailtpl,
+        template_gatherdetail: gatherdetailtpl,
 
-        template_sum:sumtpl,
+        template_sum: sumtpl,
 
-        input:'input[name = paytable-num]',
+        input: 'input[name = paytable-num]',
 
-        listnum:10,
+        listnum: 10,
 
-        i:0,
+        i: 0,
 
-        n:0,
+        n: 0,
 
-        totalamount:0,//总金额
+        totalamount: 0,//总金额
 
         listheight: 0,//购物车的高度
 
@@ -38,8 +38,8 @@ define([
             'click .btn-num': 'onNumClicked',
             'click .btn-backspace': 'onBackspaceClicked',
             'click .btn-clear': 'onClearClicked',
-            'click .keyup':'onKeyUpClicked',
-            'click .keydown':'onKeyDownClicked',
+            'click .keyup': 'onKeyUpClicked',
+            'click .keydown': 'onKeyDownClicked',
             'click .print-paytable': 'onPrintClicked'
         },
 
@@ -48,29 +48,29 @@ define([
             this.model = new LayerPaytableModel();
             this.collection = new LayerPaytableCollection();
             this.model.set({
-                sum:this.totalamount
+                sum: this.totalamount
             });
             var currencyList = ['100', '50', '20', '10', '5', '2', '1', '0.5', '0.2', '0.1'];
-            for(var i in currencyList) {
+            for (var i in currencyList) {
                 var temp = new LayerPaytableModel();
                 temp.set({
-                    gather_id:'',
-                    gather_name:currencyList[i],
-                    num:0,
-                    sum:0
+                    gather_id: '',
+                    gather_name: currencyList[i],
+                    num: 0,
+                    sum: 0
                 });
                 _self.collection.push(temp);
             }
-            if(storage.isSet(system_config.GATHER_KEY)) {
+            if (storage.isSet(system_config.GATHER_KEY)) {
                 var tlist = storage.get(system_config.GATHER_KEY);
-                var visibleTypes = _.where(tlist, {visible_flag:'1'});
-                for(var i in visibleTypes) {
+                var visibleTypes = _.where(tlist, {visible_flag: '1'});
+                for (var i in visibleTypes) {
                     var temp = new LayerPaytableModel();
                     temp.set({
-                        gather_id:visibleTypes[i].gather_id,
-                        gather_name:visibleTypes[i].gather_name,
-                        num:0,
-                        sum:0
+                        gather_id: visibleTypes[i].gather_id,
+                        gather_name: visibleTypes[i].gather_name,
+                        num: 0,
+                        sum: 0
                     });
                     _self.collection.push(temp);
                 }
@@ -119,7 +119,7 @@ define([
             });
 
             this.bindLayerKeyEvents(PAGE_ID.LAYER_PAYTABLE, KEYS.Up, function () {
-               _self.onKeyUpClicked();
+                _self.onKeyUpClicked();
             });
         },
 
@@ -145,7 +145,7 @@ define([
                 this.totalamount += sumList[i];
             }
             this.model.set({
-                sum:this.totalamount
+                sum: this.totalamount
             });
             this.renderSum();
         },
@@ -204,26 +204,26 @@ define([
             var temp = this.collection.at(this.i);
             var gatherId = temp.get('gather_id');
             var gatherName = temp.get('gather_name');
-            if(gatherId == '') {
-                if(val == '' || (val.split('.').length - 1) > 0 || val == '.') {
+            if (gatherId == '') {
+                if (val == '' || (val.split('.').length - 1) > 0 || val == '.') {
                     layer.msg('无效的数量', optLayerWarning);
                     $(this.input).val('');
                     return;
                 }
                 temp.set({
-                    num:parseFloat(val),
-                    sum:parseFloat(val) * parseFloat(gatherName)
+                    num: parseFloat(val),
+                    sum: parseFloat(val) * parseFloat(gatherName)
                 });
             }
-            if(gatherId != ''){
-                if(val == '' || (val.split('.').length - 1) > 1 || val == '.') {
+            if (gatherId != '') {
+                if (val == '' || (val.split('.').length - 1) > 1 || val == '.') {
                     layer.msg('无效的金额', optLayerWarning);
                     $(this.input).val('');
                     return;
                 }
                 temp.set({
-                    num:parseFloat(val),
-                    sum:parseFloat(val)
+                    num: parseFloat(val),
+                    sum: parseFloat(val)
                 });
             }
             $(this.input).val('');
@@ -232,7 +232,7 @@ define([
         },
 
         onPrintClicked: function () {
-            console.log(this.collection.toJSON());
+            console.log(JSON.stringify(this.collection.toJSON()));
             layer.msg('缴款单已打印', optLayerSuccess);
             this.closeLayer(layerindex)
         }
