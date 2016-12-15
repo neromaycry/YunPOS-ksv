@@ -23,6 +23,7 @@ define([
         pageInit: function () {
             pageId = window.PAGE_ID.SETTING;
             this.model = new SettingModel();
+            this.setSettingKeys();
         },
 
         initPlugins: function () {
@@ -78,6 +79,7 @@ define([
 
         onBackClicked: function () {
             var lastpage = storage.get(system_config.LAST_PAGE);
+            console.log(lastpage);
             switch (lastpage) {
                 case PAGE_ID.LOGIN:
                     router.navigate('login', {trigger: true, replace: true});
@@ -85,8 +87,26 @@ define([
                 case PAGE_ID.MAIN:
                     router.navigate('main', {trigger: true, replace: true});
                     break;
+                case PAGE_ID.SETPOSKEY:
+                    router.navigate('setposkey', {trigger: true, replace: true});
+                    break;
             }
-        }
+        },
+
+        setSettingKeys: function () {
+            var effects = ['返回', '确定', '修改服务器地址'];
+            var keys = ['ESC', 'ENTER', 'Q'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Q];
+            var printKeys = [];
+            for (var i = 0; i < effects.length; i++) {
+                var effect = effects[i];
+                var key = keys[i];
+                var keyCode = keyCodes[i];
+                var printKey = {effect: effect, key: key, keyCode: keyCode};
+                printKeys.push(printKey);
+                storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'SETTING_PAGE', printKeys);
+            }
+        },
 
     });
 

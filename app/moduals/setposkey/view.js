@@ -5,8 +5,9 @@ define([
     '../../../../js/common/BaseView',
     '../../../../moduals/setposkey/model',
     '../../../../moduals/layer-gateway/view',
+    '../../../../moduals/layer-settingauth/view',
     'text!../../../../moduals/setposkey/tpl.html'
-], function (BaseView, SetPoskeyModel, LayerGatewayView, tpl) {
+], function (BaseView, SetPoskeyModel, LayerGatewayView, LayerSettingAuthView, tpl) {
 
     var setPoskeyView = BaseView.extend({
 
@@ -24,7 +25,8 @@ define([
             'click .btn-backspace': 'onBackspaceClicked',
             'click .btn-clear': 'onClearClicked',
             //'click .poskey-pre':'onPreClicked',
-            'click .poskey-next': 'onNextClicked'
+            'click .poskey-next': 'onNextClicked',
+            'click .setting': 'onSettingClicked'
         },
 
         pageInit: function () {
@@ -43,6 +45,9 @@ define([
             var _self = this;
             this.bindKeyEvents(window.PAGE_ID.SETPOSKEY, window.KEYS.Enter, function () {
                 _self.onNextClicked();
+            });
+            this.bindKeyEvents(window.PAGE_ID.SETPOSKEY, window.KEYS.Q, function () {
+                _self.onSettingClicked();
             });
             //this.bindKeyEvents(window.PAGE_ID.SETPOSKEY, window.KEYS.Esc, function () {
             //    router.navigate('setdns', {trigger:true});
@@ -110,6 +115,18 @@ define([
                     _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: _self.input}, {area: '500px'});
                 });
             }
+        },
+
+        onSettingClicked: function () {
+            var attrs = {
+                pageid: pageId,
+                is_navigate: false,
+                callback: function () {
+                    storage.set(system_config.LAST_PAGE, PAGE_ID.SETPOSKEY);
+                    router.navigate('setting', {trigger: true});
+                }
+            };
+            this.openLayer(PAGE_ID.LAYER_SETTINGAUTH, pageId, '设置验证', LayerSettingAuthView, attrs, {area: '300px'});
         }
 
     });

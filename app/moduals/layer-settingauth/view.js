@@ -195,6 +195,12 @@ define([
                 case window.PAGE_ID.CHECKING:
                     this.closeLayer(PAGE_ID.CHECKING);
                     break;
+                case window.PAGE_ID.SETTING:
+                    this.closeLayer(PAGE_ID.SETTING);
+                    break;
+                case window.PAGE_ID.SETPOSKEY:
+                    this.closeLayer(PAGE_ID.SETPOSKEY);
+                    break;
             }
         },
 

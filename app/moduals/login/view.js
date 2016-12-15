@@ -72,7 +72,6 @@ define([
             }, 500);
             this.setKeys();
             this.renderClientDisplay(isPacked);
-
         },
 
         handleEvents: function () {
