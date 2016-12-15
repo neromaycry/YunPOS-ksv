@@ -148,21 +148,23 @@ define([
                 day:day,
                 bill_no:orderNo
             };
-            this.requestModel.getOrderInfo(data, function (resp) {
-                if (!$.isEmptyObject(resp)) {
-                    if (resp.status == '00') {
-                        _self.RtcartCollection.set(resp.goods_detail);
-                        _self.RtPayedlistCollection.set(resp.gather_detail);
-                        _self.model.set({
-                            bill_no:orderNo
-                        });
-                        _self.calculateModel();
+            this.evalAuth(auth_return, '06', {}, function () {
+                _self.requestModel.getOrderInfo(data, function (resp) {
+                    if (!$.isEmptyObject(resp)) {
+                        if (resp.status == '00') {
+                            _self.RtcartCollection.set(resp.goods_detail);
+                            _self.RtPayedlistCollection.set(resp.gather_detail);
+                            _self.model.set({
+                                bill_no:orderNo
+                            });
+                            _self.calculateModel();
+                        } else {
+                            layer.msg(resp.msg, optLayerError);
+                        }
                     } else {
-                        layer.msg(resp.msg, optLayerError);
+                        layer.msg('系统错误，请联系管理员', optLayerWarning);
                     }
-                } else {
-                    layer.msg('系统错误，请联系管理员', optLayerWarning);
-                }
+                });
             });
         },
 
@@ -407,9 +409,7 @@ define([
                 layer.msg('订单编号不能为空', optLayerWarning);
                 return;
             }
-            this.evalAuth(auth_return, '06', {}, function () {
-                _self.requestOrder();
-            });
+            this.requestOrder();
             $(this.input).val("");
         },
 
