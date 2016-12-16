@@ -237,6 +237,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.Up, function () {
                 _self.onKeyUpClicked();
             });
+
+            this.bindKeyEvents(window.PAGE_ID.RETURN_WHOLE, window.KEYS.F8, function () {
+                _self.onMemberClicked();
+            });
         },
 
 

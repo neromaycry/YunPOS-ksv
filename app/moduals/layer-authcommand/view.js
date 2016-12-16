@@ -169,6 +169,7 @@ define([
                     break;
                 case window.PAGE_ID.RETURN_WHOLE:
                     this.closeLayer(PAGE_ID.RETURN_WHOLE);
+                    $('input[name = whole_return_order]').focus();
                     break;
                 case window.PAGE_ID.BILLING:
                     this.closeLayer(PAGE_ID.BILLING);
