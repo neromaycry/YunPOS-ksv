@@ -68,14 +68,6 @@ define([
             this.delegateEvents();
             this.bindKeys();
             this.setPosLimit();
-            //$('.modal').on('show.bs.modal', function () {
-            //    alert('unbind keyup');
-            //    $(document).unbind('keyup');
-            //});
-            //$('.modal').on('hide.bs.modal', function () {
-            //    alert('bindkeys');
-            //    _self.bindKeys();
-            //});
         },
 
         initRouter: function () {
@@ -284,7 +276,7 @@ define([
                     websocket.send(directive);
                 }
             } else {
-                layer.msg('请检查硬件连接或检查电脑是否已启动socket程序', optLayerError);
+                layer.msg('请检查本地是否已经启动webctrl程序', optLayerError);
             }
         },
 
@@ -328,29 +320,6 @@ define([
             storage.set(system_config.LAST_PAGE, pageId);
             router.navigate('lockscreen', {trigger: true, replace: true});
         },
-
-        //sendLargeData2Socket: function (str) {
-        //    var SOCKET_ADDR = 'ws://127.0.0.1:2001/';
-        //    wsClient.close();
-        //    wsClient = new WebSocket(SOCKET_ADDR);
-        //    var slicelength = 42;
-        //    var n = str.length/slicelength+1;
-        //    var i = 0;
-        //    setInterval(function () {
-        //        if (i<str.length/slicelength+1){
-        //            if (i == (n-1)) {
-        //                var laststr = str.slice(slicelength*i,str.length);
-        //                console.log(laststr);
-        //                wsClient.send(laststr);
-        //            } else {
-        //                var substr = str.slice(slicelength*i,slicelength*(i+1));
-        //                console.log('substr:' + substr);
-        //                wsClient.send(substr);
-        //            }
-        //        }
-        //        i++
-        //    },10);
-        //},
 
         addClickEvents: function () {
             var _self = this;
