@@ -95,7 +95,9 @@ define([
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_MEMBER, KEYS.P, function () {
                 _self.changeTemplate(3);
             });
-
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_MEMBER, KEYS.I, function () {
+                _self.changeTemplate(2);
+            });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_MEMBER, KEYS.Up, function () {
                 if (_self.type == '03') {
                     var isUserFocused = $('input[name = phone]').is(':focus');
@@ -280,6 +282,10 @@ define([
             $(this.input).focus();
         },
 
+        /**
+         * IC卡手动读取监听事件
+         * @param respData websocket返回的数据
+         */
         onICManualRead: function(respData) {
             var _self = this;
             var data = {

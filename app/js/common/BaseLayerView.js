@@ -38,9 +38,6 @@ define([
             this.delegateEvents();
             this.LayerInitPage();
             this.bindLayerKeys();
-            //setTimeout(function () {
-
-            //}, 500)
         },
 
         LayerInitPage: function () {
@@ -72,6 +69,17 @@ define([
             //});
         },
 
+        //bindLayerKeys: function (keyCodes, callbacks) {
+        //    $(document).keyup(function (e) {
+        //        e = e || window.event;
+        //        var i = _.indexOf(keyCodes, e.which);
+        //        if (i != -1) {
+        //            callbacks[i]();
+        //        }
+        //    });
+        //},
+
+
         /**
          * 打开一般layer的通用方法
          * @param LayerId 即将打开的layer的pageid
@@ -97,13 +105,13 @@ define([
                 success: function (layero, index) {
                     pageId = LayerId;
                     layerindex = index;
-                    console.log('layerindex = ' + layerindex);
+                    //console.log('layerindex = ' + layerindex);
                 },
                 end: function () {
                     pageId = mainId;
                     isModal = false;
                     $(document).off('keyup');
-                    console.log('end:' + pageId);
+                    //console.log('end:' + pageId);
                 }
             }, options);
             layer.open(options);
@@ -151,7 +159,6 @@ define([
             var tracks = [track1, track2, track3];
             return tracks;
         },
-
 
         /**
          * 关闭layer的通用方法
@@ -207,9 +214,8 @@ define([
                     websocket.send(directive);
                 }
             } else {
-                //toastr.warning('没有连接到硬件，请检查硬件连接');
                 loading.hide();
-                layer.msg('请检查硬件连接或检查电脑是否已启动socket程序', optLayerWarning);
+                layer.msg('请检查本地是否已经启动webctrl程序', optLayerWarning);
             }
         },
 
@@ -222,7 +228,7 @@ define([
                 $(_self.input).focus();
             }, 300);
             $('.cbtn').mousedown(function () {
-                console.log('baselayer mousedown');
+                //console.log('baselayer mousedown');
                 $(this).addClass('clicked');
             });
             $('.cbtn').mouseup(function () {
