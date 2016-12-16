@@ -12,8 +12,9 @@ define([
     'text!../../../../moduals/return-whole/rtcarttpl.html',
     'text!../../../../moduals/return-whole/rtpayedlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
+    'text!../../../../moduals/return-whole/minfotpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, LayerICMemberView, returninfotpl, rtcarttpl, rtpayedlisttpl, numpadtpl, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, LayerICMemberView, returninfotpl, rtcarttpl, rtpayedlisttpl, numpadtpl, minfotpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -30,6 +31,8 @@ define([
         template_rtpayedlist: rtpayedlisttpl,
 
         template_numpad: numpadtpl,
+
+        template_minfo:minfotpl,
 
         totalamount: 0,
 
@@ -60,6 +63,7 @@ define([
             pageId = window.PAGE_ID.RETURN_WHOLE;
             this.model = new RtWholeModel();
             this.requestModel = new RtWholeModel();
+            this.membermodel = new RtWholeModel();
             this.RtcartCollection = new RtWholeCollection();
             this.RtPayedlistCollection = new RtWholeCollection();
             this.model.set({
@@ -67,6 +71,16 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
+            if (storage.isSet(system_config.VIP_KEY)) {
+                var name = storage.get(system_config.VIP_KEY,'name');
+                this.membermodel.set({
+                    name:name
+                });
+            } else {
+                this.membermodel.set({
+                    name:'未登录'
+                });
+            }
             this.initTemplates();
         },
 
@@ -80,6 +94,7 @@ define([
             $('.rtcart-content').perfectScrollbar();
             this.renderRtInfo();
             this.renderRtcart();
+            this.renderMinfo();
             this.$el.find('.for-numpad').html(this.template_numpad);
             $('#li' + this.i).addClass('cus-selected');
             //this.renderRtPayedlist();
@@ -89,6 +104,7 @@ define([
         initTemplates: function () {
             this.template_returninfo = _.template(this.template_returninfo);
             this.template_rtcart = _.template(this.template_rtcart);
+            this.template_minfo = _.template(this.template_minfo);
             //this.template_rtpayedlist = _.template(this.template_rtpayedlist);
         },
 
@@ -125,6 +141,11 @@ define([
             return this;
         },
 
+        renderMinfo: function () {
+            this.$el.find('.for-minfo').html(this.template_minfo(this.membermodel.toJSON()));
+            console.log(this.template_minfo);
+            return this;
+        },
         //renderRtPayedlist: function () {
         //    this.$el.find('.payedlist-content').html(this.template_rtpayedlist(this.RtPayedlistCollection.toJSON()));
         //    return this;
