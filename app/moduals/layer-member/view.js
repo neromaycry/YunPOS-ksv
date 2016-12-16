@@ -40,11 +40,17 @@ define([
             setTimeout(function () {
                 _self.renderByType(_self.type);
             }, 100);
+            this.handleEvents();
         },
 
         initTemplates: function () {
             this.template_phone = _.template(this.template_phone);
             this.template_magcard = _.template(this.template_magcard);
+        },
+
+        handleEvents: function () {
+            Backbone.off('onICManualRead');
+            Backbone.on('onICManualRead', this.onICManualRead, this);
         },
 
         renderByType: function (type) {
@@ -251,6 +257,9 @@ define([
                         }
                     });
                     break;
+                case 2:
+                    this.sendWebSocketDirective([DIRECTIVES.IC_CARD_MANUAL_READ], [''], wsClient);
+                    break;
                 case 3:
                     this.type = '03';
                     this.input = 'input[name = phone]';
@@ -258,7 +267,29 @@ define([
                     break;
             }
             $(this.input).focus();
+        },
+
+        onICManualRead: function(respData) {
+            var _self = this;
+            var data = {
+                type: '02',
+                iccardid: respData.cardno,
+                msr:'*'
+            };
+            this.model.getMemberInfo(data, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.closeLayer(layerindex);
+                        layer.msg('会员登录成功', optLayerSuccess);
+                        $('input[name = main]').focus();
+                        Backbone.trigger('onMemberSigned', resp);
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                    }
+                }
+            });
         }
+
     });
 
     return layerMemberView;
