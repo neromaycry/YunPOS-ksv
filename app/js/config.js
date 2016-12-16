@@ -325,9 +325,9 @@ requirejs([
                         case PAGE_ID.LAYER_MEMBER:
                             Backbone.trigger('onICManualRead', data);
                             break;
-                        //case PAGE_ID.BILLING:
-                        //    Backbone.trigger('onBillICEcardPay', data);
-                        //    break;
+                        case PAGE_ID.LAYER_ECARD_LOGIN:
+                            Backbone.trigger('onICEcardManualRead', data);
+                            break;
                     }
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);

@@ -50,8 +50,8 @@ define([
         },
 
         handleEvents: function () {
-            Backbone.off('onICManualRead');
-            Backbone.on('onICManualRead', this.onICManualRead, this);
+            Backbone.off('onICEcardManualRead');
+            Backbone.on('onICEcardManualRead', this.onICEcardManualRead, this);
         },
 
         bindLayerKeys: function () {
@@ -198,23 +198,34 @@ define([
             });
         },
 
-
-        onICManualRead: function(respData) {
+        onICEcardManualRead: function(respData) {
             var _self = this;
             var data = {
                 type: '02',
                 iccardid: respData.cardno,
                 msr:'*'
             };
-            this.model.getMemberInfo(data, function (resp) {
+            this.model.getVipInfo(data, function (resp) {
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
+                        var attrs = {
+                            pageid: _self.attrs.pageid,
+                            card_id: respData.cardno,
+                            cust_id: resp.cust_id,
+                            unpaidamount: _self.attrs.unpaidamount,
+                            gather_money: _self.attrs.gather_money,
+                            goods_detail: _self.attrs.goods_detail,
+                            gather_detail: _self.attrs.gather_detail,
+                            account_type_code: resp.account_type_code
+                        };
                         _self.closeLayer(layerindex);
-                        layer.msg('会员登录成功', optLayerSuccess);
-                        $('input[name = main]').focus();
-                        Backbone.trigger('onMemberSigned', resp);
+                        if(_self.attrs.pageid == 6) {
+                            _self.openLayer(PAGE_ID.LAYER_ECARD_PAY, PAGE_ID.BILLING, '一卡通支付', LayerECardpayView, attrs, {area: '1000px'});
+                        }else {
+                            _self.openLayer(PAGE_ID.RT_LAYER_ECARD_PAY, PAGE_ID.BILLING_RETURN, '一卡通退款', RTLayerECardPayView, attrs, {area: '1000px'});
+                        }
                     } else {
-                        layer.msg(resp.msg, optLayerError);
+                        layer.msg(resp.msg, optLayerWarning);
                     }
                 }
             });
