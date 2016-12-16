@@ -9,6 +9,14 @@ define(['../../js/common/BaseModel'], function (BaseModel) {
 
         },
 
+        printPayTable: function(data, callback) {
+            this.sendPOST({
+                url: API_URL.CASHIER_DKDJ,
+                data: data,
+                success: callback
+            })
+        }
+
     });
     return layerPayTableModel;
 });

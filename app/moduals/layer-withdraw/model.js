@@ -9,6 +9,15 @@ define(['../../js/common/BaseModel'], function (BaseModel) {
             name: ''
         },
 
+        getPrintContent: function (data, callback) {
+            this.sendPOST({
+                url: API_URL.CASHIER_MONEY,
+                data: data,
+                success: callback
+            })
+        }
+
+
     });
     return layerWithdrawModel;
 });

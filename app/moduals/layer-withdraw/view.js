@@ -63,33 +63,52 @@ define([
         },
 
         onOKClicked: function () {
+            var _self = this;
             var money = $(this.input).val();
             if (money == '') {
-                //toastr.warning('请输入提款金额');
                 layer.msg('请输入提款金额', optLayerWarning);
                 return;
             }
-            var pos = storage.get(system_config.POS_INFO_KEY, 'posid');
-            var userName = storage.get(system_config.LOGIN_USER_KEY, 'user_name');
-            var currentTime = this.getCurrentFormatDate();
+            var currentTime = new Date().format("yyyy-MM-dd hh:mm:ss");
             var data = {
-                posid: pos,
                 time: currentTime,
-                userid: userName,
                 money: money
             };
-            console.log(JSON.stringify(data));
-            console.log(currentTime);
-            var printText = '\n\n\n\n';
-            printText += '            长宇测试\n\n';
-            printText += '    提款时间' + currentTime;
-            printText += '        收款机：' + pos + '\n\n';
-            printText += '        收款员：' + userName + '\n\n';
-            printText += '        提取金额：' + toDecimal2(money) + ' 元\n\n\n\n';
-            printText += '    提款人签字：\n\n\n\n\n\n\n\n';
-            this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [printText], wsClient);
-            this.closeLayer(layerindex);
-            $('input[name = main]').focus();
+            console.log(data);
+            this.model.getPrintContent(data, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [resp.printf], wsClient);
+                        _self.closeLayer(layerindex);
+                        $('input[name = main]').focus();
+                    } else {
+                        layer.msg(resp.msg, optLayerWarning);
+                    }
+                } else {
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
+                }
+            });
+            //var pos = storage.get(system_config.POS_INFO_KEY, 'posid');
+            //var userName = storage.get(system_config.LOGIN_USER_KEY, 'user_name');
+            //var currentTime = this.getCurrentFormatDate();
+            //var data = {
+            //    posid: pos,
+            //    time: currentTime,
+            //    userid: userName,
+            //    money: money
+            //};
+            //console.log(JSON.stringify(data));
+            //console.log(currentTime);
+            //var printText = '\n\n\n\n';
+            //printText += '            长宇测试\n\n';
+            //printText += '    提款时间' + currentTime;
+            //printText += '        收款机：' + pos + '\n\n';
+            //printText += '        收款员：' + userName + '\n\n';
+            //printText += '        提取金额：' + toDecimal2(money) + ' 元\n\n\n\n';
+            //printText += '    提款人签字：\n\n\n\n\n\n\n\n';
+            //this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [printText], wsClient);
+            //this.closeLayer(layerindex);
+            //$('input[name = main]').focus();
         },
 
         getCurrentFormatDate: function () {

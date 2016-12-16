@@ -93,7 +93,9 @@ window.API_URL = {
     "PRINT": "/print",
     "RETAIL_NO": "/retailno",
     "XFB_BILL_NO": "/xfbbillno",
-    "WORKER":"/worker"
+    "WORKER":"/worker",
+    'CASHIER_MONEY': '/casiermoney',
+    'CASHIER_DKDJ': '/casierjkdj'
 };
 
 // 系统参数设置

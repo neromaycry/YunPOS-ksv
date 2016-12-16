@@ -56,6 +56,7 @@ define([
                 temp.set({
                     gather_id: '',
                     gather_name: currencyList[i],
+                    cash_flag: '1',
                     num: 0,
                     sum: 0
                 });
@@ -69,6 +70,7 @@ define([
                     temp.set({
                         gather_id: visibleTypes[i].gather_id,
                         gather_name: visibleTypes[i].gather_name,
+                        cash_flag: '0',
                         num: 0,
                         sum: 0
                     });
@@ -232,9 +234,31 @@ define([
         },
 
         onPrintClicked: function () {
-            console.log(JSON.stringify(this.collection.toJSON()));
-            layer.msg('缴款单已打印', optLayerSuccess);
-            this.closeLayer(layerindex)
+            var _self = this;
+            var list = this.collection.toJSON();
+            //console.log(list);
+            //console.log(list.length);
+            var filteredList = _.filter(list, function (item) {
+                //console.log(item);
+                return item.num != 0;
+            });
+            if (filteredList.length == 0) {
+                layer.msg('请输入数量', optLayerWarning);
+                return;
+            }
+            this.model.printPayTable({data: filteredList}, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [resp.printf], wsClient);
+                        layer.msg('缴款单已打印', optLayerSuccess);
+                        _self.closeLayer(layerindex);
+                    } else {
+                        layer.msg(resp.msg, optLayerWarning);
+                    }
+                } else {
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
+                }
+            });
         }
 
     });
