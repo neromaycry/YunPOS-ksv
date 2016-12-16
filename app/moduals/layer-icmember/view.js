@@ -28,7 +28,6 @@ define([
                 iccardid: this.attrs.card_no,
                 msr:'*'
             };
-
             this.model.doMemberLogin(data, function (resp) {
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {

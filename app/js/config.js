@@ -172,6 +172,8 @@ requirejs([
         time: 3000
     };
 
+    window.storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
+
     //layer.open({
     //    content: '测试回调',
     //    success: function(layero, index){
@@ -202,6 +204,7 @@ requirejs([
 
     if (window.isPacked) {
         window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显
+        console.log('isClientScreenShow:' + isClientScreenShow);
         if (isClientScreenShow) {
             var gui = window.requireNode(['nw.gui']);
             window.clientScreen = gui.Window.open("client.html", {
@@ -210,7 +213,7 @@ requirejs([
                 width: 1920,
                 toolbar: false
             });
-            window.clientScreen.moveTo(1366, 0);
+            window.clientScreen.moveTo(1024, 0);
             window.clientScreen.enterKioskMode();
             window.clientScreen.on('loaded', function () {
                 // the native onload event has just occurred
@@ -220,8 +223,10 @@ requirejs([
                 //console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
                 $(window.clientDom).find('img').height(clientH - 150);
                 $(window.clientDom).find('img').css('width', '100%');
+                window.focus();
             });
         }
+
     }
 
     Backbone.history.start();
@@ -244,7 +249,7 @@ requirejs([
     }
     window.wsClient.onopen = function (e) {
         window.layer.msg('已与硬件建立连接', optLayerSuccess);
-        wsClient.send(DIRECTIVES.IC_CARD_AUTO_READ);
+        //wsClient.send(DIRECTIVES.IC_CARD_AUTO_READ);
     };
     window.wsClient.onmessage = function (e) {
         var data = $.parseJSON(e.data);
@@ -313,30 +318,45 @@ requirejs([
                     window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
-            case DIRECTIVES.IC_CARD_AUTO_READ:
+            case DIRECTIVES.IC_CARD_MANUAL_READ:
                 if (data.status == '00') {
                     console.log(window.pageId);
                     switch (window.pageId) {
-                        case PAGE_ID.MAIN:
-                            Backbone.trigger('onMainICMemberLogin', data);
+                        case PAGE_ID.LAYER_MEMBER:
+                            Backbone.trigger('onICManualRead', data);
                             break;
-                        case PAGE_ID.BILLING:
-                            Backbone.trigger('onBillICEcardPay', data);
-                            break;
-                        case PAGE_ID.RETURN_WHOLE:
-                            Backbone.trigger('onRtWholeMemberLogin', data);
-                            break;
-                        case PAGE_ID.BILLING_RETURN:
-                            Backbone.trigger('onRtBillICEcardPay', data);
-                            break;
+                        //case PAGE_ID.BILLING:
+                        //    Backbone.trigger('onBillICEcardPay', data);
+                        //    break;
                     }
                 } else {
-                    window.layer.msg(data.msg + ',请滴声后再试', optLayerWarning);
+                    window.layer.msg(data.msg, optLayerWarning);
                 }
-                setTimeout(function () {
-                    wsClient.send(DIRECTIVES.IC_CARD_AUTO_READ);
-                }, 3000);
                 break;
+            //case DIRECTIVES.IC_CARD_AUTO_READ:
+            //    if (data.status == '00') {
+            //        console.log(window.pageId);
+            //        switch (window.pageId) {
+            //            case PAGE_ID.MAIN:
+            //                Backbone.trigger('onMainICMemberLogin', data);
+            //                break;
+            //            case PAGE_ID.BILLING:
+            //                Backbone.trigger('onBillICEcardPay', data);
+            //                break;
+            //            case PAGE_ID.RETURN_WHOLE:
+            //                Backbone.trigger('onRtWholeMemberLogin', data);
+            //                break;
+            //            case PAGE_ID.BILLING_RETURN:
+            //                Backbone.trigger('onRtBillICEcardPay', data);
+            //                break;
+            //        }
+            //    } else {
+            //        window.layer.msg(data.msg + ',请滴声后再试', optLayerWarning);
+            //    }
+            //    setTimeout(function () {
+            //        wsClient.send(DIRECTIVES.IC_CARD_AUTO_READ);
+            //    }, 3000);
+            //    break;
         }
     };
     window.wsClient.onclose = function (e) {
