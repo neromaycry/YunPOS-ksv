@@ -983,7 +983,10 @@ define([
          * 会员登录按钮点击事件
          */
         onMemberClicked: function () {
-            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, undefined, {area: '800px'});
+            var attrs = {
+                pageid:pageId
+            }
+            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, attrs, {area: '800px'});
         },
         /**
          * 单品优惠按钮点击事件

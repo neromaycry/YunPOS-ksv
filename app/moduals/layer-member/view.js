@@ -125,7 +125,12 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
-            $('input[name = main]').focus();
+            if(this.attrs.pageid == 2) {
+                $('input[name = main]').focus();
+            } else {
+                $('input[name = whole_return_order]').focus();
+            }
+
         },
 
         onNumClicked: function (e) {
@@ -197,8 +202,14 @@ define([
                 if (resp.status == '00') {
                     _self.closeLayer(layerindex);
                     layer.msg('会员登录成功', optLayerSuccess);
-                    $('input[name = main]').focus();
-                    Backbone.trigger('onMemberSigned', resp);
+                    if(_self.attrs.pageid == 2) {
+                        $('input[name = main]').focus();
+                        Backbone.trigger('onMemberSigned', resp);
+                    } else {
+                        $('input[name = whole_return_order]').focus();
+                        Backbone.trigger('onRTMemberSigned', resp);
+                    }
+
                 } else {
                     layer.msg(resp.msg, optLayerError);
                 }

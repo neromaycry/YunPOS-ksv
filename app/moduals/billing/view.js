@@ -726,7 +726,7 @@ define([
                 gather_detail: this.collection,
                 goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart')
             };
-            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', LayerECardView, attrs, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', LayerECardView, attrs, {area: '800px'});
             $(this.input).val('');
         },
 
@@ -841,7 +841,7 @@ define([
                             gather_detail: this.collection,
                             goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart')
                         };
-                        this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', LayerECardView, attrs, {area: '300px'});
+                        this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', LayerECardView, attrs, {area: '800px'});
                         break;
                     case '04':
                     case '05':

@@ -8,13 +8,14 @@ define([
     '../../../../moduals/layer-confirm/view',
     '../../../../moduals/layer-help/view',
     '../../../../moduals/layer-icmember/view',
+    '../../../../moduals/layer-member/view',
     'text!../../../../moduals/return-whole/returninfotpl.html',
     'text!../../../../moduals/return-whole/rtcarttpl.html',
     'text!../../../../moduals/return-whole/rtpayedlisttpl.html',
     'text!../../../../moduals/main/numpadtpl.html',
     'text!../../../../moduals/return-whole/minfotpl.html',
     'text!../../../../moduals/return-whole/tpl.html'
-], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, LayerICMemberView, returninfotpl, rtcarttpl, rtpayedlisttpl, numpadtpl, minfotpl, tpl) {
+], function (BaseView, RtWholeModel, RtWholeCollection, LayerConfirmView, LayerHelpView, LayerICMemberView, LayerMemberView,  returninfotpl, rtcarttpl, rtpayedlisttpl, numpadtpl, minfotpl, tpl) {
 
     var returnWholeView = BaseView.extend({
 
@@ -56,7 +57,8 @@ define([
             'click .rt-delete':'onDeleteClicked',
             'click .rt-keyup':'onKeyUpClicked',
             'click .rt-keydown':'onKeyDownClicked',
-            'click .modify-num':'modifyItemNum'
+            'click .modify-num':'modifyItemNum',
+            'click .member':'onMemberClicked'
         },
 
         pageInit: function () {
@@ -111,6 +113,8 @@ define([
         handleEvents: function () {
             Backbone.off('onRtWholeMemberLogin');
             Backbone.on('onRtWholeMemberLogin', this.onRtWholeMemberLogin, this);
+            Backbone.off('onRTMemberSigned');
+            Backbone.on('onRTMemberSigned', this.onRTMemberSigned, this);
         },
 
         initLayoutHeight: function () {
@@ -127,6 +131,14 @@ define([
             this.listheight = payedlist;//购物车列表的高度
             this.listnum = 6;//设置商品列表中的条目数
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
+        },
+
+        onRTMemberSigned: function (resp) {
+            this.membermodel.set({
+                name: resp.name,
+            });
+            storage.set(system_config.VIP_KEY, resp);
+            this.renderMinfo();
         },
 
         renderRtInfo: function () {
@@ -291,6 +303,7 @@ define([
             //_self.renderRtPayedlist();
             layer.msg('取消退货成功', optLayerSuccess);
             storage.remove(system_config.RETURN_KEY);
+            storage.remove(system_config.VIP_KEY);
             router.navigate('main', {trigger:true});
             //$('input[name = whole_return_order]').focus();
         },
@@ -384,6 +397,13 @@ define([
             storage.set(system_config.RETURN_KEY, 'bill_no', this.model.get('bill_no'));
         },
 
+        /**
+         * 会员登录按钮点击事件
+         */
+        onMemberClicked: function () {
+            this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, undefined, {area: '800px'});
+        },
+
         onKeyUpClicked: function () {
             if (this.i > 0) {
                 this.i--;
@@ -411,6 +431,7 @@ define([
         onBackClicked: function () {
             router.navigate('main', {trigger: true});
             storage.remove(system_config.RETURN_KEY);
+            storage.remove(system_config.VIP_KEY);
         },
 
 

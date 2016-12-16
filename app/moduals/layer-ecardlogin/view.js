@@ -18,27 +18,40 @@ define([
 
         template_magcard: magcardtpl,
 
-        type: '03',
+        type: '01',
 
         input: 'input[name = ecard]',
 
         events: {
             'click .cancel': 'onCancelClicked',
+            'click [data-index]': 'onLoginListClicked',
         },
 
         LayerInitPage: function () {
             console.log(this.attrs);
             var _self = this;
+            this.initTemplates();
             this.model = new LayerECardModel();
             this.request = new LayerECardModel();
             setTimeout(function () {
-                $('input[name = ecard]').koala({
-                    delay: 2000,
-                    keyup: function (event) {
-                        _self.swipeCard();
-                    }
-                });
+                _self.renderByType(_self.type);
+                //$('input[name = ecard]').koala({
+                //    delay: 2000,
+                //    keyup: function (event) {
+                //        _self.swipeCard();
+                //    }
+                //});
             }, 100);
+            this.handleEvents();
+        },
+
+        initTemplates: function () {
+            this.template_magcard = _.template(this.template_magcard);
+        },
+
+        handleEvents: function () {
+            Backbone.off('onICManualRead');
+            Backbone.on('onICManualRead', this.onICManualRead, this);
         },
 
         bindLayerKeys: function () {
@@ -49,6 +62,12 @@ define([
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.Enter, function () {
                 _self.onOkClicked();
             });
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.X, function () {
+                _self.changeTemplate(1);
+            });
+            //this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.P, function () {
+            //    _self.changeTemplate(3);
+            //});
         },
 
         onCancelClicked: function () {
@@ -95,6 +114,43 @@ define([
             });
         },
 
+
+        renderByType: function (type) {
+            switch (type) {
+                case '01':
+                    this.$el.find('.for-member-login').html(this.template_magcard(this.model.toJSON()));
+                    return this;
+                    break;
+            }
+        },
+
+        changeTemplate: function (index) {
+            var _self = this;
+            switch (index) {
+                case 1:
+                    this.type = '01';
+                    this.input = 'input[name = ecard]';
+                    this.renderByType(this.type);
+                    $('input[name = ecard]').koala({
+                        delay: 2000,
+                        keyup: function (event) {
+                            _self.swipeCard();
+                        }
+                    });
+                    break;
+                case 2:
+                    this.sendWebSocketDirective([DIRECTIVES.IC_CARD_MANUAL_READ], [''], wsClient);
+                    break;
+            }
+            $(this.input).focus();
+        },
+
+        onLoginListClicked: function (e) {
+            var index = $(e.currentTarget).data('index');
+            console.log(index);
+            this.changeTemplate(index);
+        },
+
         /**
          * 刷卡输入
          */
@@ -138,6 +194,28 @@ define([
                 } else {
                     $('input[name = ecard]').val('');
                     layer.msg('系统错误，请联系管理员', optLayerError);
+                }
+            });
+        },
+
+
+        onICManualRead: function(respData) {
+            var _self = this;
+            var data = {
+                type: '02',
+                iccardid: respData.cardno,
+                msr:'*'
+            };
+            this.model.getMemberInfo(data, function (resp) {
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.status == '00') {
+                        _self.closeLayer(layerindex);
+                        layer.msg('会员登录成功', optLayerSuccess);
+                        $('input[name = main]').focus();
+                        Backbone.trigger('onMemberSigned', resp);
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                    }
                 }
             });
         }

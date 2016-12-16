@@ -548,7 +548,7 @@ define([
                         } else {
                             attrs['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
                         }
-                        this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '300px'});
+                        this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '800px'});
                         break;
                     case '04':
                     case '05':
@@ -656,7 +656,7 @@ define([
             } else {
                 attrs['goods_detail'] = storage.get(system_config.RETURN_KEY, 'cartlist');
             }
-            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_ECARD_LOGIN, pageId, '一卡通登录', layerECardView, attrs, {area: '800px'});
             $(this.input).val('');
         },
 
