@@ -175,7 +175,6 @@ define([
             this.addToPaymentList(this.totalamount, gatherName, gatherMoney, gatherNo, gatherId, gatherKind, extraArgs);
         },
 
-
         /**
          *向已付款列表中插入新的行
          * @param totalamount 总金额
@@ -268,7 +267,6 @@ define([
             } else {
                 this.unpaidamount = parseFloat((totalamount - this.totalreceived).toFixed(2));
             }
-
             //if(this.totalreceived >= totalamount){
             //    this.unpaidamount = 0;
             //    this.oddchange = this.totalreceived - totalamount;
@@ -284,7 +282,6 @@ define([
             this.renderBillInfo();
             this.renderBillDetail();
         },
-
 
         renderBillInfo: function () {
             this.$el.find('.for-billinfo').html(this.template_billinfo(this.model.toJSON()));
@@ -364,7 +361,6 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.V, function () {
                 _self.onBusinessClicked();
             });
-
         },
 
         /**
@@ -433,7 +429,6 @@ define([
             };
             this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
         },
-
 
         /**
          * 删除,如果存在第三方支付，则调用refund函数;如果存在一卡通支付，调用一卡通删除函数;如果存在银行卡支付，则调用银行卡删除函数。
@@ -554,21 +549,18 @@ define([
                         fact_money: 0
                     });
                 }
-
                 if (fact_money != 0 && gatherMoney < fact_money) {
                     temp.set({
                         gather_money: gather_money + gatherMoney,
                         fact_money: fact_money - gatherMoney
                     });
                 }
-
                 if (change_money != 0 && gatherMoney > change_money) {
                     temp.set({
                         gather_money: gather_money + change_money,
                         change_money: 0
                     });
                 }
-
                 if (change_money != 0 && gatherMoney < change_money) {
                     temp.set({
                         gather_money: gather_money + gatherMoney,
@@ -623,9 +615,6 @@ define([
         billing: function () {
             var confirmBill = new BillModel();
             var _self = this;
-            //if (this.totaldiscount != 0) {
-            //    this.calculateDiscount();
-            //}
             var data = {
                 mode: '00' //销售模式,  00销售  01单品退货  02原单退货
             };
@@ -831,7 +820,6 @@ define([
                     gather_ui: gatherUI,
                     bill_no: this.billNumber
                 };
-
                 switch (gatherUI) {
                     case '03' :
                         var attrs = {
@@ -849,14 +837,12 @@ define([
                             pos_id: storage.get(system_config.POS_INFO_KEY, 'posid'),
                             bill_no: this.billNumber
                         };
-                        //layer.msg('该功能正在调试中', optLayerHelp);
                         _self.requestmodel.xfbbillno(xfbdata, function (resp) {
                             if (!$.isEmptyObject(resp)) {
                                 if (resp.status == '00') {
                                     data['payment_bill'] = resp.xfb_bill;
                                     _self.openLayer(PAGE_ID.LAYER_BILLING_ACCOUNT, pageId, item.gather_name, LayerGatherUIView, data, {area: '600px'});
                                 } else {
-                                    //toastr.error(resp.msg);
                                     layer.msg(resp.msg, optLayerError);
                                 }
                             } else {
@@ -872,7 +858,6 @@ define([
                         break;
                 }
             }
-
             $(this.input).val('');
         },
         /**
@@ -898,10 +883,7 @@ define([
         },
 
         onThirdPayClicked: function () {
-            //layer.msg('该功能正在调试中', optLayerHelp);
-            //$('input[name = billing]').val('');
             this.payment('05', '第三方支付');
-            //$('button[name = third-pay]').blur();
         },
         /**
          *点击支付大类按钮的点击事件
@@ -998,7 +980,6 @@ define([
         onBankBackoutSuccess: function () {
             this.deleteItem(this.i);
         },
-
 
         /**
          * 光标向下

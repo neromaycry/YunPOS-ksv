@@ -60,11 +60,6 @@ define([
         },
 
         onCancelClicked: function () {
-            //if (this.attrs.is_navigate) {
-            //    this.confirmCloseLayer(this.attrs.navigate_page);
-            //} else {
-            //    this.confirmCloseLayer(this.attrs.pageid);
-            //}
             this.closeLayer(layerindex);
         },
 
@@ -124,7 +119,6 @@ define([
                     break;
             }
         },
-
 
     });
 

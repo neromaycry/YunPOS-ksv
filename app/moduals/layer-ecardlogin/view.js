@@ -35,12 +35,6 @@ define([
             this.request = new LayerECardModel();
             setTimeout(function () {
                 _self.renderByType(_self.type);
-                //$('input[name = ecard]').koala({
-                //    delay: 2000,
-                //    keyup: function (event) {
-                //        _self.swipeCard();
-                //    }
-                //});
             }, 100);
             this.handleEvents();
         },
@@ -113,7 +107,6 @@ define([
                 }
             });
         },
-
 
         renderByType: function (type) {
             switch (type) {

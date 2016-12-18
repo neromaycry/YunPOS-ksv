@@ -22,8 +22,6 @@ define([
 
         index: 0,
 
-        //input: 'input[name = gather-no]',
-
         events: {
             'click .cancel': 'onCancelClicked',
             'click .ok': 'onOkClicked',
@@ -58,7 +56,6 @@ define([
                 _self.render();
                 _self.renderBilltype();
             }, 100);
-
         },
 
         initTemplates: function () {
@@ -76,7 +73,6 @@ define([
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Up, function () {
                 _self.scrollUp();
             });
-
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_RT_BILLTYPE, KEYS.Enter, function () {
                 _self.onReceived(_self.i);
             });
@@ -131,7 +127,7 @@ define([
                         gather_kind: this.attrs.gather_kind,
                     };
                     this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, gatherName, RTLayerGatherUIView, attrs, {area: '300px'});
-
+                    break;
             }
         },
 
@@ -151,7 +147,6 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
-
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
@@ -167,7 +162,6 @@ define([
         },
 
         onOkClicked: function () {
-            //var index = $('.cus-selected').data('index');
             console.log(this.index);
             this.onReceived(this.index);
         },

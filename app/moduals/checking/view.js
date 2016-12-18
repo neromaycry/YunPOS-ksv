@@ -208,7 +208,6 @@ define([
         checkingDate: function () {
             date = $('input[name = checking_date]').val();
             var _self = this;
-            //console.log(date);
             if (date == '') {
                 layer.msg('输入的收银对账日期不能为空', optLayerWarning);
             } else {

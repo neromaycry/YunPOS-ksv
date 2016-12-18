@@ -187,7 +187,6 @@ define([
         },
 
         onOkClicked: function () {
-            //var index = $('.cus-selected').data('index');
             this.confirm(this.index);
         },
 

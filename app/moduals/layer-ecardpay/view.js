@@ -74,11 +74,9 @@ define([
 
         },
 
-
         initTemplates: function () {
             this.template_ecarddetail = _.template(this.template_ecarddetail);
         },
-
 
         bindLayerKeys: function () {
             var _self = this;
@@ -158,7 +156,6 @@ define([
         /**
          * 方向上
          */
-
         scrollUp:function(){
             var receivedsum = $(this.input).val();
             if (receivedsum == '' || parseFloat(receivedsum) == 0 || (receivedsum.split('.').length - 1) > 1 || receivedsum == '.') {
@@ -196,8 +193,7 @@ define([
                 this.choiceCard(this.i);
                 $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
                }
-            },
-
+        },
 
         onAccountClicked: function (e) {
             var index = $(e.currentTarget).data('index');

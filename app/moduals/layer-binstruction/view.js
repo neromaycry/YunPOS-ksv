@@ -74,7 +74,6 @@ define([
         },
 
         checkIn: function () {
-            //toastr.info('签到');
             layer.msg('签到', optLayerSuccess);
             this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
         },

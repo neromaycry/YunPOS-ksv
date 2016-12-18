@@ -24,7 +24,6 @@ define([
         },
 
         LayerInitPage: function () {
-            var _self = this;
             this.model = new LayerGatewayModel();
         },
 
