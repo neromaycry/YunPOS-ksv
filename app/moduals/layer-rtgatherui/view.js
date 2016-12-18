@@ -9,8 +9,9 @@ define([
     'text!../../moduals/layer-rtgatherui/commontpl.html',
     'text!../../moduals/layer-rtgatherui/thirdpay.html',
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
+    'text!../../moduals/layer-rtgatherui/bankccblanditpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView ,  contenttpl, commontpl, thirdpaytpl, bankcardtpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView ,  contenttpl, commontpl, thirdpaytpl, bankcardtpl, bankccblanditpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -30,6 +31,7 @@ define([
             'click .btn-clear': 'onClearClicked',
             'click input[name = reference-num]': 'focusInputReference',
             'click input[name = payment-bill]': 'focusInputPaymentBill',
+            'click input[name = sale-dt]': 'focusInputSaleDt'
         },
 
         LayerInitPage: function () {
@@ -74,7 +76,11 @@ define([
                     this.input = 'input[name = reference-num]';
                     break;
                 case '06':
-                    this.template_content = bankcardtpl;
+                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                        this.template_content = bankcardtpl;
+                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                        this.template_content = bankccblanditpl;
+                    }
                     this.input = 'input[name = reference-num]';
                     break;
                 default:
@@ -91,8 +97,13 @@ define([
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
                 var isUserFocused = $('input[name = reference-num]').is(':focus');
                 if (isUserFocused) {
-                    $('input[name = payment-bill]').focus();
-                    _self.input = 'input[name = payment-bill]';
+                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                        $('input[name = sale-dt]').focus();
+                        _self.input = 'input[name = sale-dt]';
+                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                        $('input[name = sale-dt]').focus();
+                        _self.input = 'input[name = sale-dt]';
+                    }
                 } else {
                     _self.onOKClicked();
                 }
@@ -100,8 +111,13 @@ define([
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Up, function () {
                 var isUserFocused = $('input[name = reference-num]').is(':focus');
                 if (isUserFocused) {
-                    $('input[name = payment-bill]').focus();
-                    _self.input = 'input[name = payment-bill]';
+                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                        $('input[name = payment-bill]').focus();
+                        _self.input = 'input[name = payment-bill]';
+                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                        $('input[name = sale-dt]').focus();
+                        _self.input = 'input[name = sale-dt]';
+                    }
                 } else {
                     $('input[name = reference-num]').focus();
                     _self.input = 'input[name = reference-num]';
@@ -110,8 +126,13 @@ define([
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Down, function () {
                 var isUserFocused = $('input[name = reference-num]').is(':focus');
                 if (isUserFocused) {
-                    $('input[name = payment-bill]').focus();
-                    _self.input = 'input[name = payment-bill]';
+                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                        $('input[name = payment-bill]').focus();
+                        _self.input = 'input[name = payment-bill]';
+                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                        $('input[name = sale-dt]').focus();
+                        _self.input = 'input[name = sale-dt]';
+                    }
                 } else {
                     $('input[name = reference-num]').focus();
                     _self.input = 'input[name = reference-num]';
@@ -124,13 +145,28 @@ define([
             var _self = this;
             var attrs = {};
             if (this.gatherUI == '06') {
-                var reference_no = $(this.input).val();
-                if (reference_no == '') {
-                    layer.msg('请输入系统参考号', optLayerWarning);
-                    return;
+                if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                    var reference_no = $('input[name = reference-num]').val();
+                    if (reference_no == '') {
+                        layer.msg('请输入系统参考号', optLayerWarning);
+                        return;
+                    }
+                    this.attrs.swipe_type = 'refund';
+                    this.attrs.reference_number = reference_no;
                 }
-                this.attrs.swipe_type = 'refund';
-                this.attrs.reference_number = reference_no;
+                if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                    var sale_dt = $('input[name = sale-dt]').val();
+                    if (sale_dt == '') {
+                        layer.msg('请输入原交易日期', optLayerWarning);
+                        return;
+                    }
+                    if (sale_dt.length != 6) {
+                        layer.msg('日期格式输入错误，请重新输入', optLayerWarning);
+                        $('input[name = sale-dt]').val('');
+                        return;
+                    }
+                    this.attrs.sale_dt = sale_dt;
+                }
                 this.closeLayer(layerindex);
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING_RETURN, '银行MIS退款', LayerBankCardView, this.attrs, {area: '300px'});
                 return;
@@ -253,6 +289,9 @@ define([
             this.input = 'input[name = payment-bill]';
         },
 
+        focusInputSaleDt: function () {
+            this.input = 'input[name = sale-dt]';
+        },
 
         refund: function (gatherUI, gatherNo, attrData) {
 

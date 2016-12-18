@@ -5,7 +5,7 @@ define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-referencenum/model',
     'text!../../moduals/layer-referencenum/tpl.html',
-], function (BaseLayerView, LayerSalesmanModel, tpl) {
+], function (BaseLayerView, LayerReferenceModel, tpl) {
 
     var referencenumView = BaseLayerView.extend({
 
@@ -24,8 +24,13 @@ define([
         },
 
         LayerInitPage: function () {
-            var _self = this;
-            this.model = new LayerSalesmanModel();
+            this.model = new LayerReferenceModel();
+        },
+
+        onLayerShown: function () {
+            if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                $(this.input).attr('placeholder', '请输入流水号');
+            }
         },
 
         bindLayerKeys: function () {
@@ -63,17 +68,34 @@ define([
 
         onOKClicked: function () {
             var value = $(this.input).val();
-            if (value == '') {
-                layer.msg('请输入系统参考号', optLayerWarning);
-                return;
+            switch (storage.get(system_config.INTERFACE_TYPE)) {
+                case Interface_type.ABC_BJCS:
+                    if (value == '') {
+                        layer.msg('请输入系统参考号', optLayerWarning);
+                        return;
+                    }
+                    var data = {
+                        transaction_amount: this.attrs.transaction_amount,
+                        cashier_no: this.attrs.cashier_no,
+                        pos_no: this.attrs.pos_no,
+                        bill_no: this.attrs.bill_no,
+                        reference_number: value
+                    };
+                    break;
+                case Interface_type.CCB_LANDI:
+                    if (value == '') {
+                        layer.msg('请输入流水号', optLayerWarning);
+                        return;
+                    }
+                    var data = {
+                        transaction_amount: this.attrs.transaction_amount,
+                        cashier_no: this.attrs.cashier_no,
+                        pos_no: this.attrs.pos_no,
+                        bill_no: this.attrs.bill_no,
+                        serial_no: value
+                    };
+                    break;
             }
-            var data = {
-                transaction_amount: this.attrs.transaction_amount,
-                cashier_no: this.attrs.cashier_no,
-                pos_no: this.attrs.pos_no,
-                bill_no: this.attrs.bill_no,
-                reference_number: value
-            };
             this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
         },
         

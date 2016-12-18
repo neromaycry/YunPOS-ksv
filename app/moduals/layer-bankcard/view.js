@@ -42,14 +42,26 @@ define([
                     this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)], wsClient);
                     break;
                 case 'refund':
-                    var data = {
-                        //transaction_amount: '0.01',
-                        transaction_amount: this.attrs.gather_money,
-                        cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
-                        pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
-                        bill_no: this.attrs.bill_no,
-                        reference_number: this.attrs.reference_number
-                    };
+                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                        var data = {
+                            //transaction_amount: '0.01',
+                            transaction_amount: this.attrs.gather_money,
+                            cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                            pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                            bill_no: this.attrs.bill_no,
+                            reference_number: this.attrs.reference_number
+                        };
+                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                        var data = {
+                            //transaction_amount: '0.01',
+                            transaction_amount: this.attrs.gather_money,
+                            cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                            pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                            bill_no: this.attrs.bill_no,
+                            reference_number: this.attrs.reference_number,
+                            sale_dt: this.attrs.sale_dt
+                        };
+                    }
                     this.sendWebSocketDirective([DIRECTIVES.Bank_refund], [JSON.stringify(data)], wsClient);
                     break;
             }

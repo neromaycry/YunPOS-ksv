@@ -60,6 +60,7 @@ define([
             this.handleEvents();
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
             storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
+            storage.set(system_config.INTERFACE_TYPE, Interface_type.CCB_LANDI);
             this.template_clientlogin = _.template(this.template_clientlogin);
             //this.checkPosLimit();
         },

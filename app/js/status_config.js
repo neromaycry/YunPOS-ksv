@@ -93,7 +93,7 @@ window.API_URL = {
     "PRINT": "/print",
     "RETAIL_NO": "/retailno",
     "XFB_BILL_NO": "/xfbbillno",
-    "WORKER":"/worker",
+    "WORKER": "/worker",
     'CASHIER_MONEY': '/casiermoney',
     'CASHIER_DKDJ': '/casierjkdj'
 };
@@ -131,7 +131,8 @@ window.system_config = {
     "IS_CLIENT_SCREEN_SHOW": "IS_CLIENT_SCREEN_SHOW",
     "ODD_CHANGE": 'ODD_CHANGE_KEY',
     "LAST_PAGE": "LAST_PAGE",
-    "POS_LIMIT": ""
+    "POS_LIMIT": "POS_LIMIT",
+    "INTERFACE_TYPE": "INTERFACE_TYPE"
 };
 
 window.DIRECTIVES = {
@@ -322,6 +323,6 @@ window.KEYS = {
 };
 
 window.Interface_type = {
-    HUAXIANGAOLAI: 'ABC_BJCS',
-    JINYANAN: 'CCB_LANDI'
+    ABC_BJCS: 'ABC_BJCS',
+    CCB_LANDI: 'CCB_LANDI'
 };

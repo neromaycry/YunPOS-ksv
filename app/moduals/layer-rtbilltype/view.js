@@ -115,7 +115,7 @@ define([
                         gather_kind: _self.attrs.gather_kind,
                         bill_no: _self.attrs.bill_no,
                     };
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入系统参考号', RTLayerGatherUIView, attrs, {area: '300px'});
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入系统参考号', RTLayerGatherUIView, attrs, {area: '400px'});
                     break;
                 default ://输入账号类
                     this.closeLayer(layerindex);
