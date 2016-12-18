@@ -87,6 +87,12 @@ div .no-bottom-margin {
     margin-bottom: 0;
 }
 
+div .input-custom {
+    height: 54px;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
 div .nav-left-margin {
     color: #FFF;
     margin-left: 3px;

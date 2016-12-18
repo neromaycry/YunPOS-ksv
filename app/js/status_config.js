@@ -320,3 +320,8 @@ window.KEYS = {
     'Insert': 45,
     'Delete': 46
 };
+
+window.Interface_type = {
+    HUAXIANGAOLAI: 'ABC_BJCS',
+    JINYANAN: 'CCB_LANDI'
+};
