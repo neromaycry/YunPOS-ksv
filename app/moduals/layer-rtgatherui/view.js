@@ -48,7 +48,6 @@ define([
 
         },
 
-
         renderContent: function () {
             this.$el.find('.gatherui-content').html(this.template_content(this.model.toJSON()));
               $('.cbtn').mousedown(function () {
@@ -66,7 +65,6 @@ define([
             });
             return this;
         },
-
 
         switchTemplate: function (gatherUI) {
             switch (gatherUI) {

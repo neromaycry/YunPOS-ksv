@@ -107,7 +107,7 @@ define([
                         gather_money:_self.attrs.gather_money,
                         gather_kind:_self.attrs.gather_kind
                     };
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入系统参考号', RTLayerGatherUIView, attrs, {area: '300px'});
+                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入订单号和第三方支付流水号', RTLayerGatherUIView, attrs, {area: '300px'});
                     break;
                 case '06'://银行mis
                     this.closeLayer(layerindex);
