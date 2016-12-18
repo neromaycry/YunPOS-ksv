@@ -129,7 +129,7 @@ define([
         renderGatherDetail: function () {
             this.$el.find('.gather-detail').html(this.template_gatherdetail(this.collection.toJSON()));
             $('.li-gatherlist').height(this.listheight / this.listnum - 11);
-            $('#li' + this.i).addClass('cus-selected');
+            $('#paytable' + this.i).addClass('cus-selected');
             return this;
         },
 
@@ -162,7 +162,7 @@ define([
                 this.n++;
                 $('.gather-detail').scrollTop(this.listheight * this.n);
             }
-            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            $('#paytable' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
          * 购物车光标向上
@@ -175,7 +175,7 @@ define([
                 this.n--;
                 $('.gather-detail').scrollTop(this.listheight * this.n);
             }
-            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            $('#paytable' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
         onCancelClicked: function () {
