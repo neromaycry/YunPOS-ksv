@@ -78,9 +78,9 @@ define([
         onOKClicked: function () {
             this.closeLayer();
             if(this.i == '0') {
-                this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, PAGE_ID.BILLING_RETURN, '输入系统参考号', LayerReferenceNumView, this.attrs, {area: '300px'});
+                this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, PAGE_ID.BILLING_RETURN, '请输入凭证号', LayerReferenceNumView, this.attrs, {area: '300px'});
             } else {
-                this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入系统参考号', RTLayerGatherUIView, this.attrs, {area: '400px'});
+                this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '请输入凭证号', RTLayerGatherUIView, this.attrs, {area: '400px'});
             }
         },
 
