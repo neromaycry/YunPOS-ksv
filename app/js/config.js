@@ -258,8 +258,8 @@ requirejs([
                     Backbone.trigger('onBankBackoutSuccess');
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
+                    window.layer.close(layerindex);
                 }
-                window.layer.close(layerindex);
                 break;
             case DIRECTIVES.Bank_refund:
                 if (data.code == '00') {
