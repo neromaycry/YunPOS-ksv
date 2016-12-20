@@ -124,14 +124,19 @@ define([
 
         //重印最后一笔
         onBankRePrintCliked: function () {
-            this.sendWebSocketDirective([DIRECTIVES.Bank_reprint], [''], wsClient);
+            var data = {
+                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid')
+            };
+            this.sendWebSocketDirective([DIRECTIVES.Bank_reprint], [JSON.stringify(data)], wsClient);
         },
 
         //日结
         onBankDailyClicked: function () {
             loading.show();
             var data = {
-                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id')
+                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid')
             };
             console.log(JSON.stringify(data));
             this.sendWebSocketDirective([DIRECTIVES.Bank_daily], [JSON.stringify(data)], wsClient);
@@ -140,6 +145,10 @@ define([
         //签到
         checkIn: function () {
             layer.msg('签到', optLayerSuccess);
+            var data = {
+                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid')
+            };
             this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
         },
 
