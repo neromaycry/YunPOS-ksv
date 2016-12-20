@@ -106,6 +106,7 @@ define([
                     };
                     break;
             }
+            this.confirmHideLayer(this.attrs.pageid);
             this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行mis退款', LayerBankCardView, data, {area:'300px'});
             this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
         },
