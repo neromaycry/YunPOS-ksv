@@ -260,7 +260,7 @@ requirejs([
                             Backbone.trigger('onBankBackoutSuccess');
                             break;
                         case PAGE_ID.BILLING_RETURN:
-                            Backbone.trigger('onRTBankBackoutSuccess');
+                            Backbone.trigger('onRTBankBackoutSuccess', data);
                             break;
                     }
                 } else {
