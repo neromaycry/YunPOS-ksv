@@ -50,13 +50,7 @@ define([
         },
 
         onCancelClicked: function () {
-            this.closeLayer(layerindex);
-            if(this.attrs.pageid == '9') {
-                $('input[name = billingrt]').focus();
-            } else {
-                $('input[name = billing]').focus();
-            }
-
+            this.confirmHideLayer(this.attrs.pageid);
         },
 
         onNumClicked: function (e) {
