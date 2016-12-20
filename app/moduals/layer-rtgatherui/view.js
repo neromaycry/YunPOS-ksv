@@ -143,17 +143,14 @@ define([
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
         onOKClicked: function () {
             var _self = this;
-            var attrs = {};
             if (this.gatherUI == '06') {
-                if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
-                    var reference_no = $('input[name = reference-num]').val();
-                    if (reference_no == '') {
-                        layer.msg('请输入系统参考号', optLayerWarning);
-                        return;
-                    }
-                    this.attrs.swipe_type = 'refund';
-                    this.attrs.reference_number = reference_no;
+                var reference_no = $('input[name = reference-num]').val();
+                if (reference_no == '') {
+                    layer.msg('请输入系统参考号', optLayerWarning);
+                    return;
                 }
+                this.attrs.swipe_type = 'refund';
+                this.attrs.reference_number = reference_no;
                 if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
                     var sale_dt = $('input[name = sale-dt]').val();
                     if (sale_dt == '') {
@@ -168,6 +165,7 @@ define([
                     this.attrs.sale_dt = sale_dt;
                 }
                 this.closeLayer(layerindex);
+                //console.log(JSON.stringify(this.attrs));
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING_RETURN, '银行MIS退款', LayerBankCardView, this.attrs, {area: '300px'});
                 return;
             }

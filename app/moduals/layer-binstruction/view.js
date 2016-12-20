@@ -118,7 +118,11 @@ define([
 
         //余额查询
         onBankBalanceClicked: function () {
-            this.sendWebSocketDirective([DIRECTIVES.Bank_balance], [''], wsClient);
+            var data = {
+                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid')
+            };
+            this.sendWebSocketDirective([DIRECTIVES.Bank_balance], [JSON.stringify(data)], wsClient);
         },
 
         //重印最后一笔

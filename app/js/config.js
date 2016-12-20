@@ -141,7 +141,7 @@ requirejs([
 
     window.fecha = fecha;
 
-    window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
+    window.isPacked = true;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
 
     window.layer = layer;
 
