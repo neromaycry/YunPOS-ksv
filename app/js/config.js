@@ -248,6 +248,7 @@ requirejs([
                     window.loading.hide();
                     Backbone.trigger('onBankSaleSuccess', data);
                 } else {
+                    window.layer.close(layerindex);
                     window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
@@ -256,9 +257,9 @@ requirejs([
                     window.loading.hide();
                     Backbone.trigger('onBankBackoutSuccess');
                 } else {
-                    window.layer.close(layerindex);
                     window.layer.msg(data.msg, optLayerWarning);
                 }
+                window.layer.close(layerindex);
                 break;
             case DIRECTIVES.Bank_refund:
                 if (data.code == '00') {
