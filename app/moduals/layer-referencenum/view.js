@@ -86,8 +86,8 @@ define([
                     }
                     var data = {
                         transaction_amount: this.attrs.gather_money,
-                        //cashier_no: this.attrs.cashier_no,
-                        //pos_no: this.attrs.pos_no,
+                        cashier_no: this.attrs.cashier_no,
+                        pos_no: this.attrs.pos_no,
                         bill_no: this.attrs.bill_no,
                         reference_number: value
                     };
@@ -99,15 +99,15 @@ define([
                     }
                     var data = {
                         transaction_amount: this.attrs.gather_money,
-                        //cashier_no: this.attrs.cashier_no,
-                        //pos_no: this.attrs.pos_no,
+                        cashier_no: this.attrs.cashier_no,
+                        pos_no: this.attrs.pos_no,
                         bill_no: this.attrs.bill_no,
                         serial_no: value
                     };
                     break;
             }
             this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行mis退款', LayerBankCardView, data, {area:'300px'});
-            //this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
+            this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
         },
         
         refund: function () {
