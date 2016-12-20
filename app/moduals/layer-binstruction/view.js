@@ -85,6 +85,7 @@ define([
                     this.checkIn();
                     break;
             }
+            this.confirmHideLayer(this.attrs.pageid);
         },
 
         onTypeClicked: function (e) {
