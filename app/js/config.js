@@ -256,20 +256,22 @@ requirejs([
                     window.loading.hide();
                     Backbone.trigger('onBankBackoutSuccess');
                 } else {
+                    window.layer.close(layerindex);
                     window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_refund:
                 if (data.code == '00') {
                     window.loading.hide();
+                    Backbone.trigger('onBankRefundSuccess', data);
                 } else {
+                    window.layer.close(layerindex);
                     window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
             case DIRECTIVES.Bank_balance:
                 if (data.code == '00') {
                     window.loading.hide();
-                    Backbone.trigger('onBankRefundSuccess', data);
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
                 }
