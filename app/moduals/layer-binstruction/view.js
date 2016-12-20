@@ -150,7 +150,7 @@ define([
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
                 pos_no: storage.get(system_config.POS_INFO_KEY, 'posid')
             };
-            this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [''], wsClient);
+            this.sendWebSocketDirective([DIRECTIVES.Bank_signin], [JSON.stringify(data)], wsClient);
         },
 
         //查询流水
