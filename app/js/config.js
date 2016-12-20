@@ -427,6 +427,7 @@ requirejs([
 
     window.router = BaseRouter;
 
+    //屏蔽文本选择动作
     document.onselectstart = function () {
         return false;
     };
