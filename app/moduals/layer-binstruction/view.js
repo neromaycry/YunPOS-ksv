@@ -116,8 +116,6 @@ define([
             $('#bank' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
-
-
         //余额查询
         onBankBalanceClicked: function () {
             this.sendWebSocketDirective([DIRECTIVES.Bank_balance], [''], wsClient);

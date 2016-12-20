@@ -154,10 +154,8 @@ define([
         handleEvents: function () {
             Backbone.off('onRTReceivedsum');
             Backbone.off('onRtBillICEcardPay');
-            Backbone.off('onRTBankBackoutSuccess');
             Backbone.on('onRTReceivedsum', this.onRTReceivedsum, this);
             Backbone.on('onRtBillICEcardPay', this.onRtBillICEcardPay, this);
-            Backbone.on('onRTBankBackoutSuccess', this.onRTBankBackoutSuccess, this);
         },
 
         onRTReceivedsum: function (data) {
@@ -910,11 +908,6 @@ define([
                 gather_money: this.smallChange,
                 outtradeno: '',
             });
-        },
-
-        onRTBankBackoutSuccess: function (resp) {
-            //TODO：更新银行卡mis到退款方式列表
-
         },
 
         onRtBillICEcardPay: function (resp) {
