@@ -65,12 +65,13 @@ define([
         },
 
         onCancelClicked: function () {
-            this.closeLayer(layerindex);
-            if (this.attrs.pageid == 6) {
-                $('input[name = billing]').focus();
-            } else {
-                $('input[name = billingrt]').focus();
-            }
+            this.confirmHideLayer(this.attrs.pageid);
+            //this.closeLayer(layerindex);
+            //if (this.attrs.pageid == 6) {
+            //    $('input[name = billing]').focus();
+            //} else {
+            //    $('input[name = billingrt]').focus();
+            //}
         },
 
         onOkClicked: function () {
