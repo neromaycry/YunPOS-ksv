@@ -530,7 +530,7 @@ define([
                 //    _self.deleteItem(index);
                 //}
             };
-            this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, pageId, '输入系统参考号', LayerReferenceNumView, attrs, {area: '300px'});
+            this.openLayer(PAGE_ID.LAYER_REFERENCE_NUM, pageId, '请输入凭证号', LayerReferenceNumView, attrs, {area: '300px'});
         },
 
 

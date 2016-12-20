@@ -50,13 +50,7 @@ define([
         },
 
         onCancelClicked: function () {
-            this.closeLayer(layerindex);
-            if(this.attrs.pageid == '9') {
-                $('input[name = billingrt]').focus();
-            } else {
-                $('input[name = billing]').focus();
-            }
-
+            this.confirmHideLayer(this.attrs.pageid);
         },
 
         onNumClicked: function (e) {
@@ -106,6 +100,7 @@ define([
                     };
                     break;
             }
+            this.confirmHideLayer(this.attrs.pageid);
             this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行mis退款', LayerBankCardView, data, {area:'300px'});
             this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
         },
