@@ -160,7 +160,7 @@ define([
                         layer.msg('请输入原交易日期', optLayerWarning);
                         return;
                     }
-                    if (sale_dt.length != 6) {
+                    if (sale_dt.length != 8) {
                         layer.msg('日期格式输入错误，请重新输入', optLayerWarning);
                         $('input[name = sale-dt]').val('');
                         return;

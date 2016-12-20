@@ -24,13 +24,13 @@ define([
         },
 
         LayerInitPage: function () {
+            var _self = this;
             this.model = new LayerReferenceModel();
-        },
-
-        onLayerShown: function () {
-            if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
-                $(this.input).attr('placeholder', '请输入流水号');
-            }
+            setTimeout(function () {
+                if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                    $(_self.input).attr('placeholder', '请输入流水号');
+                }
+            }, 300);
         },
 
         bindLayerKeys: function () {

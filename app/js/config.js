@@ -141,16 +141,11 @@ requirejs([
 
     window.fecha = fecha;
 
-    window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true
+    window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
 
     window.layer = layer;
 
     window.layerindex = undefined;
-
-    //window.layer.config({
-    //    extend: 'skin/moon/style.css',
-    //    skin: 'layer-ext-moon'
-    //});
 
     window.optLayerWarning = {
         icon: 0,
@@ -174,14 +169,6 @@ requirejs([
 
     window.storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
 
-    //layer.open({
-    //    content: '测试回调',
-    //    success: function(layero, index){
-    //        console.log(layero, index);
-    //    }
-    //});
-
-    //window.storage.set('pos_limit', '11111111111');
     var isPosLimitSet = window.storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT);
     //
     if (isPosLimitSet) {
@@ -334,6 +321,7 @@ requirejs([
                 }
                 break;
             //case DIRECTIVES.IC_CARD_AUTO_READ:
+                //自动寻卡因webctrl问题暂时不可用，待可用时再打开此注释
             //    if (data.status == '00') {
             //        console.log(window.pageId);
             //        switch (window.pageId) {
@@ -484,8 +472,6 @@ requirejs([
         //    //ie下面不能屏蔽f1键的补充方法
         //    return false;
         //};
-
-
         window.loading = {
             show: function (obj) {
                 var target = obj || $("body");
@@ -526,7 +512,6 @@ requirejs([
         };
 
         setScreenWH();
-
     });
 
 
