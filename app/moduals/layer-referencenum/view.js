@@ -109,7 +109,7 @@ define([
             //        break;
             //}
             this.closeLayer(layerindex);
-            this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '银行mis退款', LayerBankCardView, this.attrs, {area:'300px'});
+            this.openLayer(PAGE_ID.LAYER_BANK_CARD, this.attrs.pageid, '银行mis退款', LayerBankCardView, this.attrs, {area:'300px'});
         },
         
         refund: function () {

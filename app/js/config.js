@@ -259,7 +259,7 @@ requirejs([
                         case PAGE_ID.BILLING:
                             Backbone.trigger('onBankBackoutSuccess');
                             break;
-                        case PAGE_ID.BILLING_RETURN:
+                        case PAGE_ID.LAYER_BANK_CARD:
                             Backbone.trigger('onRTBankBackoutSuccess', data);
                             break;
                     }
