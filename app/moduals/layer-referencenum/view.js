@@ -4,8 +4,9 @@
 define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-referencenum/model',
+    '../../moduals/layer-bankcard/view',
     'text!../../moduals/layer-referencenum/tpl.html',
-], function (BaseLayerView, LayerReferenceModel, tpl) {
+], function (BaseLayerView, LayerReferenceModel, LayerBankCardView, tpl) {
 
     var referencenumView = BaseLayerView.extend({
 
@@ -96,6 +97,7 @@ define([
                     };
                     break;
             }
+            this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '撤销银行mis支付', LayerBankCardView, data, {area:'300px'});
             this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
         },
         

@@ -19,9 +19,9 @@ define([
 
         input: 'input[name = bk-account]',
 
-        events: {
-            'click .cancel': 'onCancelClicked'
-        },
+        //events: {
+        //    'click .cancel': 'onCancelClicked'
+        //},
 
         LayerInitPage: function () {
             console.log(this.attrs);
@@ -74,15 +74,15 @@ define([
             Backbone.on('onBankRefundSuccess', this.onBankRefundSuccess, this);
         },
 
-        bindLayerKeys: function () {
-            var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Esc, function () {
-                _self.onCancelClicked();
-            });
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Enter, function () {
-                _self.onCancelClicked();
-            });
-        },
+        //bindLayerKeys: function () {
+        //    var _self = this;
+        //    this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Esc, function () {
+        //        _self.onCancelClicked();
+        //    });
+        //    this.bindLayerKeyEvents(PAGE_ID.LAYER_BANK_CARD, KEYS.Enter, function () {
+        //        _self.onCancelClicked();
+        //    });
+        //},
 
         onBankSaleSuccess: function (resp) {
             console.log(resp);
