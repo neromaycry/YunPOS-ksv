@@ -154,11 +154,15 @@ define([
         handleEvents: function () {
             Backbone.off('onRTReceivedsum');
             Backbone.off('onRtBillICEcardPay');
+            Backbone.off('onRTBankBackoutSuccess');
             Backbone.on('onRTReceivedsum', this.onRTReceivedsum, this);
             Backbone.on('onRtBillICEcardPay', this.onRtBillICEcardPay, this);
+            Backbone.on('onRTBankBackoutSuccess', this.onRTBankBackoutSuccess, this);
         },
 
         onRTReceivedsum: function (data) {
+            console.log('rt received sum---------------');
+            console.log(data);
             var gatherMoney = parseFloat(data.gather_money);//number类型
             var gatherNo = data.gather_no;//付款账号
             var gatherName = data.gather_name;
@@ -906,6 +910,11 @@ define([
                 gather_money: this.smallChange,
                 outtradeno: '',
             });
+        },
+
+        onRTBankBackoutSuccess: function (resp) {
+            //TODO：更新银行卡mis到退款方式列表
+
         },
 
         onRtBillICEcardPay: function (resp) {

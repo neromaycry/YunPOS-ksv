@@ -111,6 +111,7 @@ define([
         },
 
         onBankRefundSuccess: function (resp) {
+            console.log()
             var len = resp.card_no.length;
             console.log(len);
             if (len > 30) {
