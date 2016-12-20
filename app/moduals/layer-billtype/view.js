@@ -23,8 +23,6 @@ define([
 
         i: 0,
 
-        index: 0,
-
         events: {
             'click .cancel': 'onCancelClicked',
             'click .ok': 'onOkClicked',
@@ -157,7 +155,6 @@ define([
             if (this.i < this.collection.length - 1) {
                 this.i++;
             }
-            this.index =  this.i;
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
@@ -167,7 +164,6 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
-            this.index =  this.i;
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
 
@@ -187,12 +183,11 @@ define([
         },
 
         onOkClicked: function () {
-            this.confirm(this.index);
+            this.confirm(this.i);
         },
 
         onBillTypeClicked: function (e) {
-            this.index = $(e.currentTarget).data('index');
-            this.i = this.index;
+            this.i = $(e.currentTarget).data('index');
             $(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
         }
 

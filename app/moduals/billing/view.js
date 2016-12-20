@@ -521,9 +521,9 @@ define([
             var attrs = {
                 pageid: pageId,
                 //transaction_amount: 0.1,
-                transaction_amount: refundamount,
-                cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
-                pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                gather_money: refundamount,
+                //cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                //pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                 bill_no: this.billNumber,
                 //如果输入正确的系统参考号，则在撤销的同时，在支付列表里面删除该条支付记录
                 //callback: function () {

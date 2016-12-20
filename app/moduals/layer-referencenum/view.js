@@ -25,11 +25,15 @@ define([
         },
 
         LayerInitPage: function () {
+            console.log(this.attrs);
             var _self = this;
             this.model = new LayerReferenceModel();
+            this.model.set({
+                gather_money: this.attrs.gather_money
+            });
             setTimeout(function () {
                 if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
-                    $(_self.input).attr('placeholder', '«Î ‰»Î¡˜ÀÆ∫≈');
+                    $(_self.input).attr('placeholder', 'ËØ∑ËæìÂÖ•ÊµÅÊ∞¥Âè∑');
                 }
             }, 300);
         },
@@ -47,7 +51,12 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
-            $('input[name = billing]').focus();
+            if(this.attrs.pageid == '9') {
+                $('input[name = billingrt]').focus();
+            } else {
+                $('input[name = billing]').focus();
+            }
+
         },
 
         onNumClicked: function (e) {
@@ -72,33 +81,33 @@ define([
             switch (storage.get(system_config.INTERFACE_TYPE)) {
                 case Interface_type.ABC_BJCS:
                     if (value == '') {
-                        layer.msg('«Î ‰»ÎœµÕ≥≤Œøº∫≈', optLayerWarning);
+                        layer.msg('ËØ∑ËæìÂÖ•Á≥ªÁªüÂèÇËÄÉÂè∑', optLayerWarning);
                         return;
                     }
                     var data = {
-                        transaction_amount: this.attrs.transaction_amount,
-                        cashier_no: this.attrs.cashier_no,
-                        pos_no: this.attrs.pos_no,
+                        transaction_amount: this.attrs.gather_money,
+                        //cashier_no: this.attrs.cashier_no,
+                        //pos_no: this.attrs.pos_no,
                         bill_no: this.attrs.bill_no,
                         reference_number: value
                     };
                     break;
                 case Interface_type.CCB_LANDI:
                     if (value == '') {
-                        layer.msg('«Î ‰»Î¡˜ÀÆ∫≈', optLayerWarning);
+                        layer.msg('ËØ∑ËæìÂÖ•ÊµÅÊ∞¥Âè∑', optLayerWarning);
                         return;
                     }
                     var data = {
-                        transaction_amount: this.attrs.transaction_amount,
-                        cashier_no: this.attrs.cashier_no,
-                        pos_no: this.attrs.pos_no,
+                        transaction_amount: this.attrs.gather_money,
+                        //cashier_no: this.attrs.cashier_no,
+                        //pos_no: this.attrs.pos_no,
                         bill_no: this.attrs.bill_no,
                         serial_no: value
                     };
                     break;
             }
-            this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, '≥∑œ˙“¯––mis÷ß∏∂', LayerBankCardView, data, {area:'300px'});
-            this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
+            this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING, 'Èì∂Ë°åmisÈÄÄÊ¨æ', LayerBankCardView, data, {area:'300px'});
+            //this.sendWebSocketDirective([DIRECTIVES.Bank_backout], [JSON.stringify(data)], wsClient);
         },
         
         refund: function () {

@@ -6,9 +6,10 @@ define([
     '../../moduals/layer-rtbilltype/model',
     '../../moduals/layer-rtbilltype/collection',
     '../../moduals/layer-rtgatherui/view',
+    '../layer-rtreturndate/view',
     'text!../../moduals/layer-rtbilltype/billingtypetpl.html',
     'text!../../moduals/layer-rtbilltype/tpl.html',
-], function (BaseLayerView, RTLayerTypeModel, RTLayerTypeCollection, RTLayerGatherUIView, billingtypetpl, tpl) {
+], function (BaseLayerView, RTLayerTypeModel, RTLayerTypeCollection, RTLayerGatherUIView,LayerReturnDateView, billingtypetpl, tpl) {
 
     var billtypeView = BaseLayerView.extend({
 
@@ -19,8 +20,6 @@ define([
         template_billingtype: billingtypetpl,
 
         i: 0,
-
-        index: 0,
 
         events: {
             'click .cancel': 'onCancelClicked',
@@ -105,17 +104,21 @@ define([
                     };
                     this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入订单号和第三方支付流水号', RTLayerGatherUIView, attrs, {area: '300px'});
                     break;
-                case '06'://银行mis
+                case '06':
                     this.closeLayer(layerindex);
                     attrs = {
+                        pageid:PAGE_ID.BILLING_RETURN,
                         gather_id: gatherId,
                         gather_name: gatherName,
                         gather_ui: gatherUI,
                         gather_money: _self.attrs.gather_money,
                         gather_kind: _self.attrs.gather_kind,
                         bill_no: _self.attrs.bill_no,
+                        //cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                        //pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                     };
-                    this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入系统参考号', RTLayerGatherUIView, attrs, {area: '400px'});
+                    this.openLayer(PAGE_ID.LAYER_RETURN_DATE, PAGE_ID.BILLING_RETURN, '选择退货日期', LayerReturnDateView, attrs, {area:'300px'});
+                    //this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入系统参考号', RTLayerGatherUIView, attrs, {area: '400px'});
                     break;
                 default ://输入账号类
                     this.closeLayer(layerindex);
@@ -162,12 +165,11 @@ define([
         },
 
         onOkClicked: function () {
-            console.log(this.index);
-            this.onReceived(this.index);
+            this.onReceived(this.i);
         },
 
         onBillTypeClicked: function (e) {
-            this.index = $(e.currentTarget).data('index');
+            this.i = $(e.currentTarget).data('index');
             $(e.currentTarget).addClass('cus-selected').siblings().removeClass('cus-selected');
         }
 
