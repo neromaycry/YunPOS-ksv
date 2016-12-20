@@ -171,6 +171,8 @@ define([
         },
 
         onRTBankBackoutSuccess: function (resp) {
+            console.log('onRTbankbackoutsuccess===============');
+            console.log(resp);
             var len = resp.card_no.length;
             console.log(len);
             if (len > 30) {
