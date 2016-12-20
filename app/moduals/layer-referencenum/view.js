@@ -28,6 +28,9 @@ define([
             console.log(this.attrs);
             var _self = this;
             this.model = new LayerReferenceModel();
+            this.model.set({
+                gather_money: this.attrs.gather_money
+            });
             setTimeout(function () {
                 if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
                     $(_self.input).attr('placeholder', '请输入流水号');
@@ -83,8 +86,8 @@ define([
                     }
                     var data = {
                         transaction_amount: this.attrs.gather_money,
-                        cashier_no: this.attrs.cashier_no,
-                        pos_no: this.attrs.pos_no,
+                        //cashier_no: this.attrs.cashier_no,
+                        //pos_no: this.attrs.pos_no,
                         bill_no: this.attrs.bill_no,
                         reference_number: value
                     };
@@ -96,8 +99,8 @@ define([
                     }
                     var data = {
                         transaction_amount: this.attrs.gather_money,
-                        cashier_no: this.attrs.cashier_no,
-                        pos_no: this.attrs.pos_no,
+                        //cashier_no: this.attrs.cashier_no,
+                        //pos_no: this.attrs.pos_no,
                         bill_no: this.attrs.bill_no,
                         serial_no: value
                     };

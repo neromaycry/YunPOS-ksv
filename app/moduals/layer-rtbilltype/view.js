@@ -114,8 +114,8 @@ define([
                         gather_money: _self.attrs.gather_money,
                         gather_kind: _self.attrs.gather_kind,
                         bill_no: _self.attrs.bill_no,
-                        cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
-                        pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
+                        //cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                        //pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                     };
                     this.openLayer(PAGE_ID.LAYER_RETURN_DATE, PAGE_ID.BILLING_RETURN, '选择退货日期', LayerReturnDateView, attrs, {area:'300px'});
                     //this.openLayer(PAGE_ID.LAYER_RT_BILLACCOUNT, PAGE_ID.BILLING_RETURN, '输入系统参考号', RTLayerGatherUIView, attrs, {area: '400px'});
