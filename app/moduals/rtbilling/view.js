@@ -453,7 +453,7 @@ define([
                             layer.msg('退货成功', optLayerSuccess);
                         } else if(resp.status == '87'){//如果返回的状态值是87，代表会员积分余额不足
                             layer.msg(resp.msg.msg, optLayerError);
-                            window.loading.hide();
+                            //window.loading.hide();
                         } else {
                             layer.msg(resp.msg, optLayerError);
                         }
@@ -507,7 +507,7 @@ define([
                             layer.msg('退货成功', optLayerSuccess);
                         } else if(resp.status == '87'){//如果返回的状态值是87，代表会员积分余额不足
                             layer.msg(resp.msg.msg, optLayerError);
-                            window.loading.hide();
+                            //window.loading.hide();
                         } else {
                             layer.msg(resp.msg, optLayerError);
                         }
