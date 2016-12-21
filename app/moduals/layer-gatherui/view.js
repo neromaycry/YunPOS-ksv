@@ -25,7 +25,7 @@ define([
 
         tradeStateTimer: null,
 
-        isClosed:false,
+        isClosed: false,
 
         events: {
             'click .cancel': 'onCancelClicked',
@@ -67,14 +67,15 @@ define([
             } else {
                 return false;
             }
-            //var url = 'http://127.0.0.1:5000/';
-            var url = 'http://121.42.166.147:9090/';
-            resource.asyncPost(url + 'api/pay/xfb/prepay', data, function (resp) {
+            //var url = 'http://127.0.0.1:5000';
+            //var url = 'http://121.42.166.147:9090';
+            var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+            resource.asyncPost(url + '/api/pay/xfb/prepay', data, function (resp) {
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {
                     if (resp.code == '000000') {
                         $('.qrcode-img').attr('src', resp.data.codeurl);
-                        if (isPacked) {
+                        if (isPacked && isClientScreenShow) {
                             $(clientDom).find('.client-qrcode').css('display', 'block');
                             $(clientDom).find('.client-qrcode').css('height', '300px');
                             $(clientDom).find('.client-qrcode').css('width', '300px');
@@ -119,7 +120,7 @@ define([
                             gather_money: _self.attrs.gather_money,
                             gather_kind: _self.attrs.gather_kind,
                             //gather_no: respData.outtradeno,
-                            gather_no:'第三方支付账户',
+                            gather_no: '第三方支付账户',
                             hasExtra: true,
                             extras: {
                                 extra_id: 1,
@@ -135,7 +136,7 @@ define([
                             extras: extra
                         }));
                         layer.msg(resp2.msg, optLayerSuccess);
-                        if (isPacked) {
+                        if (isPacked && isClientScreenShow) {
                             $(clientDom).find('.client-qrcode').css('display', 'none');
                         }
                         _self.closeLayer(layerindex);
@@ -239,7 +240,7 @@ define([
                         gather_money: this.attrs.gather_money,
                         gather_kind: this.attrs.gather_kind,
                         gather_no: '第三方支付账户',
-                        authno:gatherNo,
+                        authno: gatherNo,
                         hasExtra: true,
                         extras: {
                             extra_id: 1,
@@ -247,7 +248,7 @@ define([
                         }
                     };
                     this.micropay(this.gatherUI, attrs);
-                    if (isPacked) {
+                    if (isPacked && isClientScreenShow) {
                         $(clientDom).find('.client-qrcode').css('display', 'none');
                     }
                     break;
@@ -278,7 +279,7 @@ define([
             this.closeLayer(layerindex);
             $('input[name = billing]').focus();
             this.isClosed = true;
-            if (isPacked) {
+            if (isPacked && isClientScreenShow) {
                 $(clientDom).find('.client-qrcode').css('display', 'none');
             }
         },
@@ -325,8 +326,9 @@ define([
             console.log(data);
             loading.show();
             //var url = 'http://127.0.0.1:5000/';
-            var url = 'http://121.42.166.147:9090/';
-            resource.post(url + 'api/pay/xfb/micropay', data, function (resp) {
+            //var url = 'http://121.42.166.147:9090/';
+            var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+            resource.post(url + '/api/pay/xfb/micropay', data, function (resp) {
                 if (!$.isEmptyObject(resp)) {
                     if (resp.code == '000000') {
                         if (resp.data['flag'] == '00') {

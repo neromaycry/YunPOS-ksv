@@ -305,8 +305,8 @@ define([
          * @param ids 显示与隐藏区域的id
          * @param isPacked 是否已打包 true为已打包，false为未打包（通过是否打包来判断是否执行此函数，防止程序因未打包而报错）
          */
-        ctrlClientInfo: function (displayMode, ids, isPacked) {
-            if (isPacked) {
+        ctrlClientInfo: function (displayMode, ids, isPacked, isClientShow) {
+            if (isPacked && isClientShow) {
                 for (var i = 0; i < ids.length; i++) {
                     clientDom.getElementById(ids[i]).style.display = displayMode;
                 }

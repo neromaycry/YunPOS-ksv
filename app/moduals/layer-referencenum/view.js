@@ -32,7 +32,8 @@ define([
                 gather_money: this.attrs.gather_money
             });
             setTimeout(function () {
-                if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                var itfcType = storage.get(system_config.POS_CONFIG, 'bank_interface');
+                if (itfcType == Interface_type.CCB_LANDI) {
                     $(_self.input).attr('placeholder', '请输入流水号');
                 }
             }, 300);

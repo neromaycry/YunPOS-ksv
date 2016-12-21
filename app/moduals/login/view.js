@@ -57,10 +57,11 @@ define([
             //this.getGatherDetailLocally();
             this.getGatherDetail();
             this.getPosLimit();
+            this.getPosConfig();
             this.handleEvents();
             storage.set(system_config.IS_KEYBOARD_PLUGGED, true);
-            storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
-            storage.set(system_config.INTERFACE_TYPE, Interface_type.CCB_LANDI);
+            //storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
+            //storage.set(system_config.INTERFACE_TYPE, Interface_type.CCB_LANDI);
             this.template_clientlogin = _.template(this.template_clientlogin);
             //this.checkPosLimit();
         },
@@ -71,7 +72,7 @@ define([
                 $(_self.input).focus();
             }, 500);
             this.setKeys();
-            this.renderClientDisplay(isPacked);
+            this.renderClientDisplay(isPacked, isClientScreenShow);
         },
 
         handleEvents: function () {
@@ -79,8 +80,8 @@ define([
             Backbone.on('getGatherDetail', this.getGatherDetail, this);
         },
 
-        renderClientDisplay: function (isPacked) {
-            if (isPacked) {
+        renderClientDisplay: function (isPacked, isClientShow) {
+            if (isPacked && isClientShow) {
                 $(clientDom).find('.client-display').html(this.template_clientlogin());
                 return this;
             }
@@ -233,7 +234,10 @@ define([
                 //失败回调
                 console.log(textStatus);
                 console.log(errorThrown);
-                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {input: 'input[name = username]', is_login: true}, {area: '500px'});
+                _self.openLayer(PAGE_ID.LAYER_GATEWAY, pageId, '设置服务器地址', LayerGatewayView, {
+                    input: 'input[name = username]',
+                    is_login: true
+                }, {area: '500px'});
             });
         },
 
@@ -258,6 +262,23 @@ define([
                     } else {
                         layer.msg(resp.msg, optLayerError);
                     }
+                } else {
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
+                }
+            });
+        },
+
+        getPosConfig: function () {
+            var _self = this;
+            this.model.requestPosConfig({}, function (resp) {
+                console.log(resp);
+                if (!$.isEmptyObject(resp)) {
+                        storage.set(system_config.POS_CONFIG, 'ad_url', resp.ad_url);
+                        storage.set(system_config.POS_CONFIG, system_config.IS_CLIENT_SCREEN_SHOW, resp.is_client_screen);
+                        storage.set(system_config.POS_CONFIG, 'bank_interface', resp.bank_interface);
+                        storage.set(system_config.POS_CONFIG, 'screen_height', resp.screen_height);
+                        storage.set(system_config.POS_CONFIG, 'screen_width', resp.screen_width);
+                        storage.set(system_config.POS_CONFIG, system_config.XFB_URL, resp.xfb_url);
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
@@ -405,10 +426,10 @@ define([
         },
 
         setReturnWholeKeys: function () {
-            var effects = ['返回', '确定', '结算','删除商品', '取消退货', '向上选择', '向下选择','会员登录', '修改数量'];
-            var keys = ['ESC', 'ENTER', 'Space','D', 'C', '↑', '↓', 'F8','F12'];
-            var keyCodes = [window.KEYS.Esc, window.KEYS.Space, window.KEYS.B,  window.KEYS.D, window.KEYS.C, window.KEYS.Up,
-                window.KEYS.Down,window.KEYS.F8, window.KEYS.F12 ];
+            var effects = ['返回', '确定', '结算', '删除商品', '取消退货', '向上选择', '向下选择', '会员登录', '修改数量'];
+            var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'F8', 'F12'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Space, window.KEYS.B, window.KEYS.D, window.KEYS.C, window.KEYS.Up,
+                window.KEYS.Down, window.KEYS.F8, window.KEYS.F12];
             var returnWholeKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];

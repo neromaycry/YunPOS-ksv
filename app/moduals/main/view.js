@@ -182,7 +182,7 @@ define([
             this.renderMarquee();
             this.renderMinfo();
             if (isFromLogin) {
-                this.renderClientWelcome(isPacked);
+                this.renderClientWelcome(isPacked, isClientScreenShow);
                 isFromLogin = false;
             }
             //this.buttonSelected();
@@ -259,14 +259,14 @@ define([
             $('#li' + this.i).addClass('cus-selected');
             return this;
         },
-        renderClientWelcome: function (isPacked) {
-            if (isPacked) {
+        renderClientWelcome: function (isPacked, isClientShow) {
+            if (isPacked && isClientShow) {
                 $(clientDom).find('.client-display').html(this.template_welcome());
                 return this;
             }
         },
-        renderClientCart: function (collection, isPacked) {
-            if (isPacked) {
+        renderClientCart: function (collection, isPacked, isClientShow) {
+            if (isPacked && isClientShow) {
                 var len = collection.length;
                 var model = collection.at(len - 1);
                 $(clientDom).find('.client-display').html(this.template_clientdisplay(model.toJSON()));
@@ -865,7 +865,7 @@ define([
         onAddItem: function (JSONData) {
             this.collection.set(JSONData, {merge: false});
             //this.updateClientCurItem(this.collection, isPacked);
-            this.renderClientCart(this.collection, isPacked);
+            this.renderClientCart(this.collection, isPacked, isClientScreenShow);
             this.insertSerial();
             this.calculateModel();
             //this.buttonSelected();
@@ -1116,8 +1116,8 @@ define([
          * @param itemamount
          * @param discountamount
          */
-        updateClientSaleState: function (totalamount, itemamount, discountamount, isPacked) {
-            if (isPacked) {
+        updateClientSaleState: function (totalamount, itemamount, discountamount, isPacked, isClientShow) {
+            if (isPacked && isClientShow) {
                 clientDom.getElementById("totalAmount").innerHTML = toDecimal2(totalamount);
                 clientDom.getElementById("itemAmount").innerHTML = itemamount;
                 clientDom.getElementById("totalDiscount").innerHTML = toDecimal2(discountamount);
@@ -1127,8 +1127,8 @@ define([
          * 更新客显区当前商品信息
          * @param collection
          */
-        updateClientCurItem: function (collection, isPacked) {
-            if (isPacked) {
+        updateClientCurItem: function (collection, isPacked, isClientShow) {
+            if (isPacked && isClientShow) {
                 var len = collection.length;
                 var model = collection.at(len - 1).toJSON();
                 var $clientDom = $(clientDom);

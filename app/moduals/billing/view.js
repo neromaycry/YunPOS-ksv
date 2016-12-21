@@ -114,7 +114,7 @@ define([
 
         initPlugins: function () {
             this.renderBillInfo();
-            this.renderClientDisplay(this.model, isPacked);
+            this.renderClientDisplay(this.model, isPacked, isClientScreenShow);
             $('input[name = billing]').focus();
             //$('button[name = cancel-totaldiscount]').css('display','none');
             $('.for-billdetail').perfectScrollbar();
@@ -293,8 +293,8 @@ define([
             $('#billdetail' + this.i).addClass('cus-selected');
             return this;
         },
-        renderClientDisplay: function (model, isPacked) {
-            if (isPacked) {
+        renderClientDisplay: function (model, isPacked, isClientShow) {
+            if (isPacked && isClientShow) {
                 $(clientDom).find('.client-display').html(this.template_clientbillingtpl(model.toJSON()));
                 return this;
             }
@@ -388,7 +388,7 @@ define([
                 receivedsum = unpaidamount;
             }
             this.addToPaymentList(this.totalamount, "现金", parseFloat(receivedsum), "*", "00", "00", this.card_id, "");
-            this.renderClientDisplay(this.model, isPacked);
+            this.renderClientDisplay(this.model, isPacked, isClientScreenShow);
             $(this.input).val('');
         },
 
@@ -491,8 +491,9 @@ define([
             }
             loading.show();
             //var url = 'http://127.0.0.1:5000/';
-            var url = 'http://121.42.166.147:9090/';
-            resource.post(url + 'api/pay/xfb/refund', data, function (resp) {
+            //var url = 'http://121.42.166.147:9090/';
+            var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+            resource.post(url + '/api/pay/xfb/refund', data, function (resp) {
                 console.log(resp);
                 loading.hide();
                 if (!$.isEmptyObject(resp)) {

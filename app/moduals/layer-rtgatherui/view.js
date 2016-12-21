@@ -44,6 +44,7 @@ define([
             });
             this.switchTemplate(this.gatherUI);
             this.template_content = _.template(this.template_content);
+            this.itfcType = storage.get(system_config.POS_CONFIG, 'bank_interface');
             setTimeout(function () {
                 _self.renderContent();
             }, 100);
@@ -76,9 +77,9 @@ define([
                     this.input = 'input[name = reference-num]';
                     break;
                 case '06':
-                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                    if (this.itfcType == Interface_type.ABC_BJCS) {
                         this.template_content = bankcardtpl;
-                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                    } else if (this.itfcType == Interface_type.CCB_LANDI) {
                         this.template_content = bankccblanditpl;
                     }
                     this.input = 'input[name = reference-num]';
@@ -99,10 +100,10 @@ define([
                 if (isUserFocused) {
                     if(_self.gatherUI == '04'|| _self.gatherUI == '05') {
                         $('input[name = payment-bill]').focus();
-                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                    } else if (this.itfcType == Interface_type.ABC_BJCS) {
                         $('input[name = sale-dt]').focus();
                         _self.input = 'input[name = sale-dt]';
-                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                    } else if (this.itfcType == Interface_type.CCB_LANDI) {
                         $('input[name = sale-dt]').focus();
                         _self.input = 'input[name = sale-dt]';
                     }
@@ -130,7 +131,7 @@ define([
                 }
                 this.attrs.swipe_type = 'refund';
                 this.attrs.reference_number = reference_no;
-                if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                if (this.itfcType == Interface_type.CCB_LANDI) {
                     var sale_dt = $('input[name = sale-dt]').val();
                     if (sale_dt == '') {
                         layer.msg('请输入原交易日期', optLayerWarning);
@@ -177,8 +178,9 @@ define([
                 }
                 loading.show();
                 //var url = 'http://127.0.0.1:5000/';
-                var url = 'http://121.42.166.147:9090/';
-                resource.post(url + 'api/pay/xfb/refund', data, function (resp) {
+                //var url = 'http://121.42.166.147:9090/';
+                var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+                resource.post(url + '/api/pay/xfb/refund', data, function (resp) {
                     loading.hide();
                     console.log(resp);
                     if (!$.isEmptyObject(resp)) {
@@ -276,10 +278,10 @@ define([
             if (isUserFocused) {
                 if(this.gatherUI == '04' || this.gatherUI == '05') {
                     $('input[name = payment-bill]').focus();
-                } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                } else if (this.itfcType == Interface_type.ABC_BJCS) {
                         $('input[name = payment-bill]').focus();
                         this.input = 'input[name = payment-bill]';
-                } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                } else if (this.itfcType == Interface_type.CCB_LANDI) {
                         $('input[name = sale-dt]').focus();
                         this.input = 'input[name = sale-dt]';
                 }

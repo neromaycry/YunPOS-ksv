@@ -95,7 +95,8 @@ window.API_URL = {
     "XFB_BILL_NO": "/xfbbillno",
     "WORKER": "/worker",
     'CASHIER_MONEY': '/casiermoney',
-    'CASHIER_DKDJ': '/casierjkdj'
+    'CASHIER_DKDJ': '/casierjkdj',
+    'POS_CONF': '/posconf'
 };
 
 // 系统参数设置
@@ -132,7 +133,9 @@ window.system_config = {
     "ODD_CHANGE": 'ODD_CHANGE_KEY',
     "LAST_PAGE": "LAST_PAGE",
     "POS_LIMIT": "POS_LIMIT",
-    "INTERFACE_TYPE": "INTERFACE_TYPE"
+    "INTERFACE_TYPE": "INTERFACE_TYPE",
+    "POS_CONFIG": 'POS_CONFIG',
+    "XFB_URL": 'XFB_URL'
 };
 
 window.DIRECTIVES = {

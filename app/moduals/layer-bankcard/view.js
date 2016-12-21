@@ -42,7 +42,8 @@ define([
                     this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)], wsClient);
                     break;
                 case 'refund':
-                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                    var itfcType = storage.get(system_config.POS_CONFIG, 'bank_interface');
+                    if (itfcType == Interface_type.ABC_BJCS) {
                         var data = {
                             //transaction_amount: '0.01',
                             transaction_amount: this.attrs.gather_money,
@@ -51,7 +52,7 @@ define([
                             bill_no: this.attrs.bill_no,
                             reference_number: this.attrs.reference_number
                         };
-                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                    } else if (itfcType == Interface_type.CCB_LANDI) {
                         var data = {
                             //transaction_amount: '0.01',
                             transaction_amount: this.attrs.gather_money,
@@ -65,7 +66,8 @@ define([
                     this.sendWebSocketDirective([DIRECTIVES.Bank_refund], [JSON.stringify(data)], wsClient);
                     break;
                 case 'back_out':
-                    switch (storage.get(system_config.INTERFACE_TYPE)) {
+                    var itfcType = storage.get(system_config.POS_CONFIG, 'bank_interface');
+                    switch (itfcType) {
                         case Interface_type.ABC_BJCS:
                             var data = {
                                 transaction_amount: this.attrs.gather_money,

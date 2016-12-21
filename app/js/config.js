@@ -141,7 +141,7 @@ requirejs([
 
     window.fecha = fecha;
 
-    window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
+    window.isPacked = true;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
 
     window.layer = layer;
 
@@ -167,8 +167,6 @@ requirejs([
         time: 3000
     };
 
-    window.storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
-
     var isPosLimitSet = window.storage.isSet(system_config.SETTING_DATA_KEY, system_config.INIT_DATA_KEY, system_config.POS_LIMIT);
     //
     if (isPosLimitSet) {
@@ -189,8 +187,8 @@ requirejs([
     //    window.layer.msg('未获取POS机权限，请初始化获取', optLayerWarning);
     //}
 
-    if (window.isPacked) {
-        window.isClientScreenShow = window.storage.get(system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显
+    if (isPacked && window.storage.isSet(system_config.POS_CONFIG)) {
+        window.isClientScreenShow = window.storage.get(system_config.POS_CONFIG, system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显
         console.log('isClientScreenShow:' + isClientScreenShow);
         if (isClientScreenShow) {
             var gui = window.requireNode(['nw.gui']);
@@ -200,20 +198,21 @@ requirejs([
                 width: 1920,
                 toolbar: false
             });
-            window.clientScreen.moveTo(1024, 0);
+            window.clientScreen.moveTo(window.storage.get(system_config.POS_CONFIG, 'screen_width'), 0);
             window.clientScreen.enterKioskMode();
             window.clientScreen.on('loaded', function () {
                 // the native onload event has just occurred
                 window.clientDom = window.clientScreen.window.document;
                 var clientH = $(window.clientDom).height();
-                var clientW = $(window.clientDom).width();
+                //var clientW = $(window.clientDom).width();
                 //console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
-                $(window.clientDom).find('img').height(clientH - 150);
-                $(window.clientDom).find('img').css('width', '100%');
+                var infoH = $(window.clientDom).find('.client-display').height();
+                $(window.clientDom).find('.ad-img').height(clientH - infoH);
+                $(window.clientDom).find('.ad-img').css('width', '100%');
+                $(window.clientDom).find('.ad-img').attr('src', window.storage.get(system_config.POS_CONFIG, 'ad_url'));
                 window.focus();
             });
         }
-
     }
 
     Backbone.history.start();
@@ -333,7 +332,7 @@ requirejs([
                 }
                 break;
             //case DIRECTIVES.IC_CARD_AUTO_READ:
-                //自动寻卡因webctrl问题暂时不可用，待可用时再打开此注释
+            //自动寻卡因webctrl问题暂时不可用，待可用时再打开此注释
             //    if (data.status == '00') {
             //        console.log(window.pageId);
             //        switch (window.pageId) {

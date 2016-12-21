@@ -63,6 +63,14 @@ define(['../../js/common/BaseModel'], function (BaseModel) {
                 data: data,
                 success: callback
             });
+        },
+
+        requestPosConfig: function(data, callback) {
+            this.sendPOST({
+                url: window.API_URL.POS_CONF,
+                data: data,
+                success: callback
+            });
         }
 
     });
