@@ -97,7 +97,9 @@ define([
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
                 var isUserFocused = $('input[name = reference-num]').is(':focus');
                 if (isUserFocused) {
-                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                    if(_self.gatherUI == '04'|| _self.gatherUI == '05') {
+                        $('input[name = payment-bill]').focus();
+                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
                         $('input[name = sale-dt]').focus();
                         _self.input = 'input[name = sale-dt]';
                     } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
@@ -109,34 +111,11 @@ define([
                 }
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Up, function () {
-                var isUserFocused = $('input[name = reference-num]').is(':focus');
-                if (isUserFocused) {
-                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
-                        $('input[name = payment-bill]').focus();
-                        _self.input = 'input[name = payment-bill]';
-                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
-                        $('input[name = sale-dt]').focus();
-                        _self.input = 'input[name = sale-dt]';
-                    }
-                } else {
-                    $('input[name = reference-num]').focus();
-                    _self.input = 'input[name = reference-num]';
-                }
+                _self.switchInputFocus();
             });
+
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Down, function () {
-                var isUserFocused = $('input[name = reference-num]').is(':focus');
-                if (isUserFocused) {
-                    if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
-                        $('input[name = payment-bill]').focus();
-                        _self.input = 'input[name = payment-bill]';
-                    } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
-                        $('input[name = sale-dt]').focus();
-                        _self.input = 'input[name = sale-dt]';
-                    }
-                } else {
-                    $('input[name = reference-num]').focus();
-                    _self.input = 'input[name = reference-num]';
-                }
+                _self.switchInputFocus();
             });
         },
 
@@ -173,7 +152,7 @@ define([
                 var reference_no = $('input[name = reference-num]').val();
                 var payment_bill = $('input[name = payment-bill]').val();
                 if (reference_no == '') {
-                    layer.msg('请输入参考号', optLayerWarning);
+                    layer.msg('请输入订单号', optLayerWarning);
                     return;
                 }
                 if(payment_bill == '') {
@@ -289,6 +268,25 @@ define([
 
         focusInputSaleDt: function () {
             this.input = 'input[name = sale-dt]';
+        },
+
+
+        switchInputFocus: function () {
+            var isUserFocused = $('input[name = reference-num]').is(':focus');
+            if (isUserFocused) {
+                if(this.gatherUI == '04' || this.gatherUI == '05') {
+                    $('input[name = payment-bill]').focus();
+                } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.ABC_BJCS) {
+                        $('input[name = payment-bill]').focus();
+                        this.input = 'input[name = payment-bill]';
+                } else if (storage.get(system_config.INTERFACE_TYPE) == Interface_type.CCB_LANDI) {
+                        $('input[name = sale-dt]').focus();
+                        this.input = 'input[name = sale-dt]';
+                }
+            } else {
+                $('input[name = reference-num]').focus();
+                this.input = 'input[name = reference-num]';
+            }
         },
 
         refund: function (gatherUI, gatherNo, attrData) {
