@@ -155,9 +155,9 @@ define([
             Backbone.off('onBillICEcardPay');
             //Backbone.off('onBillDiscount');
             //Backbone.on('onBillDiscount', this.onBillDiscount,this);
-            Backbone.off('onBankBackoutSuccess');
+            Backbone.off('onBankBackoutDelete');
             Backbone.on('onReceivedsum', this.onReceivedsum, this);
-            Backbone.on('onBankBackoutSuccess', this.onBankBackoutSuccess, this);
+            Backbone.on('onBankBackoutDelete', this.onBankBackoutDelete, this);
             Backbone.on('onBillICEcardPay', this.onBillICEcardPay, this);
         },
 
@@ -522,6 +522,7 @@ define([
                 pageid: pageId,
                 //transaction_amount: 0.1,
                 gather_money: refundamount,
+                billing_mode: 'sale',
                 cashier_no: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
                 pos_no: storage.get(system_config.POS_INFO_KEY, 'posid'),
                 bill_no: this.billNumber,
@@ -977,7 +978,8 @@ define([
             });
         },
 
-        onBankBackoutSuccess: function () {
+        onBankBackoutDelete: function () {
+            console.log('onBankBackoutDelete');
             this.deleteItem(this.i);
         },
 
