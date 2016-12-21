@@ -451,6 +451,9 @@ define([
                             router.navigate("main", {trigger: true, replace: true});
                             _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                             layer.msg('退货成功', optLayerSuccess);
+                        } else if(resp.status == '87'){//如果返回的状态值是87，代表会员积分余额不足
+                            layer.msg(resp.msg.msg, optLayerError);
+                            window.loading.hide();
                         } else {
                             layer.msg(resp.msg, optLayerError);
                         }
@@ -502,6 +505,9 @@ define([
                             router.navigate("main", {trigger: true, replace: true});
                             _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                             layer.msg('退货成功', optLayerSuccess);
+                        } else if(resp.status == '87'){//如果返回的状态值是87，代表会员积分余额不足
+                            layer.msg(resp.msg.msg, optLayerError);
+                            window.loading.hide();
                         } else {
                             layer.msg(resp.msg, optLayerError);
                         }
@@ -716,12 +722,12 @@ define([
             }
             var attrs = {
                 pageid: pageId,
-                content: '确定删除此条支付记录？',
+                content: '确定删除此条退款记录？',
                 callback: function () {
                     var item = _self.collection.at(_self.i);
-                    var gatherUI = item.get('gather_ui');
-                    if (gatherUI == '04' || gatherUI == '05' || gatherUI == '06') {
-                        layer.msg('无法删除此条支付记录');
+                    var gatherKind = item.get('gather_kind');
+                    if (gatherKind == '05' || gatherKind == '03') {//如果是银行卡支付或者第三方支付，则不能删除此条支付记录
+                        layer.msg('无法删除此条退款记录', optLayerWarning);
                     } else {
                         _self.deleteItem(_self.i);
                         layer.msg('删除成功', optLayerSuccess);
