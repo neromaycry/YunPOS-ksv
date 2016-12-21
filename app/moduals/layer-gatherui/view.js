@@ -118,7 +118,8 @@ define([
                             gather_name: _self.attrs.gather_name,
                             gather_money: _self.attrs.gather_money,
                             gather_kind: _self.attrs.gather_kind,
-                            gather_no: respData.outtradeno,
+                            //gather_no: respData.outtradeno,
+                            gather_no:'*',
                             hasExtra: true,
                             extras: {
                                 extra_id: 1,
