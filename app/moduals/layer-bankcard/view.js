@@ -95,9 +95,11 @@ define([
             Backbone.off('onBankSaleSuccess');
             Backbone.off('onBankRefundSuccess');
             Backbone.off('onRTBankBackoutSuccess');
+            Backbone.off('onBankBackoutSuccess');
             Backbone.on('onBankSaleSuccess', this.onBankSaleSuccess, this);
             Backbone.on('onBankRefundSuccess', this.onBankRefundSuccess, this);
             Backbone.on('onRTBankBackoutSuccess', this.onRTBankBackoutSuccess, this);
+            Backbone.on('onBankBackoutSuccess', this.onBankBackoutSuccess, this);
         },
 
         //bindLayerKeys: function () {
@@ -168,6 +170,11 @@ define([
                 };
                 this.openLayer(PAGE_ID.LAYER_TIP, PAGE_ID.BILLING_RETURN, '提示', LayerTipView, attrs, {area: '500px'});
             }
+        },
+
+        onBankBackoutSuccess: function () {
+            this.closeLayer(layerindex);
+            Backbone.trigger('onBankBackoutDelete');
         },
 
         onRTBankBackoutSuccess: function (resp) {

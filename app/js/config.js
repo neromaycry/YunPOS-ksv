@@ -141,7 +141,7 @@ requirejs([
 
     window.fecha = fecha;
 
-    window.isPacked = true;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
+    window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
 
     window.layer = layer;
 
@@ -256,11 +256,13 @@ requirejs([
                 if (data.code == '00') {
                     window.loading.hide();
                     switch (pageId) {
-                        case PAGE_ID.BILLING:
-                            Backbone.trigger('onBankBackoutSuccess');
-                            break;
                         case PAGE_ID.LAYER_BANK_CARD:
-                            Backbone.trigger('onRTBankBackoutSuccess', data);
+                            if (data.billing_mode == 'sale') {
+                                console.log('trigger --> bank back out success');
+                                Backbone.trigger('onBankBackoutSuccess');
+                            } else if (data.billing_mode == 'return') {
+                                Backbone.trigger('onRTBankBackoutSuccess', data);
+                            }
                             break;
                     }
                 } else {
