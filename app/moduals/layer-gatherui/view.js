@@ -238,14 +238,15 @@ define([
                         gather_name: this.attrs.gather_name,
                         gather_money: this.attrs.gather_money,
                         gather_kind: this.attrs.gather_kind,
-                        gather_no: gatherNo,
+                        gather_no: '第三方支付账户',
+                        authno:gatherNo,
                         hasExtra: true,
                         extras: {
                             extra_id: 1,
                             payment_bill: this.attrs.payment_bill
                         }
                     };
-                    this.micropay(this.gatherUI, gatherNo, attrs);
+                    this.micropay(this.gatherUI, attrs);
                     if (isPacked) {
                         $(clientDom).find('.client-qrcode').css('display', 'none');
                     }
@@ -263,6 +264,7 @@ define([
                     this.closeLayer(layerindex);
                     $('input[name = billing]').focus();
             }
+
         },
 
         onNumClicked: function (e) {
@@ -297,17 +299,16 @@ define([
 
         /**
          * 调用支付宝付款接口,被扫支付即条码支付
-         * @param gatherId 判断是哪种付款方式
+         * @param gatherUI 判断是哪种付款方式
          * @param gatherNo 付款账号
          * @param attrData 准备传到结算页面的数据
-         * @param paymentBill 祥付宝交易单号
          */
-        micropay: function (gatherUI, gatherNo, attrData) {
+        micropay: function (gatherUI, attrData) {
             var _self = this;
             var totalfee = attrData.gather_money;
             var data = {
                 orderid: attrData.extras.payment_bill,
-                authno: gatherNo,
+                authno: attrData.authno,
                 totalfee: totalfee,
                 body: '祥付测试',
                 subject: '祥付测试'
@@ -339,6 +340,7 @@ define([
                             }));
                             layer.msg(resp.data.msg, optLayerSuccess);
                             _self.closeLayer(layerindex);
+                            $('input[name = billing]').focus();
                         } else {
                             loading.hide();
                             layer.msg(resp.data.msg, optLayerError);

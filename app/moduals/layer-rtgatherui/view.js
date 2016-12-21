@@ -152,11 +152,11 @@ define([
                 var reference_no = $('input[name = reference-num]').val();
                 var payment_bill = $('input[name = payment-bill]').val();
                 if (reference_no == '') {
-                    layer.msg('请输入订单号', optLayerWarning);
+                    layer.msg('请输入参考号', optLayerWarning);
                     return;
                 }
                 if(payment_bill == '') {
-                    layer.msg('请输入第三方支付流水号', optLayerWarning);
+                    layer.msg('请输入第三方支付单号', optLayerWarning);
                     return;
                 }
                 var data = {
@@ -217,7 +217,7 @@ define([
             }
             var gatherNo = $(this.input).val();
             if ((gatherNo.split('.').length - 1) > 0 || gatherNo == '') {
-                layer.msg('无效的支付账号', optLayerWarning);
+                layer.msg('无效的退款账号', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
