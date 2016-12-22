@@ -57,8 +57,8 @@ define([
             var data = {
                 orderid: this.attrs.payment_bill,
                 totalfee: this.attrs.gather_money,
-                body: '祥付测试',
-                subject: '祥付测试'
+                body: '祥付宝',
+                subject: '祥付宝'
             };
             if (gatherUI == '04') {
                 data['paymethod'] = 'zfb';
@@ -120,7 +120,7 @@ define([
                             gather_money: _self.attrs.gather_money,
                             gather_kind: _self.attrs.gather_kind,
                             //gather_no: respData.outtradeno,
-                            gather_no: '第三方支付账户',
+                            gather_no: _self.attrs.payment_bill,
                             hasExtra: true,
                             extras: {
                                 extra_id: 1,
@@ -311,8 +311,8 @@ define([
                 orderid: attrData.extras.payment_bill,
                 authno: attrData.authno,
                 totalfee: totalfee,
-                body: '祥付测试',
-                subject: '祥付测试'
+                body: '祥付宝',
+                subject: '祥付宝'
             };
             if (gatherUI == '04') {
                 _.extend(data, {
