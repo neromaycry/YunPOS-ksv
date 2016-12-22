@@ -342,6 +342,7 @@ define([
                             }));
                             layer.msg(resp.data.msg, optLayerSuccess);
                             _self.closeLayer(layerindex);
+                            _self.isClosed = true;
                             $('input[name = billing]').focus();
                         } else {
                             loading.hide();

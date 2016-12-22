@@ -98,13 +98,14 @@ define([
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
                 var isUserFocused = $('input[name = reference-num]').is(':focus');
+                console.log(isUserFocused);
                 if (isUserFocused) {
                     if (_self.gatherUI == '04' || _self.gatherUI == '05') {
                         $('input[name = payment-bill]').focus();
-                    } else if (this.itfcType == Interface_type.ABC_BJCS) {
+                    } else if (_self.itfcType == Interface_type.ABC_BJCS) {
                         $('input[name = sale-dt]').focus();
                         _self.input = 'input[name = sale-dt]';
-                    } else if (this.itfcType == Interface_type.CCB_LANDI) {
+                    } else if (_self.itfcType == Interface_type.CCB_LANDI) {
                         $('input[name = sale-dt]').focus();
                         _self.input = 'input[name = sale-dt]';
                     }

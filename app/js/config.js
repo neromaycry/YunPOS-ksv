@@ -267,6 +267,12 @@ requirejs([
                             break;
                     }
                 } else {
+                    if (data.billing_mode == 'sale') {
+                        console.log('trigger --> bank back out success');
+                        $('input[name = billing]').focus();
+                    } else if (data.billing_mode == 'return') {
+                        $('input[name = billingrt]').focus();
+                    }
                     window.layer.msg(data.msg, optLayerWarning);
                 }
                 window.layer.close(layerindex);
@@ -277,6 +283,7 @@ requirejs([
                     Backbone.trigger('onBankRefundSuccess', data);
                 } else {
                     window.layer.close(layerindex);
+                    $('input[name = billingrt]').focus();
                     window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;

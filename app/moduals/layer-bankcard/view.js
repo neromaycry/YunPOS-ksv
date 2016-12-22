@@ -85,7 +85,7 @@ define([
                                 bill_no: this.attrs.bill_no,
                                 serial_no: this.attrs.reference_number,
                                 swipe_type: 'back_out',
-                                billing_mode: this.attrs.billing_mode3
+                                billing_mode: this.attrs.billing_mode
                             };
                             break;
                     }
@@ -164,10 +164,11 @@ define([
                 };
                 // TODO 将相应支付方式添加至支付列表
                 Backbone.trigger('onRTReceivedsum', data);
-                this.closeLayer(layerindex);
-                $('input[name = billingrt]').focus();
+                //this.closeLayer(layerindex);
+                //$('input[name = billingrt]').focus();
+                this.confirmHideLayer(PAGE_ID.BILLING_RETURN);
             } else {
-                this.closeLayer(layerindex);
+                this.confirmHideLayer(PAGE_ID.BILLING_RETURN);
                 var attrs = {
                     content: '付款金额与退款金额不符，请联系管理员'
                 };
@@ -176,7 +177,7 @@ define([
         },
 
         onBankBackoutSuccess: function () {
-            this.closeLayer(layerindex);
+            this.confirmHideLayer(PAGE_ID.BILLING);
             Backbone.trigger('onBankBackoutDelete');
         },
 
@@ -205,15 +206,16 @@ define([
                 };
                 // TODO 将相应支付方式添加至支付列表
                 Backbone.trigger('onRTReceivedsum', data);
-                this.closeLayer(layerindex);
-                $('input[name = billingrt]').focus();
+                //this.closeLayer(layerindex);
+                //$('input[name = billingrt]').focus();
             } else {
-                this.closeLayer(layerindex);
+                this.confirmHideLayer(PAGE_ID.BILLING_RETURN);
                 var attrs = {
                     content: '付款金额与退款金额不符，请联系管理员'
                 };
                 this.openLayer(PAGE_ID.LAYER_TIP, PAGE_ID.BILLING_RETURN, '提示', LayerTipView, attrs, {area: '500px'});
             }
+            this.confirmHideLayer(PAGE_ID.BILLING_RETURN);
         },
 
         onCancelClicked: function () {
