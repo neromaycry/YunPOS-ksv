@@ -353,10 +353,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.T, function () {
                 _self.openHelp();
             });
-            //清空支付方式列表
-            this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.C, function () {
-                _self.cleanPaylist();
-            });
+            ////清空支付方式列表
+            //this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.C, function () {
+            //    _self.cleanPaylist();
+            //});
 
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.V, function () {
                 _self.onBusinessClicked();
@@ -396,39 +396,39 @@ define([
         /**
          * 清空已支付方式列表
          */
-        cleanPaylist: function () {
-            var _self = this;
-            var data = {};
-            var receivedSum = this.model.get('receivedsum');
-            if (receivedSum == 0) {
-                layer.msg('尚未付款', optLayerWarning);
-                return;
-            }
-            var attrs = {
-                pageid: pageId,
-                content: '确定清空支付列表？',
-                callback: function () {
-                    _self.evalAuth(auth_delete, '08', {}, function () {
-                        for (var j = _self.collection.length - 1; j >= 0; j--) {
-                            var model = _self.collection.at(j);
-                            var gatherUI = model.get('gather_ui');
-                            switch (gatherUI) {
-                                case '04':
-                                case '05':
-                                    _self.refund(j, gatherUI);
-                                    break;
-                                case '06':
-                                    _self.deletebankpay(j);
-                                    break;
-                                default:
-                                    _self.deleteItem(j);
-                            }
-                        }
-                    });
-                }
-            };
-            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
-        },
+        //cleanPaylist: function () {
+        //    var _self = this;
+        //    var data = {};
+        //    var receivedSum = this.model.get('receivedsum');
+        //    if (receivedSum == 0) {
+        //        layer.msg('尚未付款', optLayerWarning);
+        //        return;
+        //    }
+        //    var attrs = {
+        //        pageid: pageId,
+        //        content: '确定清空支付列表？',
+        //        callback: function () {
+        //            _self.evalAuth(auth_delete, '08', {}, function () {
+        //                for (var j = _self.collection.length - 1; j >= 0; j--) {
+        //                    var model = _self.collection.at(j);
+        //                    var gatherUI = model.get('gather_ui');
+        //                    switch (gatherUI) {
+        //                        case '04':
+        //                        case '05':
+        //                            _self.refund(j, gatherUI);
+        //                            break;
+        //                        case '06':
+        //                            _self.deletebankpay(j);
+        //                            break;
+        //                        default:
+        //                            _self.deleteItem(j);
+        //                    }
+        //                }
+        //            });
+        //        }
+        //    };
+        //    this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
+        //},
 
         /**
          * 删除,如果存在第三方支付，则调用refund函数;如果存在一卡通支付，调用一卡通删除函数;如果存在银行卡支付，则调用银行卡删除函数。
@@ -732,7 +732,7 @@ define([
          */
         onReturnMainClicked: function () {
             if (this.collection.length != 0) {
-                layer.msg('请先清空支付列表', optLayerWarning);
+                layer.msg('请先取消支付', optLayerWarning);
             } else {
                 router.navigate('main', {trigger: true});
             }
@@ -754,9 +754,9 @@ define([
         /**
          * 清空支付方式列表
          */
-        onCleanClicked: function () {
-            this.cleanPaylist();
-        },
+        //onCleanClicked: function () {
+        //    this.cleanPaylist();
+        //},
 
         onOKClicked: function () {
             this.confirm();

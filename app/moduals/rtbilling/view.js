@@ -223,10 +223,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.O, function () {
                 _self.payByECard();
             });
-            //清空支付方式列表
-            this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.C, function () {
-                _self.onBillCleanClicked();
-            });
+            ////清空支付方式列表
+            //this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.C, function () {
+            //    _self.onBillCleanClicked();
+            //});
             //快捷支付
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.E, function () {
                 _self.QuickPay();
@@ -672,7 +672,7 @@ define([
         onReturnClicked: function () {
             var len = this.collection.length;
             if (len != 0) {
-                layer.msg('请先清空支付列表', optLayerWarning);
+                layer.msg('请先取消支付', optLayerWarning);
                 return;
             }
             if (isfromForce) {
@@ -759,22 +759,22 @@ define([
         /**
          * 清空支付方式列表
          */
-        onBillCleanClicked: function () {
-            var _self = this;
-            var len = this.collection.length;
-            if (len == 0) {
-                layer.msg('尚未退款', optLayerWarning);
-                return;
-            }
-            var attrs = {
-                pageid: pageId,
-                content: '确认清空退款列表？',
-                callback: function () {
-                    _self.cleanPaylist();
-                }
-            };
-            this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
-        },
+        //onBillCleanClicked: function () {
+        //    var _self = this;
+        //    var len = this.collection.length;
+        //    if (len == 0) {
+        //        layer.msg('尚未退款', optLayerWarning);
+        //        return;
+        //    }
+        //    var attrs = {
+        //        pageid: pageId,
+        //        content: '确认清空退款列表？',
+        //        callback: function () {
+        //            _self.cleanPaylist();
+        //        }
+        //    };
+        //    this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirmView, attrs, {area: '300px'});
+        //},
 
         /**
          * 向上按钮点击事件
