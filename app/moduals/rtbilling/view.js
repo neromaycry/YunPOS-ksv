@@ -451,12 +451,7 @@ define([
                             router.navigate("main", {trigger: true, replace: true});
                             _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                             layer.msg('退货成功', optLayerSuccess);
-                        }
-                            // else if(resp.status == '87'){//如果返回的状态值是87，代表会员积分余额不足
-                        //    layer.msg(resp.msg.msg, optLayerError);
-                        //    //window.loading.hide();
-                        //}
-                        else {
+                        }  else {
                             layer.msg(resp.msg, optLayerError);
                         }
                     } else {
@@ -507,9 +502,6 @@ define([
                             router.navigate("main", {trigger: true, replace: true});
                             _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                             layer.msg('退货成功', optLayerSuccess);
-                        } else if(resp.status == '87'){//如果返回的状态值是87，代表会员积分余额不足
-                            layer.msg(resp.msg.msg, optLayerError);
-                            //window.loading.hide();
                         } else {
                             layer.msg(resp.msg, optLayerError);
                         }
