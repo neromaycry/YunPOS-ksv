@@ -676,9 +676,7 @@ define([
                         _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                         _self.renderClientDisplay(_self.model);
                         router.navigate("main", {trigger: true, replace: true});
-                    } else if(resp.status == '87') {
-                        layer.msg(resp.msg.msg, optLayerError);
-                    } else {
+                    }  else {
                         layer.msg(resp.msg, optLayerError);
                         Backbone.trigger('onNavigateStateChanged', false);
                     }
