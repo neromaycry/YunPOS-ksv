@@ -84,7 +84,8 @@ define([
                                 pos_no: this.attrs.pos_no,
                                 bill_no: this.attrs.bill_no,
                                 serial_no: this.attrs.reference_number,
-                                swipe_type: 'back_out'
+                                swipe_type: 'back_out',
+                                billing_mode: this.attrs.billing_mode3
                             };
                             break;
                     }

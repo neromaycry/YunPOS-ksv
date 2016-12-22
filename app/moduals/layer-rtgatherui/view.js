@@ -11,7 +11,7 @@ define([
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
     'text!../../moduals/layer-rtgatherui/bankccblanditpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView ,  contenttpl, commontpl, thirdpaytpl, bankcardtpl, bankccblanditpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, contenttpl, commontpl, thirdpaytpl, bankcardtpl, bankccblanditpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -37,6 +37,7 @@ define([
         LayerInitPage: function () {
             console.log(this.attrs);
             var _self = this;
+            this.itfcType = storage.get(system_config.POS_CONFIG, 'bank_interface');
             this.gatherUI = this.attrs.gather_ui;
             this.model = new LayerGatherUIModel();
             this.model.set({
@@ -44,7 +45,7 @@ define([
             });
             this.switchTemplate(this.gatherUI);
             this.template_content = _.template(this.template_content);
-            this.itfcType = storage.get(system_config.POS_CONFIG, 'bank_interface');
+            console.log('this.itfcType:' + this.itfcType);
             setTimeout(function () {
                 _self.renderContent();
             }, 100);
@@ -53,10 +54,10 @@ define([
 
         renderContent: function () {
             this.$el.find('.gatherui-content').html(this.template_content(this.model.toJSON()));
-              $('.cbtn').mousedown(function () {
-                  console.log('baselayer mousedown');
-                  $(this).addClass('clicked');
-              });
+            $('.cbtn').mousedown(function () {
+                console.log('baselayer mousedown');
+                $(this).addClass('clicked');
+            });
             $('.cbtn').mouseup(function () {
                 $(this).removeClass('clicked');
             });
@@ -98,7 +99,7 @@ define([
             this.bindLayerKeyEvents(PAGE_ID.LAYER_RT_BILLACCOUNT, KEYS.Enter, function () {
                 var isUserFocused = $('input[name = reference-num]').is(':focus');
                 if (isUserFocused) {
-                    if(_self.gatherUI == '04'|| _self.gatherUI == '05') {
+                    if (_self.gatherUI == '04' || _self.gatherUI == '05') {
                         $('input[name = payment-bill]').focus();
                     } else if (this.itfcType == Interface_type.ABC_BJCS) {
                         $('input[name = sale-dt]').focus();
@@ -149,14 +150,14 @@ define([
                 this.openLayer(PAGE_ID.LAYER_BANK_CARD, PAGE_ID.BILLING_RETURN, '银行MIS退款', LayerBankCardView, this.attrs, {area: '300px'});
                 return;
             }
-            if(this.gatherUI == '04' || this.gatherUI == '05') {
+            if (this.gatherUI == '04' || this.gatherUI == '05') {
                 var reference_no = $('input[name = reference-num]').val();
                 var payment_bill = $('input[name = payment-bill]').val();
                 if (reference_no == '') {
                     layer.msg('请输入参考号', optLayerWarning);
                     return;
                 }
-                if(payment_bill == '') {
+                if (payment_bill == '') {
                     layer.msg('请输入第三方支付单号', optLayerWarning);
                     return;
                 }
@@ -276,14 +277,14 @@ define([
         switchInputFocus: function () {
             var isUserFocused = $('input[name = reference-num]').is(':focus');
             if (isUserFocused) {
-                if(this.gatherUI == '04' || this.gatherUI == '05') {
+                if (this.gatherUI == '04' || this.gatherUI == '05') {
                     $('input[name = payment-bill]').focus();
                 } else if (this.itfcType == Interface_type.ABC_BJCS) {
-                        $('input[name = payment-bill]').focus();
-                        this.input = 'input[name = payment-bill]';
+                    $('input[name = payment-bill]').focus();
+                    this.input = 'input[name = payment-bill]';
                 } else if (this.itfcType == Interface_type.CCB_LANDI) {
-                        $('input[name = sale-dt]').focus();
-                        this.input = 'input[name = sale-dt]';
+                    $('input[name = sale-dt]').focus();
+                    this.input = 'input[name = sale-dt]';
                 }
             } else {
                 $('input[name = reference-num]').focus();
