@@ -239,7 +239,7 @@ define([
                         gather_name: this.attrs.gather_name,
                         gather_money: this.attrs.gather_money,
                         gather_kind: this.attrs.gather_kind,
-                        gather_no: '第三方支付账户',
+                        gather_no: this.attrs.payment_bill,
                         authno: gatherNo,
                         hasExtra: true,
                         extras: {

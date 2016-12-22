@@ -25,15 +25,16 @@ define([
 
         LayerInitPage: function () {
             var _self = this;
-            this.model = new LayerWorkerModel();
-
+            this.model = new LayerWorkerModel()
         },
 
         bindLayerKeys: function () {
             var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_WORKER, KEYS.Enter, function () {
-                _self.onOKClicked();
-            });
+            setTimeout(function () {
+                _self.bindLayerKeyEvents(PAGE_ID.LAYER_WORKER, KEYS.Enter, function () {
+                    _self.onOKClicked();
+                });
+            }, 300);
 
             this.bindLayerKeyEvents(PAGE_ID.LAYER_WORKER, KEYS.Esc, function () {
                 _self.onCancelClicked();
@@ -82,6 +83,7 @@ define([
                     } else if (resp.status == '99') {
                         Backbone.trigger('openLayerWorker', _.extend(resp, {skucode: _self.attrs.skucode}));
                     } else {
+                        console.log('layer-worker msg ===============');
                         layer.msg(resp.msg, optLayerWarning);
                     }
                 } else {

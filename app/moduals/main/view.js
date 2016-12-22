@@ -784,8 +784,10 @@ define([
                             resp = _.extend(resp, {skucode: skucode});
                             _self.getGoods(resp);
                         } else if (resp.status == '99') {
+                            console.log('resp status 99 -----------------');
                             _self.openLayerWorker();
                         } else {
+                            console.log('>>>>>>>>>>>>>>>');
                             layer.msg(resp.msg, optLayerWarning);
                         }
                     } else {
