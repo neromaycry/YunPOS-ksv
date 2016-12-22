@@ -195,7 +195,7 @@ define([
                                     gather_ui: _self.gatherUI
                                 });
                                 Backbone.trigger('onRTReceivedsum', _.extend(_self.attrs, {
-                                    gather_no: '第三方支付账户',
+                                    gather_no: _self.attrs.bill_no,
                                     extras: extra
                                 }));
                                 layer.msg(resp.data.msg, optLayerSuccess);
@@ -203,7 +203,6 @@ define([
                             } else {
                                 layer.msg(resp.data.msg, optLayerError);
                             }
-
                         } else {
                             layer.msg(resp.msg, optLayerError);
                         }
