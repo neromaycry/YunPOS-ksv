@@ -48,8 +48,8 @@ define([
             'click .help': 'onHelpClicked',
             'click .keyup': 'onKeyUpClicked',
             'click .keydown': 'onKeyDownClicked',
-            'click #report': 'onReportClicked',
-            'click #daily-report': 'onDailyReportClicked',
+            'click #for_cashier': 'onCashierReportClicked',
+            'click #for_pos': 'onPosReportClicked',
             'click .print': 'onPrintClicked',
             'click .pay-table': 'onPayTableClicked'
         },
@@ -312,14 +312,16 @@ define([
         onBackClicked: function () {
             router.navigate('main', {trigger: true});
         },
-        onReportClicked: function () {
+        onCashierReportClicked: function () {
             this.isCashier = true;
             this.i = 0;
+            console.log(this.isCashier);
         },
 
-        onDailyReportClicked: function () {
+        onPosReportClicked: function () {
             this.isCashier = false;
             this.i = 0;
+            console.log(this.isCashier);
         },
 
         onPrintClicked: function () {
