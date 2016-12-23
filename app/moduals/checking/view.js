@@ -33,6 +33,10 @@ define([
 
         date: '',
 
+        printCashierText:'',
+
+        printPosText:'',
+
         input: 'input[name = checking_date]',
 
         events: {
@@ -109,11 +113,11 @@ define([
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Enter, function () {
-                if (_self.printText == '') {
-                    _self.checkingDate();
-                } else {
-                    _self.onPrintClicked();
-                }
+                _self.checkingDate();
+            });
+
+            this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.H, function () {
+                _self.onPrintClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.G, function () {
@@ -225,7 +229,7 @@ define([
                                 money: resp.sum_money,
                             });
                             _self.collection.set(resp.master_detail);
-                            _self.printText = resp.printf;
+                            _self.printCashierText = resp.printf;
                             _self.renderCashierInfo();
                             _self.renderCashierdetail();
                         } else {
@@ -256,7 +260,7 @@ define([
                                 sub_money: resp.sub_money//小计金额
                             });
                             _self.collection.set(resp.master_detail);
-                            _self.printText = resp.printf;
+                            _self.printPosText = resp.printf;
                             _self.renderPosInfo();
                             _self.renderPosDetail();
                         } else {
@@ -319,11 +323,19 @@ define([
         },
 
         onPrintClicked: function () {
+            if(this.isCashier) {//如果是收银员报表的话,this.printText = this.printCashierText
+                this.printText = this.printCashierText;
+            } else {//this.printText = this.printPosText
+                this.printText = this.printPosText;
+            }
             if (this.printText == '') {
                 layer.msg('请先查询收银报表数据', optLayerWarning);
-            } else {
-                this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [this.printText], wsClient);
+                return;
             }
+            console.log(this.printText);
+            console.log('this is printText');
+            this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [this.printText], wsClient);
+
         },
 
         onPayTableClicked: function () {
