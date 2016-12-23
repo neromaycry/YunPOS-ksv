@@ -112,7 +112,7 @@ define([
                 _self.onCancelClicked();
             });
 
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_PAYTABLE, KEYS.P, function () {
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_PAYTABLE, KEYS.H, function () {
                 _self.onPrintClicked();
             });
 
