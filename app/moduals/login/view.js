@@ -479,10 +479,10 @@ define([
 
         setCheckingKeys: function () {
             var effects = ['返回', '确定', '向上选择', '向下选择',
-                '收银员日结报表', '收款机报表', '缴费表'];
-            var keys = ['ESC', 'ENTER', '↑', '↓', '←', '→', 'G'];
+                '收银员日结报表', '收款机报表', '打印', '缴费表'];
+            var keys = ['ESC', 'ENTER', '↑', '↓', '←', '→','H', 'G'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down,
-                window.KEYS.Left, window.KEYS.Right, window.KEYS.G];
+                window.KEYS.Left, window.KEYS.Right, window.KEYS.H, window.KEYS.G];
             var checkingKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
