@@ -180,7 +180,7 @@ define([
 
         onCancelClicked: function () {
             this.closeLayer(layerindex);
-            $('input[name = main]').focus();
+            $('input[name = checking_date]').focus();
         },
 
         onNumClicked: function (e) {
@@ -252,6 +252,7 @@ define([
                         _self.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [resp.printf], wsClient);
                         layer.msg('缴款单已打印', optLayerSuccess);
                         _self.closeLayer(layerindex);
+                        $('input[name = checking_date]').focus();
                     } else {
                         layer.msg(resp.msg, optLayerWarning);
                     }

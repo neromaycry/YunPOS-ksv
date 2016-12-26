@@ -85,11 +85,11 @@ define([
             var dh = $(window).height();
             var nav = $('.navbar').height();
             var td = $('td').height();
-            var cashierdetail = dh - 3 * nav - td * 8 - 100;
+            var cashierdetail = dh - 3 * nav - td * 8 - 110;
             $('.for-cashier-detail').height(cashierdetail);
             $('.for-pos-detail').height(cashierdetail);
             this.listheight = cashierdetail;
-            this.listnum = 6;
+            this.listnum = 7;
         },
 
         bindKeys: function () {
