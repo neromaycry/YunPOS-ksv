@@ -114,7 +114,8 @@ define([
                 return;
             }
             var _self = this;
-            var url = 'http://121.42.166.147:9090/';
+            //var url = 'http://121.42.166.147:9090/';
+            var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
             var data = {
                 outtradeno: respData.outtradeno
             };
@@ -337,7 +338,7 @@ define([
                             Backbone.trigger('onReceivedsum', _.extend(attrs, {
                                 extras: extra
                             }));
-                            //layer.msg(resp.data.msg, optLayerSuccess);
+                            layer.msg('支付成功！', optLayerSuccess);
                             _self.closeLayer(layerindex);
                             _self.isClosed = true;
                             $('input[name = billing]').focus();
