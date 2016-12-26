@@ -376,8 +376,8 @@ define([
         getDeferred: function (gatherUI, attrData) {
             var totalfee = attrData.gather_money;
             var defer = $.Deferred();
-            var url = 'http://127.0.0.1:5000';
-            //var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+            //var url = 'http://127.0.0.1:5000';
+            var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
             var data = {
                 orderid: attrData.extras.payment_bill,
                 authno: attrData.authno,
