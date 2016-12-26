@@ -144,7 +144,7 @@ requirejs([
 
     window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
 
-    window.isClientScreenShow = false;
+    window.isClientScreenShow = 0;
 
     window.layer = layer;
 
@@ -193,7 +193,7 @@ requirejs([
     if (isPacked && window.storage.isSet(system_config.POS_CONFIG)) {
         window.isClientScreenShow = window.storage.get(system_config.POS_CONFIG, system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显
         console.log('isClientScreenShow:' + isClientScreenShow);
-        if (isClientScreenShow) {
+        if (isClientScreenShow == 1) {
             var gui = window.requireNode(['nw.gui']);
             window.clientScreen = gui.Window.open("client.html", {
                 title: '云POS',

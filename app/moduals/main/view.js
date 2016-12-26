@@ -578,7 +578,6 @@ define([
             });
         },
 
-
         //折让
         onDiscountPercentClicked: function () {
             var _self = this;
@@ -1240,29 +1239,42 @@ define([
 
         initNotifySocket: function () {
             var _self = this;
-            if (!window.notifySocket) {
-                var addr = storage.get(system_config.POS_CONFIG, 'notify_url');
-                window.notifySocket = new Recwebsocket(addr);
-                window.notifySocket.onopen = function (e) {
-                    layer.msg('通知服务已连接', optLayerSuccess);
-                };
-                window.notifySocket.onmessage = function (e) {
-                    console.log(e);
-                    _self.marqueeModel.set({
-                        notification_content: '当前无通知'
-                    });
-                };
-                window.notifySocket.onerror = function (e) {
-                    console.log(e);
-                };
-                window.notifySocket.onclose = function (e) {
-                    layer.msg('通知服务连接已断开', optLayerError);
-                };
+            var isNotifySet = storage.get(system_config.POS_CONFIG, 'is_notity_set');
+            //var isNotifySet = 1;
+            console.log(isNotifySet);
+            if (isNotifySet == 1) {
+                if (!window.notifySocket) {
+                    var addr = storage.get(system_config.POS_CONFIG, 'notify_url');
+                    window.notifySocket = new Recwebsocket(addr);
+                    window.notifySocket.onopen = function (e) {
+                        layer.msg('通知服务已连接', optLayerSuccess);
+                    };
+                    window.notifySocket.onmessage = function (e) {
+                        console.log(e);
+                        var data = $.parseJSON(e.data);
+                        if (data.status == '00') {
+                            _self.marqueeModel.set({
+                                notification_content: data.msg
+                            });
+                        } else {
+                            layer.msg(data.msg, optLayerWarning);
+                        }
+                    };
+                    window.notifySocket.onerror = function (e) {
+                        console.log(e);
+                    };
+                    window.notifySocket.onclose = function (e) {
+                        layer.msg('通知服务连接已断开', optLayerError);
+                    };
+                } else {
+                    layer.msg('已有通知服务实例', optLayerSuccess);
+                }
             } else {
-                layer.msg('已有通知服务实例', optLayerSuccess);
+                this.marqueeModel.set({
+                    notification_content: '通知服务未开启'
+                });
             }
         },
-
 
     });
     return mainView;

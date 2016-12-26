@@ -55,6 +55,16 @@ define([
             }, 100);
         },
 
+        bindLayerKeys: function () {
+            var _self = this;
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Esc, function () {
+                _self.onCancelClicked();
+            });
+            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Enter, function () {
+                _self.onOKClicked();
+            });
+        },
+
         prepay: function (gatherUI) {
             var _self = this;
             console.log(this.attrs);
@@ -170,7 +180,6 @@ define([
             return this;
         },
 
-
         switchTemplate: function (gatherUI) {
             switch (gatherUI) {
                 case '04':
@@ -191,16 +200,6 @@ define([
                     this.template_content = commontpl;
                     this.input = 'input[name = receive-account]';
             }
-        },
-
-        bindLayerKeys: function () {
-            var _self = this;
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Esc, function () {
-                _self.onCancelClicked();
-            });
-            this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Enter, function () {
-                _self.onOKClicked();
-            });
         },
 
         //如果当前打开的模态框是银行pos的确认模态框，则按确定后直接跳转下个页面
@@ -314,79 +313,6 @@ define([
             $(this.input).val('');
         },
 
-        /**
-         * 调用支付宝付款接口,被扫支付即条码支付
-         * @param gatherUI 判断是哪种付款方式
-         * @param gatherNo 付款账号
-         * @param attrData 准备传到结算页面的数据
-         */
-        micropay: function (gatherUI, attrData, loadlayer) {
-            var _self = this;
-            var inputValue = $(this.input).val();
-            if (inputValue.length != 18) {
-                layer.msg('不合法的支付条码，请重新输入', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
-            var totalfee = attrData.gather_money;
-            var data = {
-                orderid: attrData.extras.payment_bill,
-                authno: attrData.authno,
-                totalfee: totalfee,
-                body: '祥付宝',
-                subject: '祥付宝'
-            };
-            if (gatherUI == '04') {
-                _.extend(data, {
-                    paymethod: 'zfb'
-                });
-            } else if (gatherUI == '05') {
-                _.extend(data, {
-                    paymethod: 'wx'
-                });
-            }
-            console.log('data:' + JSON.stringify(data));
-            //loading.show();
-            var url = 'http://127.0.0.1:5000';
-            //var url = 'http://121.42.166.147:9090';
-            //var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
-            resource.post(url + '/api/pay/xfb/micropay', data, function (resp) {
-                console.log(resp);
-                layer.close(loadlayer);
-                //loading.hide();
-                if (!$.isEmptyObject(resp)) {
-                    if (resp.code == '000000') {
-                        if (resp.data['flag'] == '00') {
-                            var extra = _.extend(attrData.extras, {
-                                outtradeno: resp.data.outtradeno,
-                                gather_ui: gatherUI
-                            });
-                            Backbone.trigger('onReceivedsum', _.extend(attrData, {
-                                extras: extra
-                            }));
-                            //layer.msg(resp.data.msg, optLayerSuccess);
-                            _self.closeLayer(layerindex);
-                            _self.isClosed = true;
-                            $('input[name = billing]').focus();
-                        } else {
-                            layer.msg(resp.data.msg, optLayerError);
-                            console.log(_self.input);
-                            $(_self.input).focus();
-                            $(_self.input).val('');
-                        }
-                    } else {
-                        layer.msg(resp.msg, optLayerError);
-                        console.log(_self.input);
-                        $(_self.input).focus();
-                        $(_self.input).val('');
-                    }
-                } else {
-                    layer.msg('服务器错误，请联系管理员', optLayerError);
-                    $(_self.input).focus();
-                }
-            });
-        },
-
         micropay2: function (gatherUI, attrs) {
             var _self = this;
             var inputValue = $(this.input).val();
@@ -437,7 +363,8 @@ define([
         getDeferred: function (gatherUI, attrData) {
             var totalfee = attrData.gather_money;
             var defer = $.Deferred();
-            var url = 'http://127.0.0.1:5000';
+            //var url = 'http://127.0.0.1:5000';
+            var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
             var data = {
                 orderid: attrData.extras.payment_bill,
                 authno: attrData.authno,
@@ -461,49 +388,122 @@ define([
             return defer.promise();
         },
 
-        getMicroPayTradeState: function (url, attrData, paymethod, timer, resp, gatherUI) {
-            var _self = this;
-            var postData = {
-                orderid: attrData.extras.payment_bill,
-                paymethod: paymethod
-            };
-            resource.post(url + '/api/pay/xfb/orderquery', postData, function (queryResp) {
-                if (queryResp.code == '000000') {
-                    console.log('orderquery:===================');
-                    console.log(_self.count);
-                    console.log(queryResp);
-                    var tradeState = queryResp.data.tradestate;
-                    if (queryResp.data.flag == '00') {
-                        console.log(tradeState);
-                        switch (tradeState) {
-                            case 'TRADE_SUCCESS':
-                                var extra = _.extend(attrData.extras, {
-                                    outtradeno: resp.data.outtradeno,
-                                    gather_ui: gatherUI
-                                });
-                                Backbone.trigger('onReceivedsum', _.extend(attrData, {
-                                    extras: extra
-                                }));
-                                layer.msg(resp.data.msg, optLayerSuccess);
-                                _self.closeLayer(layerindex);
-                                clearInterval(timer);
-                                _self.isClosed = true;
-                                $('input[name = billing]').focus();
-                                loading.hide();
-                                break;
-                            case 'PAYERROR':
-                                layer.msg('密码错误', optLayerWarning);
-                                clearInterval(timer);
-                                break;
-                        }
-                    } else {
-                        layer.msg('祥付宝请求失败', optLayerError);
-                    }
-                } else {
-                    layer.msg(queryResp.msg, optLayerError);
-                }
-            });
-        }
+        /**
+         * 调用支付宝付款接口,被扫支付即条码支付
+         * @param gatherUI 判断是哪种付款方式
+         * @param gatherNo 付款账号
+         * @param attrData 准备传到结算页面的数据
+         */
+        //micropay: function (gatherUI, attrData, loadlayer) {
+        //    var _self = this;
+        //    var inputValue = $(this.input).val();
+        //    if (inputValue.length != 18) {
+        //        layer.msg('不合法的支付条码，请重新输入', optLayerWarning);
+        //        $(this.input).val('');
+        //        return;
+        //    }
+        //    var totalfee = attrData.gather_money;
+        //    var data = {
+        //        orderid: attrData.extras.payment_bill,
+        //        authno: attrData.authno,
+        //        totalfee: totalfee,
+        //        body: '祥付宝',
+        //        subject: '祥付宝'
+        //    };
+        //    if (gatherUI == '04') {
+        //        _.extend(data, {
+        //            paymethod: 'zfb'
+        //        });
+        //    } else if (gatherUI == '05') {
+        //        _.extend(data, {
+        //            paymethod: 'wx'
+        //        });
+        //    }
+        //    console.log('data:' + JSON.stringify(data));
+        //    //loading.show();
+        //    var url = 'http://127.0.0.1:5000';
+        //    //var url = 'http://121.42.166.147:9090';
+        //    //var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+        //    resource.post(url + '/api/pay/xfb/micropay', data, function (resp) {
+        //        console.log(resp);
+        //        layer.close(loadlayer);
+        //        //loading.hide();
+        //        if (!$.isEmptyObject(resp)) {
+        //            if (resp.code == '000000') {
+        //                if (resp.data['flag'] == '00') {
+        //                    var extra = _.extend(attrData.extras, {
+        //                        outtradeno: resp.data.outtradeno,
+        //                        gather_ui: gatherUI
+        //                    });
+        //                    Backbone.trigger('onReceivedsum', _.extend(attrData, {
+        //                        extras: extra
+        //                    }));
+        //                    //layer.msg(resp.data.msg, optLayerSuccess);
+        //                    _self.closeLayer(layerindex);
+        //                    _self.isClosed = true;
+        //                    $('input[name = billing]').focus();
+        //                } else {
+        //                    layer.msg(resp.data.msg, optLayerError);
+        //                    console.log(_self.input);
+        //                    $(_self.input).focus();
+        //                    $(_self.input).val('');
+        //                }
+        //            } else {
+        //                layer.msg(resp.msg, optLayerError);
+        //                console.log(_self.input);
+        //                $(_self.input).focus();
+        //                $(_self.input).val('');
+        //            }
+        //        } else {
+        //            layer.msg('服务器错误，请联系管理员', optLayerError);
+        //            $(_self.input).focus();
+        //        }
+        //    });
+        //},
+
+        //getMicroPayTradeState: function (url, attrData, paymethod, timer, resp, gatherUI) {
+        //    var _self = this;
+        //    var postData = {
+        //        orderid: attrData.extras.payment_bill,
+        //        paymethod: paymethod
+        //    };
+        //    resource.post(url + '/api/pay/xfb/orderquery', postData, function (queryResp) {
+        //        if (queryResp.code == '000000') {
+        //            console.log('orderquery:===================');
+        //            console.log(_self.count);
+        //            console.log(queryResp);
+        //            var tradeState = queryResp.data.tradestate;
+        //            if (queryResp.data.flag == '00') {
+        //                console.log(tradeState);
+        //                switch (tradeState) {
+        //                    case 'TRADE_SUCCESS':
+        //                        var extra = _.extend(attrData.extras, {
+        //                            outtradeno: resp.data.outtradeno,
+        //                            gather_ui: gatherUI
+        //                        });
+        //                        Backbone.trigger('onReceivedsum', _.extend(attrData, {
+        //                            extras: extra
+        //                        }));
+        //                        layer.msg(resp.data.msg, optLayerSuccess);
+        //                        _self.closeLayer(layerindex);
+        //                        clearInterval(timer);
+        //                        _self.isClosed = true;
+        //                        $('input[name = billing]').focus();
+        //                        loading.hide();
+        //                        break;
+        //                    case 'PAYERROR':
+        //                        layer.msg('密码错误', optLayerWarning);
+        //                        clearInterval(timer);
+        //                        break;
+        //                }
+        //            } else {
+        //                layer.msg('祥付宝请求失败', optLayerError);
+        //            }
+        //        } else {
+        //            layer.msg(queryResp.msg, optLayerError);
+        //        }
+        //    });
+        //}
 
     });
 

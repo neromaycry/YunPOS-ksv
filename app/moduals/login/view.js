@@ -299,6 +299,7 @@ define([
                         storage.set(system_config.POS_CONFIG, 'screen_width', resp.screen_width);
                         storage.set(system_config.POS_CONFIG, system_config.XFB_URL, resp.xfb_url);
                         storage.set(system_config.POS_CONFIG, 'notify_url', resp.notify_url);
+                        storage.set(system_config.POS_CONFIG, 'is_notify_set', resp.is_notify_set);
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
