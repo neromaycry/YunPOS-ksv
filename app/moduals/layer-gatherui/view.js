@@ -29,6 +29,8 @@ define([
 
         count: 0,
 
+        isSubmitFlg: true,
+
         events: {
             'click .cancel': 'onCancelClicked',
             'click .btn-num': 'onNumClicked',
@@ -197,7 +199,7 @@ define([
                 _self.onCancelClicked();
             });
             this.bindLayerKeyEvents(PAGE_ID.LAYER_BILLING_ACCOUNT, KEYS.Enter, function () {
-                _self.confirm();
+                _self.onOKClicked();
             });
         },
 
@@ -249,7 +251,9 @@ define([
                             payment_bill: this.attrs.payment_bill
                         }
                     };
-                    this.micropay(this.gatherUI, attrs);
+                    //var layerLoad = layer.load();
+                    //this.micropay(this.gatherUI, attrs, layerLoad);
+                    this.micropay2(this.gatherUI, attrs);
                     if (isPacked && isClientScreenShow) {
                         $(clientDom).find('.client-qrcode').css('display', 'none');
                     }
@@ -278,16 +282,26 @@ define([
         },
 
         onCancelClicked: function () {
-            this.closeLayer(layerindex);
-            $('input[name = billing]').focus();
-            this.isClosed = true;
-            if (isPacked && isClientScreenShow) {
-                $(clientDom).find('.client-qrcode').css('display', 'none');
+            if (this.isSubmitFlg) {
+                this.closeLayer(layerindex);
+                $('input[name = billing]').focus();
+                this.isClosed = true;
+                if (isPacked && isClientScreenShow) {
+                    $(clientDom).find('.client-qrcode').css('display', 'none');
+                }
+            } else {
+                console.log('不能执行退出操作');
+                return false;
             }
         },
 
         onOKClicked: function () {
-            this.confirm();
+            if (this.isSubmitFlg) {
+                this.confirm();
+            } else {
+                console.log('不能执行确定操作');
+                return false;
+            }
         },
 
         onBackspaceClicked: function (e) {
@@ -306,11 +320,11 @@ define([
          * @param gatherNo 付款账号
          * @param attrData 准备传到结算页面的数据
          */
-        micropay: function (gatherUI, attrData) {
+        micropay: function (gatherUI, attrData, loadlayer) {
             var _self = this;
             var inputValue = $(this.input).val();
             if (inputValue.length != 18) {
-                layer.msg('非法的支付条码，请重新输入', optLayerWarning);
+                layer.msg('不合法的支付条码，请重新输入', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
@@ -338,7 +352,8 @@ define([
             //var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
             resource.post(url + '/api/pay/xfb/micropay', data, function (resp) {
                 console.log(resp);
-                loading.hide();
+                layer.close(loadlayer);
+                //loading.hide();
                 if (!$.isEmptyObject(resp)) {
                     if (resp.code == '000000') {
                         if (resp.data['flag'] == '00') {
@@ -355,18 +370,95 @@ define([
                             $('input[name = billing]').focus();
                         } else {
                             layer.msg(resp.data.msg, optLayerError);
-                            $(_self.input).val('');
+                            console.log(_self.input);
                             $(_self.input).focus();
+                            $(_self.input).val('');
                         }
                     } else {
                         layer.msg(resp.msg, optLayerError);
-                        $(_self.input).val('');
+                        console.log(_self.input);
                         $(_self.input).focus();
+                        $(_self.input).val('');
                     }
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
+                    $(_self.input).focus();
                 }
             });
+        },
+
+        micropay2: function (gatherUI, attrs) {
+            var _self = this;
+            var inputValue = $(this.input).val();
+            if (inputValue.length != 18) {
+                layer.msg('非法的支付条码，请重新输入', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            loading.show();
+            this.isSubmitFlg = false;
+            $.when(this.getDeferred(gatherUI, attrs)).done(function (resp) {
+                loading.hide();
+                _self.isSubmitFlg = true;
+                console.log(resp);
+                if (!$.isEmptyObject(resp)) {
+                    if (resp.code == '000000') {
+                        if (resp.data['flag'] == '00') {
+                            var extra = _.extend(attrs.extras, {
+                                outtradeno: resp.data.outtradeno,
+                                gather_ui: gatherUI
+                            });
+                            Backbone.trigger('onReceivedsum', _.extend(attrs, {
+                                extras: extra
+                            }));
+                            //layer.msg(resp.data.msg, optLayerSuccess);
+                            _self.closeLayer(layerindex);
+                            _self.isClosed = true;
+                            $('input[name = billing]').focus();
+                        } else {
+                            layer.msg(resp.data.msg, optLayerError);
+                            console.log(_self.input);
+                            $(_self.input).focus();
+                            $(_self.input).val('');
+                        }
+                    } else {
+                        layer.msg(resp.msg, optLayerError);
+                        console.log(_self.input);
+                        $(_self.input).focus();
+                        $(_self.input).val('');
+                    }
+                } else {
+                    layer.msg('服务器错误，请联系管理员', optLayerError);
+                    $(_self.input).focus();
+                }
+            });
+        },
+
+        getDeferred: function (gatherUI, attrData) {
+            var totalfee = attrData.gather_money;
+            var defer = $.Deferred();
+            var url = 'http://127.0.0.1:5000';
+            var data = {
+                orderid: attrData.extras.payment_bill,
+                authno: attrData.authno,
+                totalfee: totalfee,
+                body: '祥付宝',
+                subject: '祥付宝'
+            };
+            if (gatherUI == '04') {
+                _.extend(data, {
+                    paymethod: 'zfb'
+                });
+            } else if (gatherUI == '05') {
+                _.extend(data, {
+                    paymethod: 'wx'
+                });
+            }
+            console.log('data:' + JSON.stringify(data));
+            resource.asyncPost(url + '/api/pay/xfb/micropay', data, function (resp) {
+                defer.resolve(resp);
+            });
+            return defer.promise();
         },
 
         getMicroPayTradeState: function (url, attrData, paymethod, timer, resp, gatherUI) {

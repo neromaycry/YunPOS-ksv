@@ -341,8 +341,9 @@ requirejs([
                     window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
-            case DIRECTIVES.VERSION:
+            case 'verison':
                 if (data.code == '00') {
+                    console.log('version:'+ data);
                     Backbone.trigger('onVersionAcquired',data);
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);

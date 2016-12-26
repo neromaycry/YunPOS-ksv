@@ -61,6 +61,7 @@ define([
             this.versionModel.set({
                 version: ''
             });
+            //this.sendWebSocketDirective([DIRECTIVES.VERSION], [''], wsClient);
             //this.getGatherDetailLocally();
             this.getGatherDetail();
             this.getPosLimit();
@@ -79,11 +80,11 @@ define([
             var _self = this;
             setTimeout(function () {
                 $(_self.input).focus();
+                _self.sendWebSocketDirective([DIRECTIVES.VERSION], [''], wsClient);
             }, 500);
             this.setKeys();
             this.renderClientDisplay(isPacked, isClientScreenShow);
             this.renderVersion();
-            this.sendWebSocketDirective([DIRECTIVES.VERSION], [''], wsClient);
         },
 
         handleEvents: function () {
@@ -318,7 +319,7 @@ define([
 
         onVersionAcquired: function (resp) {
             this.versionModel.set({
-                version: resp.version
+                version: resp.verison
             });
             this.renderVersion();
         },

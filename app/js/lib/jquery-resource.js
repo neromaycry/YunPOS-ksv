@@ -207,12 +207,7 @@ window.resource = {
     "opts": {
         "dataType": "json",
         "contentType": "application/json",
-        "beforeSend": function () {
-            window.loading.show();
-        },
-        complete: function () {
-            window.loading.hide();
-        }
+
     },
 
     "_get_nonce": function (n) {
@@ -257,10 +252,16 @@ window.resource = {
         var setting = $.extend(true, window.resource.opts, {
             "url": url,
             "type": "POST",
-            "timeout":10000,
+            "timeout": 130000,
             "data": JSON.stringify(_data),
-            "async":false,
-            "success": callback
+            "async": false,
+            "success": callback,
+            "beforeSend": function () {
+                window.loading.show();
+            },
+            complete: function () {
+                window.loading.hide();
+            }
         });
 
         $.ajax(setting);
@@ -270,9 +271,17 @@ window.resource = {
         var setting = $.extend(true, window.resource.opts, {
             "url": url,
             "type": "POST",
-            "timeout":10000,
             "data": JSON.stringify(_data),
-            "success": callback
+            "success": callback,
+            "error": function (model, textStatus, errorThrown) {
+                window.loading.hide();
+                layer.msg('网络请求失败,请检查网络连接', optLayerError);
+                console.log(textStatus);
+                console.error("网络请求失败！");
+            },
+            complete: function () {
+                window.loading.hide();
+            }
         });
 
         $.ajax(setting);

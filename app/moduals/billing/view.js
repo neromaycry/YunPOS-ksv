@@ -493,7 +493,7 @@ define([
             //var url = 'http://127.0.0.1:5000/';
             //var url = 'http://121.42.166.147:9090/';
             var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
-            resource.post(url + '/api/pay/xfb/refund', data, function (resp) {
+            resource.asyncPost(url + '/api/pay/xfb/refund', data, function (resp) {
                 console.log(resp);
                 loading.hide();
                 if (!$.isEmptyObject(resp)) {
@@ -676,7 +676,7 @@ define([
                         _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                         _self.renderClientDisplay(_self.model);
                         router.navigate("main", {trigger: true, replace: true});
-                    }  else {
+                    } else {
                         layer.msg(resp.msg, optLayerError);
                         Backbone.trigger('onNavigateStateChanged', false);
                     }
