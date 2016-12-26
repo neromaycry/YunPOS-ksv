@@ -152,7 +152,8 @@ window.DIRECTIVES = {
     'Bank_daily': 'bank_daily_',  //银行卡 日结
     'Bank_query': 'bank_query_',  // 银行卡 查询流水
     'IC_CARD_AUTO_READ': 'ic_card_auto_read_',
-    'IC_CARD_MANUAL_READ': 'ic_card_manual_read_'
+    'IC_CARD_MANUAL_READ': 'ic_card_manual_read_',
+    'VERSION': 'version'
 };
 
 /**

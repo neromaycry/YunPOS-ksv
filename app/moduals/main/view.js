@@ -16,6 +16,7 @@ define([
     '../../../../moduals/layer-binstruction/view',
     '../../../../moduals/layer-worker/view',
     '../../../../moduals/layer-icmember/view',
+    'Recwebsocket',
     'text!../../../../moduals/main/posinfotpl.html',
     'text!../../../../moduals/main/salesmantpl.html',
     'text!../../../../moduals/main/minfotpl.html',
@@ -26,7 +27,7 @@ define([
     'text!../../../../moduals/main/oddchangetpl.html',
     'text!../../../../moduals/main/marqueetpl.html',
     'text!../../../../moduals/main/tpl.html',
-], function (BaseView, HomeModel, HomeCollection, LayerPriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerBInstructionView, LayerWorkerView, LayerICMemberView, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
+], function (BaseView, HomeModel, HomeCollection, LayerPriceEntryView, LayerMemberView, LayerLogoutView, LayerSalesmanView, LayerConfirm, LayerHelpView, LayerRestOrderView, LayerWithdrawView, LayerBInstructionView, LayerWorkerView, LayerICMemberView, Recwebsocket, posinfotpl, salesmantpl, minfotpl, cartlisttpl, numpadtpl, clientdisplaytpl, welcometpl, oddchangetpl, marqueetpl, tpl) {
     var mainView = BaseView.extend({
         id: "mainView",
         el: '.views',
@@ -160,6 +161,9 @@ define([
                 this.marqueeModel.set({
                     notification_content: '当前无通知'
                 });
+            }
+            if (storage.isSet(system_config.POS_CONFIG, 'notify_url')) {
+                this.initNotifySocket();
             }
             //if (storage.isSet(system_config.PRINTF)) {
             //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
@@ -1232,7 +1236,32 @@ define([
                 }
             };
             this.openLayer(PAGE_ID.LAYER_ICMEMBER, pageId, '会员IC卡登录', LayerICMemberView, attrs, {area: '600px'});
-        }
+        },
+
+        initNotifySocket: function () {
+            var _self = this;
+            if (!window.notifySocket) {
+                var addr = storage.get(system_config.POS_CONFIG, 'notify_url');
+                window.notifySocket = new Recwebsocket(addr);
+                window.notifySocket.onopen = function (e) {
+                    layer.msg('通知服务已连接', optLayerSuccess);
+                };
+                window.notifySocket.onmessage = function (e) {
+                    console.log(e);
+                    _self.marqueeModel.set({
+                        notification_content: '当前无通知'
+                    });
+                };
+                window.notifySocket.onerror = function (e) {
+                    console.log(e);
+                };
+                window.notifySocket.onclose = function (e) {
+                    layer.msg('通知服务连接已断开', optLayerError);
+                };
+            } else {
+                layer.msg('已有通知服务实例', optLayerSuccess);
+            }
+        },
 
 
     });

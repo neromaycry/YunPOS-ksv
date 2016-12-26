@@ -27,6 +27,8 @@ define([
 
         isClosed: false,
 
+        count: 0,
+
         events: {
             'click .cancel': 'onCancelClicked',
             'click .btn-num': 'onNumClicked',
@@ -97,14 +99,14 @@ define([
 
         getTradeState: function (respData, gatherUI) {
             if (this.isClosed) {
-                return
+                return;
             }
             var _self = this;
             var url = 'http://121.42.166.147:9090/';
             var data = {
                 outtradeno: respData.outtradeno
             };
-            console.log(data);
+            //console.log(data);
             $.ajax(url + 'gettradestate', {
                 type: "POST",
                 contentType: "application/json",
@@ -210,7 +212,7 @@ define([
             }
             var gatherNo = $(this.input).val();
             if ((gatherNo.split('.').length - 1) > 0 || gatherNo == '') {
-                layer.msg('无效的支付账号', optLayerWarning);
+                layer.msg('无效的支付账号或支付条码', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
@@ -306,6 +308,12 @@ define([
          */
         micropay: function (gatherUI, attrData) {
             var _self = this;
+            var inputValue = $(this.input).val();
+            if (inputValue.length != 18) {
+                layer.msg('非法的支付条码，请重新输入', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             var totalfee = attrData.gather_money;
             var data = {
                 orderid: attrData.extras.payment_bill,
@@ -323,16 +331,17 @@ define([
                     paymethod: 'wx'
                 });
             }
-            console.log(data);
-            loading.show();
-            //var url = 'http://127.0.0.1:5000/';
-            //var url = 'http://121.42.166.147:9090/';
-            var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+            console.log('data:' + JSON.stringify(data));
+            //loading.show();
+            var url = 'http://127.0.0.1:5000';
+            //var url = 'http://121.42.166.147:9090';
+            //var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
             resource.post(url + '/api/pay/xfb/micropay', data, function (resp) {
+                console.log(resp);
+                loading.hide();
                 if (!$.isEmptyObject(resp)) {
                     if (resp.code == '000000') {
                         if (resp.data['flag'] == '00') {
-                            loading.hide();
                             var extra = _.extend(attrData.extras, {
                                 outtradeno: resp.data.outtradeno,
                                 gather_ui: gatherUI
@@ -340,24 +349,69 @@ define([
                             Backbone.trigger('onReceivedsum', _.extend(attrData, {
                                 extras: extra
                             }));
-                            layer.msg(resp.data.msg, optLayerSuccess);
+                            //layer.msg(resp.data.msg, optLayerSuccess);
                             _self.closeLayer(layerindex);
                             _self.isClosed = true;
                             $('input[name = billing]').focus();
                         } else {
-                            loading.hide();
                             layer.msg(resp.data.msg, optLayerError);
+                            $(_self.input).val('');
+                            $(_self.input).focus();
                         }
                     } else {
-                        loading.hide();
                         layer.msg(resp.msg, optLayerError);
+                        $(_self.input).val('');
+                        $(_self.input).focus();
                     }
                 } else {
-                    loading.hide();
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
             });
         },
+
+        getMicroPayTradeState: function (url, attrData, paymethod, timer, resp, gatherUI) {
+            var _self = this;
+            var postData = {
+                orderid: attrData.extras.payment_bill,
+                paymethod: paymethod
+            };
+            resource.post(url + '/api/pay/xfb/orderquery', postData, function (queryResp) {
+                if (queryResp.code == '000000') {
+                    console.log('orderquery:===================');
+                    console.log(_self.count);
+                    console.log(queryResp);
+                    var tradeState = queryResp.data.tradestate;
+                    if (queryResp.data.flag == '00') {
+                        console.log(tradeState);
+                        switch (tradeState) {
+                            case 'TRADE_SUCCESS':
+                                var extra = _.extend(attrData.extras, {
+                                    outtradeno: resp.data.outtradeno,
+                                    gather_ui: gatherUI
+                                });
+                                Backbone.trigger('onReceivedsum', _.extend(attrData, {
+                                    extras: extra
+                                }));
+                                layer.msg(resp.data.msg, optLayerSuccess);
+                                _self.closeLayer(layerindex);
+                                clearInterval(timer);
+                                _self.isClosed = true;
+                                $('input[name = billing]').focus();
+                                loading.hide();
+                                break;
+                            case 'PAYERROR':
+                                layer.msg('密码错误', optLayerWarning);
+                                clearInterval(timer);
+                                break;
+                        }
+                    } else {
+                        layer.msg('祥付宝请求失败', optLayerError);
+                    }
+                } else {
+                    layer.msg(queryResp.msg, optLayerError);
+                }
+            });
+        }
 
     });
 

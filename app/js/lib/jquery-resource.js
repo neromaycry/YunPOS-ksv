@@ -207,6 +207,12 @@ window.resource = {
     "opts": {
         "dataType": "json",
         "contentType": "application/json",
+        "beforeSend": function () {
+            window.loading.show();
+        },
+        complete: function () {
+            window.loading.hide();
+        }
     },
 
     "_get_nonce": function (n) {

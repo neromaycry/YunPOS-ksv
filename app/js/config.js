@@ -98,7 +98,8 @@ requirejs.config({
             'deps': ['css!../perfect-scrollbar/css/perfect-scrollbar.min.css'],
             'exports': 'pscrollbar'
         },
-    }
+    },
+    //urlArgs:'ver=20161224'
 });
 
 requirejs([
@@ -336,6 +337,13 @@ requirejs([
                             Backbone.trigger('onICEcardManualRead', data);
                             break;
                     }
+                } else {
+                    window.layer.msg(data.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.VERSION:
+                if (data.code == '00') {
+                    Backbone.trigger('onVersionAcquired',data);
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
                 }

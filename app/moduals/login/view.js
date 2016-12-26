@@ -9,8 +9,9 @@ define([
     '../../../../moduals/layer-gateway/view',
     '../../../../moduals/layer-settingauth/view',
     'text!../../../../moduals/login/clientlogintpl.html',
+    'text!../../../../moduals/login/versiontpl.html',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, LayerConfirmView, LayerGatewayView, LayerSettingAuthView, clientlogintpl, tpl) {
+], function (BaseView, LoginModel, LoginCollection, LayerConfirmView, LayerGatewayView, LayerSettingAuthView, clientlogintpl, versiontpl, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -21,6 +22,8 @@ define([
         template: tpl,
 
         template_clientlogin: clientlogintpl,
+
+        template_version: versiontpl,
 
         clientScreen: null,
 
@@ -54,6 +57,10 @@ define([
             //storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.POS_KEY,'1');
             this.requestModel = new LoginModel();
             this.model = new LoginModel();
+            this.versionModel = new LoginModel();
+            this.versionModel.set({
+                version: ''
+            });
             //this.getGatherDetailLocally();
             this.getGatherDetail();
             this.getPosLimit();
@@ -63,6 +70,8 @@ define([
             //storage.set(system_config.IS_CLIENT_SCREEN_SHOW, true);
             //storage.set(system_config.INTERFACE_TYPE, Interface_type.CCB_LANDI);
             this.template_clientlogin = _.template(this.template_clientlogin);
+            this.template_version = _.template(this.template_version);
+
             //this.checkPosLimit();
         },
 
@@ -73,11 +82,15 @@ define([
             }, 500);
             this.setKeys();
             this.renderClientDisplay(isPacked, isClientScreenShow);
+            this.renderVersion();
+            this.sendWebSocketDirective([DIRECTIVES.VERSION], [''], wsClient);
         },
 
         handleEvents: function () {
             Backbone.off('getGatherDetail');
+            Backbone.off('onVersionAcquired');
             Backbone.on('getGatherDetail', this.getGatherDetail, this);
+            Backbone.on('onVersionAcquired', this.onVersionAcquired, this);
         },
 
         renderClientDisplay: function (isPacked, isClientShow) {
@@ -85,6 +98,11 @@ define([
                 $(clientDom).find('.client-display').html(this.template_clientlogin());
                 return this;
             }
+        },
+
+        renderVersion: function () {
+            this.$el.find('.for-webctrl-version').html(this.template_version(this.versionModel.toJSON()));
+            return this;
         },
 
         iniSettngs: function () {
@@ -279,6 +297,7 @@ define([
                         storage.set(system_config.POS_CONFIG, 'screen_height', resp.screen_height);
                         storage.set(system_config.POS_CONFIG, 'screen_width', resp.screen_width);
                         storage.set(system_config.POS_CONFIG, system_config.XFB_URL, resp.xfb_url);
+                        storage.set(system_config.POS_CONFIG, 'notify_url', resp.notify_url);
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
@@ -295,6 +314,13 @@ define([
                 }
             };
             this.openLayer(PAGE_ID.LAYER_SETTINGAUTH, pageId, '设置验证', LayerSettingAuthView, attrs, {area: '300px'});
+        },
+
+        onVersionAcquired: function (resp) {
+            this.versionModel.set({
+                version: resp.version
+            });
+            this.renderVersion();
         },
 
         //doInitialize: function () {
