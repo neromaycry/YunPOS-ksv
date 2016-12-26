@@ -641,6 +641,12 @@ define([
                 goods_detail: storage.get(system_config.SALE_PAGE_KEY, 'shopcart'),
                 gather_detail: _self.collection.toJSON()
             });
+            if (!data.bill_no || data.bill_no == '') {
+                this.getRetailNo();
+                data.bill_no = this.billNumber;
+                layer.msg('因刚才断网，小票号已重新获取，请重新点击结算按钮', optLayerWarning);
+                return;
+            }
             console.log(data);
             if (this.smallChange != 0) {
                 data['gather_detail'].push(this.smallChangemodel.toJSON()); //如果存在去零，则添加一种支付方式为去零
