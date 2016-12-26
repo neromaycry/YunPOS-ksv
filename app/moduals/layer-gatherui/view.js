@@ -317,7 +317,19 @@ define([
         micropay2: function (gatherUI, attrs) {
             var _self = this;
             var inputValue = $(this.input).val();
+            var prefix2 = inputValue.substring(0, 2);
+            console.log(prefix2);
             if (inputValue.length != 18) {
+                layer.msg('非法的支付条码，请重新输入', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if (gatherUI == '04' && prefix2 != '28') {
+                layer.msg('非法的支付条码，请重新输入', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
+            if (gatherUI == '05' && prefix2 != '13') {
                 layer.msg('非法的支付条码，请重新输入', optLayerWarning);
                 $(this.input).val('');
                 return;
@@ -364,8 +376,8 @@ define([
         getDeferred: function (gatherUI, attrData) {
             var totalfee = attrData.gather_money;
             var defer = $.Deferred();
-            //var url = 'http://127.0.0.1:5000';
-            var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+            var url = 'http://127.0.0.1:5000';
+            //var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
             var data = {
                 orderid: attrData.extras.payment_bill,
                 authno: attrData.authno,

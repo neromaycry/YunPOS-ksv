@@ -1239,7 +1239,11 @@ define([
 
         initNotifySocket: function () {
             var _self = this;
-            var isNotifySet = storage.get(system_config.POS_CONFIG, 'is_notity_set');
+            if (storage.isSet(system_config.POS_CONFIG)) {
+                var isNotifySet = storage.get(system_config.POS_CONFIG, 'is_notity_set');
+            } else {
+                layer.msg('pos_config未获取', optLayerError);
+            }
             //var isNotifySet = 1;
             console.log(isNotifySet);
             if (isNotifySet == 1) {
