@@ -29,6 +29,7 @@ requirejs.config({
         'koala': '../koala/jquery.koala',
         'layer': '../layer/layer',
         'decimal': '../decimal/decimal',
+        'qrcode': 'jquery.qrcode.min'
     },
     shim: {
         'backbone': {
@@ -56,6 +57,10 @@ requirejs.config({
         'koala': {
             'deps': ['jquery'],
             'exports': 'koala'
+        },
+        'qrcode': {
+            'deps':['jquery'],
+            'exports': 'qrcode'
         },
         'layer': {
             'deps': ['jquery', 'css!../layer/skin/default/layer.css'],
@@ -124,7 +129,8 @@ requirejs([
     'koala',
     'layer',
     'decimal',
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala, layer, Decimal) {
+    'qrcode'
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala, layer, Decimal, qrcode) {
 
     window.isAndroid = false;  //是否为Android设备
 

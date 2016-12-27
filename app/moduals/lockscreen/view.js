@@ -4,8 +4,9 @@
 define([
     '../../../../js/common/BaseView',
     '../../../../moduals/lockscreen/model',
+    'text!../../../../moduals/lockscreen/usertpl.html',
     'text!../../../../moduals/lockscreen/tpl.html'
-], function (BaseView, LockscreenModel, tpl) {
+], function (BaseView, LockscreenModel, usertpl, tpl) {
 
     var lockscreenView = BaseView.extend({
 
@@ -14,6 +15,8 @@ define([
         el: '.views',
 
         template: tpl,
+
+        template_user: usertpl,
 
         input: 'input[name = passwd]',
 
@@ -27,11 +30,17 @@ define([
 
         pageInit: function () {
             pageId = window.PAGE_ID.LOCKSCREEN;
+            this.model = new LockscreenModel();
+            this.model.set({
+                username: storage.get(system_config.LOGIN_USER_KEY, 'user_id')
+            });
+            this.template_user = _.template(this.template_user);
             this.requestModel = new LockscreenModel();
         },
 
         initPlugins: function () {
             $(this.input).focus();
+            this.renderUser();
         },
 
         //onNumpadClicked: function () {
@@ -44,6 +53,11 @@ define([
         //        $('.btn-numpad').text('打开小键盘');
         //    }
         //},
+
+        renderUser: function () {
+            this.$el.find('.for-lsuser').html(this.template_user(this.model.toJSON()));
+            return this;
+        },
 
         onNumClicked: function (e) {
             var value = $(e.currentTarget).data('num');
@@ -72,7 +86,8 @@ define([
         onUnlockClicked: function () {
             var passwd = $(this.input).val();
             if (passwd == '') {
-                toastr.warning('请输入登录密码');
+                layer.msg('请输入登录密码', optLayerWarning);
+                return;
             }
             var data = {};
             data['user_id'] = storage.get(system_config.LOGIN_USER_KEY, 'user_id');
@@ -105,7 +120,7 @@ define([
                             break;
                     }
                 } else {
-                    toastr.error(resp.msg);
+                    layer.msg(resp.msg, optLayerError);
                 }
             });
         }

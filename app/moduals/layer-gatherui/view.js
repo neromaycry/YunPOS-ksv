@@ -29,7 +29,7 @@ define([
 
         count: 0,
 
-        isSubmitFlg: true,
+        isSubmitFlg: true, //判断是否正在网络请求的标志, false为正在进行网络请求
 
         events: {
             'click .cancel': 'onCancelClicked',
@@ -88,12 +88,24 @@ define([
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {
                     if (resp.code == '000000') {
-                        $('.qrcode-img').attr('src', resp.data.codeurl);
+                        console.log(resp.data.shorturl);
+                        //$('.qrcode-img').attr('src', resp.data.codeurl);
+                        $('.qrcode-img').text('');
+                        $('.qrcode-img').qrcode({
+                            text: resp.data.shorturl,
+                            height: 192,
+                            width: 192
+                        });
                         if (isPacked && isClientScreenShow) {
                             $(clientDom).find('.client-qrcode').css('display', 'block');
-                            $(clientDom).find('.client-qrcode').css('height', '300px');
-                            $(clientDom).find('.client-qrcode').css('width', '300px');
-                            $(clientDom).find('.client-qrcode').attr('src', resp.data.codeurl);
+                            //$(clientDom).find('.client-qrcode').css('height', '300px');
+                            //$(clientDom).find('.client-qrcode').css('width', '300px');
+                            //$(clientDom).find('.client-qrcode').attr('src', resp.data.codeurl);
+                            $(clientDom).find('.client-qrcode').qrcode({
+                                text: resp.data.shorturl,
+                                height: 300,
+                                width: 300
+                            });
                         }
                         if (resp.data.flag == '00') {
                             _self.getTradeState(resp.data, gatherUI);
@@ -116,16 +128,18 @@ define([
             var _self = this;
             //var url = 'http://121.42.166.147:9090/';
             var url = storage.get(system_config.POS_CONFIG, system_config.XFB_URL);
+            console.log(url);
             var data = {
                 outtradeno: respData.outtradeno
             };
-            //console.log(data);
-            $.ajax(url + 'gettradestate', {
+            console.log(data);
+            $.ajax(url + '/gettradestate', {
                 type: "POST",
                 contentType: "application/json",
                 dataType: "json",
                 data: JSON.stringify(data),
                 success: function (resp2) {
+                    console.log(resp2);
                     if (resp2.status == '00') {
                         _self.isClosed = true;
                         var attrs = {
@@ -157,6 +171,8 @@ define([
                         _self.closeLayer(layerindex);
                         $('input[name = billing]').focus();
                     } else {
+                        console.log('继续请求');
+                        //setTimeout(_self.getTradeState(respData, gatherUI), 2000);
                         _self.getTradeState(respData, gatherUI);
                     }
                 }
