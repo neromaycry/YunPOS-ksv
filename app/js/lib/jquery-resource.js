@@ -266,19 +266,20 @@ window.resource = {
 
         $.ajax(setting);
     },
-    "asyncPost": function (url, data, callback) {
+    "asyncPost": function (url, data, callback, callback2) {
         var _data = $.extend(true, window.resource._base_params(), data);
         var setting = $.extend(true, window.resource.opts, {
             "url": url,
             "type": "POST",
             "data": JSON.stringify(_data),
             "success": callback,
-            "error": function (model, textStatus, errorThrown) {
-                window.loading.hide();
-                layer.msg('网络请求失败,请检查网络连接', optLayerError);
-                console.log(textStatus);
-                console.error("网络请求失败！");
-            },
+            "error": callback2,
+            //"error": function (model, textStatus, errorThrown) {
+            //    window.loading.hide();
+            //    layer.msg('网络请求失败,请检查网络连接', optLayerError);
+            //    console.log(textStatus);
+            //    console.error("网络请求失败！");
+            //},
             complete: function () {
                 window.loading.hide();
             }

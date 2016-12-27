@@ -118,6 +118,10 @@ define([
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
+            }, function (model, textStatus, errorThrown) {
+                layer.msg('网络请求失败,请检查网络连接', optLayerError);
+                console.log(textStatus);
+                console.error("网络请求失败！");
             });
         },
 
@@ -386,10 +390,14 @@ define([
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                     $(_self.input).focus();
                 }
+            }).fail(function () {
+                loading.hide();
+                _self.isSubmitFlg = true;
             });
         },
 
         getDeferred: function (gatherUI, attrData) {
+            var _self = this;
             var totalfee = attrData.gather_money;
             var defer = $.Deferred();
             //var url = 'http://127.0.0.1:5000';
@@ -413,6 +421,16 @@ define([
             console.log('data:' + JSON.stringify(data));
             resource.asyncPost(url + '/api/pay/xfb/micropay', data, function (resp) {
                 defer.resolve(resp);
+            }, function (model, textStatus, errorThrown) {
+                loading.hide();
+                _self.isSubmitFlg = true;
+                layer.msg('网络请求失败,请检查网络连接', optLayerError);
+                console.log(textStatus);
+                console.error("网络请求失败！");
+            }, function (model, textStatus, errorThrown) {
+                layer.msg('网络请求失败,请检查网络连接', optLayerError);
+                console.log(textStatus);
+                console.error("网络请求失败！");
             });
             return defer.promise();
         },

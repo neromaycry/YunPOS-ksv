@@ -510,6 +510,10 @@ define([
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
+            }, function (model, textStatus, errorThrown) {
+                layer.msg('网络请求失败,请检查网络连接', optLayerError);
+                console.log(textStatus);
+                console.error("网络请求失败！");
             });
         },
 
