@@ -59,7 +59,7 @@ requirejs.config({
             'exports': 'koala'
         },
         'qrcode': {
-            'deps':['jquery'],
+            'deps': ['jquery'],
             'exports': 'qrcode'
         },
         'layer': {
@@ -337,7 +337,7 @@ requirejs([
                 break;
             case DIRECTIVES.IC_CARD_MANUAL_READ:
                 if (data.status == '00') {
-                    console.log(window.pageId);
+                    console.log('pageid:' + window.pageId);
                     switch (window.pageId) {
                         case PAGE_ID.LAYER_MEMBER:
                             Backbone.trigger('onICManualRead', data);
@@ -352,8 +352,8 @@ requirejs([
                 break;
             case 'verison':
                 if (data.code == '00') {
-                    console.log('version:'+ data);
-                    Backbone.trigger('onVersionAcquired',data);
+                    console.log('version:' + data);
+                    Backbone.trigger('onVersionAcquired', data);
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
                 }

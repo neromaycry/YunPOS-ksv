@@ -59,6 +59,9 @@ define([
             this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.X, function () {
                 _self.changeTemplate(1);
             });
+            this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.I, function () {
+                _self.changeTemplate(2);
+            });
             //this.bindLayerKeyEvents(window.PAGE_ID.LAYER_ECARD_LOGIN, KEYS.P, function () {
             //    _self.changeTemplate(3);
             //});
