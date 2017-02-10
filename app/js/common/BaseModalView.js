@@ -127,7 +127,8 @@ define([
                     websocket.send(directives[i] + content[i]);
                 }
             } else {
-                toastr.warning('没有连接到硬件，请检查硬件连接');
+                //toastr.warning('没有连接到硬件，请检查硬件连接');
+                layer.msg('没有连接到硬件，请检查硬件连接', optLayerWarning)
             }
         },
 

@@ -116,7 +116,8 @@ define([
                 Backbone.trigger('onReleaseOrder', _self.orderSelectedDetail);
                 storage.remove(system_config.RESTORDER_KEY, _self.orderNum);
                 router.navigate('main', {trigger: true});
-                toastr.success('解挂成功');
+                //toastr.success('解挂成功');
+                layer.msg('解挂成功', optLayerSuccess);
             });
         },
 
@@ -224,7 +225,8 @@ define([
             Backbone.trigger('onReleaseOrder', this.orderSelectedDetail);
             storage.remove(system_config.RESTORDER_KEY, this.orderNum);
             router.navigate('main', {trigger: true});
-            toastr.success('解挂成功');
+            //toastr.success('解挂成功');
+            layer.msg('解挂成功', optLayerSuccess);
         },
 
         onReturnClicked: function () {

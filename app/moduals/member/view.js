@@ -168,10 +168,12 @@ define([
         doMemberLogin: function () {
             if (this.isRequestSuccess) {
                 storage.set(system_config.VIP_KEY, this.model.toJSON());
-                toastr.success('会员登录成功');
+                //toastr.success('会员登录成功');
+                layer.msg('会员登录成功', optLayerSuccess);
                 router.navigate('main', {trigger: true});
             } else {
-                toastr.warning('请先查询会员信息');
+                //toastr.warning('请先查询会员信息');
+                layer.msg('请先查询会员信息', optLayerWarning);
             }
         },
 
@@ -190,7 +192,8 @@ define([
             var cardid = $('input[name = custid]').val();
             var pwd = $('input[name = custpwd]').val();
             if (cardid == '') {
-                toastr.warning('卡号不能为空');
+                //toastr.warning('卡号不能为空');
+                layer.msg('卡号不能为空', optLayerWarning);
             } else {
                 var data = {};
                 if (pwd != '') {
@@ -208,7 +211,8 @@ define([
                         _self.isRequestSuccess = true;
                         _self.renderMemberInfo();
                     } else {
-                        toastr.error(resp.msg);
+                        //toastr.error(resp.msg);
+                        layer.msg(resp.msg, optLayerError);
                     }
                 });
             }
