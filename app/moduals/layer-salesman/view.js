@@ -81,7 +81,6 @@ define([
             var search = $(this.input).val();
             console.log(search);
             if (search == '') {
-                //toastr.warning('您输入的营业员编号为空');
                 layer.msg('您输入的营业员编号为空', optLayerWarning);
                 return;
             }
@@ -94,7 +93,6 @@ define([
                 this.closeLayer(layerindex);
                 $('input[name = main]').focus();
             } else {
-                //toastr.warning('您输入的营业员不存在,请重新输入');
                 layer.msg('您输入的营业员不存在,请重新输入', optLayerError);
             }
             $(this.input).val('');

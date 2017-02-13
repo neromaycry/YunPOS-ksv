@@ -118,7 +118,6 @@ requirejs([
     'bootstrap',
     'loading',
     'storage',
-    'toastr',
     'pscrollbar',
     'md5',
     'xfb',
@@ -130,7 +129,7 @@ requirejs([
     'layer',
     'decimal',
     'qrcode'
-], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, toastr, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala, layer, Decimal, qrcode) {
+], function ($, _, Backbone, common, serializeObject, BaseRouter, validation, Bootstrap, loading, storage, pscrollbar, md5, xfb, marquee, Recwebsocket, fecha, noty, koala, layer, Decimal, qrcode) {
 
     window.isAndroid = false;  //是否为Android设备
 
@@ -229,13 +228,6 @@ requirejs([
 
     Backbone.history.start();
     _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
-
-    //toastr的初始化设置
-    window.toastr = toastr;
-    window.toastr.options = {
-        'timeOut': '4000',
-        'positionClass': 'toast-bottom-center'
-    };
 
     var SOCKET_ADDR = 'ws://localhost:7110/';
     //var SOCKET_ADDR = 'ws://192.168.1.114:2001/';

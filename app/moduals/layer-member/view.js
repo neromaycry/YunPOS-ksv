@@ -156,7 +156,6 @@ define([
             switch (this.type) {
                 case '01':
                     console.log('会员卡登录');
-                    //toastr.warning('请刷卡');
                     layer.msg('请刷卡', optLayerWarning);
                     break;
                 case '03':

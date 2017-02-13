@@ -67,7 +67,6 @@ define([
                             $('input[name = ecard_receivedsum]').val(_self.receivedsum);
                         }, 100);
                     } else {
-                        //toastr.error(resp.msg);
                         layer.msg(resp.msg, optLayerError);
                     }
                 } else {

@@ -93,7 +93,6 @@ define([
             var username = storage.get(system_config.LOGIN_USER_KEY, 'user_id');
             var password = $(this.input).val();
             //if (username == '') {
-            //    toastr.warning('请输入用户名');
             //    return;
             //}
             if (password == '') {

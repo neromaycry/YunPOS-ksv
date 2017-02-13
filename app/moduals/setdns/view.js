@@ -33,7 +33,6 @@ define([
                 //console.log('setdns enter');
                 //var value =  $('input[name = dns]').val();
                 //if (value == '') {
-                //    toastr.warning('请输入有效网关');
                 //} else {
                 //    storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,'gateway',value);
                 //    router.navigate('setposkey',{trigger:true});
@@ -45,7 +44,6 @@ define([
         onNextClicked: function () {
             var value =  $('input[name = dns]').val();
             if (value == '') {
-                //toastr.warning('请输入有效网关');
                 layer.msg('请输入有效网关', optLayerWarning);
             } else {
                 storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,'gateway',value);

@@ -42,7 +42,6 @@ define([
                     });
                     _self.renderModel();
                 } else {
-                    //toastr.warning(resp.msg);
                     layer.msg(resp.msg, optLayerWarning)
                 }
             });
