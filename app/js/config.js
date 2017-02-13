@@ -14,7 +14,6 @@ requirejs.config({
         'validation': 'backbone-validation',
         'loading': '../loading/jquery.showLoading.min',
         'common': 'common',
-        'toastr': '../toastr/toastr.min',
         'bootstrap': '../bootstrap/js/bootstrap',
         'pscrollbar': '../perfect-scrollbar/js/perfect-scrollbar.jquery',
         'text': 'requirePlugin/text',
@@ -94,10 +93,6 @@ requirejs.config({
         },
         'md5': {
             'deps': ['jquery']
-        },
-        'toastr': {
-            'deps': ['css!../toastr/toastr.css'],
-            'exports': 'toastr'
         },
         'pscrollbar': {
             'deps': ['css!../perfect-scrollbar/css/perfect-scrollbar.min.css'],
