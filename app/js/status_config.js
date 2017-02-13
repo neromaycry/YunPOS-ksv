@@ -62,9 +62,9 @@ window.statusCode = {
 };
 
 window.AUTH_CODE = {
-    'GRANTED': 0,
-    'COMMAND': 1,
-    'CARD': 2
+    'GRANTED': 0, // 无权限控制
+    'COMMAND': 1, // 口令控制
+    'CARD': 2  // 卡控制
 };
 
 window.API_URL = {
@@ -153,7 +153,7 @@ window.DIRECTIVES = {
     'Bank_query': 'bank_query_',  // 银行卡 查询流水
     'IC_CARD_AUTO_READ': 'ic_card_auto_read_',
     'IC_CARD_MANUAL_READ': 'ic_card_manual_read_',
-    'VERSION': 'version'
+    'VERSION': 'version' // 获取webctrl的版本号
 };
 
 /**

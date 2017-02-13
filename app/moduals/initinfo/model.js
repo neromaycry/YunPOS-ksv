@@ -1,18 +1,18 @@
-define(['../../js/common/BaseModel'],function(BaseModel){
+define(['../../js/common/BaseModel'], function (BaseModel) {
 
     var initmodel = BaseModel.extend({
 
-        defaults:{
-            posid:'',
-            merchantno:'',
-            shopid:'',
-            merchantname:''
+        defaults: {
+            posid: '',
+            merchantno: '',
+            shopid: '',
+            merchantname: ''
         },
-        init:function(data,callback){
+        init: function (data, callback) {
             this.sendPOST({
-                url:window.API_URL.INIT,
-                data:data,
-                success:callback
+                url: window.API_URL.INIT,
+                data: data,
+                success: callback
             });
         }
     });
