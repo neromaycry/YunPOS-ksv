@@ -78,12 +78,18 @@ define([
 
         initPlugins: function () {
             var _self = this;
-            setTimeout(function () {
-                $(_self.input).focus();
-                _self.sendWebSocketDirective([DIRECTIVES.VERSION], [''], wsClient);
-            }, 500);
             this.setKeys();
             this.renderClientDisplay(isPacked, isClientScreenShow);
+            var posVersion = $('.pos-version').text();
+            var posid = storage.get(system_config.POS_INFO_KEY, 'posid');
+            var content = {
+                posid: posid,
+                version: posVersion
+            };
+            setTimeout(function () {
+                $(_self.input).focus();
+                _self.sendWebSocketDirective([DIRECTIVES.VERSION, DIRECTIVES.UPGRADE], ['', JSON.stringify(content)], wsClient);
+            }, 500);
             this.renderVersion();
         },
 

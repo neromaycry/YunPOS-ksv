@@ -153,7 +153,8 @@ window.DIRECTIVES = {
     'Bank_query': 'bank_query_',  // 银行卡 查询流水
     'IC_CARD_AUTO_READ': 'ic_card_auto_read_',
     'IC_CARD_MANUAL_READ': 'ic_card_manual_read_',
-    'VERSION': 'version' // 获取webctrl的版本号
+    'VERSION': 'version', // 获取webctrl的版本号
+    'UPGRADE': 'upgrade_'
 };
 
 /**
