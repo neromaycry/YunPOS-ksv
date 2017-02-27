@@ -108,6 +108,10 @@ define([
                             });
                         }
                         if (resp.data.flag == '00') {
+                            //setTimeout(function () {
+                            //    _self.isClosed = true;
+                            //    layer.msg('支付超时, 请尝试重新支付', optLayerError);
+                            //}, 120000);
                             _self.getTradeState(resp.data, gatherUI);
                         } else {
                             layer.msg(resp.data.msg, optLayerError);

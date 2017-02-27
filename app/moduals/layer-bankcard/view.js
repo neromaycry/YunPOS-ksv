@@ -31,6 +31,7 @@ define([
             console.log(swipe_type);
             switch (swipe_type) {
                 case 'sale':
+                    // 消费
                     var data = {
                         //transaction_amount: '0.01',
                         transaction_amount: this.attrs.gather_money,
@@ -42,6 +43,7 @@ define([
                     this.sendWebSocketDirective([DIRECTIVES.Bank_sale], [JSON.stringify(data)], wsClient);
                     break;
                 case 'refund':
+                    // 隔日退货
                     var itfcType = storage.get(system_config.POS_CONFIG, 'bank_interface');
                     if (itfcType == Interface_type.ABC_BJCS) {
                         var data = {
@@ -66,6 +68,7 @@ define([
                     this.sendWebSocketDirective([DIRECTIVES.Bank_refund], [JSON.stringify(data)], wsClient);
                     break;
                 case 'back_out':
+                    // 当日撤销
                     var itfcType = storage.get(system_config.POS_CONFIG, 'bank_interface');
                     switch (itfcType) {
                         case Interface_type.ABC_BJCS:
