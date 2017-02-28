@@ -78,6 +78,7 @@ define([
                                 pos_no: this.attrs.pos_no,
                                 bill_no: this.attrs.bill_no,
                                 reference_number: this.attrs.reference_number,
+                                billing_mode: this.attrs.billing_mode
                             };
                             break;
                         case Interface_type.CCB_LANDI:

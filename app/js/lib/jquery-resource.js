@@ -246,7 +246,12 @@ window.resource = {
 
         $.ajax(setting);
     },
-
+    /**
+     * 同步请求
+     * @param url
+     * @param data
+     * @param callback
+     */
     "post": function (url, data, callback) {
         var _data = $.extend(true, window.resource._base_params(), data);
         var setting = $.extend(true, window.resource.opts, {
@@ -266,7 +271,15 @@ window.resource = {
 
         $.ajax(setting);
     },
+    /**
+     * 异步请求
+     * @param url
+     * @param data
+     * @param callback
+     * @param callback2
+     */
     "asyncPost": function (url, data, callback, callback2) {
+        //异步请求
         var _data = $.extend(true, window.resource._base_params(), data);
         var setting = $.extend(true, window.resource.opts, {
             "url": url,

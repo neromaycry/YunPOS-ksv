@@ -103,8 +103,9 @@ define([
                     if (_self.gatherUI == '04' || _self.gatherUI == '05') {
                         $('input[name = payment-bill]').focus();
                     } else if (_self.itfcType == Interface_type.ABC_BJCS) {
-                        $('input[name = sale-dt]').focus();
-                        _self.input = 'input[name = sale-dt]';
+                        //$('input[name = sale-dt]').focus();
+                        //_self.input = 'input[name = sale-dt]';
+                        _self.onOKClicked();
                     } else if (_self.itfcType == Interface_type.CCB_LANDI) {
                         $('input[name = sale-dt]').focus();
                         _self.input = 'input[name = sale-dt]';
