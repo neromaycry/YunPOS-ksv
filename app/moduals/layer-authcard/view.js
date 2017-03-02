@@ -81,6 +81,7 @@ define([
                         }
                     } else {
                         layer.msg(resp.msg, optLayerError);
+                        $(_self.input).val('');
                     }
                 });
             }
