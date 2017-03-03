@@ -53,6 +53,15 @@ define([
                 _self.renderContent();
                 _self.prepay(_self.gatherUI);
             }, 100);
+            setTimeout(function () {
+                _self.isClosed = true;
+                _self.closeLayer(layerindex);
+                $('input[name = billing]').focus();
+                if (isPacked && isClientScreenShow) {
+                    $(clientDom).find('.client-qrcode').css('display', 'none');
+                }
+                layer.msg('支付超时, 请尝试重新支付', optLayerWarning);
+            }, 180000);
         },
 
         bindLayerKeys: function () {
@@ -108,10 +117,6 @@ define([
                             });
                         }
                         if (resp.data.flag == '00') {
-                            //setTimeout(function () {
-                            //    _self.isClosed = true;
-                            //    layer.msg('支付超时, 请尝试重新支付', optLayerError);
-                            //}, 120000);
                             _self.getTradeState(resp.data, gatherUI);
                         } else {
                             layer.msg(resp.data.msg, optLayerError);
@@ -130,6 +135,8 @@ define([
         },
 
         getTradeState: function (respData, gatherUI) {
+            this._respData = respData;
+            this._gatherUI = gatherUI;
             if (this.isClosed) {
                 return;
             }
@@ -180,8 +187,9 @@ define([
                         $('input[name = billing]').focus();
                     } else {
                         console.log('继续请求');
-                        //setTimeout(_self.getTradeState(respData, gatherUI), 2000);
-                        _self.getTradeState(respData, gatherUI);
+                        setTimeout(function () {
+                            _self.getTradeState(respData, gatherUI)
+                        }, 3000);
                     }
                 }
             });
@@ -342,7 +350,16 @@ define([
             var _self = this;
             var inputValue = $(this.input).val();
             var prefix2 = inputValue.substring(0, 2);
+            var wxPrefix = ['10','11','12','13','14','15'];
+            var isWxValid = false;
+            for (var i = 0;i<wxPrefix.length;i++) {
+                if (wxPrefix[i].indexOf(prefix2) > -1) {
+                    isWxValid = true;
+                    break;
+                }
+            }
             console.log(prefix2);
+            console.log(isWxValid);
             if (inputValue.length != 18) {
                 layer.msg('非法的支付条码，请重新输入', optLayerWarning);
                 $(this.input).val('');
@@ -353,7 +370,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if (gatherUI == '05' && prefix2 != '13') {
+            if (gatherUI == '05' && !isWxValid) {
                 layer.msg('非法的支付条码，请重新输入', optLayerWarning);
                 $(this.input).val('');
                 return;
