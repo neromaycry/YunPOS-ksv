@@ -86,9 +86,13 @@ define([
                 posid: posid,
                 version: posVersion
             };
+            var content2 = {
+                posid: posid
+            };
             setTimeout(function () {
                 $(_self.input).focus();
                 _self.sendWebSocketDirective([DIRECTIVES.VERSION, DIRECTIVES.UPGRADE], ['', JSON.stringify(content)], wsClient);
+                //_self.sendWebSocketDirective([DIRECTIVES.AD], [JSON.stringify(content2)], wsClient);
             }, 500);
             this.renderVersion();
         },
@@ -298,14 +302,14 @@ define([
             this.model.requestPosConfig({}, function (resp) {
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {
-                        storage.set(system_config.POS_CONFIG, 'ad_url', resp.ad_url);
-                        storage.set(system_config.POS_CONFIG, system_config.IS_CLIENT_SCREEN_SHOW, resp.is_client_screen);
-                        storage.set(system_config.POS_CONFIG, 'bank_interface', resp.bank_interface);
-                        storage.set(system_config.POS_CONFIG, 'screen_height', resp.screen_height);
-                        storage.set(system_config.POS_CONFIG, 'screen_width', resp.screen_width);
-                        storage.set(system_config.POS_CONFIG, system_config.XFB_URL, resp.xfb_url);
-                        storage.set(system_config.POS_CONFIG, 'notify_url', resp.notify_url);
-                        storage.set(system_config.POS_CONFIG, 'is_notify_set', resp.is_notify_set);
+                    //storage.set(system_config.POS_CONFIG, 'ad_url', resp.ad_url);
+                    storage.set(system_config.POS_CONFIG, system_config.IS_CLIENT_SCREEN_SHOW, resp.is_client_screen);
+                    storage.set(system_config.POS_CONFIG, 'bank_interface', resp.bank_interface);
+                    storage.set(system_config.POS_CONFIG, 'screen_height', resp.screen_height);
+                    storage.set(system_config.POS_CONFIG, 'screen_width', resp.screen_width);
+                    storage.set(system_config.POS_CONFIG, system_config.XFB_URL, resp.xfb_url);
+                    storage.set(system_config.POS_CONFIG, 'notify_url', resp.notify_url);
+                    storage.set(system_config.POS_CONFIG, 'is_notify_set', resp.is_notify_set);
                 } else {
                     layer.msg('服务器错误，请联系管理员', optLayerError);
                 }
@@ -478,7 +482,7 @@ define([
         setBillingKeys: function () {
             var effects = ['返回', '确定', '结算', '删除已支付的方式', '向上选择', '向下选择',
                 '支票类支付', '礼券类支付', '银行卡支付', '第三方支付', '一卡通支付', '快捷支付', '银行业务'];
-            var keys = ['ESC', 'ENTER', 'Space', 'D',  '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E', 'V'];
+            var keys = ['ESC', 'ENTER', 'Space', 'D', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E', 'V'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D,
                 window.KEYS.Up, window.KEYS.Down, window.KEYS.S, window.KEYS.B, window.KEYS.P, window.KEYS.Q,
                 window.KEYS.O, window.KEYS.E, window.KEYS.V];
@@ -496,7 +500,7 @@ define([
         setBillingReturnKeys: function () {
             var effects = ['返回', '确定', '结算', '删除已支付的方式', '向上选择', '向下选择',
                 '支票类支付', '礼券类支付', '银行卡支付', '第三方支付', '一卡通支付', '快捷支付'];
-            var keys = ['ESC', 'ENTER', 'Space', 'D',  '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E'];
+            var keys = ['ESC', 'ENTER', 'Space', 'D', '↑', '↓', 'S', 'B', 'P', 'Q', 'O', 'E'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D,
                 window.KEYS.Up, window.KEYS.Down, window.KEYS.S, window.KEYS.B, window.KEYS.P, window.KEYS.Q,
                 window.KEYS.O, window.KEYS.E];
@@ -514,7 +518,7 @@ define([
         setCheckingKeys: function () {
             var effects = ['返回', '确定', '向上选择', '向下选择',
                 '收银员日结报表', '收款机报表', '打印', '缴费表'];
-            var keys = ['ESC', 'ENTER', '↑', '↓', '←', '→','H', 'G'];
+            var keys = ['ESC', 'ENTER', '↑', '↓', '←', '→', 'H', 'G'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down,
                 window.KEYS.Left, window.KEYS.Right, window.KEYS.H, window.KEYS.G];
             var checkingKeys = [];

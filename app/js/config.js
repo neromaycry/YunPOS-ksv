@@ -190,36 +190,6 @@ requirejs([
     //    window.layer.msg('未获取POS机权限，请初始化获取', optLayerWarning);
     //}
 
-    if (isPacked && window.storage.isSet(system_config.POS_CONFIG)) {
-        var isClientScreen = window.storage.get(system_config.POS_CONFIG, system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显
-        if (isClientScreen == 1) {
-            isClientScreenShow = true;
-        }
-        console.log('isClientScreenShow:' + isClientScreenShow);
-        if (isClientScreenShow) {
-            var gui = window.requireNode(['nw.gui']);
-            window.clientScreen = gui.Window.open("client.html", {
-                title: '云POS',
-                height: 1000,
-                width: 1920,
-                toolbar: false
-            });
-            window.clientScreen.moveTo(window.storage.get(system_config.POS_CONFIG, 'screen_width'), 0);
-            window.clientScreen.enterKioskMode();
-            window.clientScreen.on('loaded', function () {
-                // the native onload event has just occurred
-                window.clientDom = window.clientScreen.window.document;
-                var clientH = $(window.clientDom).height();
-                //var clientW = $(window.clientDom).width();
-                //console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
-                var infoH = $(window.clientDom).find('.client-display').height();
-                $(window.clientDom).find('.ad-img').height(clientH - infoH);
-                $(window.clientDom).find('.ad-img').css('width', '100%');
-                $(window.clientDom).find('.ad-img').attr('src', window.storage.get(system_config.POS_CONFIG, 'ad_url'));
-                window.focus();
-            });
-        }
-    }
 
     Backbone.history.start();
     _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
@@ -337,10 +307,70 @@ requirejs([
                     window.layer.msg(data.msg, optLayerWarning);
                 }
                 break;
-            case 'verison':
+            case DIRECTIVES.VERSION:
                 if (data.code == '00') {
                     console.log('version:' + data);
                     Backbone.trigger('onVersionAcquired', data);
+                } else {
+                    window.layer.msg(data.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.UPGRADE:
+                if (data.code == '00') {
+                    console.log('upgrade success');
+                    window.layer.msg(data.msg + '，更新文件下载完毕后将会重启系统', optLayerSuccess);
+                    window.close();
+                } else if (data.code == '01') {
+                    console.log('暂无版本更新');
+                    if (window.wsClient.readyState == 1) {
+                        var content = {
+                            posid: window.storage.get(system_config.POS_INFO_KEY, 'posid')
+                        };
+                        var directive = DIRECTIVES.AD + JSON.stringify(content);
+                        console.log(directive);
+                        window.wsClient.send(directive);
+                    } else {
+                        window.layer.msg('请检查本地是否已经启动webctrl程序', optLayerError);
+                    }
+                    //打开副屏
+                    if (isPacked && window.storage.isSet(system_config.POS_CONFIG)) {
+                        var isClientScreen = window.storage.get(system_config.POS_CONFIG, system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显
+                        if (isClientScreen == 1) {
+                            isClientScreenShow = true;
+                        }
+                        console.log('isClientScreenShow:' + isClientScreenShow);
+                        if (isClientScreenShow) {
+                            var gui = window.requireNode(['nw.gui']);
+                            window.clientScreen = gui.Window.open("client.html", {
+                                title: '云POS',
+                                height: 1000,
+                                width: 1920,
+                                toolbar: false
+                            });
+                            window.clientScreen.moveTo(window.storage.get(system_config.POS_CONFIG, 'screen_width'), 0);
+                            window.clientScreen.enterKioskMode();
+                            window.clientScreen.on('loaded', function () {
+                                // the native onload event has just occurred
+                                window.clientDom = window.clientScreen.window.document;
+                                var clientH = $(window.clientDom).height();
+                                //var clientW = $(window.clientDom).width();
+                                //console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
+                                var infoH = $(window.clientDom).find('.client-display').height();
+                                $(window.clientDom).find('.ad-img').height(clientH - infoH);
+                                $(window.clientDom).find('.ad-img').css('width', '100%');
+                                $(window.clientDom).find('.ad-img').attr('src', window.storage.get(system_config.POS_CONFIG, 'ad_url'));
+                                window.focus();
+                            });
+                        }
+                    }
+                } else {
+                    window.layer.msg(data.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.AD:
+                if (data.code == '00') {
+                    console.log('ad image downloaded');
+                    window.storage.set(system_config.POS_CONFIG, 'ad_url', data.ad_path);
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
                 }
