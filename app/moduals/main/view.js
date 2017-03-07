@@ -776,12 +776,14 @@ define([
          */
         addItem: function () {
             var _self = this;
+            var workerPosition = storage.get(system_config.LOGIN_USER_KEY, 'worker_position');// 当前登录的角色
+            var contractCode = storage.get(system_config.LOGIN_USER_KEY, 'contract_code');// 当前营业员合同编码
             var skucode = $(this.input).val();
             if (skucode == '') {
                 layer.msg('商品编码不能为空', optLayerWarning);
                 return;
             }
-            if (auth_store == 1) {
+            if (workerPosition != '02' && auth_store == 1) {
                 var data = {
                     user_id: '',
                     skucode: skucode,
@@ -806,7 +808,8 @@ define([
             } else {
                 var data = {
                     user_id: '',
-                    skucode: skucode
+                    skucode: skucode,
+                    contract_code:contractCode
                 };
                 this.getGoods(data);
             }
@@ -824,6 +827,7 @@ define([
             var _self = this;
             var data = {};
             data['skucode'] = respData.skucode;
+            data['contract_code'] = respData.contract_code;
             if (storage.isSet(system_config.VIP_KEY)) {
                 data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
                 data['medium_id'] = storage.get(system_config.VIP_KEY, 'medium_id');
