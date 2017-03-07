@@ -159,7 +159,7 @@ define([
                 console.log(typeof resp);
                 if (resp.status == '00') {
                     layer.msg(resp.msg, optLayerSuccess);
-                    router.navigate('main', {trigger: true});
+                    router.navigate('login', {trigger: true});
                 } else {
                     layer.msg(resp.msg, optLayerError);
                 }
