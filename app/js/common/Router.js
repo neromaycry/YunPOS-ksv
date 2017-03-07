@@ -23,7 +23,8 @@ define(['backbone'], function (Backbone) {
             'hconnection': 'hconnection',
             'print': 'print',
             'lockscreen': 'lockscreen',
-            'setting': 'setting'
+            'setting': 'setting',
+            'passwdchange':'passwdchange'
         },
 
         //路由初始化可以做一些事
@@ -176,6 +177,14 @@ define(['backbone'], function (Backbone) {
 
         setting: function () {
             var _url = './moduals/setting/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        passwdchange: function () {
+            var _url = './moduals/passwdchange/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

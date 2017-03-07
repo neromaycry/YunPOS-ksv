@@ -96,7 +96,8 @@ window.API_URL = {
     "WORKER": "/worker",
     'CASHIER_MONEY': '/casiermoney',
     'CASHIER_DKDJ': '/casierjkdj',
-    'POS_CONF': '/posconf'
+    'POS_CONF': '/posconf',
+    'PASSWDCHANGE':'/passwdchange'
 };
 
 // 系统参数设置
@@ -239,6 +240,7 @@ window.PAGE_ID = {
     'LAYER_WORKER': 58,
     'LAYER_PAYTABLE': 59,
     'LAYER_ICMEMBER': 60,
+    'PASSWD_CHANGE': 61,
 };
 
 window.KEYS = {

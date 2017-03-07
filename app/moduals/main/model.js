@@ -44,6 +44,13 @@ define(['../../js/common/BaseModel'], function (BaseModel) {
                 data: data,
                 success: callback
             });
+        },
+        password: function (data, callback) {
+            this.sendPOST({
+                url: window.API_URL.PASSWDCHANGE,
+                data: data,
+                success: callback
+            });
         }
 
     });

@@ -88,6 +88,7 @@ define([
             'click .cashdrawer': 'openCashDrawer',
             'click .lock': 'lockScreen',
             'click .bank-business': 'onBusinessClicked',
+            'click .passwd-change': 'onPasswdChangeClicked'
             //'click .setting': 'onSettingClicked'  //设置
         },
         pageInit: function () {
@@ -422,6 +423,11 @@ define([
             //整单折扣
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.U, function () {
                 _self.onTotalDiscountPercentage();
+            });
+            //修改密码
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.P, function () {
+                _self.onPasswdChangeClicked();
+                //_self.changePasswd();
             });
         },
         /**
@@ -1279,6 +1285,27 @@ define([
                 });
             }
         },
+
+        onPasswdChangeClicked: function () {
+            router.navigate('passwdchange', {trigger: true});
+        },
+
+        changePasswd: function () {
+            var data = {
+                user_id: storage.get(system_config.LOGIN_USER_KEY, 'user_id'),
+                password: '6',
+                new_password: '7'
+            };
+            console.log(data);
+            this.model.password(data, function (resp) {
+                console.log(typeof resp);
+                if (resp.status == '00') {
+                    layer.msg(resp.msg, optLayerSuccess);
+                } else {
+                    layer.msg(resp.msg, optLayerError);
+                }
+            });
+        }
 
     });
     return mainView;

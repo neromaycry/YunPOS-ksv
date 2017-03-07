@@ -86,9 +86,9 @@ define([
                 posid: posid,
                 version: posVersion
             };
-            var content2 = {
-                posid: posid
-            };
+            //var content2 = {
+            //    posid: posid
+            //};
             setTimeout(function () {
                 $(_self.input).focus();
                 _self.sendWebSocketDirective([DIRECTIVES.VERSION, DIRECTIVES.UPGRADE], ['', JSON.stringify(content)], wsClient);
@@ -208,6 +208,7 @@ define([
             data['user_password'] = $.md5(password);
             data['accredit_type'] = '00';
             this.model.login(data, function (response) {
+                console.log(response);
                 //成功回调
                 if (!$.isEmptyObject(response)) {
                     if (response.status == "00") {
