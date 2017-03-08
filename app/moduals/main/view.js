@@ -274,8 +274,9 @@ define([
                     $('.for-cartlist').scrollTop(this.listheight * this.n);
                 }
                 $('#li' + (this.i - 1)).addClass('cus-selected');
+            } else {
+                $('#li' + this.i).addClass('cus-selected');
             }
-            $('#li' + this.i).addClass('cus-selected');
             return this;
         },
         renderClientWelcome: function (isPacked, isClientShow) {
@@ -472,30 +473,27 @@ define([
          * 购物车光标向下
          */
         scrollDown: function () {
-            console.log(this.n);
-            if (this.i < this.collection.length - 1) {
+            if (this.i <= this.collection.length - 1) {
                 this.i++;
             }
             if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
                 this.n++;
                 $('.for-cartlist').scrollTop(this.listheight * this.n);
             }
-            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            $('#li' + (this.i - 1)).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
          * 购物车光标向上
          */
         scrollUp: function () {
-            if (this.i > 0) {
+            if (this.i > 1) {
                 this.i--;
             }
-            console.log(this.i);
             if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
-                console.log(this.n);
                 $('.for-cartlist').scrollTop(this.listheight * this.n);
             }
-            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            $('#li' + (this.i - 1)).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
          * 解挂
@@ -777,9 +775,9 @@ define([
         deleteItem: function () {
             try {
                 if ($('li').hasClass('cus-selected')) {
-                    var item = this.collection.at(this.i);
+                    console.log(this.i);
+                    var item = this.collection.at(this.i - 1);
                     this.collection.remove(item);
-                    this.i = 0;
                     this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
                     this.calculateModel();
                 }
