@@ -56,6 +56,10 @@ define([
         restOrderDelivery: {},
         deleteKey: {},
         isDeleteKey: false,
+        Enum: {
+            ALWAYS_FOCUS_FIRST: 0,
+            ALWAYS_FOCUS_LAST: 1
+        },
         //isDiscountPercent: false,
         //input:'input[name = main]',
         events: {
@@ -182,7 +186,7 @@ define([
             $('.for-cartlist').perfectScrollbar();  // 定制滚动条外观
             this.renderPosInfo();
             //this.renderSalesman();
-            this.renderCartList();
+            this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
             this.renderOddChange();
             this.renderMarquee();
             this.renderMinfo();
@@ -244,7 +248,8 @@ define([
             $('.for-cartlist').height(cart - oddchange - 20);  //设置购物车的高度
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
             this.listnum = 5;//设置商品列表中的条目数
-            $('.li-cartlist').height(this.listheight / this.listnum - 21);
+            this.itemheight = this.listheight / this.listnum - 21;
+            $('.li-cartlist').height(this.itemheight);
         },
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
@@ -258,9 +263,18 @@ define([
             this.$el.find('.for-minfo').html(this.template_minfo(this.memberModel.toJSON()));
             return this;
         },
-        renderCartList: function () {
+        renderCartList: function (cursor) {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
+            var cartLen = this.collection.length;
+            this.n = Math.floor(cartLen / this.listnum);
+            if (cursor == this.Enum.ALWAYS_FOCUS_LAST) {
+                this.i = cartLen;
+                if (cartLen > this.listnum) {
+                    $('.for-cartlist').scrollTop(this.listheight * this.n);
+                }
+                $('#li' + (this.i - 1)).addClass('cus-selected');
+            }
             $('#li' + this.i).addClass('cus-selected');
             return this;
         },
@@ -458,6 +472,7 @@ define([
          * 购物车光标向下
          */
         scrollDown: function () {
+            console.log(this.n);
             if (this.i < this.collection.length - 1) {
                 this.i++;
             }
@@ -474,8 +489,10 @@ define([
             if (this.i > 0) {
                 this.i--;
             }
+            console.log(this.i);
             if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
                 this.n--;
+                console.log(this.n);
                 $('.for-cartlist').scrollTop(this.listheight * this.n);
             }
             $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
@@ -526,7 +543,7 @@ define([
                 });
                 this.collection.reset();
                 this.renderPosInfo();
-                this.renderCartList();
+                this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
                 //this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
                 layer.msg('挂单号：' + orderNum, optLayerSuccess);
@@ -763,7 +780,7 @@ define([
                     var item = this.collection.at(this.i);
                     this.collection.remove(item);
                     this.i = 0;
-                    this.renderCartList();
+                    this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
                     this.calculateModel();
                 }
                 layer.msg('删除成功', optLayerSuccess);
@@ -809,7 +826,7 @@ define([
                 var data = {
                     user_id: '',
                     skucode: skucode,
-                    contract_code:contractCode
+                    contract_code: contractCode
                 };
                 this.getGoods(data);
             }
@@ -903,7 +920,7 @@ define([
             //});
             //this.buttonSelected();
             this.renderPosInfo();
-            this.renderCartList();
+            this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
             this.renderMinfo();
             //this.renderSalesman();
             storage.remove(system_config.SALE_PAGE_KEY);
@@ -942,7 +959,7 @@ define([
                 this.discountamount += discounts[i];
             }
             //this.updateClientSaleState(this.totalamount, this.itemamount, this.discountamount, isPacked);
-            this.renderCartList();
+            this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
             this.updateShopInfo();
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', this.collection.toJSON());
             storage.set(system_config.SALE_PAGE_KEY, 'shopinfo', this.model.toJSON());
@@ -999,7 +1016,7 @@ define([
          */
         onMemberClicked: function () {
             var attrs = {
-                pageid:pageId
+                pageid: pageId
             }
             this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, attrs, {area: '800px'});
         },
