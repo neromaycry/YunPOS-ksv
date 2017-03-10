@@ -358,3 +358,7 @@ div .bg-darkblue {
 .navbar-nav > li > a:hover,.navbar-nav > li > a:focus{
     color:#74898a!important;
 }
+
+.nav > li > a.p10 {
+    padding: 15px 10px;
+}

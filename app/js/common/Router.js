@@ -24,7 +24,8 @@ define(['backbone'], function (Backbone) {
             'print': 'print',
             'lockscreen': 'lockscreen',
             'setting': 'setting',
-            'passwdchange':'passwdchange'
+            'passwdchange':'passwdchange',
+            'paytable': 'paytable',
         },
 
         //路由初始化可以做一些事
@@ -185,6 +186,14 @@ define(['backbone'], function (Backbone) {
 
         passwdchange: function () {
             var _url = './moduals/passwdchange/view.js';
+            require([_url], function (View) {
+                var view = new View();
+                view.render();
+            });
+        },
+
+        paytable: function () {
+            var _url = './moduals/paytable/view.js';
             require([_url], function (View) {
                 var view = new View();
                 view.render();

@@ -394,19 +394,20 @@ define([
             this.setPrintKeys();
             this.setSettingKeys();
             this.setPasswordKeys();
+            this.setPayTableKeys();
         },
 
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '结算', '删除商品', '取消交易', '向上选择', '向下选择',
                 '单品优惠', '单品折扣', '原单退货', '锁屏', '开钱箱', '挂单', '解挂', '会员登录',
-                '提大额', '收银对账', '修改数量', '整单优惠', '整单折扣', '单品退货', '打印', '银行业务','修改密码'];
+                '提大额', '收银对账', '修改数量', '整单优惠', '整单折扣', '单品退货', '打印', '银行业务','修改密码', '缴款表'];
             var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
-                'F7', 'F8', 'F9', 'F10', 'F12', 'Y', 'U', 'F', 'H', 'V', 'P'];
+                'F7', 'F8', 'F9', 'F10', 'F12', 'Y', 'U', 'F', 'H', 'V', 'P', 'G'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D,
                 window.KEYS.C, window.KEYS.Up, window.KEYS.Down, window.KEYS.F1, window.KEYS.F2,
                 window.KEYS.F3, window.KEYS.F4, window.KEYS.F5, window.KEYS.F6, window.KEYS.F7,
-                window.KEYS.F8, window.KEYS.F9, window.KEYS.F10, window.KEYS.F12,
-                window.KEYS.Y, window.KEYS.U, window.KEYS.F, window.KEYS.H, window.KEYS.V, window.KEYS.P];
+                window.KEYS.F8, window.KEYS.F9, window.KEYS.F10, window.KEYS.F12, window.KEYS.Y,
+                window.KEYS.U, window.KEYS.F, window.KEYS.H, window.KEYS.V, window.KEYS.P, window.KEYS.G];
             var mainKeys = [];
             for (var i = 0; i < effects.length; i++) {
                 var effect = effects[i];
@@ -576,6 +577,21 @@ define([
                 var printKey = {effect: effect, key: key, keyCode: keyCode};
                 printKeys.push(printKey);
                 storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'PWD_CHANGE_PAGE', printKeys);
+            }
+        },
+
+        setPayTableKeys: function () {
+            var effects = ['返回', '确定', '向上选择', '向下选择', '打印'];
+            var keys = ['ESC', 'ENTER', '↑', '↓', 'P'];
+            var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Up, window.KEYS.Down, window.KEYS.P];
+            var printKeys = [];
+            for (var i = 0; i < effects.length; i++) {
+                var effect = effects[i];
+                var key = keys[i];
+                var keyCode = keyCodes[i];
+                var printKey = {effect: effect, key: key, keyCode: keyCode};
+                printKeys.push(printKey);
+                storage.set(system_config.SETTING_DATA_KEY, system_config.SHORTCUT_KEY, 'PAYTABLE_PAGE', printKeys);
             }
         },
 

@@ -92,8 +92,9 @@ define([
             'click .cashdrawer': 'openCashDrawer',
             'click .lock': 'lockScreen',
             'click .bank-business': 'onBusinessClicked',
-            'click .passwd-change': 'onPasswdChangeClicked'
+            'click .passwd-change': 'onPasswdChangeClicked',
             //'click .setting': 'onSettingClicked'  //设置
+            'click .paytable': 'onPayTableClicked',//缴款表
         },
         pageInit: function () {
             var _self = this;
@@ -443,6 +444,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.P, function () {
                 _self.onPasswdChangeClicked();
                 //_self.changePasswd();
+            });
+            //缴款表
+            this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.G, function () {
+                _self.onPayTableClicked();
             });
         },
         /**
@@ -1194,6 +1199,14 @@ define([
                 router.navigate('print', {trigger: true});
             });
         },
+
+        /**
+         * 跳转
+         */
+        onPayTableClicked: function () {
+            router.navigate('paytable', {trigger: true});
+        },
+
         /**
          * 提大额
          */

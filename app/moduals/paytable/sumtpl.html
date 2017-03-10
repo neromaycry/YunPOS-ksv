@@ -1,0 +1,18 @@
+<% function toDecimal2(x) {
+var f = parseFloat(x);
+if (isNaN(f)) {
+return false;
+}
+var f = Math.round(x*100)/100;
+var s = f.toString();
+var rs = s.indexOf('.');
+if (rs < 0) {
+rs = s.length;
+s += '.';
+}
+while (s.length <= rs + 2) {
+s += '0';
+}
+return s;
+}%>
+<div class="col-xs-12 col-md-12 text-center text-primary" style="padding-top: 5px;padding-bottom: 5px;font-size: 22px">合计：<span style="color: #f36c60">￥<%= toDecimal2(sum) %>元</span></div>

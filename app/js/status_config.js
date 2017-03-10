@@ -241,6 +241,7 @@ window.PAGE_ID = {
     'LAYER_PAYTABLE': 59,
     'LAYER_ICMEMBER': 60,
     'PASSWD_CHANGE': 61,
+    'PAYTABLE': 62,
 };
 
 window.KEYS = {
