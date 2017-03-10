@@ -842,6 +842,7 @@ define([
             var _self = this;
             var data = {};
             data['skucode'] = respData.skucode;
+            respData.contract_code = undefined ? respData.contract_code : '';
             data['contract_code'] = respData.contract_code;
             if (storage.isSet(system_config.VIP_KEY)) {
                 data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');
