@@ -3,13 +3,13 @@ define([
     '../../../../moduals/checking/model',
     '../../../../moduals/checking/collection',
     '../../../../moduals/layer-help/view',
-    '../../../../moduals/layer-paytable/view',
+    // '../../../../moduals/layer-paytable/view',
     'text!../../../../moduals/checking/cashierinfotpl.html',
     'text!../../../../moduals/checking/posdetailtpl.html',
     'text!../../../../moduals/checking/posinfotpl.html',
     'text!../../../../moduals/checking/cashierdetailtpl.html',
     'text!../../../../moduals/checking/tpl.html',
-], function (BaseView, CheckingModel, CheckingCollection, LayerHelpView, LayerPayTableView, cashierinfotpl, posdetailtpl, posinfotpl, casherdetailtpl, tpl) {
+], function (BaseView, CheckingModel, CheckingCollection, LayerHelpView, cashierinfotpl, posdetailtpl, posinfotpl, casherdetailtpl, tpl) {
 
     var checkingView = BaseView.extend({
 
@@ -51,7 +51,7 @@ define([
             'click #for_cashier': 'onCashierReportClicked',
             'click #for_pos': 'onPosReportClicked',
             'click .print': 'onPrintClicked',
-            'click .pay-table': 'onPayTableClicked'
+            // 'click .pay-table': 'onPayTableClicked'
         },
 
         pageInit: function () {
@@ -119,10 +119,10 @@ define([
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.H, function () {
                 _self.onPrintClicked();
             });
-
-            this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.G, function () {
-                _self.onPayTableClicked();
-            });
+            //
+            // this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.G, function () {
+            //     _self.onPayTableClicked();
+            // });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Down, function () {
                 _self.scrollDown();
@@ -340,10 +340,10 @@ define([
 
         },
 
-        onPayTableClicked: function () {
-            var attrs = {};
-            this.openLayer(PAGE_ID.LAYER_PAYTABLE, pageId, '收银员缴款单', LayerPayTableView, attrs, {area: '800px'});
-        }
+        // onPayTableClicked: function () {
+        //     var attrs = {};
+        //     this.openLayer(PAGE_ID.LAYER_PAYTABLE, pageId, '收银员缴款单', LayerPayTableView, attrs, {area: '800px'});
+        // }
 
     });
 
