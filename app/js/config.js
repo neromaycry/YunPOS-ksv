@@ -352,10 +352,11 @@ requirejs([
                             window.clientScreen.on('loaded', function () {
                                 // the native onload event has just occurred
                                 window.clientDom = window.clientScreen.window.document;
-                                var clientH = $(window.clientDom).height();
+                                var clientH = window.screen.height;
                                 //var clientW = $(window.clientDom).width();
                                 //console.log('clientHeight:' + clientH + ',clientWidth:' + clientW);
                                 var infoH = $(window.clientDom).find('.client-display').height();
+                                console.log('height:' + (clientH - infoH));
                                 $(window.clientDom).find('.ad-img').height(clientH - infoH);
                                 $(window.clientDom).find('.ad-img').css('width', '100%');
                                 $(window.clientDom).find('.ad-img').attr('src', window.storage.get(system_config.POS_CONFIG, 'ad_url'));
@@ -408,6 +409,19 @@ requirejs([
     window.wsClient.onerror = function (e) {
         console.log(e);
     };
+
+    setTimeout(function () {
+        if (window.wsClient.readyState == 1) {
+            var content = {
+                posid: window.storage.get(system_config.POS_INFO_KEY, 'posid'),
+                version: $('.pos-version').text()
+            };
+            var directive = DIRECTIVES.UPGRADE + JSON.stringify(content);
+            window.wsClient.send(directive);
+        } else {
+            window.layer.msg('请检查本地是否已经启动webctrl程序', optLayerError);
+        }
+    }, 500);
 
     // 定义调试标志
     window.debug = true;
