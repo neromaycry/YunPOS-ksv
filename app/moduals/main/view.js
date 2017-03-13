@@ -171,6 +171,7 @@ define([
             if (storage.isSet(system_config.POS_CONFIG, 'notify_url')) {
                 this.initNotifySocket();
             }
+            this.cursor = this.Enum.ALWAYS_FOCUS_LAST;
             //if (storage.isSet(system_config.PRINTF)) {
             //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
             //    console.log(message);
@@ -563,13 +564,19 @@ define([
          * 单品优惠
          */
         modifyItemDiscount: function () {
+            var index;
+            if (this.cursor == this.Enum.ALWAYS_FOCUS_LAST) {
+                index = this.i - 1;
+            } else if (this.cursor == this.Enum.ALWAYS_FOCUS_FIRST) {
+                index = this.i;
+            }
             var _self = this;
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
-            var item = this.collection.at(this.i);
+            var item = this.collection.at(index);
             var price = item.get('price');
             var discount = $(this.input).val();
             var num = item.get('num');
@@ -592,20 +599,26 @@ define([
             console.log(rate);
             this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
                 //var discount = item.get('discount');
-                _self.collection.at(_self.i).set({
+                _self.collection.at(index).set({
                     discount: parseFloat(discount),
                     money: price * num - discount,
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
                 _self.calculateModel();
                 layer.msg('单品优惠成功!优惠金额：' + discount + '元', optLayerSuccess);
-                $('#li' + _self.i).addClass('cus-selected');
+                $('#li' + index).addClass('cus-selected');
                 $(_self.input).val('');
             });
         },
 
         //折让
         onDiscountPercentClicked: function () {
+            var index;
+            if (this.cursor == this.Enum.ALWAYS_FOCUS_LAST) {
+                index = this.i - 1;
+            } else if (this.cursor == this.Enum.ALWAYS_FOCUS_FIRST) {
+                index = this.i;
+            }
             var _self = this;
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
@@ -613,7 +626,7 @@ define([
                 return;
             }
             var value = $(this.input).val();
-            var item = _self.collection.at(_self.i);
+            var item = _self.collection.at(index);
             var price = item.get('price');
             var num = item.get('num');
             if (item.get('disc_subtotal') != 0) {
@@ -635,14 +648,14 @@ define([
             this.evalAuth(auth_discount, '02', {discount_rate: rate}, function () {
                 var discountpercent = $(_self.input).val();
                 var rate = parseFloat(discountpercent) / 100;
-                _self.collection.at(_self.i).set({
+                _self.collection.at(index).set({
                     discount: price * num * (1 - rate),
                     money: price * num * rate,
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
                 _self.calculateModel();
                 layer.msg('单品折扣成功!折扣比率：' + (rate * 10).toFixed(1) + '折', optLayerSuccess);
-                $('#li' + _self.i).addClass('cus-selected');
+                $('#li' + index).addClass('cus-selected');
                 $(_self.input).val('');
             });
         },
@@ -733,7 +746,12 @@ define([
          * 修改单品数量
          */
         modifyItemNum: function () {
-            var _self = this;
+            var index;
+            if (this.cursor == this.Enum.ALWAYS_FOCUS_LAST) {
+                index = this.i - 1;
+            } else if (this.cursor == this.Enum.ALWAYS_FOCUS_FIRST) {
+                index = this.i;
+            }
             var number = $(this.input).val();
             var discountamount = this.model.get('discountamount');
             if (this.model.get('itemamount') == 0) {
@@ -751,7 +769,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            var item = this.collection.at(this.i);
+            var item = this.collection.at(index);
             var discount = item.get('discount');
             var price = item.get('price');
             item.set({
@@ -772,7 +790,7 @@ define([
             }
             this.calculateModel();
             $(this.input).val('');
-            $('#li' + this.i).addClass('cus-selected');
+            $('#li' + index).addClass('cus-selected');
         },
         /**
          * 单品删除
