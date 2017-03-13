@@ -80,19 +80,9 @@ define([
             var _self = this;
             this.setKeys();
             this.renderClientDisplay(isPacked, isClientScreenShow);
-            //var posVersion = $('.pos-version').text();
-            //var posid = storage.get(system_config.POS_INFO_KEY, 'posid');
-            //var content = {
-            //    posid: posid,
-            //    version: posVersion
-            //};
-            //var content2 = {
-            //    posid: posid
-            //};
             setTimeout(function () {
                 $(_self.input).focus();
                 _self.sendWebSocketDirective([DIRECTIVES.VERSION], [''], wsClient);
-                //_self.sendWebSocketDirective([DIRECTIVES.AD], [JSON.stringify(content2)], wsClient);
             }, 500);
             this.renderVersion();
         },
