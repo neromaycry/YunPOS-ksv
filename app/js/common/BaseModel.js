@@ -23,7 +23,6 @@ define(['backbone'], function (Backbone) {
             this.fetch(options);
         },
         sendPOST: function (options) {
-            var _self = this;
             options = _.extend({
                 type: "POST",
                 contentType: "application/json",

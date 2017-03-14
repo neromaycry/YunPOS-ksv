@@ -193,10 +193,11 @@ define([
                 layer.msg('请输入密码', optLayerWarning);
                 return;
             }
-            var data = {};
-            data['user_id'] = username;
-            data['user_password'] = $.md5(password);
-            data['accredit_type'] = '00';
+            var data = {
+                user_id: username,
+                user_password: $.md5(password),
+                accredit_type: '00'
+            };
             this.model.login(data, function (response) {
                 console.log(response);
                 //成功回调
@@ -237,8 +238,9 @@ define([
 
         getGatherDetail: function () {
             var _self = this;
-            var data = {};
-            data['modify_date'] = '19700101000000';
+            var data = {
+                modify_date: '19700101000000'
+            };
             this.requestModel.requestGatherDetail(data, function (resp) {
                 if (!$.isEmptyObject(resp)) {
                     if (resp.status == '00') {
@@ -289,7 +291,6 @@ define([
         },
 
         getPosConfig: function () {
-            var _self = this;
             this.model.requestPosConfig({}, function (resp) {
                 console.log(resp);
                 if (!$.isEmptyObject(resp)) {
@@ -391,7 +392,7 @@ define([
         setMainKeys: function () {
             var effects = ['退出登录', '确定', '结算', '删除商品', '取消交易', '向上选择', '向下选择',
                 '单品优惠', '单品折扣', '原单退货', '锁屏', '开钱箱', '挂单', '解挂', '会员登录',
-                '提大额', '收银对账', '修改数量', '整单优惠', '整单折扣', '单品退货', '打印', '银行业务','修改密码', '缴款表'];
+                '提大额', '收银对账', '修改数量', '整单优惠', '整单折扣', '单品退货', '打印', '银行业务', '修改密码', '缴款表'];
             var keys = ['ESC', 'ENTER', 'Space', 'D', 'C', '↑', '↓', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
                 'F7', 'F8', 'F9', 'F10', 'F12', 'Y', 'U', 'F', 'H', 'V', 'P', 'G'];
             var keyCodes = [window.KEYS.Esc, window.KEYS.Enter, window.KEYS.Space, window.KEYS.D,
