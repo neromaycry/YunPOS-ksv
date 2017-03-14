@@ -24,7 +24,7 @@ define([
 
         itemheight: 0,//每条商品的高度
 
-        listnum: 0,//购物车显示的商品数量
+        //listnum: 0,//购物车显示的商品数量
 
         n: 0,//
 
@@ -421,8 +421,8 @@ define([
             var dataset = _data ? _data.toJSON() : {};
             this.$el.html(this.template(dataset));
             this.initOtherView();
-            this.initPlugins();
             this.initLayoutHeight();
+            this.initPlugins();
             //if (storage.isSet(system_config.IS_KEYBOARD_PLUGGED)) {
             //    var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
             //    $('input').attr('readonly', !isKeyboardPlugged);

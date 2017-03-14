@@ -179,11 +179,11 @@ define([
             //    window.wsClient.send(DIRECTIVES.OpenCashDrawer)
             //}
             //this.onDeleteKey();
-            this.initTemplates();
             this.handleEvents();
         },
         initPlugins: function () {
             var _self = this;
+            this.initTemplates();
             $(this.input).focus();
             $('.for-cartlist').perfectScrollbar();  // 定制滚动条外观
             this.renderPosInfo();
@@ -250,6 +250,7 @@ define([
             $('.for-cartlist').height(cart - oddchange - 20);  //设置购物车的高度
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
             this.listnum = 5;//设置商品列表中的条目数
+            console.log('initlayout listnum: ' + this.listnum);
             this.itemheight = this.listheight / this.listnum - 21;
             $('.li-cartlist').height(this.itemheight);
         },
@@ -270,6 +271,8 @@ define([
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
             var cartLen = this.collection.length;
             this.n = Math.floor(cartLen / this.listnum);
+            console.log('listnum:' + this.listnum);
+            console.log('rendercartlist:' + this.n);
             if (cursor == this.Enum.ALWAYS_FOCUS_LAST) {
                 this.i = cartLen;
                 if (cartLen > this.listnum) {
