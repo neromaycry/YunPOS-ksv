@@ -429,7 +429,31 @@ define([
             //}
             this.addClickEvents();
             return this;
-        }
+        },
+
+        scrollDown: function (cartlist, lilist) {
+            if (this.i < this.collection.length - 1) {
+                this.i++;
+            }
+            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
+                this.n++;
+                $('.' + cartlist).scrollTop(this.listheight * this.n);
+            }
+            $('#'+ lilist + (this.i)).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
+        /**
+         * 购物车光标向上
+         */
+        scrollUp: function (cartlist, lilist){
+            if (this.i > 0) {
+                this.i--;
+            }
+            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
+                this.n--;
+                $('.' + cartlist).scrollTop(this.listheight * this.n);
+            }
+            $('#' + lilist + (this.i)).addClass('cus-selected').siblings().removeClass('cus-selected');
+        },
 
     });
     return BaseView;

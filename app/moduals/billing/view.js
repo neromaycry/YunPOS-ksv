@@ -75,8 +75,8 @@ define([
             'click .billing-help': 'onBillHelpClicked',
             'click .billing-return': 'onReturnMainClicked',
             'click .billing-delete': 'onDeleteClicked',
-            'click .billing-keyup': 'onKeyUp',
-            'click .billing-keydown': 'onKeyDown',
+            'click .billing-keyup': 'onKeyUpClicked',
+            'click .billing-keydown': 'onKeyDownClicked',
             'click .billing': 'onBillingClicked',
             'click .billing-clean': 'onCleanClicked',
             'click .quick-pay': 'onQuickPayClicked',//快捷支付
@@ -319,11 +319,11 @@ define([
             });
             //方向下
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Down, function () {
-                _self.scrollDown();
+                _self.onKeyDownClicked();
             });
             //方向上
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.Up, function () {
-                _self.scrollUp();
+                _self.onKeyUpClicked();
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING, window.KEYS.S, function () {
@@ -392,43 +392,6 @@ define([
             $(this.input).val('');
         },
 
-
-        /**
-         * 清空已支付方式列表
-         */
-        //cleanPaylist: function () {
-        //    var _self = this;
-        //    var data = {};
-        //    var receivedSum = this.model.get('receivedsum');
-        //    if (receivedSum == 0) {
-        //        layer.msg('尚未付款', optLayerWarning);
-        //        return;
-        //    }
-        //    var attrs = {
-        //        pageid: pageId,
-        //        content: '确定清空支付列表？',
-        //        callback: function () {
-        //            _self.evalAuth(auth_delete, '08', {}, function () {
-        //                for (var j = _self.collection.length - 1; j >= 0; j--) {
-        //                    var model = _self.collection.at(j);
-        //                    var gatherUI = model.get('gather_ui');
-        //                    switch (gatherUI) {
-        //                        case '04':
-        //                        case '05':
-        //                            _self.refund(j, gatherUI);
-        //                            break;
-        //                        case '06':
-        //                            _self.deletebankpay(j);
-        //                            break;
-        //                        default:
-        //                            _self.deleteItem(j);
-        //                    }
-        //                }
-        //            });
-        //        }
-        //    };
-        //    this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
-        //},
 
         /**
          * 删除,如果存在第三方支付，则调用refund函数;如果存在一卡通支付，调用一卡通删除函数;如果存在银行卡支付，则调用银行卡删除函数。
@@ -751,14 +714,14 @@ define([
         /**
          * 向上按钮点击事件
          */
-        onKeyUp: function () {
-            this.scrollUp();
+        onKeyUpClicked: function () {
+            this.scrollUp('for-billdetail', 'billdetail');
         },
         /**
          * 向下按钮点击事件
          */
-        onKeyDown: function () {
-            this.scrollDown();
+        onKeyDownClicked: function () {
+            this.scrollDown('for-billdetail', 'billdetail');
         },
 
         /**
@@ -995,34 +958,6 @@ define([
         },
 
         /**
-         * 光标向下
-         */
-        scrollDown: function () {
-            if (this.i < this.collection.length - 1) {
-                this.i++;
-            }
-            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
-                this.n++;
-                $('.for-billdetail').scrollTop(this.listheight * this.n);
-            }
-            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-        },
-
-        /**
-         * 光标向上
-         */
-        scrollUp: function () {
-            if (this.i > 0) {
-                this.i--;
-            }
-            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
-                this.n--;
-                $('.for-billdetail').scrollTop(this.listheight * this.n);
-            }
-            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-        },
-
-        /**
          * 银行业务
          */
         onBusinessClicked: function () {
@@ -1069,7 +1004,74 @@ define([
                 }
             };
             this.openLayer(PAGE_ID.LAYER_ICMEMBER, pageId, '一卡通IC卡登录', LayerICMemberView, attrs, {area: '600px'});
-        }
+        },
+
+
+        /**
+         * 清空已支付方式列表
+         */
+        //cleanPaylist: function () {
+        //    var _self = this;
+        //    var data = {};
+        //    var receivedSum = this.model.get('receivedsum');
+        //    if (receivedSum == 0) {
+        //        layer.msg('尚未付款', optLayerWarning);
+        //        return;
+        //    }
+        //    var attrs = {
+        //        pageid: pageId,
+        //        content: '确定清空支付列表？',
+        //        callback: function () {
+        //            _self.evalAuth(auth_delete, '08', {}, function () {
+        //                for (var j = _self.collection.length - 1; j >= 0; j--) {
+        //                    var model = _self.collection.at(j);
+        //                    var gatherUI = model.get('gather_ui');
+        //                    switch (gatherUI) {
+        //                        case '04':
+        //                        case '05':
+        //                            _self.refund(j, gatherUI);
+        //                            break;
+        //                        case '06':
+        //                            _self.deletebankpay(j);
+        //                            break;
+        //                        default:
+        //                            _self.deleteItem(j);
+        //                    }
+        //                }
+        //            });
+        //        }
+        //    };
+        //    this.openConfirmLayer(PAGE_ID.LAYER_CONFIRM, pageId, LayerConfirm, attrs, {area: '300px'});
+        //},
+
+
+        // /**
+        //  * 光标向下
+        //  */
+        // scrollDown: function () {
+        //     if (this.i < this.collection.length - 1) {
+        //         this.i++;
+        //     }
+        //     if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
+        //         this.n++;
+        //         $('.for-billdetail').scrollTop(this.listheight * this.n);
+        //     }
+        //     $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        // },
+        //
+        // /**
+        //  * 光标向上
+        //  */
+        // scrollUp: function () {
+        //     if (this.i > 0) {
+        //         this.i--;
+        //     }
+        //     if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
+        //         this.n--;
+        //         $('.for-billdetail').scrollTop(this.listheight * this.n);
+        //     }
+        //     $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        // },
 
     });
 

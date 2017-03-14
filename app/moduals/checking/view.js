@@ -125,11 +125,11 @@ define([
             // });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Down, function () {
-                _self.scrollDown();
+                _self.onKeyDownClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.Up, function () {
-                _self.scrollUp();
+                _self.onKeyUpClicked();
             });
 
             this.bindKeyEvents(window.PAGE_ID.CHECKING, window.KEYS.T, function () {

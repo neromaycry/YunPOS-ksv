@@ -386,11 +386,11 @@ define([
             });
             //向上
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
-                _self.scrollDown();
+                _self.onKeyDownClicked();
             });
             //向下
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Up, function () {
-                _self.scrollUp();
+                _self.onKeyUpClicked();
             });
             //强制退货/单品退货
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F, function () {

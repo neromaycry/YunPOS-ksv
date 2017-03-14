@@ -66,7 +66,7 @@ define([
             this.model = new RtWholeModel();
             this.requestModel = new RtWholeModel();
             this.membermodel = new RtWholeModel();
-            this.RtcartCollection = new RtWholeCollection();
+            this.collection = new RtWholeCollection();
             this.RtPayedlistCollection = new RtWholeCollection();
             this.model.set({
                 totalamount: this.totalamount,
@@ -90,7 +90,7 @@ define([
             $(this.input).focus();
             if (storage.isSet(system_config.RETURN_KEY)) {
                 this.RtPayedlistCollection.set(storage.get(system_config.RETURN_KEY, 'paymentlist'));
-                this.RtcartCollection.set(storage.get(system_config.RETURN_KEY, 'cartlist'));
+                this.collection.set(storage.get(system_config.RETURN_KEY, 'cartlist'));
                 this.model.set(storage.get(system_config.RETURN_KEY, 'panel'));
             }
             $('.rtcart-content').perfectScrollbar();
@@ -147,7 +147,7 @@ define([
         },
 
         renderRtcart: function () {
-            this.$el.find('.rtcart-content').html(this.template_rtcart(this.RtcartCollection.toJSON()));
+            this.$el.find('.rtcart-content').html(this.template_rtcart(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
             $('#li' + this.i).addClass('cus-selected');
             return this;
@@ -166,7 +166,7 @@ define([
         requestOrder: function () {
             var _self = this;
             var orderNo = $(this.input).val();
-            var len  = this.RtcartCollection.length;
+            var len  = this.collection.length;
             if(len != 0) {
                 layer.msg('当前购物车不为空，请先取消退货再查询新的订单', optLayerWarning);
                 return;
@@ -185,7 +185,7 @@ define([
                 _self.requestModel.getOrderInfo(data, function (resp) {
                     if (!$.isEmptyObject(resp)) {
                         if (resp.status == '00') {
-                            _self.RtcartCollection.set(resp.goods_detail);
+                            _self.collection.set(resp.goods_detail);
                             _self.RtPayedlistCollection.set(resp.gather_detail);
                             _self.model.set({
                                 bill_no:orderNo
@@ -262,8 +262,8 @@ define([
         deleteItem: function () {
             try {
                 if ($('li').hasClass('cus-selected')) {
-                    var item = this.RtcartCollection.at(this.i);
-                    this.RtcartCollection.remove(item);
+                    var item = this.collection.at(this.i);
+                    this.collection.remove(item);
                     this.i = 0;
                     this.calculateModel();
                 }
@@ -276,7 +276,7 @@ define([
 
         onCancelClicked: function () {
             var _self = this;
-            var len = this.RtcartCollection.length;
+            var len = this.collection.length;
             if (len == 0) {
                 layer.msg('请先查询订单', optLayerWarning);
                 return;
@@ -295,7 +295,7 @@ define([
          * 取消退货
          */
         cancelReturn: function () {
-            this.RtcartCollection.reset();
+            this.collection.reset();
             this.RtPayedlistCollection.reset();
             this.model.set({
                 totalamount: 0,
@@ -325,7 +325,7 @@ define([
                 $(this.input).val('');
                 return;
             }
-            var item = this.RtcartCollection.at(this.i);
+            var item = this.collection.at(this.i);
             var discount = item.get('discount');
             var price = item.get('price');
             var newNum = item.get('new_num');//代表未退数量，number不能大于未退数量
@@ -347,9 +347,9 @@ define([
             //this.totalamount = 0;
             //this.itemamount = 0;
             //this.discountamount = 0;
-            //var priceList = this.RtcartCollection.pluck('price');
-            //var discounts = this.RtcartCollection.pluck('discount');
-            //var itemNum = this.RtcartCollection.pluck('old_num');
+            //var priceList = this.collection.pluck('price');
+            //var discounts = this.collection.pluck('discount');
+            //var itemNum = this.collection.pluck('old_num');
             //for (var i = 0; i < priceList.length; i++) {
             //    discounts[i] = parseFloat(discounts[i]);
             //    this.totalamount += priceList[i] * itemNum[i];
@@ -363,8 +363,8 @@ define([
 
 
         calculateModel: function () {
-            //for (var i = 0; i < this.RtcartCollection.length; i++) {
-            //    var item = this.RtcartCollection.at(i);
+            //for (var i = 0; i < this.collection.length; i++) {
+            //    var item = this.collection.at(i);
             //    var money = item.get('money');
             //    var num = item.get('num');
             //    var discount = item.get('discount');
@@ -377,11 +377,11 @@ define([
             this.totalamount = 0;
             this.itemamount = 0;
             this.discountamount = 0;
-            var priceList = this.RtcartCollection.pluck('price');
-            var itemNum = this.RtcartCollection.pluck('num');//显示的是当前退货的数量
-            //var newNum = this.RtcartCollection.pluck('new_num');//显示的是未退金额，所以itemNum为new_num
-            var discounts = this.RtcartCollection.pluck('discount');
-            for (var i = 0; i < this.RtcartCollection.length; i++) {
+            var priceList = this.collection.pluck('price');
+            var itemNum = this.collection.pluck('num');//显示的是当前退货的数量
+            //var newNum = this.collection.pluck('new_num');//显示的是未退金额，所以itemNum为new_num
+            var discounts = this.collection.pluck('discount');
+            for (var i = 0; i < this.collection.length; i++) {
                 discounts[i] = parseFloat(discounts[i]);
                 this.totalamount += priceList[i] * itemNum[i];
                 this.itemamount += itemNum[i];
@@ -395,7 +395,7 @@ define([
             this.renderRtcart();
             this.renderRtInfo();
             //this.renderRtPayedlist();
-            storage.set(system_config.RETURN_KEY, 'cartlist', this.RtcartCollection.toJSON());
+            storage.set(system_config.RETURN_KEY, 'cartlist', this.collection.toJSON());
             storage.set(system_config.RETURN_KEY, 'paymentlist', this.RtPayedlistCollection.toJSON());
             storage.set(system_config.RETURN_KEY, 'panel', this.model.toJSON());
             storage.set(system_config.RETURN_KEY, 'bill_no', this.model.get('bill_no'));
@@ -409,27 +409,11 @@ define([
         },
 
         onKeyUpClicked: function () {
-            if (this.i > 0) {
-                this.i--;
-            }
-            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
-                this.n--;
-                //alert(_self.n);
-                $('.rtcart-content').scrollTop(this.listheight * this.n);
-            }
-            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            this.scrollUp('rtcart-content', 'li');
         },
 
         onKeyDownClicked:function () {
-            if (this.i < this.RtcartCollection.length - 1) {
-                this.i++;
-            }
-            if (this.i % this.listnum == 0 && this.n < parseInt(this.RtcartCollection.length / this.listnum)) {
-                this.n++;
-                //alert(_self.n);
-                $('.rtcart-content').scrollTop(this.listheight * this.n);
-            }
-            $('#li' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            this.scrollDown('rtcart-content', 'li');
         },
 
         onBackClicked: function () {

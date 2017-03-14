@@ -153,28 +153,11 @@ define([
         },
 
         onKeyDownClicked: function () {
-            console.log(this.i % this.listnum);
-            console.log(this.n);
-            console.log(this.collection.length / this.listnum);
-            if (this.i < this.collection.length - 1) {
-                this.i++;
-            }
-            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
-                this.n++;
-                $('.gather-detail').scrollTop(this.listheight * this.n);
-            }
-            $('#paytable' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            this.scrollDown('gather-detail', 'paytable');
         },
 
         onKeyUpClicked: function () {
-            if (this.i > 0) {
-                this.i--;
-            }
-            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
-                this.n--;
-                $('.gather-detail').scrollTop(this.listheight * this.n);
-            }
-            $('#paytable' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+            this.scrollUp('gather-detail', 'paytable');
         },
 
         onOKClicked: function () {

@@ -193,11 +193,11 @@ define([
             });
             //方向下
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Down, function () {
-                _self.scrollDown();
+                _self.onKeyDownClicked();
             });
             //方向上
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.Up, function () {
-                _self.scrollUp();
+                _self.onKeyUpClicked();
             });
             //支票类
             this.bindKeyEvents(window.PAGE_ID.BILLING_RETURN, window.KEYS.S, function () {
@@ -354,33 +354,7 @@ define([
         },
 
 
-        /**
-         * 光标向下
-         */
-        scrollDown: function () {
-            if (this.i < this.collection.length - 1) {
-                this.i++;
-            }
-            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
-                this.n++;
-                $('.for-billdetail').scrollTop(this.listheight * this.n);
-            }
-            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-        },
 
-        /**
-         * 光标向上
-         */
-        scrollUp: function () {
-            if (this.i > 0) {
-                this.i--;
-            }
-            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
-                this.n--;
-                $('.for-billdetail').scrollTop(this.listheight * this.n);
-            }
-            $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
-        },
 
 
         /**
@@ -780,13 +754,13 @@ define([
          * 向上按钮点击事件
          */
         onKeyUpClicked: function () {
-            this.scrollUp();
+            this.scrollUp('for-billdetail', 'billdetail');
         },
         /**
          * 向下按钮点击事件
          */
         onKeyDownClicked: function () {
-            this.scrollDown();
+            this.scrollDown('for-billdetail', 'billdetail');
         },
 
 
@@ -955,6 +929,34 @@ define([
 
         }
 
+        // /**
+        //  * 光标向下
+        //  */
+        //
+        // scrollDown: function () {
+        //     if (this.i < this.collection.length - 1) {
+        //         this.i++;
+        //     }
+        //     if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
+        //         this.n++;
+        //         $('.for-billdetail').scrollTop(this.listheight * this.n);
+        //     }
+        //     $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        // },
+        //
+        // /**
+        //  * 光标向上
+        //  */
+        // scrollUp: function () {
+        //     if (this.i > 0) {
+        //         this.i--;
+        //     }
+        //     if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
+        //         this.n--;
+        //         $('.for-billdetail').scrollTop(this.listheight * this.n);
+        //     }
+        //     $('#billdetail' + this.i).addClass('cus-selected').siblings().removeClass('cus-selected');
+        // },
 
     });
     return rtbillingView;
