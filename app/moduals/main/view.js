@@ -180,11 +180,11 @@ define([
             //    window.wsClient.send(DIRECTIVES.OpenCashDrawer)
             //}
             //this.onDeleteKey();
+            this.initTemplates();
             this.handleEvents();
         },
         initPlugins: function () {
             var _self = this;
-            this.initTemplates();
             $(this.input).focus();
             $('.for-cartlist').perfectScrollbar();  // 定制滚动条外观
             this.renderPosInfo();
@@ -248,11 +248,13 @@ define([
             var cartWidth = dw - leftWidth - 45;
             $('.cart-panel').width(cartWidth);  // 设置购物车面板的宽度
             //$('.marquee-panel').width(cartWidth);
-            $('.for-cartlist').height(cart - oddchange - 20);  //设置购物车的高度
-            this.listheight = $('.for-cartlist').height();//购物车列表的高度
+            this.listheight = cart - oddchange - 20;    //购物车列表的高度
+            $('.for-cartlist').height(this.listheight);  //设置购物车的高度
             console.log('initlayout listnum: ' + this.listnum);
+            console.log('initlayout listheight:' + this.listheight);
             this.itemheight = this.listheight / this.listnum - 21;
             $('.li-cartlist').height(this.itemheight);
+            this.moveCursor();
         },
         renderPosInfo: function () {
             this.$el.find('.for-posinfo').html(this.template_posinfo(this.model.toJSON()));
@@ -268,20 +270,7 @@ define([
         },
         renderCartList: function (cursor) {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
-            $('.li-cartlist').height(this.listheight / this.listnum - 21);
-            var cartLen = this.collection.length;
-            this.n = Math.floor(cartLen / this.listnum);
-            console.log('listnum:' + this.listnum);
-            console.log('rendercartlist:' + this.n);
-            if (cursor == this.Enum.ALWAYS_FOCUS_LAST) {
-                this.i = cartLen;
-                if (cartLen > this.listnum) {
-                    $('.for-cartlist').scrollTop(this.listheight * this.n);
-                }
-                $('#li' + (this.i - 1)).addClass('cus-selected');
-            } else {
-                $('#li' + this.i).addClass('cus-selected');
-            }
+            this.moveCursor();
             return this;
         },
         renderClientWelcome: function (isPacked, isClientShow) {
@@ -1359,7 +1348,23 @@ define([
                     layer.msg(resp.msg, optLayerError);
                 }
             });
-        }
+        },
+        moveCursor: function () {
+            var cartLen = this.collection.length;
+            this.n = Math.floor(cartLen / this.listnum);
+            console.log('listnum:' + this.listnum);
+            console.log('rendercartlist:' + this.n);
+            if (this.cursor == this.Enum.ALWAYS_FOCUS_LAST) {
+                this.i = cartLen;
+                if (cartLen > this.listnum) {
+                    console.log('rendercartlist:' + this.listheight);
+                    $('.for-cartlist').scrollTop(this.listheight * this.n);
+                }
+                $('#li' + (this.i - 1)).addClass('cus-selected');
+            } else {
+                $('#li' + this.i).addClass('cus-selected');
+            }
+        },
 
     });
     return mainView;

@@ -421,8 +421,8 @@ define([
             var dataset = _data ? _data.toJSON() : {};
             this.$el.html(this.template(dataset));
             this.initOtherView();
-            this.initLayoutHeight();
             this.initPlugins();
+            this.initLayoutHeight();
             //if (storage.isSet(system_config.IS_KEYBOARD_PLUGGED)) {
             //    var isKeyboardPlugged = storage.get(system_config.IS_KEYBOARD_PLUGGED);
             //    $('input').attr('readonly', !isKeyboardPlugged);
