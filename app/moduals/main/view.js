@@ -172,6 +172,7 @@ define([
                 this.initNotifySocket();
             }
             this.cursor = this.Enum.ALWAYS_FOCUS_LAST;
+            this.listnum = 5;//设置商品列表中的条目数
             //if (storage.isSet(system_config.PRINTF)) {
             //    var message = DIRECTIVES.PRINTTEXT + storage.get(system_config.PRINTF);
             //    console.log(message);
@@ -249,7 +250,6 @@ define([
             //$('.marquee-panel').width(cartWidth);
             $('.for-cartlist').height(cart - oddchange - 20);  //设置购物车的高度
             this.listheight = $('.for-cartlist').height();//购物车列表的高度
-            this.listnum = 5;//设置商品列表中的条目数
             console.log('initlayout listnum: ' + this.listnum);
             this.itemheight = this.listheight / this.listnum - 21;
             $('.li-cartlist').height(this.itemheight);
