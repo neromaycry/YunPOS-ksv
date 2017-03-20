@@ -270,6 +270,7 @@ define([
         },
         renderCartList: function (cursor) {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
+            $('.li-cartlist').height(this.listheight / this.listnum - 21);
             this.moveCursor();
             return this;
         },
