@@ -751,11 +751,6 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if (this.isTotalDiscount != 0) {
-                layer.msg('整单优惠或折扣后不能修改数量，如想继续修改数量，请取消交易', optLayerWarning);
-                $(this.input).val('');
-                return;
-            }
             if (number == '' || number == 0 || (number.split('.').length - 1) > 1) {
                 layer.msg('无效的商品数量', optLayerWarning);
                 $(this.input).val('');
@@ -765,7 +760,7 @@ define([
             var discount = item.get('discount');
             var price = item.get('price');
             if(discount != 0) {
-                layer.msg('单品优惠或折扣后不能修改数量，如想继续修改数量，请删除该商品', optLayerWarning);
+                layer.msg('优惠或折扣后不能修改数量，如想继续修改数量，请删除该商品或取消交易', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
