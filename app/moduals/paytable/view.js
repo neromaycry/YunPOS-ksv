@@ -57,33 +57,7 @@ define([
             this.model.set({
                 sum: this.totalamount
             });
-            var currencyList = ['100', '50', '20', '10', '5', '2', '1', '0.5', '0.2', '0.1'];
-            for (var i in currencyList) {
-                var temp = new PayTableModel();
-                temp.set({
-                    gather_id: '',
-                    gather_name: currencyList[i],
-                    cash_flag: '1',
-                    num: 0,
-                    sum: 0
-                });
-                _self.collection.push(temp);
-            }
-            if (storage.isSet(system_config.GATHER_KEY)) {
-                var tlist = storage.get(system_config.GATHER_KEY);
-                var visibleTypes = _.where(tlist, {visible_flag: '1'});
-                for (var i in visibleTypes) {
-                    var temp = new PayTableModel();
-                    temp.set({
-                        gather_id: visibleTypes[i].gather_id,
-                        gather_name: visibleTypes[i].gather_name,
-                        cash_flag: '0',
-                        num: 0,
-                        sum: 0
-                    });
-                    _self.collection.push(temp);
-                }
-            }
+            this.initCurrency(); // 初始化缴款方式
             this.initTemplates();
         },
 
@@ -142,6 +116,40 @@ define([
             this.bindKeyEvents(window.PAGE_ID.PAYTABLE, window.KEYS.P, function () {
                 _self.onPrintClicked();
             });
+        },
+
+        initCurrency:function () {
+            var currencyList = ['100', '50', '20', '10', '5', '2', '1', '0.5', '0.2', '0.1'];
+            for (var i in currencyList) {
+                var temp = new PayTableModel();
+                temp.set({
+                    gather_id: '',
+                    gather_name: currencyList[i],
+                    cash_flag: '1',
+                    num: 0,
+                    sum: 0
+                });
+                this.collection.push(temp);
+            }
+
+            if (storage.isSet(system_config.GATHER_KEY)) {
+                var gatherList = storage.get(system_config.GATHER_KEY);
+                var visibleTypes = _.where(gatherList, {visible_flag: '1'});
+                for (var i in visibleTypes) {
+                    var item = new PayTableModel();
+                    // 不显示现金类的缴款方式
+                    if(visibleTypes[i].gather_kind != '00') {
+                        item.set({
+                            gather_id: visibleTypes[i].gather_id,
+                            gather_name: visibleTypes[i].gather_name,
+                            cash_flag: '0',
+                            num: 0,
+                            sum: 0
+                        });
+                        this.collection.push(item);
+                    }
+                }
+            }
         },
 
         onHelpClicked: function () {
