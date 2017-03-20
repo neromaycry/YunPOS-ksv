@@ -32,10 +32,10 @@ define([
         id: "mainView",
         el: '.views',
         template: tpl,
-        totalamount: 0,
-        itemamount: 0,
-        discountamount: 0,
-        isTotalDiscount: false,
+        totalamount: 0, // 总金额
+        itemamount: 0, // 总数量
+        discountamount: 0, // 优惠
+        isTotalDiscount: false, // 是否进行整单优惠
         salesman: '',
         memeber: '',
         ids: ['curSaleState', 'curItem'],
@@ -751,8 +751,8 @@ define([
                 $(this.input).val('');
                 return;
             }
-            if (discountamount != 0) {
-                layer.msg('折扣后不能修改数量，如想继续修改数量，请取消交易', optLayerWarning);
+            if (this.isTotalDiscount != 0) {
+                layer.msg('整单优惠或折扣后不能修改数量，如想继续修改数量，请取消交易', optLayerWarning);
                 $(this.input).val('');
                 return;
             }
@@ -764,6 +764,11 @@ define([
             var item = this.collection.at(index);
             var discount = item.get('discount');
             var price = item.get('price');
+            if(discount != 0) {
+                layer.msg('单品优惠或折扣后不能修改数量，如想继续修改数量，请删除该商品', optLayerWarning);
+                $(this.input).val('');
+                return;
+            }
             item.set({
                 num: parseFloat(number),
                 money: price * number - discount
