@@ -59,8 +59,8 @@ define([
         Enum: {
             ALWAYS_FOCUS_FIRST: 0,
             ALWAYS_FOCUS_LAST: 1,
-            ADD_GOODS: 2, // 添加商品
-            UPDATE_SHOPPING_CART: 3 // 更新购物车
+            FOCUS_CURRENT: 2 // 判断光标是否在当前操作商品上
+
         },
         events: {
             'click .numpad-ok': 'onOKClicked',
@@ -268,10 +268,10 @@ define([
             this.$el.find('.for-minfo').html(this.template_minfo(this.memberModel.toJSON()));
             return this;
         },
-        renderCartList: function (cursor, status) {
+        renderCartList: function (cursor) {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
-            if(status == 2) {
+            if(cursor != 2) {
                 this.moveCursor();
             }
             return this;
@@ -370,7 +370,7 @@ define([
             });
             //修改数量
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F12, function () {
-                _self.modifyItemNum();
+                _self.onModifyItemNum();
             });
             //单品优惠
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F1, function () {
@@ -543,7 +543,6 @@ define([
                 this.collection.reset();
                 this.renderPosInfo();
                 this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
-                //this.buttonSelected();
                 storage.remove(system_config.SALE_PAGE_KEY);
                 layer.msg('挂单号：' + orderNum, optLayerSuccess);
                 var time = this.getCurrentFormatDate();
@@ -597,7 +596,7 @@ define([
                     money: price * num - discount,
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
-                _self.calculateModel(_self.Enum.UPDATE_SHOPPING_CART);
+                _self.calculateModel(_self.Enum.FOCUS_CURRENT);
                 layer.msg('单品优惠成功!优惠金额：' + discount + '元', optLayerSuccess);
                 $('#li' + index).addClass('cus-selected');
                 $(_self.input).val('');
@@ -646,7 +645,7 @@ define([
                     money: price * num * rate,
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
-                _self.calculateModel(_self.Enum.UPDATE_SHOPPING_CART);
+                _self.calculateModel(_self.Enum.FOCUS_CURRENT);
                 layer.msg('单品折扣成功!折扣比率：' + (rate * 10).toFixed(1) + '折', optLayerSuccess);
                 $('#li' + index).addClass('cus-selected');
                 $(_self.input).val('');
@@ -736,9 +735,9 @@ define([
             });
         },
         /**
-         * 修改单品数量
+         * 修改数量点击事件
          */
-        modifyItemNum: function () {
+        onModifyItemNum: function () {
             var index;
             if (this.cursor == this.Enum.ALWAYS_FOCUS_LAST) {
                 index = this.i - 1;
@@ -781,7 +780,7 @@ define([
                 this.itemamount += itemNum[i];
                 this.discountamount += discounts[i] * itemNum[i];
             }
-            this.calculateModel(this.Enum.UPDATE_SHOPPING_CART);
+            this.calculateModel(this.Enum.FOCUS_CURRENT);
             $(this.input).val('');
             $('#li' + index).addClass('cus-selected');
         },
@@ -794,8 +793,8 @@ define([
                     console.log(this.i);
                     var item = this.collection.at(this.i - 1);
                     this.collection.remove(item);
-                    this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
-                    this.calculateModel(this.UPDATE_SHOPPING_CART);
+                    // this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
+                    this.calculateModel(this.Enum.ALWAYS_FOCUS_LAST);
                 }
                 layer.msg('删除成功', optLayerSuccess);
             } catch (e) {
@@ -914,7 +913,7 @@ define([
             //this.updateClientCurItem(this.collection, isPacked);
             this.renderClientCart(this.collection, isPacked, isClientScreenShow);
             this.insertSerial();
-            this.calculateModel(this.Enum.ADD_GOODS);
+            this.calculateModel(this.Enum.ALWAYS_FOCUS_LAST);
             //this.buttonSelected();
         },
         clearCart: function () {
@@ -958,9 +957,9 @@ define([
         },
         /**
          * 购物车中商品变更后执行的通用方法，主要是在更新后collection中重新计算总计、件数和优惠
-         * @param status: 判断当前购物车是添加商品还是优惠、更改数量等操作
+         * @param cursor: 判断光标位置在最后一个还是在当前位置
          */
-        calculateModel: function (status) {
+        calculateModel: function (cursor) {
             this.newmodel = new HomeModel();
             this.totalamount = 0;
             this.itemamount = 0;
@@ -975,7 +974,7 @@ define([
                 this.discountamount += discounts[i];
             }
             //this.updateClientSaleState(this.totalamount, this.itemamount, this.discountamount, isPacked);
-            this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST, status);
+            this.renderCartList(cursor);
             this.updateShopInfo();
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', this.collection.toJSON());
             storage.set(system_config.SALE_PAGE_KEY, 'shopinfo', this.model.toJSON());
@@ -989,23 +988,9 @@ define([
                 itemamount: this.itemamount,
                 discountamount: this.discountamount
             });
-            //this.buttonSelected();
             this.renderPosInfo();
         },
-        ///**
-        // * 判断当前营业员是否有删除商品的权限
-        // */
-        //onDeleteKey: function () {
-        //    for(var j = 0; j < this.deleteKey.length; j++){
-        //        console.log(this.deleteKey[j]);
-        //        if(this.deleteKey[j] == '02'){
-        //            this.isDeleteKey = true;//判断当前是否有删除权限的key
-        //            break;
-        //        }else{
-        //            this.isDeleteKey = false;
-        //        }
-        //    }
-        //},
+
         openHelp: function () {
             //var tipsView = new KeyTipsView('MAIN_PAGE');
             //this.showModal(window.PAGE_ID.TIP_MEMBER, tipsView);
@@ -1051,12 +1036,7 @@ define([
                 _self.deleteItem();
             });
         },
-        /**
-         * 修改数量点击事件
-         */
-        onModifyItemNum: function () {
-            this.modifyItemNum();
-        },
+
         /**
          *清空购物车按钮点击事件
          */
