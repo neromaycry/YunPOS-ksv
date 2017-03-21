@@ -250,8 +250,6 @@ define([
             //$('.marquee-panel').width(cartWidth);
             this.listheight = cart - oddchange - 20;    //购物车列表的高度
             $('.for-cartlist').height(this.listheight);  //设置购物车的高度
-            console.log('initlayout listnum: ' + this.listnum);
-            console.log('initlayout listheight:' + this.listheight);
             this.itemheight = this.listheight / this.listnum - 21;
             $('.li-cartlist').height(this.itemheight);
             this.moveCursor();
@@ -273,6 +271,8 @@ define([
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
             if(cursor != 2) {
                 this.moveCursor();
+            } else {
+                $('.for-cartlist').scrollTop(this.listheight * this.n); // 防止最后几个商品修改数量或折扣时自动往上移
             }
             return this;
         },
@@ -470,32 +470,7 @@ define([
         doLoginSalesman: function () {
             this.openLayer(PAGE_ID.LAYER_SALESMAN, pageId, '营业员登录', LayerSalesmanView, undefined, {area: '300px'});
         },
-        /**
-         * 购物车光标向下
-         */
-        scrollDown: function () {
-            if (this.i <= this.collection.length - 1) {
-                this.i++;
-            }
-            if (this.i % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
-                this.n++;
-                $('.for-cartlist').scrollTop(this.listheight * this.n);
-            }
-            $('#li' + (this.i - 1)).addClass('cus-selected').siblings().removeClass('cus-selected');
-        },
-        /**
-         * 购物车光标向上
-         */
-        scrollUp: function () {
-            if (this.i > 1) {
-                this.i--;
-            }
-            if ((this.i + 1) % this.listnum == 0 && this.i > 0) {
-                this.n--;
-                $('.for-cartlist').scrollTop(this.listheight * this.n);
-            }
-            $('#li' + (this.i - 1)).addClass('cus-selected').siblings().removeClass('cus-selected');
-        },
+
         /**
          * 解挂
          */
@@ -1068,13 +1043,29 @@ define([
          * 向上选择点击事件
          */
         onKeyUpClicked: function () {
-            this.scrollUp();
+            if (this.i > 1) {
+                this.i--;
+            }
+            // alert('this.i: ' + this.i + '   this.n: ' + this.n);
+            if (this.i % this.listnum == 0 && this.i > 0) {
+                this.n--;
+                $('.for-cartlist').scrollTop(this.listheight * this.n);
+            }
+            $('#li' + (this.i - 1)).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
          * 向下选择点击事件
          */
         onKeyDownClicked: function () {
-            this.scrollDown();
+            if (this.i <= this.collection.length - 1) {
+                this.i++;
+            }
+            // alert('this.i: ' + this.i + '   this.n: ' + this.n );
+            if ((this.i - 1) % this.listnum == 0 && this.n < parseInt(this.collection.length / this.listnum)) {
+                this.n++;
+                $('.for-cartlist').scrollTop(this.listheight * this.n);
+            }
+            $('#li' + (this.i - 1)).addClass('cus-selected').siblings().removeClass('cus-selected');
         },
         /**
          * 挂单按钮点击事件
@@ -1328,13 +1319,15 @@ define([
         },
         moveCursor: function () {
             var cartLen = this.collection.length;
-            this.n = Math.floor(cartLen / this.listnum);
-            console.log('listnum:' + this.listnum);
-            console.log('rendercartlist:' + this.n);
+            if(cartLen % this.listnum == 0) {
+                // 当添加的商品刚好是购物车条目数的倍数时，n会自动加1
+                this.n = Math.floor(cartLen / this.listnum) - 1;
+            } else {
+                this.n = Math.floor(cartLen / this.listnum)
+            }
             if (this.cursor == this.Enum.ALWAYS_FOCUS_LAST) {
                 this.i = cartLen;
                 if (cartLen > this.listnum) {
-                    console.log('rendercartlist:' + this.listheight);
                     $('.for-cartlist').scrollTop(this.listheight * this.n);
                 }
                 $('#li' + (this.i - 1)).addClass('cus-selected');
