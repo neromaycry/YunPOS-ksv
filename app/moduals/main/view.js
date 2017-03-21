@@ -58,10 +58,10 @@ define([
         isDeleteKey: false,
         Enum: {
             ALWAYS_FOCUS_FIRST: 0,
-            ALWAYS_FOCUS_LAST: 1
+            ALWAYS_FOCUS_LAST: 1,
+            ADD_GOODS: 2, // 添加商品
+            UPDATE_SHOPPING_CART: 3 // 更新购物车
         },
-        //isDiscountPercent: false,
-        //input:'input[name = main]',
         events: {
             'click .numpad-ok': 'onOKClicked',
             'click .btn-num': 'onNumClicked',
@@ -268,10 +268,12 @@ define([
             this.$el.find('.for-minfo').html(this.template_minfo(this.memberModel.toJSON()));
             return this;
         },
-        renderCartList: function (cursor) {
+        renderCartList: function (cursor, status) {
             this.$el.find('.for-cartlist').html(this.template_cartlisttpl(this.collection.toJSON()));
             $('.li-cartlist').height(this.listheight / this.listnum - 21);
-            this.moveCursor();
+            if(status == 2) {
+                this.moveCursor();
+            }
             return this;
         },
         renderClientWelcome: function (isPacked, isClientShow) {
@@ -372,7 +374,7 @@ define([
             });
             //单品优惠
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.F1, function () {
-                _self.modifyItemDiscount();
+                _self.onDiscountClicked();
             });
             //向上
             this.bindKeyEvents(window.PAGE_ID.MAIN, window.KEYS.Down, function () {
@@ -554,16 +556,16 @@ define([
         },
 
         /**
-         * 单品优惠
+         * 单品优惠按钮点击事件
          */
-        modifyItemDiscount: function () {
+        onDiscountClicked: function () {
             var index;
+            var _self = this;
             if (this.cursor == this.Enum.ALWAYS_FOCUS_LAST) {
                 index = this.i - 1;
             } else if (this.cursor == this.Enum.ALWAYS_FOCUS_FIRST) {
                 index = this.i;
             }
-            var _self = this;
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
@@ -589,15 +591,13 @@ define([
                 return;
             }
             var rate = 1 - parseFloat(discount) / (price * num); //discount_rate类型为decimal
-            console.log(rate);
             this.evalAuth(auth_discount, '01', {discount_rate: rate}, function () {
-                //var discount = item.get('discount');
                 _self.collection.at(index).set({
                     discount: parseFloat(discount),
                     money: price * num - discount,
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
-                _self.calculateModel();
+                _self.calculateModel(_self.Enum.UPDATE_SHOPPING_CART);
                 layer.msg('单品优惠成功!优惠金额：' + discount + '元', optLayerSuccess);
                 $('#li' + index).addClass('cus-selected');
                 $(_self.input).val('');
@@ -607,12 +607,12 @@ define([
         //折让
         onDiscountPercentClicked: function () {
             var index;
+            var _self = this;
             if (this.cursor == this.Enum.ALWAYS_FOCUS_LAST) {
                 index = this.i - 1;
             } else if (this.cursor == this.Enum.ALWAYS_FOCUS_FIRST) {
                 index = this.i;
             }
-            var _self = this;
             if (this.model.get('itemamount') == 0) {
                 layer.msg('当前购物车内无商品', optLayerWarning);
                 $(this.input).val('');
@@ -646,7 +646,7 @@ define([
                     money: price * num * rate,
                     manager_id: storage.get(system_config.LOGIN_USER_KEY, 'manager_id')
                 });
-                _self.calculateModel();
+                _self.calculateModel(_self.Enum.UPDATE_SHOPPING_CART);
                 layer.msg('单品折扣成功!折扣比率：' + (rate * 10).toFixed(1) + '折', optLayerSuccess);
                 $('#li' + index).addClass('cus-selected');
                 $(_self.input).val('');
@@ -781,7 +781,7 @@ define([
                 this.itemamount += itemNum[i];
                 this.discountamount += discounts[i] * itemNum[i];
             }
-            this.calculateModel();
+            this.calculateModel(this.Enum.UPDATE_SHOPPING_CART);
             $(this.input).val('');
             $('#li' + index).addClass('cus-selected');
         },
@@ -795,7 +795,7 @@ define([
                     var item = this.collection.at(this.i - 1);
                     this.collection.remove(item);
                     this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
-                    this.calculateModel();
+                    this.calculateModel(this.UPDATE_SHOPPING_CART);
                 }
                 layer.msg('删除成功', optLayerSuccess);
             } catch (e) {
@@ -914,7 +914,7 @@ define([
             //this.updateClientCurItem(this.collection, isPacked);
             this.renderClientCart(this.collection, isPacked, isClientScreenShow);
             this.insertSerial();
-            this.calculateModel();
+            this.calculateModel(this.Enum.ADD_GOODS);
             //this.buttonSelected();
         },
         clearCart: function () {
@@ -958,8 +958,9 @@ define([
         },
         /**
          * 购物车中商品变更后执行的通用方法，主要是在更新后collection中重新计算总计、件数和优惠
+         * @param status: 判断当前购物车是添加商品还是优惠、更改数量等操作
          */
-        calculateModel: function () {
+        calculateModel: function (status) {
             this.newmodel = new HomeModel();
             this.totalamount = 0;
             this.itemamount = 0;
@@ -974,7 +975,7 @@ define([
                 this.discountamount += discounts[i];
             }
             //this.updateClientSaleState(this.totalamount, this.itemamount, this.discountamount, isPacked);
-            this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST);
+            this.renderCartList(this.Enum.ALWAYS_FOCUS_LAST, status);
             this.updateShopInfo();
             storage.set(system_config.SALE_PAGE_KEY, 'shopcart', this.collection.toJSON());
             storage.set(system_config.SALE_PAGE_KEY, 'shopinfo', this.model.toJSON());
@@ -1035,12 +1036,7 @@ define([
             }
             this.openLayer(PAGE_ID.LAYER_MEMBER, pageId, '会员登录', LayerMemberView, attrs, {area: '800px'});
         },
-        /**
-         * 单品优惠按钮点击事件
-         */
-        onDiscountClicked: function () {
-            this.modifyItemDiscount();
-        },
+
         /**
          * 删除按钮点击事件
          */
