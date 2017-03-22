@@ -208,7 +208,6 @@ requirejs([
     };
     window.wsClient.onmessage = function (e) {
         var data = $.parseJSON(e.data);
-        console.log(data.trade_type);
         console.log(data);
         switch (data.trade_type) {
             case DIRECTIVES.Bank_sale:
@@ -309,7 +308,6 @@ requirejs([
                 break;
             case DIRECTIVES.VERSION:
                 if (data.code == '00') {
-                    console.log('version:' + data);
                     Backbone.trigger('onVersionAcquired', data);
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
@@ -417,6 +415,7 @@ requirejs([
                 version: $('.pos-version').text()
             };
             var directive = DIRECTIVES.UPGRADE + JSON.stringify(content);
+            console.log('upgrade in config:' + JSON.stringify(content));
             window.wsClient.send(directive);
         } else {
             window.layer.msg('请检查本地是否已经启动webctrl程序', optLayerError);
