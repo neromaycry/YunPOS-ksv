@@ -5,13 +5,13 @@ define(['../../js/common/BaseModel'], function (BaseModel) {
         defaults: {
             pos: '',
             date: '',
-            money: '',
+            money: 0,
             sale_num: '',
-            sale_money: '',
+            sale_money: 0,
             refund_num: '',
-            refund_money: '',
+            refund_money: 0,
             sub_num: '',
-            sub_money: ''
+            sub_money: 0
         },
 
         report: function (data, callback) {

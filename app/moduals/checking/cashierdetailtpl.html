@@ -4,7 +4,7 @@
         <div class="row text-center">
             <div class="col-xs-2 col-md-2"><%= e.gather_id %></div>
             <div class="col-xs-3 col-md-3"><%= e.gather_name %></div>
-            <div class="col-xs-3 col-md-3"><%= e.gather_money %></div>
+            <div class="col-xs-3 col-md-3"><%= toDecimal2(e.gather_money) %></div>
             <div class="col-xs-3 col-md-3"><%= e.gather_num %></div>
         </div>
     </li>

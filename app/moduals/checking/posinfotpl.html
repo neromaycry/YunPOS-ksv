@@ -4,17 +4,17 @@
 </tr>
 <tr>
     <td>日期：<%= date %></td>
-    <td>总额：<%= money %></td>
+    <td>总额：<%= toDecimal2(money) %></td>
 </tr>
 <tr>
     <td>销售：<%= sale_num %></td>
-    <td>金额：<%= sale_money %></td>
+    <td>金额：<%= toDecimal2(sale_money) %></td>
 </tr>
 <tr>
     <td>退货：<%= refund_num %></td>
-    <td>金额：<%= refund_money %></td>
+    <td>金额：<%= toDecimal2(refund_money) %></td>
 </tr>
 <tr>
     <td>小计：<%= sub_num %></td>
-    <td>金额：<%= sub_money %></td>
+    <td>金额：<%= toDecimal2(sub_money) %></td>
 </tr>
