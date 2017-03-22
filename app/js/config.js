@@ -142,7 +142,7 @@ requirejs([
 
     window.fecha = fecha;
 
-    window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
+    window.isPacked = true;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
 
     window.isClientScreenShow = false;
 
@@ -330,6 +330,15 @@ requirejs([
                     } else {
                         window.layer.msg('请检查本地是否已经启动webctrl程序', optLayerError);
                     }
+
+                } else {
+                    window.layer.msg(data.msg, optLayerWarning);
+                }
+                break;
+            case DIRECTIVES.AD:
+                if (data.code == '00') {
+                    console.log('ad image downloaded');
+                    //window.storage.set(system_config.POS_CONFIG, 'ad_url', data.ad_path);
                     //打开副屏
                     if (isPacked && window.storage.isSet(system_config.POS_CONFIG)) {
                         var isClientScreen = window.storage.get(system_config.POS_CONFIG, system_config.IS_CLIENT_SCREEN_SHOW);  //是否显示客显
@@ -357,19 +366,11 @@ requirejs([
                                 console.log('height:' + (clientH - infoH));
                                 $(window.clientDom).find('.ad-img').height(clientH - infoH);
                                 $(window.clientDom).find('.ad-img').css('width', '100%');
-                                $(window.clientDom).find('.ad-img').attr('src', window.storage.get(system_config.POS_CONFIG, 'ad_url'));
+                                $(window.clientDom).find('.ad-img').attr('src', data.ad_path);
                                 window.focus();
                             });
                         }
                     }
-                } else {
-                    window.layer.msg(data.msg, optLayerWarning);
-                }
-                break;
-            case DIRECTIVES.AD:
-                if (data.code == '00') {
-                    console.log('ad image downloaded');
-                    window.storage.set(system_config.POS_CONFIG, 'ad_url', data.ad_path);
                 } else {
                     window.layer.msg(data.msg, optLayerWarning);
                 }
