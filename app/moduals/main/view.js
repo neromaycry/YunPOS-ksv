@@ -783,6 +783,7 @@ define([
             var _self = this;
             var workerPosition = storage.get(system_config.LOGIN_USER_KEY, 'worker_position');// 当前登录的角色
             var contractCode = storage.get(system_config.LOGIN_USER_KEY, 'contract_code');// 当前营业员合同编码
+            console.log('contract code:' + contractCode);
             var skucode = $(this.input).val();
             if (skucode == '') {
                 layer.msg('商品编码不能为空', optLayerWarning);
@@ -811,6 +812,7 @@ define([
                     }
                 });
             } else {
+                console.log('营业员登录');
                 var data = {
                     user_id: '',
                     skucode: skucode,
@@ -832,7 +834,10 @@ define([
             var _self = this;
             var data = {};
             data['skucode'] = respData.skucode;
-            respData.contract_code = undefined ? respData.contract_code : '';
+            if (respData.contract_code == undefined) {
+                respData.contract_code = ''
+            }
+            //respData.contract_code = undefined ? respData.contract_code : '';
             data['contract_code'] = respData.contract_code;
             if (storage.isSet(system_config.VIP_KEY)) {
                 data['cust_id'] = storage.get(system_config.VIP_KEY, 'cust_id');

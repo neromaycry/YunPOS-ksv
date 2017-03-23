@@ -206,6 +206,7 @@ define([
                         storage.set(window.system_config.LOGIN_USER_KEY, response);
                         storage.set(window.system_config.LOGIN_USER_KEY, 'manager_id', '*');
                         storage.set(window.system_config.TOKEN_KEY, response["token"]);
+                        storage.set(window.system_config.LOGIN_USER_KEY, 'contract_code', response.contract_code);
                         router.navigate("main", {
                             trigger: true,
                             replace: true
