@@ -584,10 +584,10 @@ define([
         billing: function () {
             var confirmBill = new BillModel();
             var _self = this;
+            var item = {};
             var data = {
                 mode: '00' //销售模式,  00销售  01单品退货  02原单退货
             };
-            var item = {};
             if (storage.isSet(system_config.VIP_KEY)) {
                 _.extend(data, {
                     medium_id: storage.get(system_config.VIP_KEY, 'medium_id'),
@@ -599,6 +599,12 @@ define([
                     medium_id: "*",
                     medium_type: "*",
                     cust_id: "*"
+                });
+            }
+            // 传回pos_server 来判断当前登录人的职位
+            if(storage.isSet(system_config.LOGIN_USER_KEY)) {
+                _.extend(data, {
+                    worker_position: storage.get(system_config.LOGIN_USER_KEY, 'worker_position')
                 });
             }
             _.extend(data, {
@@ -646,6 +652,7 @@ define([
                         lastbill_no = lastbill_no.substr(8);
                         storage.set(system_config.ODD_CHANGE, 'oddchange', _self.model.get('oddchange'));
                         storage.set(system_config.ODD_CHANGE, 'lastbill_no', lastbill_no);
+                        console.log(resp.printf);
                         _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                         _self.renderClientDisplay(_self.model);
                         router.navigate("main", {trigger: true, replace: true});

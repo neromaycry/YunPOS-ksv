@@ -42,7 +42,6 @@ define([
             console.log(gatherKind);
             if (storage.isSet(system_config.GATHER_KEY)) {
                 var tlist = storage.get(system_config.GATHER_KEY);
-                //this.visibleTypes = _.where(tlist, {visible_flag: '1'});
                 var gatherList = _.where(tlist, {gather_kind: gatherKind, visible_flag: '1'});
                 for (var i = 0, len = gatherList.length; i < len; i++) {
                     var item = new LayerBillTypeModel();
