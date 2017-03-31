@@ -395,6 +395,12 @@ define([
                     data['medium_type'] = "*";
                     data['cust_id'] = "*";
                 }
+                // 传回pos_server 来判断当前登录人的职位
+                if(storage.isSet(system_config.LOGIN_USER_KEY)) {
+                    _.extend(data, {
+                        worker_position: storage.get(system_config.LOGIN_USER_KEY, 'worker_position')
+                    });
+                }
                 data['bill_no'] = this.billNumber;
                 data['retreate_no'] = '*';
                 data['retreate_reason'] = '*';
@@ -423,6 +429,7 @@ define([
                                 storage.remove(system_config.VIP_KEY);
                             }
                             router.navigate("main", {trigger: true, replace: true});
+                            console.log(resp.printf);
                             _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                             layer.msg('退货成功', optLayerSuccess);
                         }  else {
@@ -443,6 +450,12 @@ define([
                     data['medium_id'] = "*";
                     data['medium_type'] = "*";
                     data['cust_id'] = "*";
+                }
+                // 传回pos_server 来判断当前登录人的职位
+                if(storage.isSet(system_config.LOGIN_USER_KEY)) {
+                    _.extend(data, {
+                        worker_position: storage.get(system_config.LOGIN_USER_KEY, 'worker_position')
+                    });
                 }
                 data['bill_no'] = _self.billNumber;
                 data['retreate_no'] = storage.get(system_config.RETURN_KEY, 'bill_no');
@@ -474,6 +487,7 @@ define([
                                 storage.remove(system_config.VIP_KEY);
                             }
                             router.navigate("main", {trigger: true, replace: true});
+                            console.log(resp.printf);
                             _self.sendWebSocketDirective([DIRECTIVES.OpenCashDrawer, DIRECTIVES.PRINTTEXT], ['', resp.printf], wsClient);
                             layer.msg('退货成功', optLayerSuccess);
                         } else {

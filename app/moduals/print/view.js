@@ -147,6 +147,7 @@ define([
                 layer.msg('请先查询要打印的小票', optLayerWarning);
             } else {
                 var str = this.print_content;
+                console.log(str);
                 this.sendWebSocketDirective([DIRECTIVES.PRINTTEXT], [str], wsClient);
             }
         },
@@ -161,9 +162,18 @@ define([
                 _self.focusChange();
             }
             if (date != '' && billNo != '') {
-                var data = {};
-                data['day'] = date;
-                data['bill_no'] = billNo;
+                var data = {
+                    'day':date,
+                    'bill_no':billNo
+                };
+                // data['day'] = date;
+                // data['bill_no'] = billNo;
+                // 传回pos_server 来判断当前登录人的职位
+                if(storage.isSet(system_config.LOGIN_USER_KEY)) {
+                   data['worker_position'] = storage.get(system_config.LOGIN_USER_KEY, 'worker_position')
+                }
+                console.log(data);
+                console.log('-----------------');
                 this.request = new PrintModel();
                 this.request.print(data, function (resp) {
                     if (resp.status == '00') {
