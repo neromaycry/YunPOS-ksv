@@ -5,13 +5,14 @@ define([
     '../../js/common/BaseLayerView',
     '../../moduals/layer-rtgatherui/model',
     '../../moduals/layer-bankcard/view',
+    '../../moduals/layer-rtconfirm/view',
     'text!../../moduals/layer-rtgatherui/contenttpl.html',
     'text!../../moduals/layer-rtgatherui/commontpl.html',
     'text!../../moduals/layer-rtgatherui/thirdpay.html',
     'text!../../moduals/layer-rtgatherui/bankcardtpl.html',
     'text!../../moduals/layer-rtgatherui/bankccblanditpl.html',
     'text!../../moduals/layer-rtgatherui/tpl.html'
-], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, contenttpl, commontpl, thirdpaytpl, bankcardtpl, bankccblanditpl, tpl) {
+], function (BaseLayerView, LayerGatherUIModel, LayerBankCardView, RTConfirmView, contenttpl, commontpl, thirdpaytpl, bankcardtpl, bankccblanditpl, tpl) {
 
     var layerGatherUIView = BaseLayerView.extend({
 
@@ -236,9 +237,10 @@ define([
                 gather_kind: this.attrs.gather_kind,
                 gather_no: gatherNo
             };
-            Backbone.trigger('onRTReceivedsum', attrs);
+            // Backbone.trigger('onRTReceivedsum', attrs);
             this.closeLayer(layerindex);
-            $('input[name = billingrt]').focus();
+            this.openLayer(PAGE_ID.LAYER_RT_CONFIRM, pageId, '确认支付凭证号', RTConfirmView, attrs, {area: '400px'});
+            // $('input[name = billingrt]').focus();
         },
 
         onNumClicked: function (e) {

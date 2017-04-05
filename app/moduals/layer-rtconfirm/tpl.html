@@ -1,87 +1,16 @@
 <div class="panel panel-primary" style="border: none;margin: 0;">
     <div class="panel-body">
-        <div class="row no-margining" style="margin-bottom: 15px;">
-            <div class="col-xs-3 col-md-3  text-right pos-textsize no-padding">退款金额：</div>
-            <div class="col-xs-3 col-md-3 text-left text-red no-padding" style="font-size: 18px">￥<%= toDecimal2(receivedsum) %></div>
-            <div class="col-xs-3 col-md-3  text-right pos-textsize no-padding">待退款金额：</div>
-            <div class="col-xs-3 col-md-3 text-left text-teal no-padding"  style="font-size: 18px">￥<%= toDecimal2(unpaidamount) %></div>
+        <div class="row m-t m-b text-center pos-textsize">
+            凭证号：<span class="text-primary"><%= gather_no %></span>
         </div>
-        <div class="row">
-            <div class="col-xs-4 col-md-4">
-                <div class="form-group">
-                    <label class="sr-only" for="ecard_receivedsum"></label>
-                    <input type="text" id="ecard_receivedsum"  name="ecard_receivedsum" class="form-control"  onkeypress="return myNumberic(event)"  onkeyup="return ValidateFloat($(this),value)" placeholder="请输入支付金额"/>
-                </div>
-                <div class="panel panel-primary" >
-                    <div class="row no-margining text-center">
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="7">7</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="8">8</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="9">9</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-backspace panel-group border-bottom">←</div>
-                        </div>
-                    </div>
-                    <div class="row no-margining text-center">
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="4">4</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="5">5</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="6">6</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-clear panel-group border-bottom">C</div>
-                        </div>
-                    </div>
-                    <div class="row no-margining text-center">
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="1">1</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="2">2</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right-bottom" data-num="3">3</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn numpad-ok border-bottom bg-highlight cancel">取消</div>
-                        </div>
-                    </div>
-                    <div class="row no-margining text-center">
-                        <div class="col-xs-6 col-md-6 no-padding">
-                            <div class="cbtn btn-num panel-group border-right" data-num="0">0</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn btn-num panel-group border-right" data-num=".">.</div>
-                        </div>
-                        <div class="col-xs-3 col-md-3 no-padding">
-                            <div class="cbtn numpad-ok ok bg-red">确定</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-8 col-md-8">
-                <div class="panel panel-primary text-center">
-                    <div class="panel-heading pos-textsize">
-                        <div class="row">
-                            <div class="col-xs-3 col-md-3">账户</div>
-                            <div class="col-xs-3 col-md-3">金额</div>
-                            <div class="col-xs-3 col-md-3">货币</div>
-                            <div class="col-xs-3 col-md-3">有效日期</div>
-                        </div>
-                    </div>
-                    <div class="panel-body for-ecarddetail" style="padding: 0;">
-                    </div>
+        <div class="row no-margining">
+            <div class="col-xs-12 col-md-12 button-group">
+                <div class="row ">
+                    <button type="button" class="col-xs-6 col-md-6 button button-block button-highlight button-rounded button-border pos-button-textsize no-padding cancel">取消</button>
+                    <button type="button" class="col-xs-6 col-md-6 button button-block button-caution  button-rounded button-border pos-button-textsize no-padding ok">确定</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
