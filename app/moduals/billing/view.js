@@ -633,8 +633,8 @@ define([
                 item.num = parseFloat(item.num);
             }
             //限制传到接口的实收金额，付款金额，找零金额，盈余金额数据类型必须为number，且位数为小数点后两位。
-            for (var i = 0; i < data.goods_detail.length; i++) {
-                item = data.goods_detail[i];
+            for (var i = 0; i < data.gather_detail.length; i++) {
+                item = data.gather_detail[i];
                 item.havepay_money = parseFloat(item.havepay_money);
                 item.gather_money = parseFloat(item.gather_money);
                 item.change_money = parseFloat(item.change_money);
