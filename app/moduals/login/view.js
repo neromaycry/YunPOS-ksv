@@ -10,8 +10,9 @@ define([
     '../../../../moduals/layer-settingauth/view',
     'text!../../../../moduals/login/clientlogintpl.html',
     'text!../../../../moduals/login/versiontpl.html',
+    'text!../../../../moduals/login/posversiontpl.html',
     'text!../../../../moduals/login/tpl.html',
-], function (BaseView, LoginModel, LoginCollection, LayerConfirmView, LayerGatewayView, LayerSettingAuthView, clientlogintpl, versiontpl, tpl) {
+], function (BaseView, LoginModel, LoginCollection, LayerConfirmView, LayerGatewayView, LayerSettingAuthView, clientlogintpl, versiontpl, posversiontpl, tpl) {
 
     var loginView = BaseView.extend({
 
@@ -24,6 +25,8 @@ define([
         template_clientlogin: clientlogintpl,
 
         template_version: versiontpl,
+
+        template_posversion: posversiontpl,
 
         clientScreen: null,
 
@@ -57,7 +60,11 @@ define([
             //storage.set(system_config.SETTING_DATA_KEY,system_config.INIT_DATA_KEY,system_config.POS_KEY,'1');
             this.requestModel = new LoginModel();
             this.model = new LoginModel();
+            this.posVersionModel = new LoginModel();
             this.versionModel = new LoginModel();
+            this.posVersionModel.set({
+                version: window.version
+            });
             this.versionModel.set({
                 version: ''
             });
@@ -72,7 +79,7 @@ define([
             //storage.set(system_config.INTERFACE_TYPE, Interface_type.CCB_LANDI);
             this.template_clientlogin = _.template(this.template_clientlogin);
             this.template_version = _.template(this.template_version);
-
+            this.template_posversion = _.template(this.template_posversion);
             //this.checkPosLimit();
         },
 
@@ -85,6 +92,7 @@ define([
                 _self.sendWebSocketDirective([DIRECTIVES.VERSION], [''], wsClient);
             }, 500);
             this.renderVersion();
+            this.renderPosVersion();
         },
 
         handleEvents: function () {
@@ -103,6 +111,11 @@ define([
 
         renderVersion: function () {
             this.$el.find('.for-webctrl-version').html(this.template_version(this.versionModel.toJSON()));
+            return this;
+        },
+
+        renderPosVersion: function () {
+            this.$el.find('.for-pos-version').html(this.template_posversion(this.posVersionModel.toJSON()));
             return this;
         },
 

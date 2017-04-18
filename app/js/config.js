@@ -142,7 +142,9 @@ requirejs([
 
     window.fecha = fecha;
 
-    window.isPacked = true;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
+    window.isPacked = false;  //程序是否已打包，打包前必须把此项设置为true，未打包运行时必须将此项设置为false，否则会报错
+
+    window.version = '20170418'; //pos版本号设置，打包之前需更改
 
     window.isClientScreenShow = false;
 
@@ -413,7 +415,7 @@ requirejs([
         if (window.wsClient.readyState == 1) {
             var content = {
                 posid: window.storage.get(system_config.POS_INFO_KEY, 'posid'),
-                version: $('.pos-version').text()
+                version: window.version
             };
             var directive = DIRECTIVES.UPGRADE + JSON.stringify(content);
             console.log('upgrade in config:' + JSON.stringify(content));
